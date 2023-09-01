@@ -3,9 +3,7 @@ function App() {
 
   return (
     <>
-      <p>
-        Click on the Vite and React logos to learn good
-      </p>
+      <h1>DMS Content Management System Loop</h1>
     </>
   )
 }

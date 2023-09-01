@@ -3,7 +3,7 @@ function App() {
 
   return (
     <>
-      <h1>DMS Content Management </h1>
+      <h1>DMS Content Management loop </h1>
     </>
   )
 }

@@ -3,7 +3,7 @@ function App() {
 
   return (
     <>
-      <h1>DMS Content Management Naveed Ilyas</h1>
+      <h1>DMS Content Management Mubeen</h1>
     </>
   )
 }

@@ -15,11 +15,11 @@ class Project(models.Model):
         return self.prjct_Name
 
 class Project_detail(models.Model):
-    drctry_Name = models.CharField(max_length=255)
+    drctry_Name = models.CharField(verbose_name="Folder Name",max_length=255)
     prjct_ID = models.ForeignKey(Project, on_delete=models.CASCADE)
-    prnt_ID = models.PositiveIntegerField(null=True, blank=True)  # Set null=True here
-    file_Name = models.CharField(max_length=100, null=True, blank=True)
-    output_Name = models.CharField(max_length=100, null=True, blank=True)
+    prnt_ID = models.PositiveIntegerField(verbose_name="Folder Parent ID",null=True, blank=True)  # Set null=True here
+    file_Name = models.CharField(verbose_name="File Name",max_length=100, null=True, blank=True)
+    output_Table_Name = models.CharField(verbose_name="Table Name",max_length=100, null=True, blank=True)
 
 
 

@@ -27,8 +27,12 @@ class UserModelAdmin(BaseUserAdmin):
             },
         ),
     ]
+
+    # search the email in the admin site
     search_fields = ["email"]
-    ordering = ["email"]
+
+# ordering(assending desending) the email and id in the admin site
+    ordering = ["email","id"]
     filter_horizontal = []
 
 

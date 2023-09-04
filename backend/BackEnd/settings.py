@@ -95,7 +95,11 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
 
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    # The billow code if i view api as as JASAN form in the web page
+    # 'DEFAULT_RENDERER_CLASSES':(
+    #     'rest_framework.renderers.JSONRenderer',
+    # )
 }
 
 # Password validation

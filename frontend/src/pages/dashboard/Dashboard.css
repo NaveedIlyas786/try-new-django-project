@@ -1,0 +1,6 @@
+.bgimg{
+    height: 87.5vh;
+    background-image:url('../../assets/dash.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+}

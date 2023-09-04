@@ -1,4 +1,44 @@
-.navbar{
-    background-color: white;
-    
+/* Navbar.css */
+
+.navbar {
+  background-color: white;
+  box-shadow: 1px 1px 5px 1px rgb(199, 199, 199);
+  height: 70px;
+}
+
+.navTabs a {
+  padding: 5px 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s, transform 0.3s;
+  display: flex;
+  justify-content: center;
+  /* font-weight: 500px !important; */                  /* Font weight is not applying due to set fontfamily in App.css */
+  align-items: center;
+}
+
+
+.navTabs a:hover,
+.navbar-nav .nav-item.active{
+  background-color: #07109f;
+  border-radius: 5px;
+  color: white !important;
+}
+
+.contacts {
+  border: 1px solid #07109f;
+  border-radius: 5px;
+}
+
+.navbar-nav a {
+  text-decoration: none;
+  color: #07109f;
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: 1.1px;
+}
+
+.navbar-nav .nav-item.active a {
+  color: white !important;
+  background-color: #07109f;
+  transition: all ease-in-out 0.5s;
 }

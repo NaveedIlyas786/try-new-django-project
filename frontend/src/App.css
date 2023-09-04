@@ -2,9 +2,10 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-}
+    font-family: Arial, Helvetica, sans-serif;
 
-h1{
-    font-size:100px;
-    text-align: center;
+}
+.Link{
+    text-decoration: none !important;
+    color: blue !important;
 }

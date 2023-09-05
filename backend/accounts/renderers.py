@@ -1,7 +1,7 @@
 from rest_framework import renderers
 import json
 
-class UserRender(renderers.JSONOpenAPIRenderer):
+class UserRenderer(renderers.JSONOpenAPIRenderer):
     charset='utf-8'
     def render(self, data, media_type=None, renderer_context=None):
         response=''
@@ -9,4 +9,4 @@ class UserRender(renderers.JSONOpenAPIRenderer):
             response=json.dumps({'errors':data})
         else:
             response=json.dumps(data)    
-        return response
+        return super().render(response, media_type='application/json', renderer_context=renderer_context)

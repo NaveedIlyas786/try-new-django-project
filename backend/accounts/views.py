@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
-from .serializers import UserRegisterationSerializers,UserLoginserializers
 from django.contrib.auth import authenticate     
 
+from .serializers import UserRegisterationSerializers,UserLoginserializers
+from .models import User 
 # Create your views here.
 
 #veiw for Registor or Create User 
@@ -17,6 +19,10 @@ class UserRegistrationView(APIView):
         
         return Response(serializer.error,status=status.HTTP_400_BAD_REQUEST)
     
+
+class UserApiListView(ListAPIView):
+     queryset=User.objects.all()
+     serializer_class=UserRegisterationSerializers
 
 # 
 class UserLoginViews(APIView):

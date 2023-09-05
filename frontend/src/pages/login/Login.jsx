@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Login.css";
-import { Link, useNavigate } from "react-router-dom"; // Import usenavigate
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const navigate = useNavigate(); // Initialize usenavigate
+  const navigate = useNavigate();
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+
+  const handleLogin = () => {
+    navigate('/homepage/dashboard');
+  };
 
   return (
     <div className="parent">
@@ -20,19 +28,23 @@ const Login = () => {
           <input
             placeholder="Enter your password"
             className="loginInput"
-            type="password"
-          />
+            type={passwordVisible ? "text" : "password"} // Toggle between text and password
+          >
+          </input>
+          <span className="password-toggle" onClick={togglePasswordVisibility}>
+            {passwordVisible ? <i className="fa-sharp fa fa-light fa-eye"></i> : <i className="fa-light fa fa-eye-slash"></i> } 
+          </span>
           <Link className="forgot" to="/forgotScreen">
             Forgot Password
           </Link>
         </div>
-        <Link to='/homepage/dashboard' className="submitbtn Link">
+        <button onClick={handleLogin} className="submitbtn">
           Login
-        </Link>
+        </button>
         <p className="signuplink">
-          Create a New account: 
+          Create a New account:
           <Link className="Link" to="/signup">
-             SignUp
+            SignUp
           </Link>
         </p>
       </div>

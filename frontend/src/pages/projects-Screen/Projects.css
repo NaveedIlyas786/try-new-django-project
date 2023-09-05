@@ -1,0 +1,32 @@
+.myaside{
+    border: 1px solid purple;
+    width: 200px;
+    height: 150vh;
+}
+.myaside ul{
+    margin: 0;
+    padding: 0;
+}
+.projects{
+    margin-top: 70px;
+    display: flex;
+
+}
+.aside_li{
+height: 40px;
+list-style-type: none;
+text-decoration: none;
+padding: 0 0 0 20px;
+cursor: pointer;
+display: flex;
+justify-content: flex-start;
+align-items: center;
+background-color: blueviolet;
+}
+.aside_li:hover{
+background-color: aliceblue;
+}
+.main-content{
+    background-color: rgb(14, 223, 153);
+    width: 100%;
+}

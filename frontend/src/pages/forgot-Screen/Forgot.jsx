@@ -12,11 +12,9 @@ const Forgot = () => {
           className="ForgotInput"
           type="email"
         />
-        
         <button type="submit" className="submitbtn">
           Submit
         </button>
-        
       </div>
     </div>
   );

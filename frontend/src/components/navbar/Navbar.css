@@ -4,6 +4,9 @@
   background-color: white;
   box-shadow: 1px 1px 5px 1px rgb(199, 199, 199);
   height: 70px;
+  position: fixed !important;
+  width: 100%;
+  top: 0;
 }
 
 .navTabs a {

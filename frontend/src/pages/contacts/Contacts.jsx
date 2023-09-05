@@ -2,7 +2,9 @@ import React from 'react'
 import "./Contacts.css"
 const Contacts = () => {
   return (
-    <h1>Contacts</h1>
+    <div className='contactSection'>
+    <h1 style={{marginTop:80}}>Contacts</h1>
+    </div>
   )
 }
 

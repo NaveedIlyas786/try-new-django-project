@@ -6,15 +6,13 @@
 }
 .sub_Parent{
     display: flex;
-    padding: 30px;
+    padding: 20px;
     gap: 25px;
     flex-direction: column;
     justify-content: space-around;
     align-items:center;
     border-radius: 5px;
-    /* border: 1px solid black; */
-    box-shadow: 0 1px 1px 5px rgb(187, 186, 186);
-    /* box-shadow: 0 3px 3px 1px rgb(187, 186, 186); */
+    box-shadow: 0 3px 3px 1px rgb(187, 186, 186);
 }
 .sub_Parent img{
     height: 50px;
@@ -25,15 +23,15 @@ h1{
 }
 .SignUpInput{
     height: 35px;
-    width: 285px;
+    width: 350px;
     border-radius: 5px;
     background-color: #F6F2F2;
     box-shadow: 0 4px 4px 0 rgb(187, 186, 186);
     border: none;
-    padding: 2px 8px;
-    font-size: 15px;
+    font-size: 16px;
     outline: none;
     color: #1b1b1b;
+    padding: 2px 2px 2px 10px;
 }
 .SignUpInput:focus{
     border: none;
@@ -44,7 +42,6 @@ h1{
     display: flex;
     flex-direction: column;
     position: relative;
-
 }
 
 .submitbtn{
@@ -61,4 +58,13 @@ h1{
 }
 .signuplink{
     margin-top: -15px;
+}
+.passfield{
+    position: relative;
+}
+.signup-toggle-pass{
+    position: absolute;
+    right: 10px;
+    top: 8px;
+     cursor: pointer;
 }

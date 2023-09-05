@@ -2,6 +2,8 @@ from django.shortcuts import render
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.generics import ListAPIView
+from .models import User
 from .serializers import UserRegisterationSerializers,UserLoginserializers
 from django.contrib.auth import authenticate     
 
@@ -15,8 +17,14 @@ class UserRegistrationView(APIView):
             user=serializer.save()
             return Response({'msg':'Registration Success'},status=status.HTTP_201_CREATED)
         
-        return Response(serializer.error,status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
+
+class UserListAPIViews(ListAPIView):
+     queryset=User.objects.all()
+     serializer_class=UserRegisterationSerializers
+
+
 
 # views for the Login
 class UserLoginViews(APIView):

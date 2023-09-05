@@ -4,6 +4,7 @@ from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
 # For Authentication
 from django.contrib.auth import authenticate    
@@ -61,7 +62,7 @@ class UserLoginViews(APIView):
 #For views Api Registration User List
 class UserProfileViews(APIView):
 #    renderer_classes=[UserRenderer]
-
+     
      def get(self,request,format=None):
           serializer=UserProfileSerializer(request.user)
           return Response(serializer.data,status=status.HTTP_200_OK)

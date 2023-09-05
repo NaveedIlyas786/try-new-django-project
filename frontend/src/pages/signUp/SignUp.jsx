@@ -1,8 +1,12 @@
+// Signup.js
+
 import React, { useState } from "react";
 import "./Signup.css";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { signUpUser } from "../../redux/authSlice";
 
-const SignUp = () => {
+const Signup = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,14 +17,34 @@ const SignUp = () => {
     setDefaultPass(!defaultpass);
   };
 
+  const dispatch = useDispatch();
+
   const handleRegister = () => {
-    console.log(name, email, password, confirmPassword);
-  }
+    // Create an object with user registration data
+    const userData = {
+      name: name,
+      email: email,
+      password: password,
+    };
+
+    // Dispatch the signUpUser action to send data to the backend
+    dispatch(signUpUser(userData))
+      .then((response) => {
+        // Handle success response from the backend (if needed)
+        console.log("User registration successful:", response);
+        // Redirect the user to a success page or do something else
+      })
+      .catch((error) => {
+        // Handle error response from the backend
+        console.error("User registration failed:", error);
+        // Display an error message to the user
+      });
+  };
 
   return (
     <div className="parent">
       <div className="sub_Parent">
-        <img src="../../../src/assets/DMS_logo.png" alt="" />
+      <img src="../../../src/assets/DMS_logo.png" alt="" />
         <h1>SignUp</h1>
         <input placeholder="Full-Name" className="SignUpInput" type="text" value={name} onChange={(e) => setName(e.target.value)} />
         <input placeholder="Email" className="SignUpInput" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -54,7 +78,6 @@ const SignUp = () => {
             )}
           </span>
         </div>
-
         <button className="submitbtn" onClick={handleRegister}>
           Send Request
         </button>
@@ -69,4 +92,5 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Signup;
+

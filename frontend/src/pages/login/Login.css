@@ -12,7 +12,7 @@
     justify-content: space-around;
     align-items:center;
     border-radius: 5px;
-    box-shadow: 0 3px 3px 1px rgb(187, 186, 186);
+    /* box-shadow: 0 3px 3px 1px rgb(187, 186, 186); */
 }
 .sub_Parent img{
     height: 50px;

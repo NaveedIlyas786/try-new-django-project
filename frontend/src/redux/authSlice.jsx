@@ -1,5 +1,3 @@
-// authSlice.js
-
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -8,9 +6,10 @@ const initialState = {
   error: null,
 };
 
-// Create an asynchronous thunk to handle user registration
 export const signUpUser = createAsyncThunk("auth/signUpUser", async (userData, { rejectWithValue }) => {
   try {
+    console.log("Sending user data: ", userData); // This will log the userData to the console before making the request
+
     const response = await fetch("http://127.0.0.1:8000/api/user/Userapi/", {
       method: "POST",
       headers: {
@@ -21,14 +20,16 @@ export const signUpUser = createAsyncThunk("auth/signUpUser", async (userData, {
 
     if (!response.ok) {
       const data = await response.json();
+      console.error("Error response from server: ", data); // This will log the error data from server to the console
       return rejectWithValue(data); // Handle the error in the catch block
     }
 
     const data = await response.json();
-    return data; // This can be any data you want to store in your state, like user information
+    return data; 
 
   } catch (error) {
-    throw error; // Let the catch block handle the error
+    console.error("An error occurred: ", error); // This will log any other errors to the console
+    return rejectWithValue("An error occurred during registration."); // This will return a more generic error message
   }
 });
 

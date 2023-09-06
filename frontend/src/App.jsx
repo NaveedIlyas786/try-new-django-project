@@ -16,13 +16,14 @@ import Login from "./pages/login/Login";
 import SignUp from "./pages/signUp/SignUp";
 import Forgot from "./pages/forgot-Screen/Forgot";
 import HomePage from "./pages/homePage/HomePage";
+import { AuthProvider } from "./firebase/context/AuthContext";
 
 function App() {
 
 
   return (
+    <AuthProvider>
     <Router>
-      {/* {isNavbarVisible && <Navbar />} */}
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
@@ -37,6 +38,7 @@ function App() {
         </Route>
       </Routes>
     </Router>
+    </AuthProvider>
   );
 }
 

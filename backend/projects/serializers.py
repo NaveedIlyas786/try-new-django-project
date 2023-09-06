@@ -5,15 +5,15 @@ from .models import Company, Project, Project_detail
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
-        fields = '__all__'
+        fields = ['id','Cmpny_Name']
 
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = '__all__'
+        fields = ['id',' company','prjct_Name']
 
 class ProjectDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project_detail
-        fields = '__all__'
+        fields = ['id','drctry_Name','prjct_ID','prnt_ID','file_Name','output_Table_Name']
   

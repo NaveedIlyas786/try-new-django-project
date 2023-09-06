@@ -12,7 +12,7 @@ from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
-from .serializers import UserRegisterationSerializers,UserLoginserializers,UserProfileSerializer,UserChangePasswordSerializer
+from .serializers import UserRegisterationSerializers,UserLoginserializers,UserProfileSerializer,UserChangePasswordSerializer,SendEmailResetPasswordViewsSerializer
 from .models import User 
 from .renderers import UserRenderer
 
@@ -56,7 +56,7 @@ class UserLoginViews(APIView):
 
 
 
-#For views Api Registration User List
+#For views for Get A Uniq Registration User With the Authentication
 class UserProfileViews(APIView):
 #    renderer_classes=[UserRenderer]
      permission_classes=[IsAuthenticated]
@@ -70,4 +70,12 @@ class UserChangePasswordViews(APIView):
         serializer=UserChangePasswordSerializer(data=request.data,context={'user':request.user})
         if serializer.is_valid(raise_exception=True):
             return Response({'msg':'Password Change Successfully'},status=status.HTTP_200_OK)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+
+class SendEmailResetPasswordViews(APIView):
+    def post(seld,request,format=None):
+        serializer=SendEmailResetPasswordViewsSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            return Response({'msg':'Password Resend Link send. Please check your Email'},status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)

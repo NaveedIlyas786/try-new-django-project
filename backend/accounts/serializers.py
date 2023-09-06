@@ -1,6 +1,11 @@
 from rest_framework import serializers
 from .models import User
 
+#import for the Send Email and reset Password 
+from django.utils.encoding import smart_str,force_bytes,DjangoUnicodeDecodeError
+from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+
 
 class UserRegisterationSerializers(serializers.ModelSerializer):
     password2=serializers.CharField(style={'input_type':'password'},write_only=True)   #this line for password hid (password ****** like this format)
@@ -30,12 +35,13 @@ class UserLoginserializers(serializers.ModelSerializer):
         model=User 
         fields= ['email','password']
 
+#For Get A Uniq user With the Authentication
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model=User
         fields=['id','email','full_Name','is_admin','create_at']
 
-
+# This Serializer for Change Password for Authorized User
 class UserChangePasswordSerializer(serializers.Serializer):
     password=serializers.CharField(max_length=255, style={'input_type':'password'},write_only=True)  
     password2=serializers.CharField(max_length=255,style={'input_type':'password'},write_only=True)  
@@ -50,3 +56,12 @@ class UserChangePasswordSerializer(serializers.Serializer):
         user.set_password(password)
         user.save()
         return attrs   
+    
+class SendEmailResetPasswordViewsSerializer(serializers.Serializer):
+    email=serializers.EmailField(max_length=255)
+    class Meta:
+        fields=['email']
+    def validate(self, attrs):
+        email=attrs.get('email')
+        pass
+        return super().validate(attrs)

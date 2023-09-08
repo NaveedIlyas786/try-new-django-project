@@ -19,13 +19,13 @@ class ProjectDetailListCreateView(generics.ListCreateAPIView):
     queryset = Project_detail.objects.all()
     serializer_class = ProjectDetailSerializer
 
-@api_view(['GET'])
-def get_matching_id(request):
-    """
-    Fetch Project_detail instances where id matches the prnt_ID.
-    """
-    matching_details = [detail for detail in Project_detail.objects.all() if detail.id == detail.prnt_ID]
-    print(matching_details)
-    serializer = ProjectDetailSerializer(matching_details, many=True)
-    return Response(serializer.data)
+# @api_view(['GET'])
+# def get_matching_id(request):
+#     """
+#     Fetch Project_detail instances where id matches the prnt_ID.
+#     """
+#     matching_details = [detail for detail in Project_detail.objects.all() if detail.id == detail.prnt_ID]
+#     print(matching_details)
+#     serializer = ProjectDetailSerializer(matching_details, many=True)
+#     return Response(serializer.data)
 

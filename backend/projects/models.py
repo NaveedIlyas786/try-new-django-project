@@ -1,7 +1,17 @@
 from django.db import models
+from .validation import validate_logo_file_extension
+
+
 
 class Company(models.Model):
-    Cmpny_Name = models.CharField(verbose_name="Company Name",max_length=255)
+    Cmpny_Name = models.CharField(verbose_name="Company Name",max_length=50, null=True, blank=True)
+    adress=models.CharField(verbose_name="Adress",max_length=70, null=True, blank=True)
+    office_phone_number = models.CharField(max_length=10, null=True, blank=True)
+    fax_number = models.CharField(max_length=10, null=True, blank=True)
+    license_number = models.CharField(max_length=50, null=True, blank=True)
+    logo = models.ImageField(upload_to='logos/', validators=[validate_logo_file_extension], null=True, blank=True)
+    email = models.EmailField(default="estimating@dmsmgt.com", editable=False)
+
 
     def __str__(self):
         return self.Cmpny_Name

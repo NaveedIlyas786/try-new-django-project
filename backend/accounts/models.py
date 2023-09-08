@@ -3,9 +3,17 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
 # Create your models here.
 
+class UserRole(models.Model):
+    name=models.CharField(verbose_name="Role", max_length=50)
+    description = models.TextField(verbose_name="Add Description", blank=True,null=True)
+    
+    def __str__(self):
+        return self.name
+
+
 # Custom User Manager
 class UserManager(BaseUserManager):
-    def create_user(self, email, full_Name, password=None, password2=None):
+    def create_user(self, email, full_Name, password=None, password2=None,roles=None):
         """
         Creates and saves a User with the given email, full_Name and password.
         """
@@ -19,9 +27,11 @@ class UserManager(BaseUserManager):
 
         user.set_password(password)
         user.save(using=self._db)
+        if roles:
+            user.roles.set(roles)
         return user
 
-    def create_superuser(self, email, full_Name, password=None):
+    def create_superuser(self, email, full_Name, password=None,roles=None):
         """
         Creates and saves a superuser with the given email, full_Name ,   and password.
         """
@@ -29,20 +39,21 @@ class UserManager(BaseUserManager):
             email,
             password=password,
             full_Name=full_Name,
+            roles=roles,
 
         )
         user.is_admin = True
         user.save(using=self._db)
         return user
 
+
 class User(AbstractBaseUser):
 
     full_Name=models.CharField(verbose_name="Full Name", max_length=255)
-
     email = models.EmailField(verbose_name="Email",max_length=255,unique=True,)
+    roles = models.ManyToManyField(UserRole,verbose_name="Role",blank=True,related_name='users')
     create_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
-
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
@@ -53,6 +64,9 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.email
+    
+    def __str__(self):
+        return self.full_Name
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"

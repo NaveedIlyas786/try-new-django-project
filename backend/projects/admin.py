@@ -3,7 +3,9 @@ from .models import Project_detail,Project,Company
 # Register your models here.
 
 class CompanyAdmin(admin.ModelAdmin):
-    list_display = ('id', 'Cmpny_Name')
+    list_display = ('id', 'Cmpny_Name','adress',
+                    'office_phone_number','fax_number',
+                    'license_number','email')
 
 
 class ProjectAdmin(admin.ModelAdmin):
@@ -11,7 +13,8 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 class ProjectDetailAdmin(admin.ModelAdmin):
-    list_display = ('id', 'drctry_Name', 'prjct_ID', 'prnt_ID', 'file_Name', 'output_Table_Name')
+    list_display = ('id', 'drctry_Name', 'prjct_ID',
+                    'prnt_ID', 'file_Name', 'output_Table_Name')
 
 
 # Register the models with their respective admin views

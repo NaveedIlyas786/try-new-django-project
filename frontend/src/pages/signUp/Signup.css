@@ -45,7 +45,7 @@ h1{
 }
 
 .submitbtn{
-    width: 100%;
+    width: 350px !important;
     height: 35px;
     border-radius: 5px;
     border: none;

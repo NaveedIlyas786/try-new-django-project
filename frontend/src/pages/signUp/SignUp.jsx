@@ -1,10 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import "./Signup.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signUpUser } from "../../redux/authSlice";
-import { Form, Button, Card, Alert } from "react-bootstrap";
-import { useAuth } from "../../firebase/context/AuthContext";
+import axios from "axios";
 
 const Signup = () => {
   const [full_Name, setfull_Name] = useState("");
@@ -13,57 +12,96 @@ const Signup = () => {
   const [password2, setpassword2] = useState("");
   const [defaultpass, setDefaultPass] = useState(false);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [SubmitbtnClicked, setSubmitbtnClicked] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(
+    "Registered Successfully !"
+  );
 
-  const { signup } = useAuth();
-  const nameref = useRef();
-  const emailRef = useRef();
-  const passref = useRef();
-  const passConfirmref = useRef();
+  const navigate = useNavigate();
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (passref.current.value !== passConfirmref.current.value) {
-      return setError("Password do not match !");
-    }
-
-    try {
-      setError("");
-      setLoading(true);
-      await signup(emailRef.current.value, passref.current.value);
-    } catch (error) {
-      console.log(error);
-      setError("Failed to create an account");
-    }
-    setLoading(false);
-  }
   const togglePass = () => {
     setDefaultPass(!defaultpass);
   };
 
   const dispatch = useDispatch();
 
-  const handleRegister = () => {
-    // Create an object with user registration data
-    const userData = {
-      full_Name: full_Name,
-      email: email,
-      password: password,
-      password2:password2
-    };
+  const handleRegister = async () => {
+    // Reset error messages
+    setError("");
+    setSuccessMessage("");
+    setSubmitbtnClicked(true);
 
-    // Dispatch the signUpUser action to send data to the backend
-    dispatch(signUpUser(userData))
-      .then((response) => {
-        // Handle success response from the backend (if needed)
-        console.log("User registration successful:", response);
-        // Redirect the user to a success page or do something else
-      })
-      .catch((error) => {
-        // Handle error response from the backend
-        console.error("User registration failed:", error);
-        // Display an error message to the user
-      });
+    // Check for empty fields
+    if (!full_Name || !email || !password || !password2) {
+      setError("All fields are required");
+      return;
+    }
+
+    // Check if password and confirm password match
+    if (password !== password2) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    // Check if password meets the validation criteria
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Z][A-Za-z\d@$!%*?&]{7,}$/;
+    const isValidPassword = passwordRegex.test(password);
+
+    if (password.length < 8) {
+      setError("Password length should be equal or greater than 8");
+      return;
+    }
+    if (!isValidPassword) {
+      setError(
+        "Password first letter should be capital, at least one number & special character like this ' Kingdom123? '"
+      );
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/user/Userapi/",
+        {
+          email: email,
+        }
+      );
+
+      // Check the response from the backend
+      if (response.data.error) {
+        setError("User is already registered with this email");
+      } else {
+        // User is not registered, continue with the registration process
+        // Create an object with user registration data
+        const userData = {
+          full_Name: full_Name,
+          email: email,
+          password: password,
+          password2: password2,
+        };
+
+        // Dispatch the signUpUser action to send data to the backend
+        dispatch(signUpUser(userData))
+          .then((response) => {
+            // Handle success response from the backend (if needed)
+            console.log("User registration successful:", response);
+            setSuccessMessage("Registration Successful!");
+
+            setTimeout(() => {
+              navigate("/");
+            }, 1700);
+            // Redirect the user to a success page or do something else
+          })
+          .catch((error) => {
+            // Handle error response from the backend
+            console.error("User registration failed:", error);
+            setError("Registration failed. Please try again.");
+          });
+      }
+    } catch (error) {
+      console.error("Error checking email:", error);
+      setError("Error checking email. Please try again.");
+    }
   };
 
   return (
@@ -71,6 +109,28 @@ const Signup = () => {
       <div className="sub_Parent">
         <img src="../../../src/assets/DMS_logo.png" alt="" />
         <h1>SignUp</h1>
+        {SubmitbtnClicked && (
+          <>
+            {error ? (
+              <div
+                className="error bg-danger w-100 p-2 text-center rounded"
+                style={{ color: "white" }}
+              >
+                {error}
+              </div>
+            ) : (
+              successMessage && (
+                <div
+                  className="success bg-success w-100 p-2 text-center rounded"
+                  style={{ color: "white" }}
+                >
+                  {successMessage}
+                </div>
+              )
+            )}
+          </>
+        )}
+
         <input
           placeholder="Full-Name"
           className="SignUpInput"
@@ -127,42 +187,6 @@ const Signup = () => {
           </Link>
         </p>
       </div>
-
-      {/* <Card>
-        <Card.Body className="w-100" style={{ minWidth: "400px" }}>
-          <h2 className="text-center mb-4">Signup</h2>
-          {error && <Alert variant="danger">{error}</Alert>}
-
-          <Form onSubmit={handleSubmit} className="w-100">
-            <Form.Group id="email">
-              <Form.Label>Email</Form.Label>
-              <Form.Control type="email" required ref={emailRef}></Form.Control>
-            </Form.Group>
-            <Form.Group id="password">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                required
-                ref={passref}
-              ></Form.Control>
-            </Form.Group>
-            <Form.Group id="email">
-              <Form.Label>Confirm-Password</Form.Label>
-              <Form.Control
-                type="password"
-                required
-                ref={passConfirmref}
-              ></Form.Control>
-            </Form.Group>
-            <Button type="submit" disabled={loading} className="w-100 mt-4">
-              SignUp
-            </Button>
-          </Form>
-        </Card.Body>
-        <div className="w-100 text-center mt-2">
-          Already have an account? Login
-        </div>
-      </Card> */}
     </div>
   );
 };

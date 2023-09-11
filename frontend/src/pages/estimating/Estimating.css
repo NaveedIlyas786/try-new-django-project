@@ -1,3 +1,58 @@
 .estimator{
     margin-top: 70px;
+    position: relative;
+    padding-top: 2.5rem;
+    background-color: rgb(194, 190, 190);
 }
+
+td{
+  padding: 5px 10px !important;
+  background-color: aquamarine !important;
+  max-width: fit-content !important;
+}
+.inputbtn{
+  /* min-width: 350px; */
+  position: absolute;
+  right: 0;
+  color: black;
+  top: 2.5rem;
+}
+.myinput{
+  min-width: 350px;
+  background-color: white;
+  color: black;
+  /* position: absolute;
+  right: 0;
+  top: 2.5rem; */
+  border: 1px solid black;
+}
+#myInput {
+    /* background-image: url('/css/searchicon.png'); */
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    width: 100%;
+    font-size: 16px;
+    padding: 12px 20px 12px 40px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+  }
+  
+  #myTable {
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid #ddd;
+    font-size: 18px;
+  }
+  
+  #myTable th, #myTable td {
+    text-align: left;
+    padding: 12px;
+  }
+  
+  #myTable tr {
+    border-bottom: 1px solid #ddd;
+  }
+  
+  #myTable tr.header, #myTable tr:hover {
+    background-color: #f1f1f1;
+  }

@@ -11,9 +11,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [SubmitbtnClicked, setSubmitbtnClicked] = useState(false);
   const [error, setError] = useState(""); // State to store error message
-  const [successMessage, setSuccessMessage] = useState(
-    "Login Successfully !"
-  );
+  const [successMessage, setSuccessMessage] = useState("");
 
   const dispatch = useDispatch();
 
@@ -22,20 +20,20 @@ const Login = () => {
   };
 
   const handleLogin = async () => {
-    setSubmitbtnClicked(true)
+    setSubmitbtnClicked(true);
     if (!email || !password) {
       setError("Please fill in all fields.");
       return;
     }
-  
+
     try {
       // Send a request to the server to authenticate the user
       const response = await dispatch(loginUser({ email, password }));
-  
+
       if (loginUser.fulfilled.match(response)) {
         // Successful login, you can redirect the user or perform other actions here
         setError(""); // Clear any previous errors
-        setSuccessMessage("Loggedin Successfully!")
+        setSuccessMessage("Loggedin Successfully!");
         setTimeout(() => {
           navigate("/homepage/dashboard");
         }, 1700);
@@ -48,7 +46,6 @@ const Login = () => {
       setError("An error occurred during login.");
     }
   };
-  
 
   return (
     <div className="parent">

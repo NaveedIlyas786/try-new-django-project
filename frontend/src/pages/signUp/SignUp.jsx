@@ -54,7 +54,7 @@ const Signup = () => {
     }
     if (!isValidPassword) {
       setError(
-        "Password first letter should be capital, at least one number & special character like this ' Kingdom123? '"
+        <h6>Password first letter should be capital, at least one number & special character like this '<strong> Kingdom123? </strong>'</h6>
       );
       return;
     }

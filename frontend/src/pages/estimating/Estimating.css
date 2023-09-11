@@ -2,12 +2,12 @@
     margin-top: 70px;
     position: relative;
     padding-top: 2.5rem;
-    background-color: rgb(194, 190, 190);
+    background-color: rgb(255, 255, 255);
 }
 
 td{
   padding: 5px 10px !important;
-  background-color: aquamarine !important;
+  background-color: rgb(231, 236, 234) !important;
   max-width: fit-content !important;
 }
 .inputbtn{
@@ -55,4 +55,84 @@ td{
   
   #myTable tr.header, #myTable tr:hover {
     background-color: #f1f1f1;
+  }
+  .modal-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 99;
+    height: 480px;
+    width: 950px;
+    background-color: rgb(224, 222, 222);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+    /* display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; */
+    opacity: 0; /* Initially hide the modal */
+    pointer-events: none; /* Disable mouse events on the hidden modal */
+    transition: opacity 0.5s, transform 0.5s; /*Add transition properties*/
+  }
+  .addnewtxt{
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .modal-container.show {
+    opacity: 1; /* Show the modal */
+    pointer-events: auto; /* Enable mouse events */
+    transform: translate(-50%, -50%) scale(1); /* Scale to 1 for the opening transition */
+  }
+  
+  .modal-content {
+    /* background-color: #ddd !important; */
+    height: 100%;
+    /* overflow: hidden; */
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+  }
+  
+  /* CSS for the close button */
+.close-btn {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  cursor: pointer;
+  background-color: #07109f;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: none; /* Remove the default button border */
+  /* border-radius: 50%; Make it circular */
+}
+
+/* Style the close icon inside the button */
+.close-btn::before {
+  content: '\00D7'; /* Unicode for the close icon (×) */
+  color: white; /* Color the close icon white */
+  /* font-size: 30px; Adjust the font size as needed */
+  line-height: 1; /* Center the icon vertically */
+}
+
+  
+  .modal-active {
+    filter: blur(3px);
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .btn-submit{
+    background-color: #07109f;
+    color: white;
+  }
+  .btn-submit:hover{
+    background-color: #0611b4;
+    color: white;
+  }
+  .addnewtxt{
+    /* background-color:#0611b4 ; */
+    color: rgb(3, 3, 3);
+    padding: 5px;
+    border-radius: 5px;
   }

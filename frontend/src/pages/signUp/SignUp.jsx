@@ -58,35 +58,36 @@ const Signup = () => {
       );
       return;
     }
-
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/user/Userapi/",
-        {
-          email: email,
-        }
-      );
-
-      // Check the response from the backend
-      if (response.data.error) {
-        setError("User is already registered with this email");
-      } else {
-        // User is not registered, continue with the registration process
-        // Create an object with user registration data
+      // **************
+      // // Send a POST request to check if the email exists
+      // const checkEmailResponse = await axios.post(
+      //   "http://127.0.0.1:8000/api/user/Userapi/",
+      //   { email: email } // Send email in the request body
+      // );
+    
+      // // Check the response from the backend
+      // if (checkEmailResponse.email.length > 0) {
+      //   setError("User is already registered with this email");
+      // } 
+      // else {
+      //   // User is not registered, continue with the registration process
+      //   // Create an object with user registration data
+        // ***************
         const userData = {
           full_Name: full_Name,
           email: email,
           password: password,
           password2: password2,
         };
-
+    
         // Dispatch the signUpUser action to send data to the backend
         dispatch(signUpUser(userData))
           .then((response) => {
             // Handle success response from the backend (if needed)
             console.log("User registration successful:", response);
             setSuccessMessage("Registration Successful!");
-
+    
             setTimeout(() => {
               navigate("/");
             }, 1700);
@@ -98,10 +99,12 @@ const Signup = () => {
             setError("Registration failed. Please try again.");
           });
       }
-    } catch (error) {
+    catch (error) {
       console.error("Error checking email:", error);
       setError("Error checking email. Please try again.");
     }
+  
+    
   };
 
   return (

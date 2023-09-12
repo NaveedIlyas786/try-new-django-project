@@ -16,11 +16,11 @@ class UserRegisterationSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'full_Name', 'password', 'password2']
+        fields = ['email', 'full_Name', 'password', 'password2','phone_number','signtrPDF']
         extra_kwargs = {
             'password': {'write_only': True}
         }
-
+ 
 # Validating Password and Config Password while registration
 
     def validate(self, data):
@@ -48,7 +48,7 @@ class UserLoginserializers(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'full_Name', 'is_admin', 'create_at']
+        fields = ['id', 'email', 'full_Name', 'is_admin', 'create_at','phone_number','signtrPDF']
 
 # This Serializer for Change Password for Authorized User
 

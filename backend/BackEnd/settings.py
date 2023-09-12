@@ -41,10 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'projects',
+    'Estimating',
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
-    'Estimating',
+   
 ]
 
 MIDDLEWARE = [

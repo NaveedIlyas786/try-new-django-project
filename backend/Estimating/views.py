@@ -92,6 +92,6 @@ class ProposalView(APIView):
             proposal = Proposals.objects.get(pk=pk)
         except Proposals.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        
+            
         proposal.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

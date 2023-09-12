@@ -33,9 +33,9 @@ class EstimatingListView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
-    def delete(self, request, pk, format=None):
+    def delete(self, request, id, format=None):
         try:
-            estimating = Estimating.objects.get(pk=pk)
+            estimating = Estimating.objects.get(id=id)
         except Estimating.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
@@ -44,9 +44,9 @@ class EstimatingListView(APIView):
     
 
 
-    def put(self, request, pk, format=None):
+    def put(self, request, id, format=None):
         try:
-            estimating = Estimating.objects.get(pk=pk)
+            estimating = Estimating.objects.get(id=id)
         except Estimating.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
@@ -75,9 +75,9 @@ class ProposalView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
-    def put(self, request, pk, format=None):
+    def put(self, request, id, format=None):
         try:
-            proposal = Proposals.objects.get(pk=pk)
+            proposal = Proposals.objects.get(id=id)
         except Proposals.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
@@ -87,9 +87,9 @@ class ProposalView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def delete(self, request, pk, format=None):
+    def delete(self, request, id, format=None):
         try:
-            proposal = Proposals.objects.get(pk=pk)
+            proposal = Proposals.objects.get(id=id)
         except Proposals.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
             

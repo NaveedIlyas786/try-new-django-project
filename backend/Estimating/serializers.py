@@ -3,7 +3,7 @@
 from rest_framework import serializers
 
 
-from .models import Estimating, Proposals
+from .models import Estimating, Proposals,Addendum
 from projects.models import Company
 from accounts.models import User
 
@@ -104,3 +104,8 @@ class ProposalSerializer(serializers.ModelSerializer):
         representation['estimating'] = instance.estimating.Prjct_Name if instance.estimating else None
 
         return representation
+class AddendumSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model=Addendum
+        fields=['id','proposal','date','addendum_Number']

@@ -14,12 +14,12 @@ class UserRole(models.Model):
 
 # Custom User Manager
 class UserManager(BaseUserManager):
-    def create_user(self, email,phone_number,signtrPDF, full_Name, password=None, password2=None,roles=None):
+    def create_user(self, email,full_Name,phone_number=None,signtrPDF=None, password=None, password2=None,roles=None):
         """
         Creates and saves a User with the given email, full_Name and password.
         """
         if not email:
-            raise ValueError("Users must have an email address")
+            raise ValueError("The Email field is required")
 
         user = self.model(
             email=self.normalize_email(email),
@@ -68,7 +68,7 @@ class User(AbstractBaseUser):
     objects = UserManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ['full_Name', 'phone_number','signtrPDF']
+    REQUIRED_FIELDS = ['full_Name']
 
     def __str__(self):
         return self.email

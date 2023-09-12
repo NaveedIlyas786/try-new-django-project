@@ -69,13 +69,13 @@ class CompanySerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    class Mera:
+    class Meta:
         model = User
-        fields = ['id',]
+        fields = ['id','full_Name','phone_number','signtrPDF']
 
 
 class ProposalSerializer(serializers.ModelSerializer):
-
+    estimator=UserSerializer(read_only=True)
     company = CompanySerializer(read_only=True)
 
     class Meta:
@@ -101,7 +101,6 @@ class ProposalSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
 
         # Updating representation to include names instead of IDs for foreign keys
-        representation['estimator'] = instance.estimator.full_Name if instance.estimator else None
         representation['estimating'] = instance.estimating.Prjct_Name if instance.estimating else None
 
         return representation

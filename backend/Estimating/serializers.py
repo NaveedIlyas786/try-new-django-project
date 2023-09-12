@@ -13,10 +13,8 @@ class EstimatingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Estimating
-<<<<<<< HEAD
         fields = '__all__' # to include all fields in the API
         
-=======
         fields = ['id',
             'Prjct_Name', 
             'due_date', 
@@ -69,4 +67,3 @@ class ProposalSerializer(serializers.ModelSerializer):
         if isinstance(value, datetime):
             return value.date()
         return value
->>>>>>> b90fae9e646276299c95ed23326a12e39808e567

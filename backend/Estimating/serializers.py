@@ -52,16 +52,34 @@ class EstimatingSerializer(serializers.ModelSerializer):
             return value.date()
         return value
 
+
+
+
 class ProposalSerializer(serializers.ModelSerializer):
     class Meta:
         model=Proposals
-        fields='__all__'
+        fields = ['id',
+            'date', 
+            'architect_name', 
+            'architect_firm',
+            'company',
+            'estimator',
+            'estimating'
+        ]
+        extra_kwargs = {
+            'architect_name': {'required': True},
+            'architect_firm': {'required': True},
+            'date': {'required': True},
+            'company': {'required': True},
+            'estimator': {'required': True},
+            'estimating':{'required':True}
+        }
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['date'] = self.format_date(instance.date)
-        return representation
+        
+        # Updating representation to include names instead of IDs for foreign keys
+        representation['company'] = instance.company.Cmpny_Name if instance.company else None
+        representation['estimator'] = instance.estimator.full_Name if instance.estimator else None
+        representation['estimating'] = instance.estimating.Prjct_Name if instance.estimating else None
 
-    def format_date(self, value):
-        if isinstance(value, datetime):
-            return value.date()
-        return value
+        return representation       

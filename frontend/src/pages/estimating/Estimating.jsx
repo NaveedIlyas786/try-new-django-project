@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Estimating.css";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Estimator = () => {
   const [data, setData] = useState([]);
@@ -14,12 +15,11 @@ const Estimator = () => {
   const [bidAmount, setBidAmount] = useState("");
   const [bidder, setBidder] = useState("");
   const [companyName, setCompanyName] = useState("");
-  // const [dueDate, closeModal] = useState("");
 
   useEffect(() => {
     // Fetch data from the API
-    fetch("http://127.0.0.1:8000/api/estimating/estimating/")
-      .then((response) => response.json())
+    axios.get("http://127.0.0.1:8000/api/estimating/estimating/")
+      .then((response) => response.data)
       .then((data) => {
         setData(data);
       })
@@ -44,13 +44,25 @@ const Estimator = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setDueDate("");
-    setProjectName("");
-    setEstimatorName("");
-    setEstStatus("onHold");
-    setLocation("SA");
-    setBidAmount("");
-    setBidder("");
+    const dataToPost = {
+      Prjct_Name: projectName,
+      due_date: dueDate,
+      status: Eststatus,
+      location: location,
+      bid_amount: bidAmount,
+      bidder: bidder,
+      estimator: estimatorName,
+      company: companyName,
+    };
+    axios.post("http://127.0.0.1:8000/api/estimating/estimating/", dataToPost)
+      .then((response) => {
+        console.log("Data posted successfully");
+        console.log(response.data);
+        setShowModal(false);
+      })
+      .catch((error) => {
+        console.error("Error posting data:", error);
+      });
   };
 
   const handleDueDateChange = (e) => {
@@ -59,9 +71,6 @@ const Estimator = () => {
 
   const handleProjectNameChange = (e) => {
     setProjectName(e.target.value);
-  };
-  const handlecompanyNameChange = (e) => {
-    setCompanyName(e.target.value);
   };
 
   const handleEstimatorNameChange = (e) => {
@@ -82,6 +91,9 @@ const Estimator = () => {
 
   const handleBidderChange = (e) => {
     setBidder(e.target.value);
+  };
+  const handleCompanyNameChange = (e) => {
+    setCompanyName(e.target.value);
   };
 
   return (
@@ -109,11 +121,12 @@ const Estimator = () => {
               <tr>
                 <th>ID</th>
                 {/* <th>Company</th> */}
-                <th>Due_Date</th>
-                <th>Project_Name</th>
+                <th>Due Date</th>
+                <th>Project Name</th>
+                <th>Status</th>
                 <th>Estimator</th>
                 <th>Bidder</th>
-                <th>Bid_Amount</th>
+                <th>Bid Amount</th>
                 {/* <th>Location</th>
             <th>Start_Date</th>
             <th>Status</th> */}
@@ -126,19 +139,19 @@ const Estimator = () => {
                   <td>{item.due_date}</td>
                   {/* <td>{item.Company}</td> */}
                   <td>{item.Prjct_Name}</td>
+                  <td>{item.status}</td>
                   <td>{item.estimator}</td>
                   <td>{item.bidder}</td>
                   <td>{item.bid_amount}</td>
                   {/* <td>{item.location}</td>
-              <td>{item.start_date}</td>
-              <td>{item.status}</td> */}
+              <td>{item.start_date}</td>*/}
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       </div>
-      {/* Modal */}
+      {/* Modal Code */}
       {showModal && (
         <div className={`modal-container pt-5 ps-2 ${showModal ? "show" : ""}`}>
           <h4 className="text-center addnewtxt">Add New Estimating Entry</h4>
@@ -175,30 +188,34 @@ const Estimator = () => {
                 </label>
                 <select
                   className="form-select"
-                  id="status"
-                  value={Eststatus}
-                  onChange={handleStatusChange}
+                  id="companyName"
+                  value={companyName}
+                  onChange={handleCompanyNameChange}
                 >
-                  <option value="onHold">Select Company</option>
-                  <option value="onHold">Innovative Technology Solutions</option>
-                  <option value="working">Programmers Force</option>
-                  <option value="complete">PureLogics</option>
+                  <option value="Select Company">Select Company</option>
+                  <option value="Innovative Technology Solutions">Innovative Technology Solutions</option>
+                  <option value="Programmers Force">Programmers Force</option>
+                  <option value="PureLogics">PureLogics</option>
                 </select>
               </div>
+              
+              {/* ****************************** */}
+
+              
               <div className="mb-3">
                 <label htmlFor="estimatorName" className="form-label">
                   Estimator_Name:
                 </label>
                 <select
                   className="form-select"
-                  id="status"
-                  value={Eststatus}
-                  onChange={handleStatusChange}
+                  id="estimatorName"
+                  value={estimatorName}
+                  onChange={handleEstimatorNameChange}
                 >
-                  <option value="onHold">Select_Estimator_Name</option>
-                  <option value="onHold">Ali</option>
-                  <option value="working">Naveed</option>
-                  <option value="complete">Mubeen</option>
+                  <option value=" ">Select_Estimator_Name</option>
+                  <option value="Ali">Ali</option>
+                  <option value="Naveed">Naveed</option>
+                  <option value="Mubeen">Mubeen</option>
                 </select>
               </div>
               <div className="mb-3">
@@ -211,8 +228,8 @@ const Estimator = () => {
                   value={Eststatus}
                   onChange={handleStatusChange}
                 >
-                  <option value="onHold">Select_Status</option>
-                  <option value="onHold">On Hold</option>
+                  <option value=" ">Select_Status</option>
+                  <option value="onHold">OnHold</option>
                   <option value="working">Working</option>
                   <option value="complete">Complete</option>
                 </select>
@@ -227,7 +244,7 @@ const Estimator = () => {
                   value={location}
                   onChange={handleLocationChange}
                 >
-                  <option value="SA">Select_Location</option>
+                  <option value=" ">Select-Location</option>
                   <option value="SA">SA</option>
                   <option value="VA">VA</option>
                   <option value="NV">NV</option>
@@ -239,7 +256,7 @@ const Estimator = () => {
               </div>
               <div className="mb-3">
                 <label htmlFor="bidAmount" className="form-label">
-                  Bid_Amount:
+                  Bid-Amount:
                 </label>
                 <input
                   type="number"
@@ -261,15 +278,16 @@ const Estimator = () => {
                   onChange={handleBidderChange}
                 />
               </div>
-              <button type="submit" className="btn btn-submit mt-3 mb-2">
+              <button type="submit" className="btn btn-submit mt-3 mb-4" onClick={handleSubmit}>
                 Add
               </button>
-            </form>
-          </div>
-        </div>
-      )}
-    </>
-  );
-};
 
-export default Estimator;
+              </form>
+              </div>
+              </div>
+      )}
+      </>
+  )
+      }
+
+      export default Estimator;

@@ -67,7 +67,7 @@ const Navbar = () => {
               to="bim"
               onClick={() => handleLinkClick("BIM")}
             >
-              <li>Bim</li>
+              <li>BIM</li>
             </Link>
             <Link
               className={`nav-item ${activeLink === "Reports" ? "active" : ""}`}
@@ -83,7 +83,7 @@ const Navbar = () => {
               to="hrPayroll"
               onClick={() => handleLinkClick("HrPayRoll")}
             >
-              <li>Hr/Payroll</li>
+              <li>HR/Payroll</li>
             </Link>
             <Link
               className={`nav-item ${

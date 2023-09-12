@@ -7,7 +7,7 @@
 
 td{
   padding: 5px 10px !important;
-  background-color: rgb(231, 236, 234) !important;
+  background-color: rgb(244, 248, 246) !important;
   max-width: fit-content !important;
 }
 .inputbtn{
@@ -21,10 +21,10 @@ td{
   min-width: 350px;
   background-color: white;
   color: black;
-  /* position: absolute;
-  right: 0;
-  top: 2.5rem; */
   border: 1px solid black;
+}
+.myinput:focus{
+  border: 1px solid black !important;
 }
 #myInput {
     /* background-image: url('/css/searchicon.png'); */
@@ -67,20 +67,11 @@ td{
     background-color: rgb(224, 222, 222);
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
-    /* display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; */
     opacity: 0; /* Initially hide the modal */
     pointer-events: none; /* Disable mouse events on the hidden modal */
     transition: opacity 0.5s, transform 0.5s; /*Add transition properties*/
   }
-  .addnewtxt{
-    position: absolute;
-    top: 30px;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
+  
   .modal-container.show {
     opacity: 1; /* Show the modal */
     pointer-events: auto; /* Enable mouse events */
@@ -88,12 +79,26 @@ td{
   }
   
   .modal-content {
-    /* background-color: #ddd !important; */
     height: 100%;
-    /* overflow: hidden; */
     overflow-y: scroll;
     scroll-behavior: smooth;
   }
+  
+  /* Style the scrollbar for WebKit-based browsers */
+  .modal-content::-webkit-scrollbar {
+    width: 10px; /* Set the width of the scrollbar */
+  }
+  
+  .modal-content::-webkit-scrollbar-thumb {
+    background-color: #283897; /* Set the color of the scrollbar track (the non-draggable part) */
+    border-radius: 10px; /*Round the corners of the thumb*/
+  }
+  
+  .modal-content::-webkit-scrollbar-track {
+    border-radius: 10px; /*Round the corners of the thumb*/
+    background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
+  }
+  
   
   /* CSS for the close button */
 .close-btn {
@@ -101,7 +106,7 @@ td{
   top: 5px;
   right: 10px;
   cursor: pointer;
-  background-color: #07109f;
+  background-color: #283897;
   padding: 5px 10px;
   border-radius: 5px;
   border: none; /* Remove the default button border */
@@ -123,16 +128,37 @@ td{
     overflow: hidden;
   }
   .btn-submit{
-    background-color: #07109f;
+    width:200px;
+    background-color: #283897;
     color: white;
+    margin: 0 auto;
   }
   .btn-submit:hover{
     background-color: #0611b4;
     color: white;
   }
-  .addnewtxt{
-    /* background-color:#0611b4 ; */
+  .addnewtxt {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translate(-50%, -50%);
     color: rgb(3, 3, 3);
     padding: 5px;
     border-radius: 5px;
+    text-align: center; /* Center the text */
+  }
+  
+  .addnewtxt::after {
+    content: ""; /* Create a pseudo-element */
+    display: block; /* Make it a block element */
+    width: 100%; /* Set the width to 100% to create a line that spans the text */
+    height: 1px; /* Set the height to create the line */
+    background-color: #283897; /* Line color */
+    margin-top: 5px; /* Adjust the margin to control the spacing between text and line */
+  }
+
+  
+  input:focus{
+    border: none !important;
+    outline: none !important;
   }

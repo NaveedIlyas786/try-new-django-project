@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from .validation import validate_pdf_file_extension
 
 # Create your models here.
 
@@ -13,7 +14,7 @@ class UserRole(models.Model):
 
 # Custom User Manager
 class UserManager(BaseUserManager):
-    def create_user(self, email, full_Name, password=None, password2=None,roles=None):
+    def create_user(self, email,phone_number,signtrPDF, full_Name, password=None, password2=None,roles=None):
         """
         Creates and saves a User with the given email, full_Name and password.
         """
@@ -23,6 +24,8 @@ class UserManager(BaseUserManager):
         user = self.model(
             email=self.normalize_email(email),
             full_Name=full_Name,
+            phone_number=phone_number,
+            signtrPDF=signtrPDF
         )
 
         user.set_password(password)
@@ -31,15 +34,18 @@ class UserManager(BaseUserManager):
             user.roles.set(roles)
         return user
 
-    def create_superuser(self, email, full_Name, password=None,roles=None):
+    def create_superuser(self, email,phone_number,signtrPDF, full_Name, password=None,roles=None):
         """
-        Creates and saves a superuser with the given email, full_Name ,   and password.
+        Creates and saves a superuser with the given email, full_Name ,phone Number=null,sigtrPDF   and password.
         """
         user = self.create_user(
             email,
             password=password,
             full_Name=full_Name,
             roles=roles,
+            phone_number=phone_number,
+            signtrPDF=signtrPDF
+
 
         )
         user.is_admin = True
@@ -53,6 +59,8 @@ class User(AbstractBaseUser):
     email = models.EmailField(verbose_name="Email",max_length=255,unique=True,)
     roles = models.ManyToManyField(UserRole,verbose_name="Role",blank=True,related_name='users')
     create_at=models.DateTimeField(auto_now_add=True)
+    signtrPDF = models.FileField(upload_to='user_pdfs/', validators=[validate_pdf_file_extension], null=True, blank=True)
+    phone_number=models.CharField(max_length=10,null=True,blank=True)
     updated_at=models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
@@ -60,7 +68,7 @@ class User(AbstractBaseUser):
     objects = UserManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ['full_Name',]
+    REQUIRED_FIELDS = ['full_Name', 'phone_number','signtrPDF']
 
     def __str__(self):
         return self.email

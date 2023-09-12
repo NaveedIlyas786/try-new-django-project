@@ -3,7 +3,7 @@
 from rest_framework import serializers
 
 
-from .models import Estimating, Proposals,Addendum
+from .models import Estimating, Proposals,Addendum,Qualification
 from projects.models import Company
 from accounts.models import User
 
@@ -109,3 +109,10 @@ class AddendumSerializer(serializers.ModelSerializer):
     class Meta:
         model=Addendum
         fields=['id','proposal','date','addendum_Number']
+
+
+
+class QualificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Qualification
+        fields=['id','detail']

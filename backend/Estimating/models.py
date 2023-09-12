@@ -29,7 +29,7 @@ class Estimating(models.Model):
             ('Complete','Complete')],default='Null',max_length=50)
     start_date = models.DateField(verbose_name="start Date(YYYY-MM-DD)",null=True,blank=True)
 
-    company = models.ForeignKey(Company, verbose_name="Company", on_delete=models.CASCADE, blank=False, null=False)
+    company = models.ForeignKey(Company, verbose_name="Company", on_delete=models.CASCADE,blank=False)
     bid_amount=models.IntegerField(verbose_name="Bid Amount",blank=False)
     location=models.ForeignKey(Location,on_delete=models.CASCADE,blank=False,null=True)
     estimator = models.ForeignKey(User,verbose_name="Estimator", related_name='estimations_as_estimator', limit_choices_to=models.Q(roles__name='Estimator'), on_delete=models.SET_NULL, null=True)

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./App.css";
-import Navbar from "./components/navbar/Navbar";
 import "bootstrap/dist/css/bootstrap.css";
 import {
   BrowserRouter as Router,
@@ -10,19 +9,21 @@ import {
 } from "react-router-dom";
 import Dashboard from "./pages/dashboard/Dashboard";
 import Projects from "./pages/projects-Screen/Projects";
-import Estimators from "./pages/estimators/Estimators";
+import Estimating from "./pages/estimating/Estimating";
 import Contacts from "./pages/contacts/Contacts";
+import Reports from "./pages/reports/Reports"
 import Login from "./pages/login/Login";
 import SignUp from "./pages/signUp/SignUp";
 import Forgot from "./pages/forgot-Screen/Forgot";
 import HomePage from "./pages/homePage/HomePage";
-import { AuthProvider } from "./firebase/context/AuthContext";
+import HrPayRoll from "./pages/hrPayRoll/HrPayRoll"
+import BIM from "./pages/bim/BIM";
+import PostEstimating from "./pages/estimating/PostEstimating";
 
 function App() {
 
 
   return (
-    <AuthProvider>
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
@@ -31,14 +32,15 @@ function App() {
         <Route path="/homepage/" element={<HomePage />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="projects" element={<Projects />} />
-          <Route path="estimators" element={<Estimators />} />
-          <Route path="sheets" element={<Dashboard />} />
-          <Route path="submitters" element={<Dashboard />} />
+          <Route path="bim" element={<BIM/>} />
+          <Route path="estimating" element={<Estimating/>} />
+          <Route path="reports" element={<Reports/>} />
           <Route path="contacts" element={<Contacts />} />
+          <Route path="hrPayroll" element={<HrPayRoll/>} />
+          <Route path="postEstimating" element={<PostEstimating/>} />
         </Route>
       </Routes>
     </Router>
-    </AuthProvider>
   );
 }
 

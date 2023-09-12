@@ -32,7 +32,7 @@ const Navbar = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navTabs navbar-collapse" id="mynavbar">
-          <ul className="navbar-nav ms-auto gap-4">
+          <ul className="navbar-nav ms-auto gap-2">
             <Link
               className={`nav-item ${
                 activeLink === "Dashboard" ? "active" : ""
@@ -41,6 +41,15 @@ const Navbar = () => {
               onClick={() => handleLinkClick("Dashboard")}
             >
               <li>Dashboard</li>
+            </Link>
+            <Link
+              className={`nav-item ${
+                activeLink === "Estimating" ? "active" : ""
+              }`}
+              to="estimating"
+              onClick={() => handleLinkClick("Estimating")}
+            >
+              <li>Estimating</li>
             </Link>
             <Link
               className={`nav-item ${
@@ -53,28 +62,28 @@ const Navbar = () => {
             </Link>
             <Link
               className={`nav-item ${
-                activeLink === "Estimators" ? "active" : ""
+                activeLink === "BIM" ? "active" : ""
               }`}
-              to="estimators"
-              onClick={() => handleLinkClick("Estimators")}
+              to="bim"
+              onClick={() => handleLinkClick("BIM")}
             >
-              <li>Estimators</li>
+              <li>BIM</li>
             </Link>
             <Link
-              className={`nav-item ${activeLink === "Sheets" ? "active" : ""}`}
-              to="sheets"
-              onClick={() => handleLinkClick("Sheets")}
+              className={`nav-item ${activeLink === "Reports" ? "active" : ""}`}
+              to="reports"
+              onClick={() => handleLinkClick("Reports")}
             >
-              <li>Sheets</li>
+              <li>Reports</li>
             </Link>
             <Link
               className={`nav-item ${
-                activeLink === "Submitters" ? "active" : ""
+                activeLink === "HrPayRoll" ? "active" : ""
               }`}
-              to="submitters"
-              onClick={() => handleLinkClick("Submitters")}
+              to="hrPayroll"
+              onClick={() => handleLinkClick("HrPayRoll")}
             >
-              <li>Submitters</li>
+              <li>HR/Payroll</li>
             </Link>
             <Link
               className={`nav-item ${

@@ -20,11 +20,13 @@ class UserRegisterationSerializers(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True}
         }
-    # def to_representation(self, instance):
-    #     representation = super().to_representation(instance)
-
-    #     representation['roles'] = instance.roles.name if instance.roles else None
-    #     return representation
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+    
+    # Get a list of role names
+        representation['roles'] = [role.name for role in instance.roles.all()] if instance.roles.all() else 'No roles assigned'
+    
+        return representation
 # Validating Password and Config Password while registration
 
     def validate(self, data):

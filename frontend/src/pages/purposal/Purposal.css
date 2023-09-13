@@ -1,0 +1,110 @@
+* {
+  font-size: 20px;
+  line-height: 24px;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+}
+.exportdiv {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 3rem 0 0;
+  margin: 1rem 0;
+}
+.exportSection{
+    /* padding-top: 3rem; */
+    width: 25px;
+    height: 30px;
+    cursor: pointer;
+    /* background-color: #283897; */
+}
+.pdfimg{
+    width: 100%;
+    height: 100%;
+}
+.purposal {
+  margin-top: 70px;
+  padding: 2rem;
+}
+.pdf_form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.myspan {
+  white-space: pre;
+  display: inline-block;
+  text-align: center !important;
+  font-weight: bold;
+  color: #283897;
+  opacity: 0.8;
+}
+.li {
+  list-style-type: none;
+}
+.myspan:before {
+  position: absolute;
+  top: -15px;
+  /* right: 0; */
+  left: 20%;
+  content: "";
+  display: inline-block;
+  width: 520px;
+  height: 1.5px;
+  background-color: #283897;
+  opacity: 0.6;
+}
+.myspan:after {
+  position: absolute;
+  left: 20%;
+  bottom: -15px;
+  content: "";
+  display: inline-block;
+  opacity: 0.6;
+  width: 520px;
+  height: 2px;
+  color: black;
+  background-color: #283897;
+}
+.footer {
+  position: relative;
+  margin: 50px 0 500px 0 !important;
+}
+.drywall-interior h4 {
+  width: 400px;
+  margin: 0 auto;
+  text-decoration: underline;
+  font-weight: bold;
+  text-align: center !important;
+  margin-top: 150px;
+  margin-bottom: 150px;
+}
+
+main,.header {
+  padding: 3rem;
+}
+.inclusions .exclusions .qualifications p {
+  text-decoration: underline;
+}
+.inclusions ul,
+.exclusions ul,
+.qualifications ul {
+  list-style-type: decimal;
+}
+.baseh4 {
+  font-weight: bold;
+}
+.logoimg {
+  width: 27%;
+}
+.myesti {
+  line-height: 15px;
+}
+.topinfo {
+  line-height: 5px;
+}
+.topSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

@@ -91,12 +91,12 @@ class Proposals(models.Model):
 
 
 class PropsalsServices(models.Model):
-    propsals=models.ForeignKey(Proposals, verbose_name="Proposals", on_delete=models.CASCADE)
+    propsals=models.ForeignKey(Proposals, verbose_name="Proposals", on_delete=models.CASCADE,null=False)
     service=models.ForeignKey(Service,verbose_name="Add service", on_delete=models.CASCADE)
     serviceTyp=models.CharField( verbose_name="Service Type",
                 choices=[
             ('Exclusions','Exclusions'),
-            ('Inclusions','Inclusions')],default='Exclusion',max_length=50)
+            ('Inclusions','Inclusions')],default='Exclusions',max_length=50)
 
 
 

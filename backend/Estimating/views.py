@@ -4,8 +4,8 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Estimating, Proposals, Addendum, Qualification
-from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer
+from .models import Estimating, Proposals, Addendum, Qualification, Spec_detail, PropsalsServices
+from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer, ProposalServiceSerializer
 
 
 class EstimatingListView(APIView):
@@ -153,4 +153,84 @@ class AddendumView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         Addendums.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class SpecificationViews(APIView):
+
+    def get(self, request, format=None):
+        specification = Spec_detail.objects.all()
+        serializer = SpecificationDetailSerializer(specification, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = SpecificationDetailSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, id, format=None):
+        try:
+            specification = Spec_detail.objects.get(id=id)
+        except Spec_detail.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = SpecificationDetailSerializer(
+            specification, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id, format=None):
+        try:
+            specification = Spec_detail.objects.get(id=id)
+        except Spec_detail.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        specification.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ProposalServiceViews(APIView):
+
+    def get(self, request, format=None):
+        service = PropsalsServices.objects.all()
+        serializer = ProposalServiceSerializer(service, many=True)
+        return Response(serializer.data)
+
+
+    def post(self, request, format=None):
+        serializer = ProposalServiceSerializer(data=request.data)
+        if serializer.is_valid():
+        # Check if 'propsals' field is present in the validated data
+            if 'propsals' not in serializer.validated_data:
+                return Response({"error": "The 'propsals' field is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Save the instance if it's valid
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, id, format=None):
+        try:
+            service = PropsalsServices.objects.get(id=id)
+        except PropsalsServices.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ProposalServiceSerializer(service, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id, format=None):
+        try:
+            service = PropsalsServices.objects.get(id=id)
+        except PropsalsServices.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        service.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

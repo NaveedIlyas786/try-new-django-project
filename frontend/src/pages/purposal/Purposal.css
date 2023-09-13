@@ -1,0 +1,33 @@
+
+*{
+    font-size: 16px;
+    line-height: 24px;
+    /* font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-family:Georgia, 'Times New Roman', Times, serif; */
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+.purposal{
+    /* margin-top: 70px; */
+    padding: 6rem;
+    /* background-color: aliceblue; */
+}
+.pdf_form{
+    position: relative;
+}
+.header,footer{
+    padding: 0 3rem;
+}
+main{
+    padding: 3rem;
+}
+.logoimg{
+    width:27%;
+}
+.topinfo{
+    line-height: 5px;
+}
+.topSection{
+    display: flex;
+    justify-content: space-between; 
+     align-items: flex-start;
+}

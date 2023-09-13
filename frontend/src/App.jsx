@@ -19,6 +19,7 @@ import HomePage from "./pages/homePage/HomePage";
 import HrPayRoll from "./pages/hrPayRoll/HrPayRoll"
 import BIM from "./pages/bim/BIM";
 import PostEstimating from "./pages/estimating/PostEstimating";
+import Purposal from "./pages/purposal/Purposal";
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
         <Route path="/homepage/" element={<HomePage />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="projects" element={<Projects />} />
+          <Route path="purposal" element={<Purposal />} />
           <Route path="bim" element={<BIM/>} />
           <Route path="estimating" element={<Estimating/>} />
           <Route path="reports" element={<Reports/>} />

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Estimating.css";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Estimator = () => {
@@ -15,7 +15,7 @@ const Estimator = () => {
   const [bidAmount, setBidAmount] = useState("");
   const [bidder, setBidder] = useState("");
   const [companyName, setCompanyName] = useState("");
-
+const navigate=useNavigate();
   useEffect(() => {
     // Fetch data from the API
     axios.get("http://127.0.0.1:8000/api/estimating/estimating/")
@@ -64,7 +64,9 @@ const Estimator = () => {
         console.error("Error posting data:", error);
       });
   };
-
+const movetoPurposalPage=()=>{
+  navigate("/homepage/purposal")
+}
   const handleDueDateChange = (e) => {
     setDueDate(e.target.value);
   };
@@ -119,32 +121,30 @@ const Estimator = () => {
           <table className="table table-striped  table-bordered table-hover text-center">
             <thead>
               <tr>
-                <th>ID</th>
-                {/* <th>Company</th> */}
                 <th>Due Date</th>
                 <th>Project Name</th>
                 <th>Status</th>
                 <th>Estimator</th>
                 <th>Bidder</th>
                 <th>Bid Amount</th>
-                {/* <th>Location</th>
-            <th>Start_Date</th>
-            <th>Status</th> */}
+                <th>
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="cursor-pointer">
               {filteredData.map((item) => (
                 <tr key={item.id}>
-                  <td>{item.id}</td>
                   <td>{item.due_date}</td>
-                  {/* <td>{item.Company}</td> */}
                   <td>{item.Prjct_Name}</td>
                   <td>{item.status}</td>
                   <td>{item.estimator}</td>
                   <td>{item.bidder}</td>
                   <td>{item.bid_amount}</td>
-                  {/* <td>{item.location}</td>
-              <td>{item.start_date}</td>*/}
+                  <td>
+                    <button className="btn btn-primary" onClick={movetoPurposalPage}>Purposal</button>
+                    <button className="btn ms-3 btn-success">Project</button>
+                  </td>
                 </tr>
               ))}
             </tbody>

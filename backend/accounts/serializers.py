@@ -16,11 +16,15 @@ class UserRegisterationSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id','email', 'full_Name', 'password', 'password2','phone_number','signtrPDF']
+        fields = ['id','email', 'full_Name', 'password', 'password2','phone_number','signtrPDF','roles']
         extra_kwargs = {
             'password': {'write_only': True}
         }
- 
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
+
+    #     representation['roles'] = instance.roles.name if instance.roles else None
+    #     return representation
 # Validating Password and Config Password while registration
 
     def validate(self, data):

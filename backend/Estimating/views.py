@@ -4,8 +4,11 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Estimating, Proposals, Addendum, Qualification, Spec_detail, PropsalsServices,Specification,Service
-from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer, ProposalServiceSerializer,SpecificationSerializer,ServicesSerializer
+from .models import Estimating, Proposals, Addendum, Qualification, Spec_detail, PropsalsServices,Specification,Service,Location
+from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer, ProposalServiceSerializer,SpecificationSerializer,ServicesSerializer,LocationSerializer
+
+
+
 
 
 class EstimatingListView(APIView):
@@ -52,6 +55,8 @@ class EstimatingListView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+
+
 class ProposalView(APIView):
 
     def get(self, request, format=None):
@@ -89,6 +94,8 @@ class ProposalView(APIView):
 
 
 class QualificationView(APIView):
+
+
     def get(self, request, format=None):
         qualification = Qualification.objects.all()
         serializer = QualificationSerializer(qualification, many=True)
@@ -119,6 +126,7 @@ class QualificationView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         qualification.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 
 class AddendumView(APIView):
@@ -155,6 +163,38 @@ class AddendumView(APIView):
         Addendums.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
+
+class LocationViews(APIView):
+    def get(self,request):
+        location=Location.objects.all()
+        serializer=LocationSerializer(location,many=True)
+        return Response(serializer.data)
+    def post(self,request):
+        serializer=LocationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    def put(self,request):
+        try:
+            location=Location.objects.get(id=id)
+        except Location.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer=LocationSerializer(location,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    def delete(self,request):
+        try:
+            location = Location.objects.get(id=id)
+        except Location.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        location.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
 
 class SpecificationViews(APIView):
 
@@ -228,6 +268,9 @@ class SpecificationDetailViews(APIView):
 
         specification.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+
 class ServiceViews(APIView):
     def get(self, request, format=None):
         service = Service.objects.all()

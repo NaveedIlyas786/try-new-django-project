@@ -5,7 +5,7 @@ from .models import Company, Project, Project_detail
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
-        fields = ['id','Cmpny_Name']
+        fields = ['id','Cmpny_Name','adress','office_phone_number','fax_number','license_number','logo','email']
 
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:

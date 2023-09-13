@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
-from .validation import validate_pdf_file_extension
+from .validation import validate_file_extension
 
 # Create your models here.
 
@@ -59,7 +59,7 @@ class User(AbstractBaseUser):
     email = models.EmailField(verbose_name="Email",max_length=255,unique=True,)
     roles = models.ManyToManyField(UserRole,verbose_name="Role",blank=True,related_name='users')
     create_at=models.DateTimeField(auto_now_add=True)
-    signtrPDF = models.FileField(upload_to='user_pdfs/', validators=[validate_pdf_file_extension], null=True, blank=True)
+    signtrPDF = models.FileField(upload_to='user_pdfs/', validators=[validate_file_extension], null=True, blank=True)
     phone_number=models.CharField(max_length=10,null=True,blank=True)
     updated_at=models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)

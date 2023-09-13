@@ -3,7 +3,7 @@
 from rest_framework import serializers
 
 
-from .models import Estimating, Proposals,Addendum,Qualification,Spec_detail,Specification,PropsalsServices,Service
+from .models import Estimating, Proposals,Addendum,Qualification,Spec_detail,Specification,PropsalsServices,Service,Location
 from projects.models import Company
 from accounts.models import User
 
@@ -72,7 +72,10 @@ class EstimatingSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = User
 #         fields = ['id','full_Name','phone_number','signtrPDF']
-
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Location
+        fields=['id','name']
 
 class ProposalSerializer(serializers.ModelSerializer):
     # estimator=UserSerializer(read_only=True)

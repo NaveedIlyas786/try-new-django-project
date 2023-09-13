@@ -28,8 +28,8 @@ class Project_detail(models.Model):
     drctry_Name = models.CharField(verbose_name="Folder Name",max_length=255)
     prjct_ID = models.ForeignKey(Project,verbose_name="Project", on_delete=models.CASCADE)
     prnt_ID = models.PositiveIntegerField(verbose_name="Folder Parent ID",null=False, blank=False)  # Set null-Flase here
-    file_Name = models.CharField(verbose_name="File Name",max_length=100, null=False, blank=False)  # Set null=Flase here
-    output_Table_Name = models.CharField(verbose_name="Table Name",max_length=100, null=False, blank=False)  # Set null=False here
+    file_Name = models.CharField(verbose_name="Type Name",max_length=100, null=False, blank=False)  # Set null=Flase here
+    output_Table_Name = models.CharField(verbose_name="file Name",max_length=100, null=False, blank=False)  # Set null=False here
 
 
 

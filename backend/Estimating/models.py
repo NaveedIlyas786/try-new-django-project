@@ -12,7 +12,7 @@ from accounts.models import User
 # create Estimating 
 
 class Location(models.Model):
-    name=models.CharField(verbose_name="Location",max_length=50,blank=False,null=True)
+    name=models.CharField(verbose_name="Location Name",max_length=50,blank=False,null=False)
 
     def __str__(self):
         return self.name
@@ -23,10 +23,9 @@ class Estimating(models.Model):
     # Areas = 
     status=models.CharField(
         choices=[
-            (' ',' '),
             ('On Hold','On Hold'),
             ('Working','Working'),
-            ('Complete','Complete')],default='Null',max_length=50)
+            ('Complete','Complete')],default='Working',max_length=50)
     start_date = models.DateField(verbose_name="start Date(YYYY-MM-DD)",null=True,blank=True)
 
     company = models.ForeignKey(Company, verbose_name="Company", on_delete=models.CASCADE,blank=False)
@@ -37,6 +36,15 @@ class Estimating(models.Model):
     
     def __str__(self):
         return self.Prjct_Name
+    
+
+
+class Estimating_detail(models.Model):
+    Estimating=models.ForeignKey(Estimating, verbose_name="Add Estimating", on_delete=models.CASCADE)
+    prnt_id = models.PositiveIntegerField(verbose_name="Folder Parent ID",null=False, blank=False) 
+    drctry_name = models.CharField(verbose_name="Folder Name",max_length=255)
+    file_type = models.CharField(verbose_name="Type Name",max_length=100, null=False, blank=False) 
+    output_Table_Name = models.CharField(verbose_name="file Name",max_length=100, null=False, blank=False) 
     
 
 ##Create perposel

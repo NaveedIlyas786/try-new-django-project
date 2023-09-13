@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
                 ('full_Name', models.CharField(max_length=255, verbose_name='Full Name')),
                 ('email', models.EmailField(max_length=255, unique=True, verbose_name='Email')),
                 ('create_at', models.DateTimeField(auto_now_add=True)),
-                ('signtrPDF', models.FileField(blank=True, null=True, upload_to='user_pdfs/', validators=[accounts.validation.validate_pdf_file_extension])),
+                ('signtrPDF', models.FileField(blank=True, null=True, upload_to='user_pdfs/', validators=[accounts.validation.validate_file_extension])),
                 ('phone_number', models.CharField(blank=True, max_length=10, null=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('is_active', models.BooleanField(default=True)),

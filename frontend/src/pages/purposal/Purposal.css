@@ -1,5 +1,5 @@
 * {
-  font-size: 16px;
+  font-size: 20px;
   line-height: 24px;
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
     "Lucida Sans", Arial, sans-serif;
@@ -11,7 +11,7 @@
   margin: 1rem 0;
 }
 .exportSection{
-    margin-top: 3rem;
+    /* padding-top: 3rem; */
     width: 25px;
     height: 30px;
     cursor: pointer;
@@ -22,10 +22,10 @@
     height: 100%;
 }
 .purposal {
+  margin-top: 70px;
   padding: 2rem;
 }
 .pdf_form {
-  /* position: relative; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -76,9 +76,11 @@
   text-decoration: underline;
   font-weight: bold;
   text-align: center !important;
-  margin-top: 4rem;
+  margin-top: 150px;
+  margin-bottom: 150px;
 }
-main {
+
+main,.header {
   padding: 3rem;
 }
 .inclusions .exclusions .qualifications p {

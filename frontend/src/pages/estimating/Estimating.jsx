@@ -28,6 +28,21 @@ const navigate=useNavigate();
       });
   }, []);
 
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+      fetch('http://127.0.0.1:8000/api/estimating/estimating/')
+          .then(response => response.json())
+          .then(data => {
+              console.log(data); // Log the data
+              setUsers(data);    // Set the state with the data
+          })
+          .catch(error => {
+              console.error('Error fetching data:', error);
+          });
+  }, []);
+  
+
   const filteredData = data.filter(
     (customer) =>
       customer.Prjct_Name.toUpperCase().includes(filter.toUpperCase()) ||
@@ -42,28 +57,29 @@ const navigate=useNavigate();
     document.body.classList.remove("modal-active");
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const dataToPost = {
-      Prjct_Name: projectName,
-      due_date: dueDate,
-      status: Eststatus,
-      location: location,
-      bid_amount: bidAmount,
-      bidder: bidder,
-      estimator: estimatorName,
-      company: companyName,
-    };
-    axios.post("http://127.0.0.1:8000/api/estimating/estimating/", dataToPost)
-      .then((response) => {
-        console.log("Data posted successfully");
-        console.log(response.data);
-        setShowModal(false);
-      })
-      .catch((error) => {
-        console.error("Error posting data:", error);
-      });
-  };
+  const handleSubmit=()=>{}
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   const dataToPost = {
+  //     Prjct_Name: projectName,
+  //     due_date: dueDate,
+  //     status: Eststatus,
+  //     location: location,
+  //     bid_amount: bidAmount,
+  //     bidder: bidder,
+  //     estimator: estimatorName,
+  //     company: companyName,
+  //   };
+  //   axios.post("http://127.0.0.1:8000/api/estimating/estimating/", dataToPost)
+  //     .then((response) => {
+  //       console.log("Data posted successfully");
+  //       console.log(response.data);
+  //       setShowModal(false);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error posting data:", error);
+  //     });
+  // };
 const movetoPurposalPage=()=>{
   navigate("/homepage/purposal")
 }
@@ -192,15 +208,12 @@ const movetoPurposalPage=()=>{
                   value={companyName}
                   onChange={handleCompanyNameChange}
                 >
-                  <option value="Select Company">Select Company</option>
-                  <option value="Innovative Technology Solutions">Innovative Technology Solutions</option>
-                  <option value="Programmers Force">Programmers Force</option>
-                  <option value="PureLogics">PureLogics</option>
+                   {users.map(user => (
+                        <option value={user.id} key={user.id}>{user.company}</option>
+                    ))}
                 </select>
               </div>
               
-              {/* ****************************** */}
-
               
               <div className="mb-3">
                 <label htmlFor="estimatorName" className="form-label">
@@ -212,10 +225,9 @@ const movetoPurposalPage=()=>{
                   value={estimatorName}
                   onChange={handleEstimatorNameChange}
                 >
-                  <option value=" ">Select_Estimator_Name</option>
-                  <option value="Ali">Ali</option>
-                  <option value="Naveed">Naveed</option>
-                  <option value="Mubeen">Mubeen</option>
+                {users.map(user => (
+                        <option value={user.id} key={user.id}>{user.estimator}</option>
+                    ))}
                 </select>
               </div>
               <div className="mb-3">

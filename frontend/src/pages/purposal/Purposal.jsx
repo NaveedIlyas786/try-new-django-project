@@ -25,7 +25,7 @@ const Purposal = () => {
         imgWidth * ratio,
         imgHeight * ratio
       );
-      pdf.save("invoice.pdf");
+      pdf.save("Estimating.pdf");
     });
   };
   return (
@@ -33,7 +33,7 @@ const Purposal = () => {
       <div className="exportdiv">
         <div onClick={Exportpdf}  className="exportSection">
          <img className="pdfimg" src="../../../src/assets/pdfimg.png" alt="" />
-        </div>
+        </div> 
       </div>
       <div ref={pdfRef} className="pdf_form">
         <header className="header ">

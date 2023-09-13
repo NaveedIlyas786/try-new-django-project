@@ -130,6 +130,14 @@ class SpecificationDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model=Spec_detail
         fields=['id','sefic','number','name']
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        # Updating representation to include names instead of IDs for foreign keys
+        representation['sefic'] = instance.sefic.specific_name if instance.sefic else None
+
+
+        return representation
 
 class ServicesSerializer(serializers.ModelSerializer):
 
@@ -141,3 +149,13 @@ class ProposalServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model=PropsalsServices
         fields=['id','propsals','service','serviceTyp']
+
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        # Updating representation to include names instead of IDs for foreign keys
+        representation['service'] = instance.service.services if instance.service else None
+
+
+        return representation

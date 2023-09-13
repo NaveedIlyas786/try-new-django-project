@@ -61,11 +61,11 @@ class EstimatingSerializer(serializers.ModelSerializer):
 
 
 # This seriliazer for the show campany data in the proposals API only show in the API
-# class CompanySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Company
-#         fields = ['id', 'Cmpny_Name', 'adress', 'office_phone_number',
-#                   'fax_number', 'license_number', 'logo', 'email']
+class CompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = ['id', 'Cmpny_Name', 'adress', 'office_phone_number',
+                  'fax_number', 'license_number', 'logo', 'email']
 
 
 # class UserSerializer(serializers.ModelSerializer):

@@ -30,7 +30,6 @@ class EstimatingSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {
             'Prjct_Name': {'required': True},
-            'status': {'required': True},
             'company': {'required': True},
             'bid_amount': {'required': True},
             'location': {'required': True},

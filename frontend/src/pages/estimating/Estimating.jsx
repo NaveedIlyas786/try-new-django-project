@@ -2,11 +2,22 @@ import React, { useState, useEffect } from "react";
 import "./Estimating.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import {
+  Modal,
+  TextField,
+  Button,
+  Stepper,
+  Step,
+  StepLabel,
+  Typography,
+} from "@mui/material";
+import { styled } from "@mui/system";
 
 const Estimator = () => {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState("");
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
+  const [purposalModal, setPurposalModal] = useState(false); // State to control modal visibility
   const [dueDate, setDueDate] = useState("");
   const [projectName, setProjectName] = useState("");
   const [estimatorName, setEstimatorName] = useState("");
@@ -14,6 +25,20 @@ const Estimator = () => {
   const [bidAmount, setBidAmount] = useState("");
   const [company, setCompany] = useState(1); // Updated to store company name as a string
   const navigate = useNavigate();
+
+  //********************************************/
+  //TODO: Multistep Form  React Code
+  const [activeStep, setActiveStep] = useState(0);
+  const steps = ["Step 1", "Step 2", "Step 3"];
+
+  const handleBack = () => {
+    setActiveStep((prevStep) => prevStep - 1);
+  };
+  const handleNext = () => {
+    setActiveStep((prevStep) => prevStep + 1);
+  };
+
+  //********************************************/
 
   //************ To show data in Estimating List
   useEffect(() => {
@@ -118,12 +143,6 @@ const Estimator = () => {
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
 
-    // Check if companyName is not empty (you can add additional validation if needed)
-    // if (!company) {
-    //   console.error("Company name is required.");
-    //   return;
-    // }
-
     // Create a data object with the form values
     const formData = {
       due_date: dueDate,
@@ -170,6 +189,7 @@ const Estimator = () => {
   // Define a function to handle modal close
   const closeModal = () => {
     setShowModal(false);
+    setPurposalModal(false);
     // Remove the 'modal-active' class when the modal is closed
     document.body.classList.remove("modal-active");
   };
@@ -266,8 +286,11 @@ const Estimator = () => {
                   <td>{item.bid_amount}</td>
                   <td>
                     <button
-                      className="btn btn-primary"
-                      onClick={movetoPurposalPage}
+                      className={`btn btn-primary ${
+                        purposalModal ? "modal-active" : ""
+                      }`}
+                      // onClick={movetoPurposalPage}
+                      onClick={() => setPurposalModal(true)}
                     >
                       Purposal
                     </button>
@@ -279,7 +302,7 @@ const Estimator = () => {
           </table>
         </div>
       </div>
-      {/* Modal Code */}
+      {/* New Estimating Entry Posting-Code */}
       {showModal && (
         <div className={`modal-container pt-5 ps-2 ${showModal ? "show" : ""}`}>
           <h4 className="text-center addnewtxt">Add New Estimating Entry</h4>
@@ -371,7 +394,7 @@ const Estimator = () => {
                   value={location}
                   onChange={handleLocationChange}
                 >
-                                    <option  value="">Select Location</option>
+                  <option value="">Select Location</option>
 
                   {userLocation && userLocation.length > 0 ? (
                     userLocation.map((place) => (
@@ -408,7 +431,7 @@ const Estimator = () => {
                   value={selectedBidderId}
                   onChange={handleBidderChange}
                 >
-                                    <option value="null">Select Bidder Name</option>
+                  <option value="null">Select Bidder Name</option>
 
                   {bidderName && bidderName.length > 0 ? (
                     bidderName.map((bidder) => (
@@ -427,6 +450,120 @@ const Estimator = () => {
                 Add
               </button>
             </form>
+          </div>
+        </div>
+      )}
+      {/* New Purposal Entries Posting-Code */}
+      {purposalModal && (
+        <div
+          className={`modal-container pt-5 ps-2 ${purposalModal ? "show" : ""}`}
+        >
+          <h4 className="text-center addnewtxt">Add Purposal Entries</h4>
+          <button className="close-btn" onClick={closeModal}></button>
+          <div className="purposal-content px-5">
+            //************* Implementation of Multistep-Form using Material UI
+            <Modal
+              open={purposalModal}
+              onClose={closeModal}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <div
+                className={`modal-container pt-5 ps-2 ${
+                  purposalModal ? "show" : ""
+                }`}
+              >
+                <h4 className="text-center addnewtxt">Add Purposal Entries</h4>
+                <button className="close-btn" onClick={closeModal}></button>
+                <div className="purposal-content px-5">
+                  <Stepper activeStep={activeStep} alternativeLabel>
+                    {steps.map((label) => (
+                      <Step key={label}>
+                        <StepLabel>{label}</StepLabel>
+                      </Step>
+                    ))}
+                  </Stepper>
+                  <form onSubmit={handleSubmit} className="d-flex flex-column">
+                    {activeStep === 0 && (
+                      <div>
+                        {/* Step 1 */}
+                        <TextField
+                          label="Field 1"
+                          variant="outlined"
+                          margin="normal"
+                          fullWidth
+                          // Add value and onChange props
+                        />
+                        {/* Add more fields for Step 1 */}
+                      </div>
+                    )}
+                    {activeStep === 1 && (
+                      <div>
+                        {/* Step 2 */}
+                        <TextField
+                          label="Field 2"
+                          variant="outlined"
+                          margin="normal"
+                          fullWidth
+                          // Add value and onChange props
+                        />
+                        {/* Add more fields for Step 2 */}
+                      </div>
+                    )}
+                    {activeStep === 2 && (
+                      <div>
+                        {/* Step 3 */}
+                        <TextField
+                          label="Field 3"
+                          variant="outlined"
+                          margin="normal"
+                          fullWidth
+                          // Add value and onChange props
+                        />
+                        {/* Add more fields for Step 3 */}
+                      </div>
+                    )}
+                    <div className="mt-3">
+                      {activeStep <= 1 ? (
+                        <>
+                        <Button
+                            variant="outlined"
+                            color="secondary"
+                            onClick={handleBack}
+                          >
+                            Back
+                          </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={handleNext}
+                        >
+                          Next
+                        </Button>
+                        </>
+                      ) : (
+                        <>
+                          <Button
+                            variant="outlined"
+                            color="secondary"
+                            onClick={handleBack}
+                          >
+                            Back
+                          </Button>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                          >
+                            Submit
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </Modal>
           </div>
         </div>
       )}

@@ -157,6 +157,10 @@ td{
     margin-top: 5px; /* Adjust the margin to control the spacing between text and line */
   }
 
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(100%);
+    cursor: pointer; /* Invert the colors (black icon on white background) */
+  }  
   
   input:focus{
     border: none !important;

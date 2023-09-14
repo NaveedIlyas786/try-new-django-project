@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Estimating.css";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Estimator = () => {
@@ -10,17 +10,21 @@ const Estimator = () => {
   const [dueDate, setDueDate] = useState("");
   const [projectName, setProjectName] = useState("");
   const [estimatorName, setEstimatorName] = useState("");
-  const [Eststatus, setEstStatus] = useState("");
+  // const [Eststatus, setEstStatus] = useState("");
   const [location, setLocation] = useState("");
   const [bidAmount, setBidAmount] = useState("");
-  const [bidder, setBidder] = useState("");
+  const [BidderName, setBidderName] = useState("");
   const [companyName, setCompanyName] = useState("");
-const navigate=useNavigate();
+  const navigate = useNavigate();
+
+  //************ To show data in Estimating List
   useEffect(() => {
     // Fetch data from the API
-    axios.get("http://127.0.0.1:8000/api/estimating/estimating/")
+    axios
+      .get("http://127.0.0.1:8000/api/estimating/estimating/")
       .then((response) => response.data)
       .then((data) => {
+        console.log(data);
         setData(data);
       })
       .catch((error) => {
@@ -28,20 +32,123 @@ const navigate=useNavigate();
       });
   }, []);
 
-  const [users, setUsers] = useState([]);
+  //************ To show locations in dropdown in estimating post field
+
+  const [userLocation, setUserLocation] = useState([]);
 
   useEffect(() => {
-      fetch('http://127.0.0.1:8000/api/estimating/estimating/')
-          .then(response => response.json())
-          .then(data => {
-              console.log(data); // Log the data
-              setUsers(data);    // Set the state with the data
-          })
-          .catch(error => {
-              console.error('Error fetching data:', error);
-          });
+    // Fetch data from the API
+    axios
+      .get("http://127.0.0.1:8000/api/estimating/location/")
+      .then((response) => response.data)
+      .then((data) => {
+        console.log(data);
+        setUserLocation(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
   }, []);
+
+  //************ To show Company Names in dropdown in estimating post field
+
+  const [userCompany, setuserCompany] = useState([]);
+
+  useEffect(() => {
+    // Fetch data from the API
+    axios
+      .get("http://127.0.0.1:8000/api/project/company/")
+      .then((response) => response.data)
+      .then((data) => {
+        console.log(data);
+        setuserCompany(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  //************ To show Estimator full_Names in dropdown in estimating post field
+
+  const [EstimatorName, setestimatorName] = useState([]);
+
+  useEffect(() => {
+    // Fetch data from the API
+    axios
+      .get("http://127.0.0.1:8000/api/user/Userapi/")
+      .then((response) => response.data)
+      .then((data) => {
+        const bidUser = data.filter((user) =>
+          user.roles.includes("Estimator")
+        );
+        setestimatorName(bidUser);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+   
+
+  //************ To show bidder Names in dropdown in estimating post field
+
+  const [bidderName, setbidderName] = useState([]);
+
+  useEffect(() => {
+    // Fetch data from the API
+  axios
+  .get("http://127.0.0.1:8000/api/user/Userapi/")
+  .then((response) => response.data)
+  .then((data) => {
+    const bidUser = data.filter((user) =>
+      user.roles.includes("Bidder")
+    );
+    setbidderName(bidUser);
+    console.log(bidUser);
+  })
+  .catch((error) => {
+    console.error("Error fetching data:", error);
+  });
+}, []);
+  //************* Define the handleSubmit function
+    const handleSubmit = (event) => {
+      event.preventDefault(); // Prevent the default form submission behavior
   
+      // Create a data object with the form values
+      const formData = {
+        due_date: dueDate,
+        Prjct_Name: projectName,
+        company: companyName,
+        estimator: estimatorName,
+        location: location,
+        bid_amount: bidAmount,
+        bidder: BidderName, // Use BidderName here, not bidder
+      };
+  
+      // Send a POST request to the API
+      axios
+        .post("http://127.0.0.1:8000/api/estimating/estimating/", formData)
+        .then((response) => {
+          // Handle the response if needed
+          console.log("Data successfully submitted:", response.data);
+          // You can also reset the form fields here if needed
+          setDueDate("");
+          setProjectName("");
+          setCompanyName("");
+          setEstimatorName("");
+          setLocation("");
+          setBidAmount("");
+          setBidderName("");
+          // Close the modal
+          closeModal();
+        })
+        .catch((error) => {
+          // Handle any errors that occurred during the POST request
+          console.error("Error submitting data:", error);
+          // Log the response data for more details
+          console.log("Response data:", error.response.data);
+        });
+    };
 
   const filteredData = data.filter(
     (customer) =>
@@ -57,32 +164,9 @@ const navigate=useNavigate();
     document.body.classList.remove("modal-active");
   };
 
-  const handleSubmit=()=>{}
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   const dataToPost = {
-  //     Prjct_Name: projectName,
-  //     due_date: dueDate,
-  //     status: Eststatus,
-  //     location: location,
-  //     bid_amount: bidAmount,
-  //     bidder: bidder,
-  //     estimator: estimatorName,
-  //     company: companyName,
-  //   };
-  //   axios.post("http://127.0.0.1:8000/api/estimating/estimating/", dataToPost)
-  //     .then((response) => {
-  //       console.log("Data posted successfully");
-  //       console.log(response.data);
-  //       setShowModal(false);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error posting data:", error);
-  //     });
-  // };
-const movetoPurposalPage=()=>{
-  navigate("/homepage/purposal")
-}
+  const movetoPurposalPage = () => {
+    navigate("/homepage/purposal");
+  };
   const handleDueDateChange = (e) => {
     setDueDate(e.target.value);
   };
@@ -95,10 +179,6 @@ const movetoPurposalPage=()=>{
     setEstimatorName(e.target.value);
   };
 
-  const handleStatusChange = (e) => {
-    setEstStatus(e.target.value);
-  };
-
   const handleLocationChange = (e) => {
     setLocation(e.target.value);
   };
@@ -108,7 +188,7 @@ const movetoPurposalPage=()=>{
   };
 
   const handleBidderChange = (e) => {
-    setBidder(e.target.value);
+    setBidderName(e.target.value);
   };
   const handleCompanyNameChange = (e) => {
     setCompanyName(e.target.value);
@@ -143,9 +223,7 @@ const movetoPurposalPage=()=>{
                 <th>Estimator</th>
                 <th>Bidder</th>
                 <th>Bid Amount</th>
-                <th>
-                  Actions
-                </th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody className="cursor-pointer">
@@ -158,7 +236,12 @@ const movetoPurposalPage=()=>{
                   <td>{item.bidder}</td>
                   <td>{item.bid_amount}</td>
                   <td>
-                    <button className="btn btn-primary" onClick={movetoPurposalPage}>Purposal</button>
+                    <button
+                      className="btn btn-primary"
+                      onClick={movetoPurposalPage}
+                    >
+                      Purposal
+                    </button>
                     <button className="btn ms-3 btn-success">Project</button>
                   </td>
                 </tr>
@@ -208,13 +291,15 @@ const movetoPurposalPage=()=>{
                   value={companyName}
                   onChange={handleCompanyNameChange}
                 >
-                   {users.map(user => (
-                        <option value={user.id} key={user.id}>{user.company}</option>
-                    ))}
+                  {userCompany.map((user) => (
+                    <option value={user.id} key={user.id}>
+                      {user.Cmpny_Name}
+                    </option>
+                  ))}
+                  {/* <option value="DMS">DMS</option> */}
                 </select>
               </div>
-              
-              
+
               <div className="mb-3">
                 <label htmlFor="estimatorName" className="form-label">
                   Estimator_Name:
@@ -225,27 +310,20 @@ const movetoPurposalPage=()=>{
                   value={estimatorName}
                   onChange={handleEstimatorNameChange}
                 >
-                {users.map(user => (
-                        <option value={user.id} key={user.id}>{user.estimator}</option>
-                    ))}
+                  {EstimatorName && EstimatorName.length > 0 ? (
+                    EstimatorName.map((user) => (
+                      <option value={user.id} key={user.id}>
+                        {user.full_Name}
+                      </option>
+                    ))
+                  ) : (
+                    <option value="" disabled>
+                      Loading...
+                    </option>
+                  )}
                 </select>
               </div>
-              <div className="mb-3">
-                <label htmlFor="status" className="form-label">
-                  Status:
-                </label>
-                <select
-                  className="form-select"
-                  id="status"
-                  value={Eststatus}
-                  onChange={handleStatusChange}
-                >
-                  <option value=" ">Select_Status</option>
-                  <option value="onHold">OnHold</option>
-                  <option value="working">Working</option>
-                  <option value="complete">Complete</option>
-                </select>
-              </div>
+
               <div className="mb-3">
                 <label htmlFor="location" className="form-label">
                   Location:
@@ -256,14 +334,17 @@ const movetoPurposalPage=()=>{
                   value={location}
                   onChange={handleLocationChange}
                 >
-                  <option value=" ">Select-Location</option>
-                  <option value="SA">SA</option>
-                  <option value="VA">VA</option>
-                  <option value="NV">NV</option>
-                  <option value="SF">SF</option>
-                  <option value="STN">STN</option>
-                  <option value="PHL">PHL</option>
-                  <option value="FL">FL</option>
+                  {userLocation && userLocation.length > 0 ? (
+                    userLocation.map((place) => (
+                      <option value={place.id} key={place.id}>
+                        {place.name}
+                      </option>
+                    ))
+                  ) : (
+                    <option value="" disabled>
+                      Loading...
+                    </option>
+                  )}
                 </select>
               </div>
               <div className="mb-3">
@@ -278,28 +359,42 @@ const movetoPurposalPage=()=>{
                   onChange={handleBidAmountChange}
                 />
               </div>
+
               <div className="mb-3">
                 <label htmlFor="bidder" className="form-label">
                   Bidder_Name:
                 </label>
-                <input
-                  type="text"
-                  className="form-control"
+                <select
+                  className="form-select"
                   id="bidder"
-                  value={bidder}
+                  value={BidderName}
                   onChange={handleBidderChange}
-                />
+                >
+                  {bidderName.length > 0 ? (
+                    bidderName.map((bidder) => (
+                      <option value={bidder.id} key={bidder.id}>
+                        {bidder.full_Name}
+                      </option>
+                    ))
+                  ) : (
+                    <option value="" disabled>
+                      Loading...
+                    </option>
+                  )}
+                </select>
               </div>
-              <button type="submit" className="btn btn-submit mt-3 mb-4" onClick={handleSubmit}>
+              <button
+                type="submit"
+                className="btn btn-submit mt-3 mb-4"
+              >
                 Add
               </button>
-
-              </form>
-              </div>
-              </div>
+            </form>
+          </div>
+        </div>
       )}
-      </>
-  )
-      }
+    </>
+  );
+};
 
-      export default Estimator;
+export default Estimator;

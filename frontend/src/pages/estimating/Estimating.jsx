@@ -10,11 +10,10 @@ const Estimator = () => {
   const [dueDate, setDueDate] = useState("");
   const [projectName, setProjectName] = useState("");
   const [estimatorName, setEstimatorName] = useState("");
-  // const [Eststatus, setEstStatus] = useState("");
   const [location, setLocation] = useState("");
   const [bidAmount, setBidAmount] = useState("");
   const [BidderName, setBidderName] = useState("");
-  // const [companyName, setCompanyName] = useState("");
+  const [company, setCompany] = useState(""); // Updated to store company name as a string
   const navigate = useNavigate();
 
   //************ To show data in Estimating List
@@ -52,27 +51,24 @@ const Estimator = () => {
 
   //************ To show Company Names in dropdown in estimating post field
 
-  const [companyName, setCompanyName] = useState("");
-  // const [companyData, setCompanyData] = useState([]); // Store the API response data
+  const [companyName, setCompanyName] = useState([]);
 
   useEffect(() => {
-    // Make the API request
-    // Use the fetch API to make a GET request to the API endpoint
-    fetch("http://127.0.0.1:8000/api/project/company/")
+    // Make the API request using Axios
+    axios
+      .get("http://127.0.0.1:8000/api/project/company/")
       .then((response) => {
         // Check if the response status is OK (200)
-        if (response.ok) {
+        if (response.status === 200) {
           // Parse the response JSON
-          return response.json();
+          const data = response.data;
+
+          // Assuming the data is an array of objects with a "Cmpny_Name" property
+          const companyNames = data.map((item) => item.Cmpny_Name);
+          setCompanyName(companyNames);
         } else {
           throw new Error("Failed to fetch data");
         }
-      })
-      .then((data) => {
-        // Assuming the data is an array of objects with a "Cmpny_Name" property
-        data.forEach((item) => {
-          console.log(item.Cmpny_Name);
-        });
       })
       .catch((error) => {
         console.error(error);
@@ -115,13 +111,13 @@ const Estimator = () => {
         console.error("Error fetching data:", error);
       });
   }, []);
+
   //************* Define the handleSubmit function
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
 
     // Check if companyName is not empty (you can add additional validation if needed)
-
-    if (!companyName) {
+    if (!company) {
       console.error("Company name is required.");
       return;
     }
@@ -130,7 +126,7 @@ const Estimator = () => {
     const formData = {
       due_date: dueDate,
       Prjct_Name: projectName,
-      company: parseInt(companyName), // Parse the ID as an integer
+      company: company, // Use the company state directly
       estimator: estimatorName,
       location: location,
       bid_amount: bidAmount,
@@ -146,7 +142,7 @@ const Estimator = () => {
         // You can also reset the form fields here if needed
         setDueDate("");
         setProjectName("");
-        setCompanyName(""); // Reset companyName here
+        setCompany(""); // Reset companyName here
         setEstimatorName("");
         setLocation("");
         setBidAmount("");
@@ -179,8 +175,26 @@ const Estimator = () => {
   const movetoPurposalPage = () => {
     navigate("/homepage/purposal");
   };
+
   const handleDueDateChange = (e) => {
-    setDueDate(e.target.value);
+    // Get the selected date from the input field
+    const selectedDate = e.target.value;
+
+    // Create a Date object from the selected date
+    const dateObject = new Date(selectedDate);
+
+    // Check if the dateObject is a valid date
+    if (!isNaN(dateObject.getTime())) {
+      // Format the date as "YYYY-MM-DD"
+      const formattedDate = dateObject.toISOString().split('T')[0];
+
+      // Set the formatted date in the state
+      setDueDate(formattedDate);
+    } else {
+      // Handle invalid date input here (e.g., show an error message)
+      console.error("Invalid date format");
+      // You might want to set an error state or display an error message to the user
+    }
   };
 
   const handleProjectNameChange = (e) => {
@@ -202,8 +216,9 @@ const Estimator = () => {
   const handleBidderChange = (e) => {
     setBidderName(e.target.value);
   };
+
   const handleCompanyNameChange = (e) => {
-    setCompanyName(e.target.value);
+    setCompany(e.target.value);
   };
 
   return (
@@ -294,7 +309,6 @@ const Estimator = () => {
                 />
               </div>
               {/* ******************* */}
-
               <div className="mb-3">
                 <label htmlFor="companyName" className="form-label">
                   Company
@@ -302,15 +316,23 @@ const Estimator = () => {
                 <select
                   className="form-select"
                   id="companyName"
-                  value={companyName}
+                  value={company}
                   onChange={handleCompanyNameChange}
                 >
-                  <option value=""></option>
+                  {companyName && companyName.length > 0 ? (
+                    companyName.map((companyItem) => (
+                      <option value={companyItem} key={companyItem}>
+                        {companyItem}
+                      </option>
+                    ))
+                  ) : (
+                    <option value="" disabled>
+                      {companyName ? 'No companies available' : 'Loading...'}
+                    </option>
+                  )}
                 </select>
               </div>
-
               {/* ****************** */}
-
               <div className="mb-3">
                 <label htmlFor="estimatorName" className="form-label">
                   Estimator_Name:
@@ -334,7 +356,6 @@ const Estimator = () => {
                   )}
                 </select>
               </div>
-
               <div className="mb-3">
                 <label htmlFor="location" className="form-label">
                   Location:
@@ -370,7 +391,6 @@ const Estimator = () => {
                   onChange={handleBidAmountChange}
                 />
               </div>
-
               <div className="mb-3">
                 <label htmlFor="bidder" className="form-label">
                   Bidder_Name:

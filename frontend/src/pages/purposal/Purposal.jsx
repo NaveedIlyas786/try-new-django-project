@@ -185,6 +185,207 @@ const Purposal = () => {
               </li>
               <li>Scaffolding for our scope of work only</li>
               <li>Badging for our workers only</li>
+              <li>Light gauge metal framing, wall board and finish</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Light gauge metal framing, wall board and finish</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Light gauge metal framing, wall board and finish</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Light gauge metal framing, wall board and finish</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Light gauge metal framing, wall board and finish</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Light gauge metal framing, wall board and finish</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Light gauge metal framing, wall board and finish</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Light gauge metal framing, wall board and finish</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Light gauge metal framing, wall board and finish</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Light gauge metal framing, wall board and finish</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
+              <li>Cold-formed metal framing for our scope of work only</li>
+              <li>
+                Fire-stopping and joint sealants for our scope of work only
+              </li>
+              <li>Scaffolding for our scope of work only</li>
+              <li>Badging for our workers only</li>
             </ul>
           </div>
           <div className="estimator">

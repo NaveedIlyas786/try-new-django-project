@@ -12,8 +12,7 @@ const Estimator = () => {
   const [estimatorName, setEstimatorName] = useState("");
   const [location, setLocation] = useState("");
   const [bidAmount, setBidAmount] = useState("");
-  const [BidderName, setBidderName] = useState("");
-  const [company, setCompany] = useState(""); // Updated to store company name as a string
+  const [company, setCompany] = useState(1); // Updated to store company name as a string
   const navigate = useNavigate();
 
   //************ To show data in Estimating List
@@ -23,7 +22,7 @@ const Estimator = () => {
       .get("http://127.0.0.1:8000/api/estimating/estimating/")
       .then((response) => response.data)
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setData(data);
       })
       .catch((error) => {
@@ -41,7 +40,7 @@ const Estimator = () => {
       .get("http://127.0.0.1:8000/api/estimating/location/")
       .then((response) => response.data)
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setUserLocation(data);
       })
       .catch((error) => {
@@ -86,6 +85,7 @@ const Estimator = () => {
       .then((response) => response.data)
       .then((data) => {
         const bidUser = data.filter((user) => user.roles.includes("Estimator"));
+        // console.log(bidUser);
         setestimatorName(bidUser);
       })
       .catch((error) => {
@@ -94,6 +94,8 @@ const Estimator = () => {
   }, []);
 
   //************ To show bidder Names in dropdown in estimating post field
+  // const [BidderName, setBidderName] = useState("");
+  const [selectedBidderId, setSelectedBidderId] = useState("");
 
   const [bidderName, setbidderName] = useState([]);
 
@@ -117,10 +119,10 @@ const Estimator = () => {
     event.preventDefault(); // Prevent the default form submission behavior
 
     // Check if companyName is not empty (you can add additional validation if needed)
-    if (!company) {
-      console.error("Company name is required.");
-      return;
-    }
+    // if (!company) {
+    //   console.error("Company name is required.");
+    //   return;
+    // }
 
     // Create a data object with the form values
     const formData = {
@@ -130,7 +132,7 @@ const Estimator = () => {
       estimator: estimatorName,
       location: location,
       bid_amount: bidAmount,
-      bidder: BidderName, // Use BidderName here, not bidder
+      bidder: selectedBidderId, // Use BidderName here, not bidder
     };
 
     // Send a POST request to the API
@@ -146,7 +148,7 @@ const Estimator = () => {
         setEstimatorName("");
         setLocation("");
         setBidAmount("");
-        setBidderName("");
+        setSelectedBidderId("");
         // Close the modal
         closeModal();
       })
@@ -186,7 +188,7 @@ const Estimator = () => {
     // Check if the dateObject is a valid date
     if (!isNaN(dateObject.getTime())) {
       // Format the date as "YYYY-MM-DD"
-      const formattedDate = dateObject.toISOString().split('T')[0];
+      const formattedDate = dateObject.toISOString().split("T")[0];
 
       // Set the formatted date in the state
       setDueDate(formattedDate);
@@ -214,7 +216,7 @@ const Estimator = () => {
   };
 
   const handleBidderChange = (e) => {
-    setBidderName(e.target.value);
+    setSelectedBidderId(e.target.value);
   };
 
   const handleCompanyNameChange = (e) => {
@@ -319,6 +321,7 @@ const Estimator = () => {
                   value={company}
                   onChange={handleCompanyNameChange}
                 >
+                  {/* <option value="">Select Company</option> */}
                   {companyName && companyName.length > 0 ? (
                     companyName.map((companyItem) => (
                       <option value={companyItem} key={companyItem}>
@@ -327,7 +330,7 @@ const Estimator = () => {
                     ))
                   ) : (
                     <option value="" disabled>
-                      {companyName ? 'No companies available' : 'Loading...'}
+                      {companyName ? "No companies available" : "Loading..."}
                     </option>
                   )}
                 </select>
@@ -343,6 +346,8 @@ const Estimator = () => {
                   value={estimatorName}
                   onChange={handleEstimatorNameChange}
                 >
+                  <option value="">Select Estimator Name</option>
+
                   {EstimatorName && EstimatorName.length > 0 ? (
                     EstimatorName.map((user) => (
                       <option value={user.id} key={user.id}>
@@ -366,6 +371,8 @@ const Estimator = () => {
                   value={location}
                   onChange={handleLocationChange}
                 >
+                                    <option  value="">Select Location</option>
+
                   {userLocation && userLocation.length > 0 ? (
                     userLocation.map((place) => (
                       <option value={place.id} key={place.id}>
@@ -398,10 +405,12 @@ const Estimator = () => {
                 <select
                   className="form-select"
                   id="bidder"
-                  value={BidderName}
+                  value={selectedBidderId}
                   onChange={handleBidderChange}
                 >
-                  {bidderName.length > 0 ? (
+                                    <option value="null">Select Bidder Name</option>
+
+                  {bidderName && bidderName.length > 0 ? (
                     bidderName.map((bidder) => (
                       <option value={bidder.id} key={bidder.id}>
                         {bidder.full_Name}

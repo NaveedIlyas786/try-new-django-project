@@ -14,7 +14,7 @@ const Estimator = () => {
   const [location, setLocation] = useState("");
   const [bidAmount, setBidAmount] = useState("");
   const [BidderName, setBidderName] = useState("");
-  const [companyName, setCompanyName] = useState("");
+  // const [companyName, setCompanyName] = useState("");
   const navigate = useNavigate();
 
   //************ To show data in Estimating List
@@ -52,19 +52,30 @@ const Estimator = () => {
 
   //************ To show Company Names in dropdown in estimating post field
 
-  const [userCompany, setuserCompany] = useState([]);
+  const [companyName, setCompanyName] = useState("");
+  // const [companyData, setCompanyData] = useState([]); // Store the API response data
 
   useEffect(() => {
-    // Fetch data from the API
-    axios
-      .get("http://127.0.0.1:8000/api/project/company/")
-      .then((response) => response.data)
+    // Make the API request
+    // Use the fetch API to make a GET request to the API endpoint
+    fetch("http://127.0.0.1:8000/api/project/company/")
+      .then((response) => {
+        // Check if the response status is OK (200)
+        if (response.ok) {
+          // Parse the response JSON
+          return response.json();
+        } else {
+          throw new Error("Failed to fetch data");
+        }
+      })
       .then((data) => {
-        console.log(data);
-        setuserCompany(data);
+        // Assuming the data is an array of objects with a "Cmpny_Name" property
+        data.forEach((item) => {
+          console.log(item.Cmpny_Name);
+        });
       })
       .catch((error) => {
-        console.error("Error fetching data:", error);
+        console.error(error);
       });
   }, []);
 
@@ -78,9 +89,7 @@ const Estimator = () => {
       .get("http://127.0.0.1:8000/api/user/Userapi/")
       .then((response) => response.data)
       .then((data) => {
-        const bidUser = data.filter((user) =>
-          user.roles.includes("Estimator")
-        );
+        const bidUser = data.filter((user) => user.roles.includes("Estimator"));
         setestimatorName(bidUser);
       })
       .catch((error) => {
@@ -88,67 +97,70 @@ const Estimator = () => {
       });
   }, []);
 
-   
-
   //************ To show bidder Names in dropdown in estimating post field
 
   const [bidderName, setbidderName] = useState([]);
 
   useEffect(() => {
     // Fetch data from the API
-  axios
-  .get("http://127.0.0.1:8000/api/user/Userapi/")
-  .then((response) => response.data)
-  .then((data) => {
-    const bidUser = data.filter((user) =>
-      user.roles.includes("Bidder")
-    );
-    setbidderName(bidUser);
-    console.log(bidUser);
-  })
-  .catch((error) => {
-    console.error("Error fetching data:", error);
-  });
-}, []);
+    axios
+      .get("http://127.0.0.1:8000/api/user/Userapi/")
+      .then((response) => response.data)
+      .then((data) => {
+        const bidUser = data.filter((user) => user.roles.includes("Bidder"));
+        setbidderName(bidUser);
+        console.log(bidUser);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
   //************* Define the handleSubmit function
-    const handleSubmit = (event) => {
-      event.preventDefault(); // Prevent the default form submission behavior
-  
-      // Create a data object with the form values
-      const formData = {
-        due_date: dueDate,
-        Prjct_Name: projectName,
-        company: companyName,
-        estimator: estimatorName,
-        location: location,
-        bid_amount: bidAmount,
-        bidder: BidderName, // Use BidderName here, not bidder
-      };
-  
-      // Send a POST request to the API
-      axios
-        .post("http://127.0.0.1:8000/api/estimating/estimating/", formData)
-        .then((response) => {
-          // Handle the response if needed
-          console.log("Data successfully submitted:", response.data);
-          // You can also reset the form fields here if needed
-          setDueDate("");
-          setProjectName("");
-          setCompanyName("");
-          setEstimatorName("");
-          setLocation("");
-          setBidAmount("");
-          setBidderName("");
-          // Close the modal
-          closeModal();
-        })
-        .catch((error) => {
-          // Handle any errors that occurred during the POST request
-          console.error("Error submitting data:", error);
-          // Log the response data for more details
-          console.log("Response data:", error.response.data);
-        });
+  const handleSubmit = (event) => {
+    event.preventDefault(); // Prevent the default form submission behavior
+
+    // Check if companyName is not empty (you can add additional validation if needed)
+
+    if (!companyName) {
+      console.error("Company name is required.");
+      return;
+    }
+
+    // Create a data object with the form values
+    const formData = {
+      due_date: dueDate,
+      Prjct_Name: projectName,
+      company: parseInt(companyName), // Parse the ID as an integer
+      estimator: estimatorName,
+      location: location,
+      bid_amount: bidAmount,
+      bidder: BidderName, // Use BidderName here, not bidder
     };
+
+    // Send a POST request to the API
+    axios
+      .post("http://127.0.0.1:8000/api/estimating/estimating/", formData)
+      .then((response) => {
+        // Handle the response if needed
+        console.log("Data successfully submitted:", response.data);
+        // You can also reset the form fields here if needed
+        setDueDate("");
+        setProjectName("");
+        setCompanyName(""); // Reset companyName here
+        setEstimatorName("");
+        setLocation("");
+        setBidAmount("");
+        setBidderName("");
+        // Close the modal
+        closeModal();
+      })
+      .catch((error) => {
+        // Handle any errors that occurred during the POST request
+        console.error("Error submitting data:", error);
+        // Log the response data for more details
+        console.log("Response data:", error.response.data);
+      });
+  };
 
   const filteredData = data.filter(
     (customer) =>
@@ -281,9 +293,11 @@ const Estimator = () => {
                   onChange={handleProjectNameChange}
                 />
               </div>
+              {/* ******************* */}
+
               <div className="mb-3">
                 <label htmlFor="companyName" className="form-label">
-                  Company_Name:
+                  Company
                 </label>
                 <select
                   className="form-select"
@@ -291,14 +305,11 @@ const Estimator = () => {
                   value={companyName}
                   onChange={handleCompanyNameChange}
                 >
-                  {userCompany.map((user) => (
-                    <option value={user.id} key={user.id}>
-                      {user.Cmpny_Name}
-                    </option>
-                  ))}
-                  {/* <option value="DMS">DMS</option> */}
+                  <option value=""></option>
                 </select>
               </div>
+
+              {/* ****************** */}
 
               <div className="mb-3">
                 <label htmlFor="estimatorName" className="form-label">
@@ -383,10 +394,7 @@ const Estimator = () => {
                   )}
                 </select>
               </div>
-              <button
-                type="submit"
-                className="btn btn-submit mt-3 mb-4"
-              >
+              <button type="submit" className="btn btn-submit mt-3 mb-4">
                 Add
               </button>
             </form>

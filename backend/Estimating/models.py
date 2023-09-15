@@ -19,6 +19,12 @@ class Location(models.Model):
     def __str__(self):
         return self.name
 
+
+
+
+
+
+
 class Estimating(models.Model):
     Prjct_Name=models.CharField(verbose_name="Estimate Project Name", max_length=50)
     due_date=models.DateField(verbose_name="Due Date(YYYY-MM-DD)")
@@ -36,8 +42,6 @@ class Estimating(models.Model):
     estimator = models.ForeignKey(User,verbose_name="Estimator", related_name='estimations_as_estimator', limit_choices_to=models.Q(roles__name='Estimator'), on_delete=models.SET_NULL, null=True)
     bidder = models.CharField(verbose_name="bidder ",max_length=1500, null=True)
     
-
-
     def save(self, *args, **kwargs):
         # Check if the object is new (doesn't have an ID yet)
         is_new = self.pk is None
@@ -68,6 +72,11 @@ class Estimating(models.Model):
         return self.Prjct_Name
 
 
+
+
+
+
+
 class Estimating_detail(models.Model):
     Estimating=models.ForeignKey(Estimating, verbose_name="Add Estimating", on_delete=models.CASCADE)
     prnt_id = models.PositiveIntegerField(verbose_name="Folder Parent ID",null=True, blank=True) 
@@ -89,6 +98,14 @@ class Estimating_detail(models.Model):
             self.file_type = uploaded_file_type
         
         super().save(*args, **kwargs)
+
+
+
+
+
+
+
+
 ##Create perposel
 
 #Service of Exclusion and Inclusion
@@ -98,6 +115,11 @@ class Service(models.Model):
 
     def __str__(self):
         return self.services
+
+
+
+
+
 
 
 
@@ -127,6 +149,14 @@ class Proposals(models.Model):
         return f"{self.estimating}"
 
 
+
+
+
+
+
+
+
+
 class PropsalsServices(models.Model):
     propsals=models.ForeignKey(Proposals, verbose_name="Proposals", on_delete=models.CASCADE,null=False)
     service=models.ForeignKey(Service,verbose_name="Add service", on_delete=models.CASCADE)
@@ -134,6 +164,12 @@ class PropsalsServices(models.Model):
                 choices=[
             ('Exclusions','Exclusions'),
             ('Inclusions','Inclusions')],default='Exclusions',max_length=50)
+
+
+
+
+
+
 
 
 
@@ -146,6 +182,14 @@ class Addendum(models.Model):
     def __str__(self):
         return str(self.addendum_Number)
 
+
+
+
+
+
+
+
+
 class Specification(models.Model):
     proposal=models.ForeignKey(Proposals, on_delete=models.CASCADE)
     specific_name=models.CharField(verbose_name="Specification Name", max_length=250)
@@ -154,12 +198,28 @@ class Specification(models.Model):
     def __str__(self) -> str:
         return self.specific_name
 
+
+
+
+
+
+
+
 class Spec_detail(models.Model):
     sefic=models.ForeignKey(Specification, verbose_name="Specification", on_delete=models.CASCADE)
     number=models.IntegerField(verbose_name="Add Number")
     name=models.CharField(verbose_name="Name", max_length=250)
     def __str__(self) :
         return self.name
+    
+
+
+
+
+
+
+
+    
 class Qualification(models.Model):
     detail=models.CharField(verbose_name="Add Qualification", max_length=255)
 

@@ -3,6 +3,15 @@ from .validation import validate_file_extension
 
 import os
 
+
+
+
+
+
+
+
+
+
 class Company(models.Model):
     Cmpny_Name = models.CharField(verbose_name="Company Name",max_length=50, null=False, blank=False)
     adress=models.CharField(verbose_name="Adress",max_length=70, null=False, blank=False)
@@ -15,6 +24,14 @@ class Company(models.Model):
 
     def __str__(self):
         return self.Cmpny_Name
+
+
+
+
+
+
+
+
 
 
 class Project(models.Model):
@@ -48,6 +65,13 @@ class Project(models.Model):
     
     def __str__(self):
         return self.prjct_Name
+
+
+
+
+
+
+
 
 class Project_detail(models.Model):
     drctry_Name = models.CharField(verbose_name="Folder Name",max_length=255)

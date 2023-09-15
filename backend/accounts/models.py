@@ -4,12 +4,20 @@ from .validation import validate_file_extension
 
 # Create your models here.
 
+
+
+
 class UserRole(models.Model):
     name=models.CharField(verbose_name="Role", max_length=50)
     description = models.TextField(verbose_name="Add Description", blank=True,null=True)
     
     def __str__(self):
         return self.name
+
+
+
+
+
 
 
 # Custom User Manager
@@ -51,6 +59,12 @@ class UserManager(BaseUserManager):
         user.is_admin = True
         user.save(using=self._db)
         return user
+
+
+
+
+
+
 
 
 class User(AbstractBaseUser):

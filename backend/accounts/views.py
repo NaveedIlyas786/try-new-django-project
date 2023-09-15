@@ -26,6 +26,13 @@ def get_tokens_for_user(user):
         'refresh': str(refresh),
         'access': str(refresh.access_token),
     }
+
+
+
+
+
+
+
 #veiw for Registor or Create User 
 class UserRegistrationView(APIView):
     def post(self, request, format=None):
@@ -53,6 +60,17 @@ class UserRegistrationView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+
+
+
+
+
+
+
+
+
 class UserLoginViews(APIView):
     def post(self, request, format=None):
         serializer = UserLoginserializers(data=request.data)
@@ -70,6 +88,16 @@ class UserLoginViews(APIView):
 
 
 
+
+
+
+
+
+
+
+
+
+
 #For views for Get A Uniq Registration User With the Authentication
 class UserProfileViews(APIView):
 #    renderer_classes=[UserRenderer]
@@ -77,6 +105,16 @@ class UserProfileViews(APIView):
      def get(self,request,format=None):
           serializer=UserProfileSerializer(request.user)
           return Response(serializer.data,status=status.HTTP_200_OK)
+
+
+
+
+
+
+
+
+
+
 
 #Change Password For a Uniq User
 class UserChangePasswordViews(APIView):
@@ -87,6 +125,15 @@ class UserChangePasswordViews(APIView):
             return Response({'msg':'Password Change Successfully'},status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
+
+
+
+
+
+
+
+
+
 # this class for Send email For the Reset or Forget Password for the User
 class SendEmailResetPasswordViews(APIView):
     def post(self,request,format=None):
@@ -95,6 +142,14 @@ class SendEmailResetPasswordViews(APIView):
             return Response({'msg':'Password Resend Link send. Please check your Email'},status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
+
+
+
+
+
+
+
+
 
 class UserPasswordResetViews(APIView):
     def post(self,request,token,user_ID,format=None):

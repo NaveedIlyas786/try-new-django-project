@@ -9,6 +9,12 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 
+
+
+
+
+
+
 class UserRegisterationSerializers(serializers.ModelSerializer):
     # this line for password hid (password ****** like this format)
     password2 = serializers.CharField(
@@ -16,7 +22,7 @@ class UserRegisterationSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id','email', 'full_Name', 'password', 'password2','phone_number','signtrPDF','roles']
+        fields = ['id','email', 'full_Name', 'password', 'password2','phone_number','signtr','roles']
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -41,6 +47,12 @@ class UserRegisterationSerializers(serializers.ModelSerializer):
         return User.objects.create_user(**validate_data)
 
 
+
+
+
+
+
+
 class UserLoginserializers(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=255)
 
@@ -48,13 +60,26 @@ class UserLoginserializers(serializers.ModelSerializer):
         model = User
         fields = ['email', 'password']
 
-# For Get A Uniq user With the Authentication
 
+
+
+
+
+
+# For Get A Uniq user With the Authentication
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'full_Name', 'is_admin', 'create_at','phone_number','signtrPDF']
+        fields = ['id', 'email', 'full_Name', 'is_admin', 'create_at','phone_number','signtr']
+
+
+
+
+
+
+
+
 
 # This Serializer for Change Password for Authorized User
 
@@ -78,6 +103,13 @@ class UserChangePasswordSerializer(serializers.Serializer):
         user.set_password(password)
         user.save()
         return attrs
+
+
+
+
+
+
+
 
 
 class SendEmailResetPasswordViewsSerializer(serializers.Serializer):
@@ -107,6 +139,14 @@ class SendEmailResetPasswordViewsSerializer(serializers.Serializer):
             return attrs
         else:
             raise ValidationErr('You are Not a register User')
+
+
+
+
+
+
+
+
 
 
 class UserPasswordResetSerializer(serializers.Serializer):

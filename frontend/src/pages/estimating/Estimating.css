@@ -58,11 +58,11 @@ td{
   }
   .modal-container {
     position: fixed;
-    top: 50%;
+    top: 55%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 99;
-    height: 480px;
+    height: 500px;
     width: 950px;
     background-color: rgb(224, 222, 222);
     border-radius: 8px;
@@ -78,18 +78,18 @@ td{
     transform: translate(-50%, -50%) scale(1); /* Scale to 1 for the opening transition */
   }
   
-  .modal-content {
+  .modal-content, .purposal-content {
     height: 100%;
     overflow-y: scroll;
     scroll-behavior: smooth;
   }
   
   /* Style the scrollbar for WebKit-based browsers */
-  .modal-content::-webkit-scrollbar {
+  .modal-content::-webkit-scrollbar, .purposal-content::-webkit-scrollbar {
     width: 10px; /* Set the width of the scrollbar */
   }
   
-  .modal-content::-webkit-scrollbar-thumb {
+  .modal-content::-webkit-scrollbar-thumb,.purposal-content::-webkit-scrollbar-thumb {
     background-color: #283897; /* Set the color of the scrollbar track (the non-draggable part) */
     border-radius: 10px; /*Round the corners of the thumb*/
   }
@@ -120,10 +120,13 @@ td{
   /* font-size: 30px; Adjust the font size as needed */
   line-height: 1; /* Center the icon vertically */
 }
-
+.blur-background {
+  filter: blur(5px); /* You can adjust the blur intensity */
+  pointer-events: none; /* Allow click-through to the modal */
+}
   
-  .modal-active {
-    filter: blur(3px);
+  .modal-active{
+    filter: blur(5px);
     pointer-events: none;
     overflow: hidden;
   }
@@ -165,4 +168,22 @@ td{
   input:focus{
     border: none !important;
     outline: none !important;
+  }
+ .exclusionsID{
+  width: 50px !important;
+ }
+  .spacebtns{
+    margin: 2rem 0;
+    display: flex;
+    justify-content: space-between;
+  }
+  .upperDiv{
+    position: relative !important;
+    background-color: aqua;
+  }
+  .newentrybtn{
+    position: absolute !important;
+    border-radius: 0;
+    top: 40px;
+    left: 2px;
   }

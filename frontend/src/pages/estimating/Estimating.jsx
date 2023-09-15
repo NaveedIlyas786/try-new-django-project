@@ -29,7 +29,7 @@ const Estimator = () => {
   //********************************************/
   //TODO: Multistep Form  React Code
   const [activeStep, setActiveStep] = useState(0);
-  const steps = ["Step 1", "Step 2", "Step 3"];
+  const steps = ["Step 1", "Step 2", "Step 3", "Step 4", "Step 5"];
 
   const handleBack = () => {
     setActiveStep((prevStep) => prevStep - 1);
@@ -38,8 +38,49 @@ const Estimator = () => {
     setActiveStep((prevStep) => prevStep + 1);
   };
 
-  //********************************************/
+  //*********************Multistep Purposal-form Addendum Section***********************/
+  const [entries, setEntries] = useState([{
+    addendumNumber: '',
+    addendumDate: '',
+  }]);
 
+  // Define functions to handle data changes
+  const handleAddendumNumberChange = (index, value) => {
+    const updatedEntries = [...entries];
+    updatedEntries[index].addendumNumber = value;
+    setEntries(updatedEntries);
+  };
+
+  const handleAddendumDateChange = (index, value) => {
+    const updatedEntries = [...entries];
+    updatedEntries[index].addendumDate = value;
+    setEntries(updatedEntries);
+  };
+  const [addendumNumber, setAddendumNumber] = useState("");
+  const [addendumDate, setAddendumDate] = useState("");
+
+  const handleNewEntry = () => {
+    // Create a new entry object with the input data
+    const newEntry = {
+      addendumNumber,
+      addendumDate,
+    };
+
+    // Add the new entry to the entries array
+    setEntries([...entries, newEntry]);
+
+    // Clear the input fields
+    setAddendumNumber("");
+    setAddendumDate("");
+  };
+  const handleRemoveEntry = (index) => {
+    // Create a copy of the entries array
+    const updatedEntries = [...entries];
+    // Remove the entry at the specified index
+    updatedEntries.splice(index, 1);
+    // Update the state with the modified entries array
+    setEntries(updatedEntries);
+  };
   //************ To show data in Estimating List
   useEffect(() => {
     // Fetch data from the API
@@ -461,7 +502,8 @@ const Estimator = () => {
           <h4 className="text-center addnewtxt">Add Purposal Entries</h4>
           <button className="close-btn" onClick={closeModal}></button>
           <div className="purposal-content px-5">
-            //************* Implementation of Multistep-Form using Material UI Purposal Form
+            //************* Implementation of Multistep-Form using Material UI
+            Purposal
             <Modal
               open={purposalModal}
               onClose={closeModal}
@@ -475,7 +517,7 @@ const Estimator = () => {
               >
                 <h4 className="text-center addnewtxt">Add Purposal Entries</h4>
                 <button className="close-btn" onClick={closeModal}></button>
-                <div className="purposal-content px-5">
+                <div className="purposal-content pt-4 px-5">
                   <Stepper activeStep={activeStep} alternativeLabel>
                     {steps.map((label) => (
                       <Step key={label}>
@@ -485,79 +527,199 @@ const Estimator = () => {
                   </Stepper>
                   <form onSubmit={handleSubmit} className="d-flex flex-column">
                     {activeStep === 0 && (
-                      <div>
-                        {/* Step 1 */}
-                        <TextField
-                          label="Field 1"
-                          variant="outlined"
-                          margin="normal"
-                          fullWidth
-                          // Add value and onChange props
-                        />
-                        {/* Add more fields for Step 1 */}
-                      </div>
+                      <>
+                        <div className="mb-2 mt-3">
+                          <label htmlFor="projectName" className="form-label">
+                            Current Date:
+                          </label>
+                          <input
+                            type="date"
+                            className="form-control"
+                            id="projectName"
+                            value={projectName}
+                            onChange={handleProjectNameChange}
+                          />
+                        </div>
+                        <div className="mb-2 mt-3">
+                          <label htmlFor="ArchitectName" className="form-label">
+                            Architect Name:
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="projectName"
+                            value={projectName}
+                            onChange={handleProjectNameChange}
+                          />
+                        </div>
+                        <div className="mb-2 mt-3">
+                          <label htmlFor="ArchitectFirm" className="form-label">
+                            Architect Firm:
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="projectName"
+                            value={projectName}
+                            onChange={handleProjectNameChange}
+                          />
+                        </div>
+                      </>
                     )}
                     {activeStep === 1 && (
-                      <div>
-                        {/* Step 2 */}
-                        <TextField
-                          label="Field 2"
-                          variant="outlined"
-                          margin="normal"
-                          fullWidth
-                          // Add value and onChange props
-                        />
-                        {/* Add more fields for Step 2 */}
+                      <div className="mt-2">
+                        {/* Render the entries */}
+                        <label className="form-label">
+                          Addendum Information
+                        </label>
+                        {entries.map((entry, index) => (
+                          <div
+                            key={index}
+                            className="mb-2 mt-3 position-relative"
+                          >
+                            <div className="input-group mb-3 ">
+                              <input
+                                type="number"
+                                className="form-control"
+                                value={entry.addendumNumber}
+                                onChange={(e) =>
+                                  handleAddendumNumberChange(
+                                    index,
+                                    e.target.value
+                                  )
+                                }
+                              />
+                              <input
+                                type="date"
+                                className="form-control"
+                                value={entry.addendumDate}
+                                onChange={(e) =>
+                                  handleAddendumDateChange(
+                                    index,
+                                    e.target.value
+                                  )
+                                }
+                              />
+                              <button
+                                className="btn btn-danger"
+                                onClick={() => handleRemoveEntry(index)} // Call the handleRemoveEntry function with the index
+                              >
+                                <i className="far">X</i>
+                              </button>
+                            </div>
+                            {index === entries.length - 1 && (
+                              <button
+                                className="btn btn-success newentrybtn"
+                                onClick={handleNewEntry}
+                              >
+                                <i class="fa-regular fa-plus"></i>
+                              </button>
+                            )}
+                          </div>
+                        ))}
+
+                        {/* Initial "New-Entry" button */}
+                        {entries.length === 0 && (
+                          <button
+                            className="btn btn-success ms-3 rounded-0"
+                            onClick={handleNewEntry}
+                          >
+                            New-Entry
+                          </button>
+                        )}
                       </div>
                     )}
                     {activeStep === 2 && (
-                      <div>
-                        {/* Step 3 */}
-                        <TextField
-                          label="Field 3"
-                          variant="outlined"
-                          margin="normal"
-                          fullWidth
-                          // Add value and onChange props
+                      <div className="mb-2 mt-3">
+                        <label htmlFor="projectName" className="form-label">
+                          Services(Inclusions & Exclusions):
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="projectName"
+                          value={projectName}
+                          onChange={handleProjectNameChange}
                         />
-                        {/* Add more fields for Step 3 */}
+                        {/* <select
+                            className="form-select exclusionsID"
+                            id="exclusionsID"
+                            value=""
+                          >
+                            <option value="Exclusions">Exclusions</option>
+                            <option value="Inclusions">Inclusions</option>
+                          </select> */}
                       </div>
                     )}
-                    <div className="mt-3">
-                      {activeStep <= 1 ? (
-                        <>
-                        <Button
-                            variant="outlined"
-                            color="secondary"
-                            onClick={handleBack}
-                          >
-                            Back
-                          </Button>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={handleNext}
-                        >
-                          Next
-                        </Button>
-                        </>
+
+                    {activeStep === 3 && (
+                      <div className="mb-2 mt-3">
+                        <label htmlFor="projectName" className="form-label">
+                          Specifications
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="projectName"
+                          value={projectName}
+                          onChange={handleProjectNameChange}
+                        />
+                      </div>
+                    )}
+                    {activeStep === 4 && (
+                      <div className="mb-2 mt-3">
+                        <label htmlFor="projectName" className="form-label">
+                          Qualifications
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="projectName"
+                          value={projectName}
+                          onChange={handleProjectNameChange}
+                        />
+                      </div>
+                    )}
+                    <div className="mt-1">
+                      {activeStep <= 3 ? (
+                        <div className="parentbtnsdiv">
+                          <div className="spacebtns">
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              disabled={activeStep === 0} // Disable the button when activeStep is 0
+                              onClick={handleBack}
+                            >
+                              Back
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={handleNext}
+                            >
+                              Next
+                            </Button>
+                          </div>
+                        </div>
                       ) : (
-                        <>
-                          <Button
-                            variant="outlined"
-                            color="secondary"
-                            onClick={handleBack}
-                          >
-                            Back
-                          </Button>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            type="submit"
-                          >
-                            Submit
-                          </Button>
-                        </>
+                        <div className="parentbtnsdiv">
+                          <div className="spacebtns">
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={handleBack}
+                            >
+                              Back
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              type="submit"
+                            >
+                              Submit
+                            </Button>
+                          </div>
+                        </div>
                       )}
                     </div>
                   </form>

@@ -13,8 +13,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 class ProjectDetailAdmin(admin.ModelAdmin):
-    list_display = ('id', 'drctry_Name', 'prjct_ID',
-                    'prnt_ID', 'file_Name', 'output_Table_Name')
+    list_display = ('id','prnt_ID','drctry_Name','file_type','output_Table_Name','prjct_ID')
 
 
 # Register the models with their respective admin views

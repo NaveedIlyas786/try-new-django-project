@@ -19,20 +19,21 @@ class EstimatingAdmin(admin.ModelAdmin):
     list_display = ['id','start_date','Prjct_Name','due_date','status',
                     'company','bid_amount','location', 
                     'estimator', 'bidder']
-    list_filter = ['estimator', 'bidder']
+    list_filter = ['estimator']
 
    
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
-        queryset = queryset.select_related('estimator', 'bidder')  # Optimize the number of SQL queries
+        queryset = queryset.select_related('estimator')  # Optimize the number of SQL queries
         return queryset
     
-
+class EstimatingDetail(admin.ModelAdmin):
+    list_display=['id','prnt_id','drctry_name','file_type','output_Table_Name']
 
 
 class ProposalsAdmin(admin.ModelAdmin):
        
-    list_display=['id','company','estimator','estimating','date',
+    list_display=['id','estimating','date',
                   'architect_name','architect_firm']
     
 

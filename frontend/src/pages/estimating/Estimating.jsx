@@ -461,7 +461,7 @@ const Estimator = () => {
           <h4 className="text-center addnewtxt">Add Purposal Entries</h4>
           <button className="close-btn" onClick={closeModal}></button>
           <div className="purposal-content px-5">
-            //************* Implementation of Multistep-Form using Material UI
+            //************* Implementation of Multistep-Form using Material UI Purposal Form
             <Modal
               open={purposalModal}
               onClose={closeModal}

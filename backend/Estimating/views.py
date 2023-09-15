@@ -4,8 +4,8 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Estimating, Proposals, Addendum, Qualification, Spec_detail, PropsalsServices,Specification,Service,Location
-from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer, ProposalServiceSerializer,SpecificationSerializer,ServicesSerializer,LocationSerializer
+from .models import Estimating,Estimating_detail, Proposals, Addendum, Qualification, Spec_detail, PropsalsServices,Specification,Service,Location
+from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer,ProposalServiceSerializer,SpecificationSerializer,ServicesSerializer,LocationSerializer,EstimatingDetailSerializer
 
 
 
@@ -54,7 +54,11 @@ class EstimatingListView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+class Estimating_detailView(APIView):
+    def get(self,request):
+        estimating_detail=Estimating_detail.objects.all()
+        serializer=EstimatingDetailSerializer(estimating_detail,many=True)
+        return Response(serializer.data)
 
 
 class ProposalView(APIView):

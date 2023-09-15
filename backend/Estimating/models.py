@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+import os
 from django.utils import timezone
 # from pytz import timezone as pytz_timezone
 
@@ -32,21 +34,61 @@ class Estimating(models.Model):
     bid_amount=models.IntegerField(verbose_name="Bid Amount",blank=False)
     location=models.ForeignKey(Location,on_delete=models.CASCADE,blank=False,null=True)
     estimator = models.ForeignKey(User,verbose_name="Estimator", related_name='estimations_as_estimator', limit_choices_to=models.Q(roles__name='Estimator'), on_delete=models.SET_NULL, null=True)
-    bidder = models.ForeignKey(User, related_name='estimations_as_bidder',verbose_name="Bidder", limit_choices_to=models.Q(roles__name='Bidder'), on_delete=models.SET_NULL, null=True)
+    bidder = models.CharField(verbose_name="bidder ",max_length=1500, null=True)
+    
+
+
+    def save(self, *args, **kwargs):
+        # Check if the object is new (doesn't have an ID yet)
+        is_new = self.pk is None
+        super().save(*args, **kwargs)
+
+        if is_new:
+            # Create the initial Estimating_detail instances
+            initial_detail_data = [
+                {'drctry_name': 'Addendums'},
+                {'drctry_name': 'Bid'},
+                {'drctry_name': 'Plans'},
+                {'drctry_name': 'Pre Bid RFIs'},
+                {'drctry_name': 'Quotes'},
+                {'drctry_name': 'Specs'},
+                {'drctry_name': 'Wages Rates For Distribution'},
+            ]
+
+            for data in initial_detail_data:
+                Estimating_detail.objects.create(
+                    Estimating=self, 
+                    drctry_name=data['drctry_name'],
+                    prnt_id=None,  
+                    file_type=None, 
+                    output_Table_Name=None,  
+                )
     
     def __str__(self):
         return self.Prjct_Name
-    
 
 
-# class Estimating_detail(models.Model):
-#     Estimating=models.ForeignKey(Estimating, verbose_name="Add Estimating", on_delete=models.CASCADE)
-#     prnt_id = models.PositiveIntegerField(verbose_name="Folder Parent ID",null=False, blank=False) 
-#     drctry_name = models.CharField(verbose_name="Folder Name",max_length=255)
-#     file_type = models.CharField(verbose_name="Type Name",max_length=100, null=False, blank=False) 
-#     output_Table_Name = models.CharField(verbose_name="file Name",max_length=100, null=False, blank=False) 
+class Estimating_detail(models.Model):
+    Estimating=models.ForeignKey(Estimating, verbose_name="Add Estimating", on_delete=models.CASCADE)
+    prnt_id = models.PositiveIntegerField(verbose_name="Folder Parent ID",null=True, blank=True) 
+    drctry_name = models.CharField(verbose_name="Folder Name",max_length=255)
+    file_type = models.CharField(verbose_name="Type Name",max_length=100, null=True, blank=True) 
+    output_Table_Name = models.CharField(verbose_name="file Name",max_length=100, null=True, blank=True) 
+    file_field = models.FileField(upload_to='Files/', null=True)
+    file_binary_data = models.BinaryField(null=True, blank=True)
 
-
+    def save(self, *args, **kwargs):
+        if self.file_field:
+            with open(self.file_field.path, 'rb') as f:
+                self.file_binary_data = f.read()
+            
+            uploaded_file_name, uploaded_file_extension = os.path.splitext(self.file_field.name)
+            uploaded_file_type = uploaded_file_extension.lstrip('.')
+            
+            self.output_Table_Name = uploaded_file_name
+            self.file_type = uploaded_file_type
+        
+        super().save(*args, **kwargs)
 ##Create perposel
 
 #Service of Exclusion and Inclusion
@@ -61,19 +103,6 @@ class Service(models.Model):
 
 #Proposal Table
 class Proposals(models.Model):
-
-    company=models.ForeignKey(
-        Company,
-        verbose_name="Company",
-        on_delete=models.CASCADE,
-        blank=False,)
-
-    estimator = models.ForeignKey(
-        User,
-        verbose_name="Estimator",
-        related_name='estimations_in_Propsals',
-        limit_choices_to=models.Q(roles__name='Estimator'),
-        on_delete=models.SET_NULL, null=True)
 
     
     estimating=models.ForeignKey(
@@ -95,7 +124,7 @@ class Proposals(models.Model):
 
 
     def __str__(self) -> str:
-        return f"{self.estimating}, {self.company}"
+        return f"{self.estimating}"
 
 
 class PropsalsServices(models.Model):

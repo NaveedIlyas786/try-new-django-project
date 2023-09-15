@@ -11,6 +11,8 @@ from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSeria
 
 
 
+
+
 class EstimatingListView(APIView):
 
     def get(self, request, id=None, format=None):
@@ -54,11 +56,21 @@ class EstimatingListView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+
+
+
 class Estimating_detailView(APIView):
     def get(self,request):
         estimating_detail=Estimating_detail.objects.all()
         serializer=EstimatingDetailSerializer(estimating_detail,many=True)
         return Response(serializer.data)
+
+
+
+
+
 
 
 class ProposalView(APIView):
@@ -97,6 +109,12 @@ class ProposalView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+
+
+
+
+
+
 class QualificationView(APIView):
 
 
@@ -130,6 +148,12 @@ class QualificationView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         qualification.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+
 
 
 
@@ -168,6 +192,13 @@ class AddendumView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
 
+
+
+
+
+
+
+
 class LocationViews(APIView):
     def get(self,request):
         location=Location.objects.all()
@@ -196,6 +227,12 @@ class LocationViews(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         location.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+
 
 
 
@@ -237,6 +274,14 @@ class SpecificationViews(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+
+
+
+
+
+
+
+
 class SpecificationDetailViews(APIView):
 
     def get(self, request, format=None):
@@ -275,6 +320,14 @@ class SpecificationDetailViews(APIView):
     
 
 
+
+
+
+
+
+
+
+
 class ServiceViews(APIView):
     def get(self, request, format=None):
         service = Service.objects.all()
@@ -311,6 +364,15 @@ class ServiceViews(APIView):
 
         service.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+
+
+
+
 
 
 class ProposalServiceViews(APIView):

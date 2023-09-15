@@ -15,6 +15,9 @@ class LocationAdmin(admin.ModelAdmin):
 
 
 
+
+
+
 class EstimatingAdmin(admin.ModelAdmin):
     list_display = ['id','start_date','Prjct_Name','due_date','status',
                     'company','bid_amount','location', 
@@ -27,8 +30,18 @@ class EstimatingAdmin(admin.ModelAdmin):
         queryset = queryset.select_related('estimator')  # Optimize the number of SQL queries
         return queryset
     
+
+
+
+
+
+
 class EstimatingDetail(admin.ModelAdmin):
     list_display=['id','prnt_id','drctry_name','file_type','output_Table_Name']
+
+
+
+
 
 
 class ProposalsAdmin(admin.ModelAdmin):
@@ -42,8 +55,17 @@ class ServiceAdmin(admin.ModelAdmin):
     list_display=['id','services']
 
 
+
+
+
+
+
 class PropsalsServicesAdmin(admin.ModelAdmin):
     list_display=['id','propsals','service','serviceTyp']
+
+
+
+
 
 
 class AddendumAdmin(admin.ModelAdmin):
@@ -51,8 +73,18 @@ class AddendumAdmin(admin.ModelAdmin):
 
 
 
+
+
+
+
+
 class SpecificationAdmin(admin.ModelAdmin):
     list_display=['id','proposal','specific_name','budget']
+
+
+
+
+
 
 
 
@@ -63,8 +95,16 @@ class Spec_detailAdmin(admin.ModelAdmin):
 
 
 
+
+
+
+
+
 class QualificationAdmin(admin.ModelAdmin):
     list_display=['id','detail']
+
+
+
 
 
 

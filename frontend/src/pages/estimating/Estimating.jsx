@@ -174,25 +174,7 @@ const Estimator = () => {
   }, []);
 
   //************ To show bidder Names in dropdown in estimating post field
-  // const [BidderName, setBidderName] = useState("");
-  const [selectedBidderId, setSelectedBidderId] = useState("");
-
-  const [bidderName, setbidderName] = useState([]);
-
-  useEffect(() => {
-    // Fetch data from the API
-    axios
-      .get("http://127.0.0.1:8000/api/user/Userapi/")
-      .then((response) => response.data)
-      .then((data) => {
-        const bidUser = data.filter((user) => user.roles.includes("Bidder"));
-        setbidderName(bidUser);
-        console.log(bidUser);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []);
+  const [bidderName, setbidderName] = useState("");
 
   //************* Define the handleSubmit function
   const handleSubmit = (event) => {
@@ -206,7 +188,7 @@ const Estimator = () => {
       estimator: estimatorName,
       location: location,
       bid_amount: bidAmount,
-      bidder: selectedBidderId, // Use BidderName here, not bidder
+      bidder: bidderName, // Use BidderName here, not bidder
     };
 
     // Send a POST request to the API
@@ -222,7 +204,7 @@ const Estimator = () => {
         setEstimatorName("");
         setLocation("");
         setBidAmount("");
-        setSelectedBidderId("");
+        setbidderName("");
         // Close the modal
         closeModal();
       })
@@ -234,12 +216,17 @@ const Estimator = () => {
       });
   };
 
-  const filteredData = data.filter(
-    (customer) =>
-      customer.Prjct_Name.toUpperCase().includes(filter.toUpperCase()) ||
-      customer.status.toUpperCase().includes(filter.toUpperCase()) ||
-      customer.due_date.toUpperCase().includes(filter.toUpperCase())
-  );
+  const filteredData = data.filter((customer) => {
+    return (
+      (customer.Prjct_Name && customer.Prjct_Name.toUpperCase().includes(filter.toUpperCase())) ||
+      (customer.status && customer.status.toUpperCase().includes(filter.toUpperCase())) ||
+      (customer.due_date && customer.due_date.toUpperCase().includes(filter.toUpperCase())) ||
+      (customer.bidder && customer.bidder.toUpperCase().includes(filter.toUpperCase())) ||
+      (customer.bid_amount && customer.bid_amount.toString().toUpperCase().includes(filter.toUpperCase()))
+    );
+  });
+  
+  
 
   // Define a function to handle modal close
   const closeModal = () => {
@@ -291,7 +278,7 @@ const Estimator = () => {
   };
 
   const handleBidderChange = (e) => {
-    setSelectedBidderId(e.target.value);
+    setbidderName(e.target.value);
   };
 
   const handleCompanyNameChange = (e) => {
@@ -394,9 +381,9 @@ const Estimator = () => {
                 <th>Actions</th>
               </tr>
             </thead>
-            <tbody className="cursor-pointer jloop">
+            <tbody className="cursor-pointer  bg-info jloop">
               {filteredData.map((item) => (
-                <tr key={item.id}>
+                <tr  key={item.id}>
                   <td className="mytd">{item.due_date}</td>
                   <td className="mytd myproject">{item.Prjct_Name}</td>
                   <td className="mytd">{item.status}</td>
@@ -555,29 +542,16 @@ const Estimator = () => {
                 />
               </div>
               <div className="mb-3">
-                <label htmlFor="bidder" className="form-label">
-                  Bidder_Name:
+                <label htmlFor="bidderName" className="form-label">
+                  Bidder Name:
                 </label>
-                <select
-                  className="form-select"
-                  id="bidder"
-                  value={selectedBidderId}
+                <input
+                  type="text"
+                  className="form-control"
+                  id="bidderName"
+                  value={bidderName}
                   onChange={handleBidderChange}
-                >
-                  <option value="null">Select Bidder Name</option>
-
-                  {bidderName && bidderName.length > 0 ? (
-                    bidderName.map((bidder) => (
-                      <option value={bidder.id} key={bidder.id}>
-                        {bidder.full_Name}
-                      </option>
-                    ))
-                  ) : (
-                    <option value="" disabled>
-                      Loading...
-                    </option>
-                  )}
-                </select>
+                />
               </div>
               <button type="submit" className="btn btn-submit mt-3 mb-4">
                 Add
@@ -726,7 +700,7 @@ const Estimator = () => {
                         >
                           <strong>Specifications</strong>
                         </label>
-                        <div className=" specificationEntry">
+                        <div className=" specificationEntry bg-warning">
                           <div className="mb-2 mt-3">
                             <label
                               htmlFor="specificName"
@@ -817,6 +791,7 @@ const Estimator = () => {
 
                          
                         </div>
+                        <button className="btn btn-success">Add-New-Specification-Section</button>
                       </div>
                     )}
                     {activeStep === 3 && (
@@ -824,7 +799,7 @@ const Estimator = () => {
                         <label htmlFor="projectName" className="form-label">
                           Services(Inclusions & Exclusions):
                         </label>
-                        <div className="bg-info p-2 rounded">
+                        <div className="sarviceSection p-2 rounded">
                           {serviceData.services.map((service) => (
                             <div key={service.id} className="mb-2 d-flex ">
                               <input

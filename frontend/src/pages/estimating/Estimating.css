@@ -308,9 +308,30 @@ input:focus {
 .dropdown:hover .dropbtn {
   background-color: #3e8e41;
 }
-.ServiceSection > input, .ServiceSection>.dropdown{
-  padding: 0 !important;
-}
 .serviceInput{
   border-radius: 0 !important;
+}
+.sarviceSection{
+  max-height: 350px !important;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+/* Style the scrollbar for WebKit-based browsers */
+.sarviceSection::-webkit-scrollbar {
+  width: 10px; /* Set the width of the scrollbar */
+}
+
+.sarviceSection::-webkit-scrollbar-thumb {
+  background-color: #5d5d5f; /* Set the color of the scrollbar track (the non-draggable part) */
+  border-radius: 10px; /*Round the corners of the thumb*/
+}
+
+.sarviceSection::-webkit-scrollbar-track {
+  border-radius: 10px; /*Round the corners of the thumb*/
+  background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
+}
+.jloop{
+  border-radius: 20px 20px 0 0 !important;
+  margin-top: 50px !important;
+  max-height: 200px !important;
 }

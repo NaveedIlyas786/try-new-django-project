@@ -178,7 +178,7 @@ class ProposalService(models.Model):
 
 
 class Addendum(models.Model):
-    proposal=models.ForeignKey(Proposal, on_delete=models.CASCADE)
+    proposal=models.ForeignKey(Proposal, on_delete=models.CASCADE,related_name='Addendums')
     date = models.DateField(verbose_name="Addendum Date(YYYY-MM-DD)",blank=False,null=True)
     addendum_Number=models.IntegerField(verbose_name="Addendum Number")
 

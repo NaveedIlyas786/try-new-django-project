@@ -77,17 +77,19 @@ class LocationSerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 
-class AddendumSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Addendum
-        fields = ['id', 'proposal', 'date', 'addendum_Number']
 
 
 class QualificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Qualification
         fields = ['id', 'detail']
+
+
+
+
+
+
+
 
 
 class SpecificationSerializer(serializers.ModelSerializer):
@@ -110,12 +112,25 @@ class SpecificationDetailSerializer(serializers.ModelSerializer):
         return representation
 
 
+
+
+
+
+
+
+
+
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
         fields = '__all__'
 
 
+class AddendumSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Addendum
+        fields = ['id', 'proposal', 'date', 'addendum_Number']
 
 
 
@@ -128,10 +143,18 @@ class ProposalServiceSerializer(serializers.ModelSerializer):
 
 class ProposalSerializer(serializers.ModelSerializer):
     services = ProposalServiceSerializer(many=True, read_only=True)
+    Addendums=AddendumSerializer(many=True,read_only=True)
     
     class Meta:
         model = Proposal
-        fields = ['id','estimating', 'date', 'architect_name', 'architect_firm', 'services'] 
+        fields = ['id','estimating', 'date', 'architect_name', 'architect_firm','Addendums', 'services'] 
+
+
+
+
+
+
+
 # class ProposalServiceSerializer(serializers.ModelSerializer):
 #     service = ServiceSerializer()
 

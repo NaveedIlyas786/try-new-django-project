@@ -330,27 +330,30 @@ def create_proposal(request):
     if request.method == 'POST':
         data = request.data
 
-        # Fetching the estimating instance or handling the error if it does not exist
         try:
             estimating_instance = Estimating.objects.get(id=data['estimating'])
         except Estimating.DoesNotExist:
             return Response({"error": "Estimating instance not found"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Creating a new proposal
         proposal_data = {
             "estimating": estimating_instance.id,
             "date": data['date'],
             "architect_name": data['architect_name'],
             "architect_firm": data['architect_firm'],
         }
-        
+
         proposal_serializer = ProposalSerializer(data=proposal_data)
         if proposal_serializer.is_valid():
             proposal = proposal_serializer.save()
         else:
             return Response(proposal_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-        # Creating the ProposalService instances
+
+
+
+
+
+
         for service_data in data['services']:
             try:
                 service = Service.objects.get(id=service_data['service'])
@@ -366,58 +369,98 @@ def create_proposal(request):
                     return Response(proposal_service_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             except Service.DoesNotExist:
                 return Response({"error": f"Service with id {service_data['service']} not found"}, status=status.HTTP_400_BAD_REQUEST)
+            
+
+
+
+
+
+
         
+        if 'Addendums' in data:
+            for addendum_data in data['Addendums']:
+                proposal_addendum_data = {
+                    "proposal": proposal.id,
+                    "date": addendum_data['date'],
+                    "addendum_Number": addendum_data['addendum_Number']
+                }
+                proposal_addendum_serializer = AddendumSerializer(data=proposal_addendum_data)
+                if proposal_addendum_serializer.is_valid():
+                    proposal_addendum_serializer.save()
+                else:
+                    return Response(proposal_addendum_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error": "No Addendums data provided"}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+
+
+
+
+
         return Response({"message": "Proposal created successfully"}, status=status.HTTP_201_CREATED)
-    
+
+
+
+
+
+
+
 
 class ProposalView(APIView):
     def get(self, request):
         proposals = Proposal.objects.all()
         serializer = ProposalSerializer(proposals, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
+    def Post(request):
+        pass
+        
 
 class ProposalServiceView(APIView):
     def get(self, request, format=None):
         proposalservice = ProposalService.objects.all()
         serializer = ProposalServiceSerializer(proposalservice, many=True)
         return Response(serializer.data)
-# class ServiceViews(APIView):
-#     def get(self, request, format=None):
-#         service = Service.objects.all()
-#         serializer = ServiceSerializer(service, many=True)
-#         return Response(serializer.data)
-
-
-#     def post(self, request, format=None):
-#         serializer = ServiceSerializer(data=request.data)
-#         if serializer.is_valid():
-
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
     
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#     def put(self, request, id, format=None):
-#         try:
-#             service = Service.objects.get(id=id)
-#         except Service.DoesNotExist:
-#             return Response(status=status.HTTP_404_NOT_FOUND)
 
-#         serializer = ServiceSerializer(service, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#     def delete(self, request, id, format=None):
-#         try:
-#             service = Service.objects.get(id=id)
-#         except Service.DoesNotExist:
-#             return Response(status=status.HTTP_404_NOT_FOUND)
+class ServiceViews(APIView):
+    def get(self, request, format=None):
+        service = Service.objects.all()
+        serializer = ServiceSerializer(service, many=True)
+        return Response(serializer.data)
 
-#         service.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def post(self, request, format=None):
+        serializer = ServiceSerializer(data=request.data)
+        if serializer.is_valid():
+
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, id, format=None):
+        try:
+            service = Service.objects.get(id=id)
+        except Service.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ServiceSerializer(service, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id, format=None):
+        try:
+            service = Service.objects.get(id=id)
+        except Service.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        service.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 

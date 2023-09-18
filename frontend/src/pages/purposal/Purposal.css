@@ -1,8 +1,8 @@
 * {
   font-size: 17px;
   line-height: 24px;
-  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-    "Lucida Sans", Arial, sans-serif;
+  /* font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif; */
 }
 .exportdiv {
   display: flex;
@@ -10,25 +10,30 @@
   padding: 0 3rem 0 0;
   margin: 1rem 0;
 }
-.exportSection{
-    /* padding-top: 3rem; */
-    width: 25px;
-    height: 30px;
-    cursor: pointer;
-    /* background-color: #283897; */
+
+/* Set page padding */
+.pdf_form {
+  padding: 10px;
 }
-.pdfimg{
-    width: 100%;
-    height: 100%;
+
+/* Set font size */
+.pdf_form * {
+  font-size: 20px;
 }
+
+/* Style the PDF export button (optional) */
+.exportSection {
+  cursor: pointer;
+}
+
+.pdfimg {
+  width: 50px; /* Set the width as per your preference */
+  height: auto;
+}
+
 .purposal {
   margin-top: 70px;
   padding: 2rem;
-}
-.pdf_form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 
 .myspan {

@@ -39,10 +39,12 @@ const Estimator = () => {
   };
 
   //*********************Multistep Purposal-form Addendum Section***********************/
-  const [entries, setEntries] = useState([{
-    addendumNumber: '',
-    addendumDate: '',
-  }]);
+  const [entries, setEntries] = useState([
+    {
+      addendumNumber: "",
+      addendumDate: "",
+    },
+  ]);
 
   // Define functions to handle data changes
   const handleAddendumNumberChange = (index, value) => {
@@ -529,13 +531,13 @@ const Estimator = () => {
                     {activeStep === 0 && (
                       <>
                         <div className="mb-2 mt-3">
-                          <label htmlFor="projectName" className="form-label">
+                          <label htmlFor="PurposalID" className="form-label">
                             Current Date:
                           </label>
                           <input
                             type="date"
                             className="form-control"
-                            id="projectName"
+                            id="PurposalID"
                             value={projectName}
                             onChange={handleProjectNameChange}
                           />
@@ -547,9 +549,9 @@ const Estimator = () => {
                           <input
                             type="text"
                             className="form-control"
-                            id="projectName"
-                            value={projectName}
-                            onChange={handleProjectNameChange}
+                            id="ArchitectName"
+                            value=""
+                            onChange={() => {}}
                           />
                         </div>
                         <div className="mb-2 mt-3">
@@ -559,9 +561,9 @@ const Estimator = () => {
                           <input
                             type="text"
                             className="form-control"
-                            id="projectName"
-                            value={projectName}
-                            onChange={handleProjectNameChange}
+                            id="ArchitectFirm"
+                            value=""
+                            onChange={() => {}}
                           />
                         </div>
                       </>
@@ -570,7 +572,7 @@ const Estimator = () => {
                       <div className="mt-2">
                         {/* Render the entries */}
                         <label className="form-label">
-                          Addendum Information
+                          <strong> Addendum Information</strong>
                         </label>
                         {entries.map((entry, index) => (
                           <div
@@ -630,6 +632,113 @@ const Estimator = () => {
                       </div>
                     )}
                     {activeStep === 2 && (
+                      <div >
+                        <label
+                          htmlFor="projectName"
+                          className="form-label mt-2"
+                        >
+                          <strong>Specifications</strong>
+                        </label>
+                        <div className="bg-warning specificationEntry">
+                          <div className="mb-2 mt-3">
+                            <label
+                              htmlFor="specificName"
+                              className="form-label"
+                            >
+                              Specification Name
+                            </label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="specificName"
+                              // value={projectName}
+                              // onChange={handleProjectNameChange}
+                            />
+                          </div>
+                          <div className="mb-2 mt-3">
+                            <label
+                              htmlFor="specificbudget"
+                              className="form-label"
+                            >
+                              Specification budget
+                            </label>
+                            <input
+                              type="number"
+                              className="form-control"
+                              id="specificbudget"
+                              // value={projectName}
+                              // onChange={handleProjectNameChange}
+                            />
+                          </div>
+
+                          <div className="mt-2">
+                            {/* Render the entries */}
+                            <label className="form-label">
+                              Specification Details
+                            </label>
+                            {entries.map((entry, index) => (
+                              <div
+                                key={index}
+                                className="mb-2 mt-3"
+                              >
+                                <div className="input-group mb-3 ">
+                                  <input
+                                    type="number"
+                                    className="form-control"
+                                    value={entry.addendumNumber}
+                                    placeholder="Specification Number"
+                                    onChange={(e) =>
+                                      handleAddendumNumberChange(
+                                        index,
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    value={entry.addendumDate}
+                                    placeholder="Specification description"
+                                    onChange={(e) =>
+                                      handleAddendumDateChange(
+                                        index,
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                  <button
+                                    className="btn btn-danger"
+                                    onClick={() => handleRemoveEntry(index)} // Call the handleRemoveEntry function with the index
+                                  >
+                                    <i className="far">X</i>
+                                  </button>
+                                </div>
+                                {index === entries.length - 1 && (
+                                  <button
+                                  //newentrybtn ye class ha below btn ki
+                                    className="btn btn-success bk  "
+                                    onClick={handleNewEntry}
+                                  >
+                                    <i onClick={handleNewEntry} className="fa-regular fa-plus"></i>
+                                  </button>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Initial "New-Entry" button */}
+                          {entries.length === 0 && (
+                            <button
+                              className="btn btn-success ms-3 rounded-0"
+                              onClick={handleNewEntry}
+                            >
+                              New-Entry
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                    {activeStep === 3 && (
                       <div className="mb-2 mt-3">
                         <label htmlFor="projectName" className="form-label">
                           Services(Inclusions & Exclusions):
@@ -652,20 +761,6 @@ const Estimator = () => {
                       </div>
                     )}
 
-                    {activeStep === 3 && (
-                      <div className="mb-2 mt-3">
-                        <label htmlFor="projectName" className="form-label">
-                          Specifications
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="projectName"
-                          value={projectName}
-                          onChange={handleProjectNameChange}
-                        />
-                      </div>
-                    )}
                     {activeStep === 4 && (
                       <div className="mb-2 mt-3">
                         <label htmlFor="projectName" className="form-label">

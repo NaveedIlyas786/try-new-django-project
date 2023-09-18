@@ -181,9 +181,12 @@ td{
     position: relative !important;
     background-color: aqua;
   }
-  .newentrybtn{
-    position: absolute !important;
-    border-radius: 0;
-    top: 40px;
-    left: 2px;
+ 
+  .bk{
+   margin-top: -35px;
+   width: 45px !important;
+   height: 30px !important;
+   border-radius: 50px;
+   font-size: 10px !important;
+   text-align: center;
   }

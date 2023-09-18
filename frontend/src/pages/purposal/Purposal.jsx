@@ -9,25 +9,20 @@ const Purposal = () => {
     const input = pdfRef.current;
     html2canvas(input).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF(" p", "mm", "a4", true);
+      const pdf = new jsPDF("p", "mm", "a4", true);
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-      const imgx = (pdfWidth - imgWidth * ratio) / 2;
-      const imgY = 30;
-      pdf.addImage(
-        imgData,
-        "PNG",
-        imgx,
-        imgY,
-        imgWidth * ratio,
-        imgHeight * ratio
-      );
+      const imgWidth = pdfWidth - 20; // Set the image width to the page width minus the desired padding (20px on each side)
+      const imgHeight = (imgWidth * canvas.height) / canvas.width;
+      const imgX = 10; // Set the left padding
+      const imgY = 10; // Set the top padding
+  
+      pdf.addImage(imgData, "PNG", imgX, imgY, imgWidth, imgHeight);
       pdf.save("Estimating.pdf");
     });
   };
+  
+  
   return (
     <div className="purposal ">
       <div className="exportdiv">
@@ -385,7 +380,7 @@ const Purposal = () => {
                 Fire-stopping and joint sealants for our scope of work only
               </li>
               <li>Scaffolding for our scope of work only</li>
-              <li>Badging for our workers only</li>
+              <li>Complete Car</li>
             </ul>
           </div>
           <div className="estimator">

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./Estimating.css";
 import { Link, useNavigate } from "react-router-dom";
+import "font-awesome/css/font-awesome.min.css";
+
 import axios from "axios";
 import {
   Modal,
@@ -25,11 +27,21 @@ const Estimator = () => {
   const [bidAmount, setBidAmount] = useState("");
   const [company, setCompany] = useState(1); // Updated to store company name as a string
   const navigate = useNavigate();
+  // ***********************************
+  const [openRow, setOpenRow] = useState(null);
+
+  const toggleDropdown = (rowId) => {
+    if (openRow === rowId) {
+      setOpenRow(null); // Close the dropdown if it's already open
+    } else {
+      setOpenRow(rowId); // Open the dropdown for the clicked row
+    }
+  };
 
   //********************************************/
   //TODO: Multistep Form  React Code
   const [activeStep, setActiveStep] = useState(0);
-  const steps = ["Step 1", "Step 2", "Step 3", "Step 4", "Step 5"];
+  const steps = ["Step 1", "Step 2", "Step 3", "Step 4"];
 
   const handleBack = () => {
     setActiveStep((prevStep) => prevStep - 1);
@@ -286,6 +298,70 @@ const Estimator = () => {
     setCompany(e.target.value);
   };
 
+  const [serviceData, setServiceData] = useState({
+    services: [
+      {
+        id: 1,
+        name: "Service 1: What is your City Name!",
+      },
+      {
+        id: 2,
+        name: "Service 2:  What is your Village Name!",
+      },
+      {
+        id: 3,
+        name: "Service 3:  What is your Country Name!",
+      },
+      {
+        id: 4,
+        name: "Service 4:  What is your Country Name!",
+      },
+      {
+        id: 5,
+        name: "Service 5:  What is your Country Name!",
+      },
+      {
+        id: 6,
+        name: "Service 6:  What is your Country Name!",
+      },
+      {
+        id: 7,
+        name: "Service 7:  What is your Country Name!",
+      },
+      {
+        id: 8,
+        name: "Service 8:  What is your Country Name!",
+      },
+      {
+        id: 9,
+        name: "Service 9:  What is your Country Name!",
+      },
+      {
+        id: 10,
+        name: "Service 10:  What is your Country Name!",
+      },
+    ],
+  });
+
+  const handleServiceChange = (id, value) => {
+    // Create a copy of the serviceData object
+    const updatedServiceData = { ...serviceData };
+
+    // Find the service by ID and update its name
+    updatedServiceData.services = updatedServiceData.services.map((service) => {
+      if (service.id === id) {
+        return {
+          ...service,
+          name: value,
+        };
+      }
+      return service;
+    });
+
+    // Update the state with the modified serviceData
+    setServiceData(updatedServiceData);
+  };
+
   return (
     <>
       <div className={`estimator px-5 ${showModal ? "modal-active" : ""}`}>
@@ -293,7 +369,7 @@ const Estimator = () => {
         <div className="inputbtn d-flex gap-2 px-5">
           <input
             type="text"
-            placeholder="Filter by Project Name"
+            placeholder="Filter by Project Name,Status"
             value={filter}
             className="myinput p-2 rounded"
             onChange={(e) => setFilter(e.target.value)}
@@ -318,26 +394,40 @@ const Estimator = () => {
                 <th>Actions</th>
               </tr>
             </thead>
-            <tbody className="cursor-pointer">
+            <tbody className="cursor-pointer jloop">
               {filteredData.map((item) => (
                 <tr key={item.id}>
-                  <td>{item.due_date}</td>
-                  <td>{item.Prjct_Name}</td>
-                  <td>{item.status}</td>
-                  <td>{item.estimator}</td>
-                  <td>{item.bidder}</td>
-                  <td>{item.bid_amount}</td>
-                  <td>
-                    <button
-                      className={`btn btn-primary ${
-                        purposalModal ? "modal-active" : ""
-                      }`}
-                      // onClick={movetoPurposalPage}
-                      onClick={() => setPurposalModal(true)}
-                    >
-                      Purposal
-                    </button>
-                    <button className="btn ms-3 btn-success">Project</button>
+                  <td className="mytd">{item.due_date}</td>
+                  <td className="mytd myproject">{item.Prjct_Name}</td>
+                  <td className="mytd">{item.status}</td>
+                  <td className="mytd">{item.estimator}</td>
+                  <td className="mytdbidder">{item.bidder}</td>
+                  <td className="mytd">{item.bid_amount}</td>
+                  <td className="mytd">
+                    <div className="relative-container">
+                      <i
+                        onClick={() => toggleDropdown(item.id)}
+                        style={{ cursor: "pointer" }}
+                        className="fa-solid threeDotIcon fa-ellipsis-vertical"
+                      ></i>
+                      <div
+                        className={`mydiv ${
+                          openRow === item.id ? "open" : " "
+                        }`}
+                      >
+                        <button
+                          className="btn dropbtns"
+                          onClick={() => {
+                            setPurposalModal(true);
+                          }}
+                          // onClick={movetoPurposalPage}
+                        >
+                          Proposal
+                        </button>
+                        <button className="btn dropbtns">Project</button>
+                        <button className="btn dropbtns">Status</button>
+                      </div>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -575,11 +665,8 @@ const Estimator = () => {
                           <strong> Addendum Information</strong>
                         </label>
                         {entries.map((entry, index) => (
-                          <div
-                            key={index}
-                            className="mb-2 mt-3 position-relative"
-                          >
-                            <div className="input-group mb-3 ">
+                          <div key={index} className="mb-2 mt-3">
+                            <div className="input-group  ">
                               <input
                                 type="number"
                                 className="form-control"
@@ -611,10 +698,10 @@ const Estimator = () => {
                             </div>
                             {index === entries.length - 1 && (
                               <button
-                                className="btn btn-success newentrybtn"
+                                className="btn btn-success bk"
                                 onClick={handleNewEntry}
                               >
-                                <i class="fa-regular fa-plus"></i>
+                                <i class="fa-regular icon fa-plus"></i>
                               </button>
                             )}
                           </div>
@@ -632,14 +719,14 @@ const Estimator = () => {
                       </div>
                     )}
                     {activeStep === 2 && (
-                      <div >
+                      <div>
                         <label
                           htmlFor="projectName"
                           className="form-label mt-2"
                         >
                           <strong>Specifications</strong>
                         </label>
-                        <div className="bg-warning specificationEntry">
+                        <div className=" specificationEntry">
                           <div className="mb-2 mt-3">
                             <label
                               htmlFor="specificName"
@@ -676,65 +763,59 @@ const Estimator = () => {
                             <label className="form-label">
                               Specification Details
                             </label>
-                            {entries.map((entry, index) => (
-                              <div
-                                key={index}
-                                className="mb-2 mt-3"
-                              >
-                                <div className="input-group mb-3 ">
-                                  <input
-                                    type="number"
-                                    className="form-control"
-                                    value={entry.addendumNumber}
-                                    placeholder="Specification Number"
-                                    onChange={(e) =>
-                                      handleAddendumNumberChange(
-                                        index,
-                                        e.target.value
-                                      )
-                                    }
-                                  />
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    value={entry.addendumDate}
-                                    placeholder="Specification description"
-                                    onChange={(e) =>
-                                      handleAddendumDateChange(
-                                        index,
-                                        e.target.value
-                                      )
-                                    }
-                                  />
-                                  <button
-                                    className="btn btn-danger"
-                                    onClick={() => handleRemoveEntry(index)} // Call the handleRemoveEntry function with the index
-                                  >
-                                    <i className="far">X</i>
-                                  </button>
+                            <div className={`wholediv`}>
+                              {entries.map((entry, index) => (
+                                <div key={index} className="mb-2 mt-3">
+                                  <div className="input-group">
+                                    <input
+                                      type="number"
+                                      className="form-control"
+                                      value={entry.addendumNumber}
+                                      placeholder="Specification Number"
+                                      onChange={(e) =>
+                                        handleAddendumNumberChange(
+                                          index,
+                                          e.target.value
+                                        )
+                                      }
+                                    />
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      value={entry.addendumDate}
+                                      placeholder="Specification description"
+                                      onChange={(e) =>
+                                        handleAddendumDateChange(
+                                          index,
+                                          e.target.value
+                                        )
+                                      }
+                                    />
+                                    <button
+                                      className="btn btn-danger"
+                                      onClick={() => handleRemoveEntry(index)}
+                                      disabled={entries.length === 1} // Disable the button if there is only one entry
+                                    >
+                                      <i className="far">X</i>
+                                    </button>
+                                  </div>
+                                  {index === entries.length - 1 && (
+                                    <button
+                                      className="btn btn-success bk"
+                                      onClick={handleNewEntry}
+                                    >
+                                      <i
+                                        onClick={handleNewEntry}
+                                        className="fa-regular icon fa-plus"
+                                      ></i>
+                                    </button>
+                                  )}
                                 </div>
-                                {index === entries.length - 1 && (
-                                  <button
-                                  //newentrybtn ye class ha below btn ki
-                                    className="btn btn-success bk  "
-                                    onClick={handleNewEntry}
-                                  >
-                                    <i onClick={handleNewEntry} className="fa-regular fa-plus"></i>
-                                  </button>
-                                )}
-                              </div>
-                            ))}
+                              ))}
+                            </div>
                           </div>
 
-                          {/* Initial "New-Entry" button */}
-                          {entries.length === 0 && (
-                            <button
-                              className="btn btn-success ms-3 rounded-0"
-                              onClick={handleNewEntry}
-                            >
-                              New-Entry
-                            </button>
-                          )}
+                         
                         </div>
                       </div>
                     )}
@@ -743,13 +824,33 @@ const Estimator = () => {
                         <label htmlFor="projectName" className="form-label">
                           Services(Inclusions & Exclusions):
                         </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="projectName"
-                          value={projectName}
-                          onChange={handleProjectNameChange}
-                        />
+                        <div className="bg-info p-2 rounded">
+                          {serviceData.services.map((service) => (
+                            <div key={service.id} className="mb-2 d-flex ">
+                              <input
+                                type="text"
+                                className="form-control serviceInput"
+                                placeholder={`Service ${service.id}`}
+                                value={service.name}
+                                onChange={(e) =>
+                                  handleServiceChange(
+                                    service.id,
+                                    e.target.value
+                                  )
+                                }
+                              />
+                              {/* <div class="dropdown"> */}
+                               
+                                <select name="#" id="">
+                                  <option value="#">Exclusion</option>
+                                  <option value="#">inclusion</option>
+                                </select>
+                               
+                              {/* </div> */}
+                            </div>
+                          ))}
+                        </div>
+
                         {/* <select
                             className="form-select exclusionsID"
                             id="exclusionsID"
@@ -761,22 +862,8 @@ const Estimator = () => {
                       </div>
                     )}
 
-                    {activeStep === 4 && (
-                      <div className="mb-2 mt-3">
-                        <label htmlFor="projectName" className="form-label">
-                          Qualifications
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="projectName"
-                          value={projectName}
-                          onChange={handleProjectNameChange}
-                        />
-                      </div>
-                    )}
                     <div className="mt-1">
-                      {activeStep <= 3 ? (
+                      {activeStep <= 2 ? (
                         <div className="parentbtnsdiv">
                           <div className="spacebtns">
                             <Button

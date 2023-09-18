@@ -1,106 +1,113 @@
-.estimator{
-    margin-top: 70px;
-    position: relative;
-    padding-top: 2.5rem;
-    background-color: rgb(255, 255, 255);
+.estimator {
+  margin-top: 70px;
+  position: relative;
+  padding-top: 2.5rem;
+  background-color: rgb(255, 255, 255);
 }
 
-td{
+td {
   padding: 5px 10px !important;
   background-color: rgb(244, 248, 246) !important;
   max-width: fit-content !important;
 }
-.inputbtn{
+.inputbtn {
   /* min-width: 350px; */
   position: absolute;
   right: 0;
   color: black;
   top: 2.5rem;
 }
-.myinput{
+.myinput {
   min-width: 350px;
   background-color: white;
   color: black;
   border: 1px solid black;
+  transition: all 0.5s ease-in-out;
 }
-.myinput:focus{
+.myinput:focus {
+  min-width: 550px;
   border: 1px solid black !important;
+  transition: all 0.5s ease-in-out;
 }
 #myInput {
-    /* background-image: url('/css/searchicon.png'); */
-    background-position: 10px 10px;
-    background-repeat: no-repeat;
-    width: 100%;
-    font-size: 16px;
-    padding: 12px 20px 12px 40px;
-    border: 1px solid #ddd;
-    margin-bottom: 12px;
-  }
-  
-  #myTable {
-    border-collapse: collapse;
-    width: 100%;
-    border: 1px solid #ddd;
-    font-size: 18px;
-  }
-  
-  #myTable th, #myTable td {
-    text-align: left;
-    padding: 12px;
-  }
-  
-  #myTable tr {
-    border-bottom: 1px solid #ddd;
-  }
-  
-  #myTable tr.header, #myTable tr:hover {
-    background-color: #f1f1f1;
-  }
-  .modal-container {
-    position: fixed;
-    top: 55%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 99;
-    height: 500px;
-    width: 950px;
-    background-color: rgb(224, 222, 222);
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
-    opacity: 0; /* Initially hide the modal */
-    pointer-events: none; /* Disable mouse events on the hidden modal */
-    transition: opacity 0.5s, transform 0.5s; /*Add transition properties*/
-  }
-  
-  .modal-container.show {
-    opacity: 1; /* Show the modal */
-    pointer-events: auto; /* Enable mouse events */
-    transform: translate(-50%, -50%) scale(1); /* Scale to 1 for the opening transition */
-  }
-  
-  .modal-content, .purposal-content {
-    height: 100%;
-    overflow-y: scroll;
-    scroll-behavior: smooth;
-  }
-  
-  /* Style the scrollbar for WebKit-based browsers */
-  .modal-content::-webkit-scrollbar, .purposal-content::-webkit-scrollbar {
-    width: 10px; /* Set the width of the scrollbar */
-  }
-  
-  .modal-content::-webkit-scrollbar-thumb,.purposal-content::-webkit-scrollbar-thumb {
-    background-color: #283897; /* Set the color of the scrollbar track (the non-draggable part) */
-    border-radius: 10px; /*Round the corners of the thumb*/
-  }
-  
-  .modal-content::-webkit-scrollbar-track {
-    border-radius: 10px; /*Round the corners of the thumb*/
-    background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
-  }
-  
-  
-  /* CSS for the close button */
+  /* background-image: url('/css/searchicon.png'); */
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myTable {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+
+#myTable th,
+#myTable td {
+  text-align: left;
+  padding: 12px;
+}
+
+#myTable tr {
+  border-bottom: 1px solid #ddd;
+}
+
+#myTable tr.header,
+#myTable tr:hover {
+  background-color: #f1f1f1;
+}
+.modal-container {
+  position: fixed;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 99;
+  height: 500px;
+  width: 950px;
+  background-color: rgb(224, 222, 222);
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+  opacity: 0; /* Initially hide the modal */
+  pointer-events: none; /* Disable mouse events on the hidden modal */
+  transition: opacity 0.5s, transform 0.5s; /*Add transition properties*/
+}
+
+.modal-container.show {
+  opacity: 1; /* Show the modal */
+  pointer-events: auto; /* Enable mouse events */
+  transform: translate(-50%, -50%) scale(1); /* Scale to 1 for the opening transition */
+}
+
+.modal-content,
+.purposal-content {
+  height: 100%;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+
+/* Style the scrollbar for WebKit-based browsers */
+.modal-content::-webkit-scrollbar,
+.purposal-content::-webkit-scrollbar {
+  width: 10px; /* Set the width of the scrollbar */
+}
+
+.modal-content::-webkit-scrollbar-thumb,
+.purposal-content::-webkit-scrollbar-thumb {
+  background-color: #283897; /* Set the color of the scrollbar track (the non-draggable part) */
+  border-radius: 10px; /*Round the corners of the thumb*/
+}
+
+.modal-content::-webkit-scrollbar-track {
+  border-radius: 10px; /*Round the corners of the thumb*/
+  background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
+}
+
+/* CSS for the close button */
 .close-btn {
   position: absolute;
   top: 5px;
@@ -115,7 +122,7 @@ td{
 
 /* Style the close icon inside the button */
 .close-btn::before {
-  content: '\00D7'; /* Unicode for the close icon (×) */
+  content: "\00D7"; /* Unicode for the close icon (×) */
   color: white; /* Color the close icon white */
   /* font-size: 30px; Adjust the font size as needed */
   line-height: 1; /* Center the icon vertically */
@@ -124,69 +131,186 @@ td{
   filter: blur(5px); /* You can adjust the blur intensity */
   pointer-events: none; /* Allow click-through to the modal */
 }
-  
-  .modal-active{
-    filter: blur(5px);
-    pointer-events: none;
-    overflow: hidden;
-  }
-  .btn-submit{
-    width:200px;
-    background-color: #283897;
-    color: white;
-    margin: 0 auto;
-  }
-  .btn-submit:hover{
-    background-color: #0611b4;
-    color: white;
-  }
-  .addnewtxt {
-    position: absolute;
-    top: 30px;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: rgb(3, 3, 3);
-    padding: 5px;
-    border-radius: 5px;
-    text-align: center; /* Center the text */
-  }
-  
-  .addnewtxt::after {
-    content: ""; /* Create a pseudo-element */
-    display: block; /* Make it a block element */
-    width: 100%; /* Set the width to 100% to create a line that spans the text */
-    height: 1px; /* Set the height to create the line */
-    background-color: #283897; /* Line color */
-    margin-top: 5px; /* Adjust the margin to control the spacing between text and line */
-  }
 
-  input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(100%);
-    cursor: pointer; /* Invert the colors (black icon on white background) */
-  }  
-  
-  input:focus{
-    border: none !important;
-    outline: none !important;
-  }
- .exclusionsID{
+.modal-active {
+  filter: blur(5px);
+  pointer-events: none;
+  overflow: hidden;
+}
+.btn-submit {
+  width: 200px;
+  background-color: #283897;
+  color: white;
+  margin: 0 auto;
+}
+.btn-submit:hover {
+  background-color: #0611b4;
+  color: white;
+}
+.addnewtxt {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgb(3, 3, 3);
+  padding: 5px;
+  border-radius: 5px;
+  text-align: center; /* Center the text */
+}
+
+.addnewtxt::after {
+  content: ""; /* Create a pseudo-element */
+  display: block; /* Make it a block element */
+  width: 100%; /* Set the width to 100% to create a line that spans the text */
+  height: 1px; /* Set the height to create the line */
+  background-color: #283897; /* Line color */
+  margin-top: 5px; /* Adjust the margin to control the spacing between text and line */
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(100%);
+  cursor: pointer; /* Invert the colors (black icon on white background) */
+}
+
+input:focus {
+  border: none !important;
+  outline: none !important;
+}
+.exclusionsID {
   width: 50px !important;
- }
-  .spacebtns{
-    margin: 2rem 0;
-    display: flex;
-    justify-content: space-between;
-  }
-  .upperDiv{
-    position: relative !important;
-    background-color: aqua;
-  }
- 
-  .bk{
-   margin-top: -35px;
-   width: 45px !important;
-   height: 30px !important;
-   border-radius: 50px;
-   font-size: 10px !important;
-   text-align: center;
-  }
+}
+.spacebtns {
+  margin: 2rem 0;
+  display: flex;
+  justify-content: space-between;
+}
+.upperDiv {
+  position: relative !important;
+  background-color: aqua;
+}
+.mydiv {
+  opacity: 0;
+  display: none;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.mydiv.open {
+  opacity: 1;
+  display: flex;
+  justify-content: center !important;
+  align-items: center;
+  flex-direction: column;
+  background-color: #0611b4;
+  border-radius: 5px;
+}
+.dropbtns {
+  width: 100px !important;
+  padding: 0 !important;
+  font-size: 15px !important;
+  border-radius: 2px !important;
+  color: white;
+  margin: 1px 0;
+}
+.dropbtns:hover{
+  background-color: aliceblue;
+  color: black;
+  padding: 0.3px 0 !important;
+}
+
+.mytdbidder,
+.myproject {
+  max-width: 250px !important;
+  text-align: left !important;
+}
+.mytd {
+  position: relative;
+  max-width: 150px !important;
+}
+
+.mydiv {
+  position: absolute;
+  z-index: 99;
+  right: 70px;
+  top: 10px;
+  opacity: 0;
+  display: none;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.threeDotIcon {
+  /* background-color: #0611b4; */
+  padding: 10px;
+}
+
+.mydiv.open {
+  opacity: 1;
+  display: block; /* or display: initial; depending on your layout */
+  flex-direction: column;
+}
+.bk{
+  width: 30px  !important;
+  /* height: 30px !important; */
+  border-radius: 0 !important;
+  margin-top: -10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.icon{
+  /* background-color: aqua; */
+  margin-top: 7px;
+}
+.wholediv{
+  padding: 10px   !important;
+  border-radius: 10px;
+  background-color: rgb(182, 181, 181) !important;
+}
+/* ************************ */
+
+
+.dropbtn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  left: 0;
+  background-color: #f9f9f9;
+  min-width: 120px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: #3e8e41;
+}
+.ServiceSection > input, .ServiceSection>.dropdown{
+  padding: 0 !important;
+}
+.serviceInput{
+  border-radius: 0 !important;
+}

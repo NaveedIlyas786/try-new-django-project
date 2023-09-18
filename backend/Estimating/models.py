@@ -109,12 +109,14 @@ class Estimating_detail(models.Model):
 ##Create perposel
 
 #Service of Exclusion and Inclusion
-
 class Service(models.Model):
-    services=models.CharField(verbose_name="add Serves(INCLUSIONS or EXCLUSIONS)", max_length=250)
+    name = models.CharField(max_length=255)
+
 
     def __str__(self):
-        return self.services
+        return self.name
+
+ 
 
 
 
@@ -124,9 +126,11 @@ class Service(models.Model):
 
 
 #Proposal Table
-class Proposals(models.Model):
+class Proposal(models.Model):
 
     
+
+
     estimating=models.ForeignKey(
         Estimating,
         on_delete=models.CASCADE)
@@ -144,10 +148,8 @@ class Proposals(models.Model):
         verbose_name="Architect Firm",
         max_length=50)
 
-
-    def __str__(self) -> str:
-        return f"{self.estimating}"
-
+    def __str__(self):
+        return f"Proposal {self.id} by {self.architect_name}"
 
 
 
@@ -157,14 +159,15 @@ class Proposals(models.Model):
 
 
 
-class PropsalsServices(models.Model):
-    propsals=models.ForeignKey(Proposals, verbose_name="Proposals", on_delete=models.CASCADE,null=False)
-    service=models.ForeignKey(Service,verbose_name="Add service", on_delete=models.CASCADE)
-    serviceTyp=models.CharField( verbose_name="Service Type",
-                choices=[
-            ('Exclusions','Exclusions'),
-            ('Inclusions','Inclusions')],default='Exclusions',max_length=50)
 
+class ProposalService(models.Model):
+    proposal = models.ForeignKey(Proposal, on_delete=models.CASCADE,related_name='services')
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    service_type = models.CharField(max_length=2, choices=[('IN', 'Inclusion'), ('EX', 'Exclusion')], default='EX') # NEW_INCLUSION, NEW_EXCLUSION etc
+
+    def __str__(self):
+        return f"Service {self.service.name} in Proposal {self.Proposal.id}"
+    
 
 
 
@@ -175,7 +178,7 @@ class PropsalsServices(models.Model):
 
 
 class Addendum(models.Model):
-    proposal=models.ForeignKey(Proposals, on_delete=models.CASCADE)
+    proposal=models.ForeignKey(Proposal, on_delete=models.CASCADE)
     date = models.DateField(verbose_name="Addendum Date(YYYY-MM-DD)",blank=False,null=True)
     addendum_Number=models.IntegerField(verbose_name="Addendum Number")
 
@@ -191,7 +194,7 @@ class Addendum(models.Model):
 
 
 class Specification(models.Model):
-    proposal=models.ForeignKey(Proposals, on_delete=models.CASCADE)
+    proposal=models.ForeignKey(Proposal, on_delete=models.CASCADE)
     specific_name=models.CharField(verbose_name="Specification Name", max_length=250)
     budget=models.IntegerField(verbose_name="Budget")
 

@@ -1,16 +1,13 @@
 # serializers.py in the "Estimating" app
 
 from rest_framework import serializers
+from rest_framework.response import Response
+from rest_framework import status
 
-
-from .models import Estimating,Estimating_detail, Proposals,Addendum,Qualification,Spec_detail,Specification,PropsalsServices,Service,Location
+from Estimating.models import Estimating, Estimating_detail, Proposal, Addendum, Qualification, Spec_detail, Specification, ProposalService, Service, Location
 
 
 from datetime import datetime
-
-
-
-
 
 
 class EstimatingSerializer(serializers.ModelSerializer):
@@ -59,133 +56,64 @@ class EstimatingSerializer(serializers.ModelSerializer):
         if isinstance(value, datetime):
             return value.date()
         return value
-    
-
-
-
 
 
 # Estimating Folder Derectory
 class EstimatingDetailSerializer(serializers.ModelSerializer):
     class Meta:
-        model=Estimating_detail
-        fields=['id','Estimating','prnt_id','drctry_name','file_type','output_Table_Name']
+        model = Estimating_detail
+        fields = ['id', 'Estimating', 'prnt_id',
+                  'drctry_name', 'file_type', 'output_Table_Name']
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['Estimating']=instance.Estimating.Prjct_Name if instance.Estimating else None
+        representation['Estimating'] = instance.Estimating.Prjct_Name if instance.Estimating else None
         return representation
-
-
-
-
-
 
 
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
-        model=Location
-        fields=['id','name']
-
-
-
-
-
-
-
-class ProposalSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Proposals
-        fields = ['id',
-                  'date',
-                  'architect_name',
-                  'architect_firm',
-                  'estimating'
-                  ]
-        extra_kwargs = {
-            'architect_name': {'required': True},
-            'architect_firm': {'required': True},
-            'date': {'required': True},
-            'estimating': {'required': True}
-        }
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation['estimating'] = instance.estimating.Prjct_Name if instance.estimating else None
-
-        return representation
-    
-
-
-
-
+        model = Location
+        fields = ['id', 'name']
 
 
 class AddendumSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model=Addendum
-        fields=['id','proposal','date','addendum_Number']
-
-
-
-
-
-
+        model = Addendum
+        fields = ['id', 'proposal', 'date', 'addendum_Number']
 
 
 class QualificationSerializer(serializers.ModelSerializer):
     class Meta:
-        model=Qualification
-        fields=['id','detail']
-
-
-
-
-
+        model = Qualification
+        fields = ['id', 'detail']
 
 
 class SpecificationSerializer(serializers.ModelSerializer):
     class Meta:
-        model=Specification
-        fields=['id','proposal','budget','specific_name']
-
-
-
-
-
-
+        model = Specification
+        fields = ['id', 'proposal', 'budget', 'specific_name']
 
 
 class SpecificationDetailSerializer(serializers.ModelSerializer):
     class Meta:
-        model=Spec_detail
-        fields=['id','sefic','number','name']
+        model = Spec_detail
+        fields = ['id', 'sefic', 'number', 'name']
+
     def to_representation(self, instance):
         representation = super().to_representation(instance)
 
         # Updating representation to include names instead of IDs for foreign keys
         representation['sefic'] = instance.sefic.specific_name if instance.sefic else None
 
-
         return representation
-    
 
 
-
-
-
-
-
-class ServicesSerializer(serializers.ModelSerializer):
-
+class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
-        model=Service
-        fields=['id','services']
-
-
-
+        model = Service
+        fields = '__all__'
 
 
 
@@ -193,15 +121,112 @@ class ServicesSerializer(serializers.ModelSerializer):
 
 class ProposalServiceSerializer(serializers.ModelSerializer):
     class Meta:
-        model=PropsalsServices
-        fields=['id','propsals','service','serviceTyp']
+        model = ProposalService
+        fields = ['proposal', 'service', 'service_type']
 
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
 
-        # Updating representation to include names instead of IDs for foreign keys
-        representation['service'] = instance.service.services if instance.service else None
+class ProposalSerializer(serializers.ModelSerializer):
+    services = ProposalServiceSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = Proposal
+        fields = ['id','estimating', 'date', 'architect_name', 'architect_firm', 'services'] 
+# class ProposalServiceSerializer(serializers.ModelSerializer):
+#     service = ServiceSerializer()
+
+#     class Meta:
+#         model = ProposalService
+#         fields = '__all__'
 
 
-        return representation
+# class ProposalSerializer(serializers.ModelSerializer):
+#     services = ProposalServiceSerializer(many=True, required=False)
+
+#     class Meta:
+#         model = Proposal
+#         fields = '__all__'
+
+
+#     def create_proposal(request):
+#         if request.method == 'POST':
+#             data = request.data
+
+#         # Fetching the estimating instance or handling the error if it does not exist
+#             try:
+#                 estimating_instance = Estimating.objects.get(
+#                     id=data['estimating_id'])
+#             except Estimating.DoesNotExist:
+#                 return Response({"error": "Estimating instance not found"}, status=status.HTTP_400_BAD_REQUEST)
+
+#         # Creating a new proposal
+#             proposal = Proposal.objects.create(
+#                 estimating=estimating_instance,
+#                 date=data['date'],
+#                 architect_name=data['architect_name'],
+#                 architect_firm=data['architect_firm']
+#             )
+
+#         # Creating the ProposalService instances
+#             for service_data in data['services']:
+#                 try:
+#                     service = Service.objects.get(id=service_data['service_id'])
+#                     ProposalService.objects.create(
+#                         proposal=proposal, service=service, type=service_data['type'])
+#                 except Service.DoesNotExist:
+#                     return Response({"error": f"Service with id {service_data['service_id']} not found"}, status=status.HTTP_400_BAD_REQUEST)
+
+#             return Response({"message": "Proposal created successfully"}, status=status.HTTP_201_CREATED)
+
+
+# class ServiceSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Service
+#         fields = ['id','name', 'type']
+
+
+# class ProposalServiceSerializer(serializers.ModelSerializer):
+#     service = ServiceSerializer(read_only=True)
+#     edited_type = serializers.CharField()
+
+#     class Meta:
+#         model = ProposalService
+#         fields = ['service', 'type', 'edited_type', 'proposal']
+
+
+# class ProposalSerializer(serializers.ModelSerializer):
+
+#     # services = ProposalServiceSerializer(many=True)
+
+#     # class Meta:
+#     #     model = Proposals
+#     #     fields = ['id','estimating', 'date', 'architect_name', 'architect_firm', 'services']
+
+#     #     extra_kwargs = {
+#     #         'architect_name': {'required': True},
+#     #         'architect_firm': {'required': True},
+#     #         'date': {'required': True},
+#     #         'estimating': {'required': True}
+#     #     }
+
+#     service = ServiceSerializer()
+
+#     class Meta:
+#         model = ProposalService
+#         fields = ['service', 'id','estimating', 'date', 'architect_name', 'architect_firm']
+
+#     def create(self, validated_data):
+#         service_data = validated_data.pop('service')
+#         service, created = Service.objects.get_or_create(**service_data)
+#         proposal_service = ProposalService.objects.create(service=service, **validated_data)
+#         return proposal_service
+
+
+#     # ... (rest of the serializer)
+
+
+#     def to_representation(self, instance):
+#         representation = super().to_representation(instance)
+#         representation['estimating'] = instance.estimating.Prjct_Name if instance.estimating else None
+
+#         return representation

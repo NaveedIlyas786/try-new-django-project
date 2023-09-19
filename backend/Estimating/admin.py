@@ -1,16 +1,13 @@
 from django.contrib import admin
 from .models import Location,Estimating,Estimating_detail
-# Register your models here.
+
+
 from django.contrib import admin
 from .models import Estimating,Proposal,Service,Addendum,Specification,Spec_detail,Qualification,ProposalService
 from nested_admin import NestedStackedInline, NestedModelAdmin
 
 
-
-
-
-
-
+# Register your models here
 class LocationAdmin(admin.ModelAdmin):
     list_display=['id','name']
 
@@ -43,26 +40,6 @@ class EstimatingDetailAdmin(admin.ModelAdmin):
 
 
 
-# class ProposalsAdmin(admin.ModelAdmin):
-       
-#     list_display = ['id', 'estimating', 'date', 'architect_name', 'architect_firm']
-#     search_fields = ['architect_name', 'architect_firm']
-#     list_filter = ['date']
-
-
-# class ServiceAdmin(admin.ModelAdmin):
-#     list_display = ['id', 'name', 'type']
-#     search_fields = ['name']
-#     list_filter = ['type']
-
-
-
-
-
-# class ProposalServiceAdmin(admin.ModelAdmin):
-#     list_display = ['id', 'proposal', 'service', 'type', 'edited_type']
-#     search_fields = ['service__name']
-#     list_filter = ['type', 'edited_type']
 
 class ProposalServiceInline(admin.TabularInline):
     model = ProposalService
@@ -105,27 +82,39 @@ class ProposalAdmin(NestedModelAdmin):
     search_fields = ['architect_name', 'architect_firm']
 
 
-class SpecificationAdmin(admin.ModelAdmin):
-    inlines = [SpecificationDetailInline]
-    list_display = ['specific_name', 'budget']
-
 
 class QualificationAdmin(admin.ModelAdmin):
     list_display=['id','detail']
-
-
-
-
-
-
-
-
-
 
 admin.site.register(Location,LocationAdmin)
 admin.site.register(Estimating, EstimatingAdmin)
 admin.site.register(Proposal,ProposalAdmin)
 admin.site.register(Service,ServiceAdmin)
-admin.site.register(Specification,SpecificationAdmin)
 admin.site.register(Qualification,QualificationAdmin)
 admin.site.register(Estimating_detail,EstimatingDetailAdmin)
+
+
+
+
+
+
+# class ProposalsAdmin(admin.ModelAdmin):
+       
+#     list_display = ['id', 'estimating', 'date', 'architect_name', 'architect_firm']
+#     search_fields = ['architect_name', 'architect_firm']
+#     list_filter = ['date']
+
+
+# class ServiceAdmin(admin.ModelAdmin):
+#     list_display = ['id', 'name', 'type']
+#     search_fields = ['name']
+#     list_filter = ['type']
+
+
+
+
+
+# class ProposalServiceAdmin(admin.ModelAdmin):
+#     list_display = ['id', 'proposal', 'service', 'type', 'edited_type']
+#     search_fields = ['service__name']
+#     list_filter = ['type', 'edited_type']

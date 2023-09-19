@@ -352,7 +352,7 @@ def create_proposal(request):
 
 
 
-
+        
 
         for service_data in data['services']:
             try:
@@ -393,6 +393,37 @@ def create_proposal(request):
             return Response({"error": "No Addendums data provided"}, status=status.HTTP_400_BAD_REQUEST)
         
 
+
+        
+
+        if 'spcifc' in data:
+            for spcifc_data in data['spcifc']:
+                # creating a new Specification instance
+                specification_data = {
+                    "proposal": proposal.id,
+                    "budget": spcifc_data['budget'],
+                    "specific_name": spcifc_data['specific_name']
+                }
+                specification_serializer = SpecificationSerializer(data=specification_data)
+                if specification_serializer.is_valid():
+                    specification = specification_serializer.save()
+                else:
+                    return Response(specification_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+                # Creating the nested Spec_detail instances
+                for sefic_data in spcifc_data['sefic']:
+                    spec_detail_data = {
+                        "sefic": specification.id,
+                        "number": sefic_data['number'],
+                        "name": sefic_data['name']
+                    }
+                    spec_detail_serializer = SpecificationDetailSerializer(data=spec_detail_data)
+                    if spec_detail_serializer.is_valid():
+                        spec_detail_serializer.save()
+                    else:
+                        return Response(spec_detail_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error": "No Specification data provided"}, status=status.HTTP_400_BAD_REQUEST)       
 
 
 

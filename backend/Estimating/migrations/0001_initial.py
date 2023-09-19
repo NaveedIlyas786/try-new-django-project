@@ -73,7 +73,7 @@ class Migration(migrations.Migration):
             name='Spec_detail',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('number', models.IntegerField(verbose_name='Add Number')),
+                ('number', models.CharField(verbose_name='Add Number')),
                 ('name', models.CharField(max_length=250, verbose_name='Name')),
                 ('sefic', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='Estimating.specification', verbose_name='Specification')),
             ],

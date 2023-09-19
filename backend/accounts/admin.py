@@ -49,3 +49,4 @@ class UserRoleAdmin(admin.ModelAdmin):
 # Now register the new UserAdmin...
 admin.site.register(User, UserModelAdmin)
 admin.site.register(UserRole,UserRoleAdmin)
+#kdsfksdksjdksjdksj

@@ -166,7 +166,7 @@ class ProposalService(models.Model):
     service_type = models.CharField(max_length=2, choices=[('IN', 'Inclusion'), ('EX', 'Exclusion')], default='EX') # NEW_INCLUSION, NEW_EXCLUSION etc
 
     def __str__(self):
-        return f"Service {self.service.name} in Proposal {self.Proposal.id}"
+        return f"Service {self.service.name} in Proposal {self.proposal.id}"
     
 
 

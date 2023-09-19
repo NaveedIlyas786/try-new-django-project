@@ -18,7 +18,7 @@ urlpatterns = [
     path('specification/<int:id>/',SpecificationViews.as_view(),name='specification detail'),
 
     path('service/',ServiceViews.as_view(),name='service list'),
-    # path('service/<int:id>/',ServiceViews.as_view(),name='service'),
+    path('service/<int:id>/',ServiceViews.as_view(),name='service'),
     path('Proposalservices/', ProposalServiceView.as_view(), name='service-list'),
     path('proposals/', create_proposal, name='proposal-list'),
 

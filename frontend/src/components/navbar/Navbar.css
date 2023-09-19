@@ -23,19 +23,20 @@
 
 .navTabs a:hover,
 .navbar-nav .nav-item.active{
-  background-color: #07109f;
+  background-color: #283897;
   border-radius: 5px;
   color: white !important;
 }
 
 .contacts {
-  border: 1px solid #07109f;
+  border: 1px solid #283897;
   border-radius: 5px;
 }
 
+
 .navbar-nav a {
   text-decoration: none;
-  color: #07109f;
+  color: #283897;
   font-size: 17px;
   font-weight: 500;
   letter-spacing: 1.1px;
@@ -43,6 +44,6 @@
 
 .navbar-nav .nav-item.active a {
   color: white !important;
-  background-color: #07109f;
+  background-color: #283897;
   transition: all ease-in-out 0.5s;
 }

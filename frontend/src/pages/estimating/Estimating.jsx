@@ -216,6 +216,34 @@ const Estimator = () => {
       });
   };
 
+// ******************Purposal Page Posting start************************
+const handlePurposalSubmit = async (e) => {
+  e.preventDefault();
+
+  // Gather data from form fields
+  const purposalformData = new FormData(e.target);
+  const requestData = {
+    method: 'POST',
+    body: purposalformData,
+  };
+
+  try {
+    // Make a POST request to the API
+    const response = await fetch('http://127.0.0.1:8000/api/estimating/proposals/', requestData);
+
+    if (response.ok) {
+      // Request was successful, you can handle the response here if needed
+      console.log('Data posted successfully');
+    } else {
+      // Request failed, handle the error
+      console.error('Failed to post data to the API');
+    }
+  } catch (error) {
+    // Handle any network or other errors
+    console.error('An error occurred:', error);
+  }
+};
+// ******************Purposal Page Posting end************************
   const filteredData = data.filter((customer) => {
     return (
       (customer.Prjct_Name && customer.Prjct_Name.toUpperCase().includes(filter.toUpperCase())) ||
@@ -478,7 +506,6 @@ const Estimator = () => {
                   )}
                 </select>
               </div>
-              {/* ****************** */}
               <div className="mb-3">
                 <label htmlFor="estimatorName" className="form-label">
                   Estimator_Name:
@@ -591,7 +618,7 @@ const Estimator = () => {
                       </Step>
                     ))}
                   </Stepper>
-                  <form onSubmit={handleSubmit} className="d-flex flex-column">
+                  <form onSubmit={handlePurposalSubmit} className="d-flex flex-column">
                     {activeStep === 0 && (
                       <>
                         <div className="mb-2 mt-3">
@@ -602,8 +629,7 @@ const Estimator = () => {
                             type="date"
                             className="form-control"
                             id="PurposalID"
-                            value={projectName}
-                            onChange={handleProjectNameChange}
+                            onChange={()=>{}}
                           />
                         </div>
                         <div className="mb-2 mt-3">
@@ -614,7 +640,6 @@ const Estimator = () => {
                             type="text"
                             className="form-control"
                             id="ArchitectName"
-                            value=""
                             onChange={() => {}}
                           />
                         </div>
@@ -626,7 +651,6 @@ const Estimator = () => {
                             type="text"
                             className="form-control"
                             id="ArchitectFirm"
-                            value=""
                             onChange={() => {}}
                           />
                         </div>
@@ -644,24 +668,12 @@ const Estimator = () => {
                               <input
                                 type="number"
                                 className="form-control"
-                                value={entry.addendumNumber}
-                                onChange={(e) =>
-                                  handleAddendumNumberChange(
-                                    index,
-                                    e.target.value
-                                  )
-                                }
+                                
                               />
                               <input
                                 type="date"
                                 className="form-control"
-                                value={entry.addendumDate}
-                                onChange={(e) =>
-                                  handleAddendumDateChange(
-                                    index,
-                                    e.target.value
-                                  )
-                                }
+                              
                               />
                               <button
                                 className="btn btn-danger"
@@ -675,7 +687,7 @@ const Estimator = () => {
                                 className="btn btn-success bk"
                                 onClick={handleNewEntry}
                               >
-                                <i class="fa-regular icon fa-plus"></i>
+                                <i className="fa-regular icon fa-plus"></i>
                               </button>
                             )}
                           </div>
@@ -712,8 +724,6 @@ const Estimator = () => {
                               type="text"
                               className="form-control"
                               id="specificName"
-                              // value={projectName}
-                              // onChange={handleProjectNameChange}
                             />
                           </div>
                           <div className="mb-2 mt-3">
@@ -727,8 +737,6 @@ const Estimator = () => {
                               type="number"
                               className="form-control"
                               id="specificbudget"
-                              // value={projectName}
-                              // onChange={handleProjectNameChange}
                             />
                           </div>
 
@@ -744,26 +752,13 @@ const Estimator = () => {
                                     <input
                                       type="number"
                                       className="form-control"
-                                      value={entry.addendumNumber}
                                       placeholder="Specification Number"
-                                      onChange={(e) =>
-                                        handleAddendumNumberChange(
-                                          index,
-                                          e.target.value
-                                        )
-                                      }
                                     />
                                     <input
                                       type="text"
                                       className="form-control"
-                                      value={entry.addendumDate}
                                       placeholder="Specification description"
-                                      onChange={(e) =>
-                                        handleAddendumDateChange(
-                                          index,
-                                          e.target.value
-                                        )
-                                      }
+                                     
                                     />
                                     <button
                                       className="btn btn-danger"
@@ -805,16 +800,10 @@ const Estimator = () => {
                               <input
                                 type="text"
                                 className="form-control serviceInput"
-                                placeholder={`Service ${service.id}`}
-                                value={service.name}
-                                onChange={(e) =>
-                                  handleServiceChange(
-                                    service.id,
-                                    e.target.value
-                                  )
-                                }
+                                placeholder={`Services`}
+                                
                               />
-                              {/* <div class="dropdown"> */}
+                              {/* <div className="dropdown"> */}
                                
                                 <select name="#" id="">
                                   <option value="#">Exclusion</option>
@@ -826,14 +815,6 @@ const Estimator = () => {
                           ))}
                         </div>
 
-                        {/* <select
-                            className="form-select exclusionsID"
-                            id="exclusionsID"
-                            value=""
-                          >
-                            <option value="Exclusions">Exclusions</option>
-                            <option value="Inclusions">Inclusions</option>
-                          </select> */}
                       </div>
                     )}
 

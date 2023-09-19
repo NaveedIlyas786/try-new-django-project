@@ -144,7 +144,7 @@ td {
   margin: 0 auto;
 }
 .btn-submit:hover {
-  background-color: #0611b4;
+  background-color: #283897;
   color: white;
 }
 .addnewtxt {
@@ -200,7 +200,7 @@ input:focus {
   justify-content: center !important;
   align-items: center;
   flex-direction: column;
-  background-color: #0611b4;
+  background-color: #283897;
   border-radius: 5px;
 }
 .dropbtns {
@@ -238,7 +238,7 @@ input:focus {
 }
 
 .threeDotIcon {
-  /* background-color: #0611b4; */
+  /* background-color: #283897; */
   padding: 10px;
 }
 
@@ -261,7 +261,7 @@ input:focus {
   margin-top: 7px;
 }
 .wholediv{
-  padding: 10px   !important;
+  /* padding: 10px   !important; */
   border-radius: 10px;
   background-color: rgb(182, 181, 181) !important;
 }

@@ -154,8 +154,31 @@ const Estimator = () => {
       });
   }, []);
 
-  //************ To show Estimator full_Names in dropdown in estimating post field
+  // ****************************Getting Services Entries from Api start
 
+  const [ServiceData, setServiceData] = useState([]);
+
+  useEffect(() => {
+    // Fetch data from the API
+    axios
+      .get("http://127.0.0.1:8000/api/estimating/service/")
+      .then((response) => response.data)
+      .then((data) => {
+        if (data.length > 0) {
+          // Extract service names and store them in the state
+          const serviceNames = data.map((service) => service.name);
+          setServiceData(serviceNames);
+          console.log(serviceNames);
+        } else {
+          console.log("No services found.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  // ****************************Getting Services Entries from Api End
   const [EstimatorName, setestimatorName] = useState([]);
 
   useEffect(() => {
@@ -215,46 +238,113 @@ const Estimator = () => {
         console.log("Response data:", error.response.data);
       });
   };
+  //************* Define the handleProposalSubmitPosting function
+  const [proposalFormData, setProposalFormData] = useState({});
+  const [step0FormData, setStep0FormData] = useState({
+    currentDate: "",
+    architectName: "",
+    architectFirm: "",
+  });
+  const [selectedProjectName, setSelectedProjectName] = useState("");
+  const [step1FormData, setStep1FormData] = useState({});
+  const [step2FormData, setStep2FormData] = useState({});
+  const [step3FormData, setStep3FormData] = useState({});
+  const [serviceTypes, setServiceTypes] = useState(
+    ServiceData.map((service, id) => ({
+      serviceId: id,
+      type: "Exclusion", // Default type, you can change it to 'Exclusion' if needed
+    }))
+  );
 
-// ******************Purposal Page Posting start************************
-const handlePurposalSubmit = async (e) => {
-  e.preventDefault();
+  const handleProposalSubmitPosting = (event) => {
+    event.preventDefault();
 
-  // Gather data from form fields
-  const purposalformData = new FormData(e.target);
-  const requestData = {
-    method: 'POST',
-    body: purposalformData,
+    axios
+      .post("http://127.0.0.1:8000/api/estimating/proposals/", proposalFormData)
+      .then((response) => {
+        console.log("Data successfully submitted:", response.data);
+        // Reset the form fields
+        setProposalFormData({});
+        // Close the modal
+        closeModal();
+      })
+      .catch((error) => {
+        console.error("Error submitting data:", error);
+        console.log("Response data:", error.response.data);
+      });
+    // Gather data form fields for activeStep === 0
+    if (activeStep === 0) {
+      const formData = {
+        currentDate: step0FormData.currentDate,
+        architectName: step0FormData.architectName,
+        architectFirm: step0FormData.architectFirm,
+        // Add more fields as needed for activeStep === 0
+      };
+
+      // Update proposalFormData state for activeStep === 0
+      setProposalFormData(formData);
+    }
+    // Gather data from form fields for activeStep === 1
+    if (activeStep === 1) {
+      const step1Data = {
+        // You can use similar logic to gather data for step 1 fields
+        addendumEntries: entries.map((entry, index) => ({
+          addendumNumber: document.getElementById(
+            "proposalAddendumNumber" + index
+          ).value,
+          addendumDate: document.getElementById("proposalAddendumDate" + index)
+            .value,
+        })),
+      };
+
+      // Update step1FormData state
+      setStep1FormData(step1Data);
+    }
+    if (activeStep === 2) {
+      const step2Data = {
+        specificationName: document.getElementById("specificName").value,
+        specificationBudget: document.getElementById("specificbudget").value,
+        specificationDetails: entries.map((entry, index) => ({
+          specificationNumber: document.getElementById(
+            "specificationNumber" + index
+          ).value,
+          specificationDescription: document.getElementById(
+            "specificationDescription" + index
+          ).value,
+        })),
+      };
+
+      // Update step2FormData state
+      setStep2FormData(step2Data);
+    }
+
+    if (activeStep === 3) {
+      const step3Data = {
+        services: serviceTypes,
+      };
+
+      // Update step3FormData state
+      setStep3FormData(step3Data);
+    }
   };
 
-  try {
-    // Make a POST request to the API
-    const response = await fetch('http://127.0.0.1:8000/api/estimating/proposals/', requestData);
-
-    if (response.ok) {
-      // Request was successful, you can handle the response here if needed
-      console.log('Data posted successfully');
-    } else {
-      // Request failed, handle the error
-      console.error('Failed to post data to the API');
-    }
-  } catch (error) {
-    // Handle any network or other errors
-    console.error('An error occurred:', error);
-  }
-};
-// ******************Purposal Page Posting end************************
   const filteredData = data.filter((customer) => {
     return (
-      (customer.Prjct_Name && customer.Prjct_Name.toUpperCase().includes(filter.toUpperCase())) ||
-      (customer.status && customer.status.toUpperCase().includes(filter.toUpperCase())) ||
-      (customer.due_date && customer.due_date.toUpperCase().includes(filter.toUpperCase())) ||
-      (customer.bidder && customer.bidder.toUpperCase().includes(filter.toUpperCase())) ||
-      (customer.bid_amount && customer.bid_amount.toString().toUpperCase().includes(filter.toUpperCase()))
+      (customer.Prjct_Name &&
+        customer.Prjct_Name.toUpperCase().includes(filter.toUpperCase())) ||
+      (customer.status &&
+        customer.status.toUpperCase().includes(filter.toUpperCase())) ||
+      (customer.due_date &&
+        customer.due_date.toUpperCase().includes(filter.toUpperCase())) ||
+      (customer.bidder &&
+        customer.bidder.toUpperCase().includes(filter.toUpperCase())) ||
+      (customer.bid_amount &&
+        customer.bid_amount
+          .toString()
+          .toUpperCase()
+          .includes(filter.toUpperCase()))
     );
   });
-  
-  
 
   // Define a function to handle modal close
   const closeModal = () => {
@@ -313,70 +403,6 @@ const handlePurposalSubmit = async (e) => {
     setCompany(e.target.value);
   };
 
-  const [serviceData, setServiceData] = useState({
-    services: [
-      {
-        id: 1,
-        name: "Service 1: What is your City Name!",
-      },
-      {
-        id: 2,
-        name: "Service 2:  What is your Village Name!",
-      },
-      {
-        id: 3,
-        name: "Service 3:  What is your Country Name!",
-      },
-      {
-        id: 4,
-        name: "Service 4:  What is your Country Name!",
-      },
-      {
-        id: 5,
-        name: "Service 5:  What is your Country Name!",
-      },
-      {
-        id: 6,
-        name: "Service 6:  What is your Country Name!",
-      },
-      {
-        id: 7,
-        name: "Service 7:  What is your Country Name!",
-      },
-      {
-        id: 8,
-        name: "Service 8:  What is your Country Name!",
-      },
-      {
-        id: 9,
-        name: "Service 9:  What is your Country Name!",
-      },
-      {
-        id: 10,
-        name: "Service 10:  What is your Country Name!",
-      },
-    ],
-  });
-
-  const handleServiceChange = (id, value) => {
-    // Create a copy of the serviceData object
-    const updatedServiceData = { ...serviceData };
-
-    // Find the service by ID and update its name
-    updatedServiceData.services = updatedServiceData.services.map((service) => {
-      if (service.id === id) {
-        return {
-          ...service,
-          name: value,
-        };
-      }
-      return service;
-    });
-
-    // Update the state with the modified serviceData
-    setServiceData(updatedServiceData);
-  };
-
   return (
     <>
       <div className={`estimator px-5 ${showModal ? "modal-active" : ""}`}>
@@ -411,7 +437,7 @@ const handlePurposalSubmit = async (e) => {
             </thead>
             <tbody className="cursor-pointer  bg-info jloop">
               {filteredData.map((item) => (
-                <tr  key={item.id}>
+                <tr key={item.id}>
                   <td className="mytd">{item.due_date}</td>
                   <td className="mytd myproject">{item.Prjct_Name}</td>
                   <td className="mytd">{item.status}</td>
@@ -433,12 +459,13 @@ const handlePurposalSubmit = async (e) => {
                         <button
                           className="btn dropbtns"
                           onClick={() => {
+                            setSelectedProjectName(item.Prjct_Name);
                             setPurposalModal(true);
                           }}
-                          // onClick={movetoPurposalPage}
                         >
                           Proposal
                         </button>
+
                         <button className="btn dropbtns">Project</button>
                         <button className="btn dropbtns">Status</button>
                       </div>
@@ -618,7 +645,10 @@ const handlePurposalSubmit = async (e) => {
                       </Step>
                     ))}
                   </Stepper>
-                  <form onSubmit={handlePurposalSubmit} className="d-flex flex-column">
+                  <form
+                    onSubmit={handleProposalSubmitPosting}
+                    className="d-flex flex-column"
+                  >
                     {activeStep === 0 && (
                       <>
                         <div className="mb-2 mt-3">
@@ -629,9 +659,31 @@ const handlePurposalSubmit = async (e) => {
                             type="date"
                             className="form-control"
                             id="PurposalID"
-                            onChange={()=>{}}
+                            value={step0FormData.currentDate}
+                            onChange={(e) =>
+                              setStep0FormData({
+                                ...step0FormData,
+                                currentDate: e.target.value,
+                              })
+                            }
                           />
                         </div>
+                        <div className="mb-2 mt-3">
+                          <label htmlFor="ProjectName" className="form-label">
+                            Estimating-Project-Name:
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="ProjectName"
+                            value={selectedProjectName}
+                            onChange={(e) =>
+                              setSelectedProjectName(e.target.value)
+                            }
+                            readOnly // Add this to make the input field read-only
+                          />
+                        </div>
+
                         <div className="mb-2 mt-3">
                           <label htmlFor="ArchitectName" className="form-label">
                             Architect Name:
@@ -640,7 +692,13 @@ const handlePurposalSubmit = async (e) => {
                             type="text"
                             className="form-control"
                             id="ArchitectName"
-                            onChange={() => {}}
+                            value={step0FormData.architectName}
+                            onChange={(e) =>
+                              setStep0FormData({
+                                ...step0FormData,
+                                architectName: e.target.value,
+                              })
+                            }
                           />
                         </div>
                         <div className="mb-2 mt-3">
@@ -651,11 +709,18 @@ const handlePurposalSubmit = async (e) => {
                             type="text"
                             className="form-control"
                             id="ArchitectFirm"
-                            onChange={() => {}}
+                            value={step0FormData.architectFirm}
+                            onChange={(e) =>
+                              setStep0FormData({
+                                ...step0FormData,
+                                architectFirm: e.target.value,
+                              })
+                            }
                           />
                         </div>
                       </>
                     )}
+
                     {activeStep === 1 && (
                       <div className="mt-2">
                         {/* Render the entries */}
@@ -664,20 +729,61 @@ const handlePurposalSubmit = async (e) => {
                         </label>
                         {entries.map((entry, index) => (
                           <div key={index} className="mb-2 mt-3">
-                            <div className="input-group  ">
+                            <div
+                              id={"proposalAddendumDiv" + index}
+                              className="input-group"
+                            >
                               <input
+                                id={"proposalAddendumNumber" + index}
                                 type="number"
                                 className="form-control"
-                                
+                                value={
+                                  step1FormData.addendumEntries?.[index]
+                                    ?.addendumNumber || ""
+                                }
+                                onChange={(e) =>
+                                  setStep1FormData((prevState) => {
+                                    const newAddendumEntries = [
+                                      ...prevState.addendumEntries,
+                                    ];
+                                    newAddendumEntries[index] = {
+                                      ...newAddendumEntries[index],
+                                      addendumNumber: e.target.value,
+                                    };
+                                    return {
+                                      ...prevState,
+                                      addendumEntries: newAddendumEntries,
+                                    };
+                                  })
+                                }
                               />
                               <input
+                                id={"proposalAddendumDate" + index}
                                 type="date"
                                 className="form-control"
-                              
+                                value={
+                                  step1FormData.addendumEntries?.[index]
+                                    ?.addendumDate || ""
+                                }
+                                onChange={(e) =>
+                                  setStep1FormData((prevState) => {
+                                    const newAddendumEntries = [
+                                      ...prevState.addendumEntries,
+                                    ];
+                                    newAddendumEntries[index] = {
+                                      ...newAddendumEntries[index],
+                                      addendumDate: e.target.value,
+                                    };
+                                    return {
+                                      ...prevState,
+                                      addendumEntries: newAddendumEntries,
+                                    };
+                                  })
+                                }
                               />
                               <button
                                 className="btn btn-danger"
-                                onClick={() => handleRemoveEntry(index)} // Call the handleRemoveEntry function with the index
+                                onClick={() => handleRemoveEntry(index)}
                               >
                                 <i className="far">X</i>
                               </button>
@@ -724,6 +830,13 @@ const handlePurposalSubmit = async (e) => {
                               type="text"
                               className="form-control"
                               id="specificName"
+                              value={step2FormData.specificationName || ""}
+                              onChange={(e) =>
+                                setStep2FormData({
+                                  ...step2FormData,
+                                  specificationName: e.target.value,
+                                })
+                              }
                             />
                           </div>
                           <div className="mb-2 mt-3">
@@ -737,11 +850,17 @@ const handlePurposalSubmit = async (e) => {
                               type="number"
                               className="form-control"
                               id="specificbudget"
+                              value={step2FormData.specificationBudget || ""}
+                              onChange={(e) =>
+                                setStep2FormData({
+                                  ...step2FormData,
+                                  specificationBudget: e.target.value,
+                                })
+                              }
                             />
                           </div>
 
                           <div className="mt-2">
-                            {/* Render the entries */}
                             <label className="form-label">
                               Specification Details
                             </label>
@@ -753,17 +872,61 @@ const handlePurposalSubmit = async (e) => {
                                       type="number"
                                       className="form-control"
                                       placeholder="Specification Number"
+                                      id={"specificationNumber" + index}
+                                      value={
+                                        step2FormData.specificationDetails?.[
+                                          index
+                                        ]?.specificationNumber || ""
+                                      }
+                                      onChange={(e) =>
+                                        setStep2FormData((prevState) => {
+                                          const newSpecificationDetails = [
+                                            ...prevState.specificationDetails,
+                                          ];
+                                          newSpecificationDetails[index] = {
+                                            ...newSpecificationDetails[index],
+                                            specificationNumber: e.target.value,
+                                          };
+                                          return {
+                                            ...prevState,
+                                            specificationDetails:
+                                              newSpecificationDetails,
+                                          };
+                                        })
+                                      }
                                     />
                                     <input
                                       type="text"
                                       className="form-control"
                                       placeholder="Specification description"
-                                     
+                                      id={"specificationDescription" + index}
+                                      value={
+                                        step2FormData.specificationDetails?.[
+                                          index
+                                        ]?.specificationDescription || ""
+                                      }
+                                      onChange={(e) =>
+                                        setStep2FormData((prevState) => {
+                                          const newSpecificationDetails = [
+                                            ...prevState.specificationDetails,
+                                          ];
+                                          newSpecificationDetails[index] = {
+                                            ...newSpecificationDetails[index],
+                                            specificationDescription:
+                                              e.target.value,
+                                          };
+                                          return {
+                                            ...prevState,
+                                            specificationDetails:
+                                              newSpecificationDetails,
+                                          };
+                                        })
+                                      }
                                     />
                                     <button
                                       className="btn btn-danger"
                                       onClick={() => handleRemoveEntry(index)}
-                                      disabled={entries.length === 1} // Disable the button if there is only one entry
+                                      disabled={entries.length === 1}
                                     >
                                       <i className="far">X</i>
                                     </button>
@@ -783,38 +946,43 @@ const handlePurposalSubmit = async (e) => {
                               ))}
                             </div>
                           </div>
-
-                         
                         </div>
-                        <button className="btn btn-success">Add-New-Specification-Section</button>
+                        <button className="btn btn-success">
+                          Add-New-Specification-Section
+                        </button>
                       </div>
                     )}
+
                     {activeStep === 3 && (
                       <div className="mb-2 mt-3">
                         <label htmlFor="projectName" className="form-label">
-                          Services(Inclusions & Exclusions):
+                          <strong>Services (Inclusions & Exclusions):</strong>
                         </label>
-                        <div className="sarviceSection p-2 rounded">
-                          {serviceData.services.map((service) => (
-                            <div key={service.id} className="mb-2 d-flex ">
-                              <input
-                                type="text"
-                                className="form-control serviceInput"
-                                placeholder={`Services`}
-                                
-                              />
-                              {/* <div className="dropdown"> */}
-                               
-                                <select name="#" id="">
-                                  <option value="#">Exclusion</option>
-                                  <option value="#">inclusion</option>
-                                </select>
-                               
-                              {/* </div> */}
-                            </div>
-                          ))}
-                        </div>
-
+                        {serviceTypes.map((service, id) => (
+                          <div key={id} className="mb-2 d-flex">
+                            <input
+                              type="text"
+                              className="form-control serviceInput"
+                              placeholder={`Service ${id + 1}`}
+                              value={ServiceData[id]} // Display the service name
+                              readOnly
+                            />
+                            <select
+                              name="#"
+                              id=""
+                              value={service.type}
+                              onChange={(e) => {
+                                // Update the service type when the user selects a new value
+                                const updatedServiceTypes = [...serviceTypes];
+                                updatedServiceTypes[id].type = e.target.value;
+                                setServiceTypes(updatedServiceTypes);
+                              }}
+                            >
+                              <option value="Exclusion">Exclusion</option>
+                              <option value="Inclusion">Inclusion</option>
+                            </select>
+                          </div>
+                        ))}
                       </div>
                     )}
 

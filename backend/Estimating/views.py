@@ -548,11 +548,11 @@ class ServiceViews(APIView):
 
 
 
-# class ServiceViews(APIView):
-#     def get(self, request):
-#         services = Service.objects.all()
-#         serializer = ServiceSerializer(services, many=True)
-#         return Response(serializer.data)
+class ServiceViews(APIView):
+    def get(self, request):
+        services = Service.objects.all()
+        serializer = ServiceSerializer(services, many=True)
+        return Response(serializer.data)
 
 
 

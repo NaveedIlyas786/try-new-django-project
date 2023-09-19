@@ -151,7 +151,7 @@ class LocationViews(APIView):
 
 
 
-@api_view(['POST','GET','DELETE'])
+@api_view(['POST','GET','PUT','DELETE'])
 def create_proposal(request, proposal_id=None):
     if request.method == 'POST':
         data = request.data
@@ -266,6 +266,29 @@ def create_proposal(request, proposal_id=None):
         proposals = Proposal.objects.all()
         serializer = ProposalSerializer(proposals, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+    
+    elif request.method == 'PUT':
+        # Add PUT request handling logic here (update)
+        if proposal_id is None:
+            return Response({"error": "Proposal ID is required for updating"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            proposal = Proposal.objects.get(id=proposal_id)
+        except Proposal.DoesNotExist:
+            return Response({"error": "Proposal not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        data = request.data
+        proposal_serializer = ProposalSerializer(proposal, data=data)
+        if proposal_serializer.is_valid():
+            proposal_serializer.save()
+            return Response({"message": "Proposal updated successfully"}, status=status.HTTP_200_OK)
+        else:
+            return Response(proposal_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
 
 
     

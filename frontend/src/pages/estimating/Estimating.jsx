@@ -48,6 +48,7 @@ const Estimator = () => {
   };
   const handleNext = () => {
     setActiveStep((prevStep) => prevStep + 1);
+    console.log(activeStep);
   };
 
   //*********************Multistep Purposal-form Addendum Section***********************/
@@ -58,18 +59,18 @@ const Estimator = () => {
     },
   ]);
 
-  // Define functions to handle data changes
-  const handleAddendumNumberChange = (index, value) => {
-    const updatedEntries = [...entries];
-    updatedEntries[index].addendumNumber = value;
-    setEntries(updatedEntries);
-  };
+  // // Define functions to handle data changes
+  // const handleAddendumNumberChange = (index, value) => {
+  //   const updatedEntries = [...entries];
+  //   updatedEntries[index].addendumNumber = value;
+  //   setEntries(updatedEntries);
+  // };
 
-  const handleAddendumDateChange = (index, value) => {
-    const updatedEntries = [...entries];
-    updatedEntries[index].addendumDate = value;
-    setEntries(updatedEntries);
-  };
+  // const handleAddendumDateChange = (index, value) => {
+  //   const updatedEntries = [...entries];
+  //   updatedEntries[index].addendumDate = value;
+  //   setEntries(updatedEntries);
+  // };
   const [addendumNumber, setAddendumNumber] = useState("");
   const [addendumDate, setAddendumDate] = useState("");
 
@@ -168,7 +169,7 @@ const Estimator = () => {
           // Extract service names and store them in the state
           const serviceNames = data.map((service) => service.name);
           setServiceData(serviceNames);
-          console.log(serviceNames);
+          // console.log(serviceNames);
         } else {
           console.log("No services found.");
         }
@@ -240,91 +241,114 @@ const Estimator = () => {
   };
   //************* Define the handleProposalSubmitPosting function
   const [proposalFormData, setProposalFormData] = useState({});
-  const [step0FormData, setStep0FormData] = useState({
-    currentDate: "",
-    architectName: "",
-    architectFirm: "",
+  const [selectedProjectName, setSelectedProjectName] = useState({});
+  const [step1FormData, setStep1FormData] = useState({
+    Addendums: [],
   });
-  const [selectedProjectName, setSelectedProjectName] = useState("");
-  const [step1FormData, setStep1FormData] = useState({});
-  const [step2FormData, setStep2FormData] = useState({});
-  const [step3FormData, setStep3FormData] = useState({});
-  const [serviceTypes, setServiceTypes] = useState(
-    ServiceData.map((service, id) => ({
-      serviceId: id,
-      type: "Exclusion", // Default type, you can change it to 'Exclusion' if needed
-    }))
+
+  const [services, setServices] = useState([]);
+  const [serviceTypes, setServiceTypes] = useState([]);
+  useEffect(() => {
+    // Define an async function to fetch data from the API
+    async function fetchServiceData() {
+      try {
+        const response = await fetch(
+          "http://127.0.0.1:8000/api/estimating/service/"
+        );
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+
+        // Map the data to the serviceTypes array
+        const updatedServiceTypes = data.map((service, id) => ({
+          serviceId: id,
+          type: "Exclusion", // Default type, you can change it to 'Inclusion' if needed
+          name: service.name, // Assign the service name from the API
+        }));
+
+        setServices(updatedServiceTypes);
+      } catch (error) {
+        console.error("Error fetching service data:", error);
+      }
+    }
+
+    // Call the fetchServiceData function when the component mounts
+    fetchServiceData();
+  }, []);
+
+  const [selectedEstimatingID, setSelectedEstimatingID] = useState();
+  const [step0FormData, setStep0FormData] = useState({
+    date: "",
+    architect_name: "",
+    architect_firm: "",
+    estimating: selectedEstimatingID,
+  });
+  const [step2FormData, setStep2FormData] = useState({
+    specificationName: "",
+    specificationBudget: "",
+    specificationDetails: [],
+  });
+  const specificationDetails = step2FormData.specificationDetails.map(
+    (item) => ({
+      specific_name: item.specificName, // Map your specificName field
+      budget: item.budget, // Map your budget field
+      sefic: item.sefic, // Map your sefic field (assuming it's an array)
+    })
   );
-
-  const handleProposalSubmitPosting = (event) => {
-    event.preventDefault();
-
-    axios
-      .post("http://127.0.0.1:8000/api/estimating/proposals/", proposalFormData)
-      .then((response) => {
-        console.log("Data successfully submitted:", response.data);
-        // Reset the form fields
-        setProposalFormData({});
-        // Close the modal
-        closeModal();
-      })
-      .catch((error) => {
-        console.error("Error submitting data:", error);
-        console.log("Response data:", error.response.data);
-      });
-    // Gather data form fields for activeStep === 0
-    if (activeStep === 0) {
-      const formData = {
-        currentDate: step0FormData.currentDate,
-        architectName: step0FormData.architectName,
-        architectFirm: step0FormData.architectFirm,
-        // Add more fields as needed for activeStep === 0
-      };
-
-      // Update proposalFormData state for activeStep === 0
-      setProposalFormData(formData);
-    }
-    // Gather data from form fields for activeStep === 1
-    if (activeStep === 1) {
-      const step1Data = {
-        // You can use similar logic to gather data for step 1 fields
-        addendumEntries: entries.map((entry, index) => ({
-          addendumNumber: document.getElementById(
-            "proposalAddendumNumber" + index
-          ).value,
-          addendumDate: document.getElementById("proposalAddendumDate" + index)
-            .value,
-        })),
-      };
-
-      // Update step1FormData state
-      setStep1FormData(step1Data);
-    }
-    if (activeStep === 2) {
-      const step2Data = {
-        specificationName: document.getElementById("specificName").value,
-        specificationBudget: document.getElementById("specificbudget").value,
-        specificationDetails: entries.map((entry, index) => ({
-          specificationNumber: document.getElementById(
-            "specificationNumber" + index
-          ).value,
-          specificationDescription: document.getElementById(
-            "specificationDescription" + index
-          ).value,
-        })),
-      };
-
-      // Update step2FormData state
-      setStep2FormData(step2Data);
+  console.log(
+    "Submitting proposal with estimating ID:",
+    step0FormData.estimating
+  );
+  const handleProposalSubmitPosting = async (e) => {
+    e.preventDefault();
+    if (!step0FormData.estimating) {
+      alert("Please select an Estimating ID.");
+      return; // Prevent form submission
     }
 
-    if (activeStep === 3) {
-      const step3Data = {
-        services: serviceTypes,
-      };
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/estimating/proposals/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", // Set the content type to JSON
+          },
+          body: JSON.stringify({
+            // date: step0FormData.date,
+            // estimating: step0FormData.estimating,
+            // architect_name: step0FormData.architect_name,
+            // architect_firm: step0FormData.architect_firm,
+            // Addendums: step1FormData.Addendums,
+            // specificationName: step2FormData.specificationName,
+            // specificationBudget: step2FormData.specificationBudget,
+            // specificationDetails: step2FormData.specificationDetails,
+            // services: serviceTypes,
+            date: step0FormData.date,
+            estimating: step0FormData.estimating,
+            architect_name: step0FormData.architect_name,
+            architect_firm: step0FormData.architect_firm,
+            Addendums: step1FormData.Addendums,
+            spcifc: specificationDetails, // Use the correctly formatted specification data here
+            services: serviceTypes,
+          }),
+        }
+      );
 
-      // Update step3FormData state
-      setStep3FormData(step3Data);
+      if (response.ok) {
+        // Handle success, e.g., display a success message or navigate to another page
+        console.log("Proposal data submitted successfully");
+      } else {
+        // Handle errors, e.g., display an error message
+        console.error("Error submitting proposal data");
+        const errorResponse = await response.json(); // Parse the error response as JSON
+        console.error("Error response:", errorResponse);
+      }
+    } catch (error) {
+      // Handle network errors or other exceptions
+      console.error("An error occurred:", error);
     }
   };
 
@@ -402,7 +426,7 @@ const Estimator = () => {
   const handleCompanyNameChange = (e) => {
     setCompany(e.target.value);
   };
-
+  const errorMessage = "";
   return (
     <>
       <div className={`estimator px-5 ${showModal ? "modal-active" : ""}`}>
@@ -459,7 +483,12 @@ const Estimator = () => {
                         <button
                           className="btn dropbtns"
                           onClick={() => {
-                            setSelectedProjectName(item.Prjct_Name);
+                            console.log(item.id);
+                            setStep0FormData({
+                              ...step0FormData,
+                              estimating: item.id,
+                            });
+                            setSelectedEstimatingID(item.id); // Set the selected estimating ID
                             setPurposalModal(true);
                           }}
                         >
@@ -615,15 +644,16 @@ const Estimator = () => {
         </div>
       )}
       {/* New Purposal Entries Posting-Code */}
+
       {purposalModal && (
         <div
           className={`modal-container pt-5 ps-2 ${purposalModal ? "show" : ""}`}
         >
-          <h4 className="text-center addnewtxt">Add Purposal Entries</h4>
+          <h4 className="text-center addnewtxt">Add Proposal Entries</h4>
           <button className="close-btn" onClick={closeModal}></button>
           <div className="purposal-content px-5">
-            //************* Implementation of Multistep-Form using Material UI
-            Purposal
+            {/* ************* Implementation of Multistep-Form using Material UI */}
+            Proposal {/* Updated text to "Proposal" */}
             <Modal
               open={purposalModal}
               onClose={closeModal}
@@ -635,7 +665,8 @@ const Estimator = () => {
                   purposalModal ? "show" : ""
                 }`}
               >
-                <h4 className="text-center addnewtxt">Add Purposal Entries</h4>
+                <h4 className="text-center addnewtxt">Add Proposal Entries</h4>{" "}
+                {/* Updated text to "Proposal Entries" */}
                 <button className="close-btn" onClick={closeModal}></button>
                 <div className="purposal-content pt-4 px-5">
                   <Stepper activeStep={activeStep} alternativeLabel>
@@ -646,41 +677,47 @@ const Estimator = () => {
                     ))}
                   </Stepper>
                   <form
-                    onSubmit={handleProposalSubmitPosting}
+                    // onSubmit={handleProposalSubmitPosting}
                     className="d-flex flex-column"
                   >
                     {activeStep === 0 && (
                       <>
                         <div className="mb-2 mt-3">
-                          <label htmlFor="PurposalID" className="form-label">
+                          <label htmlFor="dateID" className="form-label">
+                            {/* Updated ID to "ProposalID" */}
                             Current Date:
                           </label>
                           <input
                             type="date"
                             className="form-control"
-                            id="PurposalID"
-                            value={step0FormData.currentDate}
+                            id="dateID"
+                            name="dateID"
+                            value={step0FormData.date}
                             onChange={(e) =>
                               setStep0FormData({
                                 ...step0FormData,
-                                currentDate: e.target.value,
+                                date: e.target.value,
                               })
                             }
                           />
                         </div>
                         <div className="mb-2 mt-3">
-                          <label htmlFor="ProjectName" className="form-label">
-                            Estimating-Project-Name:
+                          <label htmlFor="ProjectID" className="form-label">
+                            Estimating ID:
                           </label>
                           <input
-                            type="text"
+                            type="number"
                             className="form-control"
-                            id="ProjectName"
-                            value={selectedProjectName}
+                            id="ProjectID"
+                            name="ProjectID"
+                            value={selectedEstimatingID}
                             onChange={(e) =>
-                              setSelectedProjectName(e.target.value)
+                              setStep0FormData({
+                                ...step0FormData,
+                                estimating: e.target.value,
+                              })
                             }
-                            readOnly // Add this to make the input field read-only
+                            readOnly
                           />
                         </div>
 
@@ -692,11 +729,12 @@ const Estimator = () => {
                             type="text"
                             className="form-control"
                             id="ArchitectName"
-                            value={step0FormData.architectName}
+                            name="ArchitectName"
+                            value={step0FormData.architect_name}
                             onChange={(e) =>
                               setStep0FormData({
                                 ...step0FormData,
-                                architectName: e.target.value,
+                                architect_name: e.target.value,
                               })
                             }
                           />
@@ -709,18 +747,18 @@ const Estimator = () => {
                             type="text"
                             className="form-control"
                             id="ArchitectFirm"
-                            value={step0FormData.architectFirm}
+                            name="ArchitectFirm"
+                            value={step0FormData.architect_firm}
                             onChange={(e) =>
                               setStep0FormData({
                                 ...step0FormData,
-                                architectFirm: e.target.value,
+                                architect_firm: e.target.value,
                               })
                             }
                           />
                         </div>
                       </>
                     )}
-
                     {activeStep === 1 && (
                       <div className="mt-2">
                         {/* Render the entries */}
@@ -736,15 +774,16 @@ const Estimator = () => {
                               <input
                                 id={"proposalAddendumNumber" + index}
                                 type="number"
+                                name="number"
                                 className="form-control"
                                 value={
-                                  step1FormData.addendumEntries?.[index]
-                                    ?.addendumNumber || ""
+                                  step1FormData.Addendums?.[index]?.Addendums ||
+                                  ""
                                 }
                                 onChange={(e) =>
                                   setStep1FormData((prevState) => {
                                     const newAddendumEntries = [
-                                      ...prevState.addendumEntries,
+                                      ...(prevState.Addendums || []), // Ensure addendumEntries is an array
                                     ];
                                     newAddendumEntries[index] = {
                                       ...newAddendumEntries[index],
@@ -760,6 +799,7 @@ const Estimator = () => {
                               <input
                                 id={"proposalAddendumDate" + index}
                                 type="date"
+                                name="date"
                                 className="form-control"
                                 value={
                                   step1FormData.addendumEntries?.[index]
@@ -768,7 +808,7 @@ const Estimator = () => {
                                 onChange={(e) =>
                                   setStep1FormData((prevState) => {
                                     const newAddendumEntries = [
-                                      ...prevState.addendumEntries,
+                                      ...(prevState.addendumEntries || []), // Ensure addendumEntries is an array
                                     ];
                                     newAddendumEntries[index] = {
                                       ...newAddendumEntries[index],
@@ -810,6 +850,7 @@ const Estimator = () => {
                         )}
                       </div>
                     )}
+
                     {activeStep === 2 && (
                       <div>
                         <label
@@ -818,7 +859,7 @@ const Estimator = () => {
                         >
                           <strong>Specifications</strong>
                         </label>
-                        <div className=" specificationEntry bg-warning">
+                        <div className="specificationEntry bg-warning">
                           <div className="mb-2 mt-3">
                             <label
                               htmlFor="specificName"
@@ -844,7 +885,7 @@ const Estimator = () => {
                               htmlFor="specificbudget"
                               className="form-label"
                             >
-                              Specification budget
+                              Specification Budget
                             </label>
                             <input
                               type="number"
@@ -865,89 +906,89 @@ const Estimator = () => {
                               Specification Details
                             </label>
                             <div className={`wholediv`}>
-                              {entries.map((entry, index) => (
-                                <div key={index} className="mb-2 mt-3">
-                                  <div className="input-group">
-                                    <input
-                                      type="number"
-                                      className="form-control"
-                                      placeholder="Specification Number"
-                                      id={"specificationNumber" + index}
-                                      value={
-                                        step2FormData.specificationDetails?.[
-                                          index
-                                        ]?.specificationNumber || ""
-                                      }
-                                      onChange={(e) =>
-                                        setStep2FormData((prevState) => {
-                                          const newSpecificationDetails = [
-                                            ...prevState.specificationDetails,
-                                          ];
-                                          newSpecificationDetails[index] = {
-                                            ...newSpecificationDetails[index],
-                                            specificationNumber: e.target.value,
-                                          };
-                                          return {
-                                            ...prevState,
-                                            specificationDetails:
-                                              newSpecificationDetails,
-                                          };
-                                        })
-                                      }
-                                    />
-                                    <input
-                                      type="text"
-                                      className="form-control"
-                                      placeholder="Specification description"
-                                      id={"specificationDescription" + index}
-                                      value={
-                                        step2FormData.specificationDetails?.[
-                                          index
-                                        ]?.specificationDescription || ""
-                                      }
-                                      onChange={(e) =>
-                                        setStep2FormData((prevState) => {
-                                          const newSpecificationDetails = [
-                                            ...prevState.specificationDetails,
-                                          ];
-                                          newSpecificationDetails[index] = {
-                                            ...newSpecificationDetails[index],
-                                            specificationDescription:
-                                              e.target.value,
-                                          };
-                                          return {
-                                            ...prevState,
-                                            specificationDetails:
-                                              newSpecificationDetails,
-                                          };
-                                        })
-                                      }
-                                    />
-                                    <button
-                                      className="btn btn-danger"
-                                      onClick={() => handleRemoveEntry(index)}
-                                      disabled={entries.length === 1}
-                                    >
-                                      <i className="far">X</i>
-                                    </button>
-                                  </div>
-                                  {index === entries.length - 1 && (
-                                    <button
-                                      className="btn btn-success bk"
-                                      onClick={handleNewEntry}
-                                    >
-                                      <i
+                              {step2FormData.specificationDetails.map(
+                                (item, index) => (
+                                  <div key={index} className="mb-2 mt-3">
+                                    <div className="input-group">
+                                      <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Specification Name"
+                                        value={item.specificName || ""}
+                                        onChange={(e) =>
+                                          setStep2FormData((prevState) => {
+                                            const newSpecificationDetails = [
+                                              ...prevState.specificationDetails,
+                                            ];
+                                            newSpecificationDetails[index] = {
+                                              ...newSpecificationDetails[index],
+                                              specificName: e.target.value,
+                                            };
+                                            return {
+                                              ...prevState,
+                                              specificationDetails:
+                                                newSpecificationDetails,
+                                            };
+                                          })
+                                        }
+                                      />
+                                      <input
+                                        type="number"
+                                        className="form-control"
+                                        placeholder="Budget"
+                                        value={item.budget || ""}
+                                        onChange={(e) =>
+                                          setStep2FormData((prevState) => {
+                                            const newSpecificationDetails = [
+                                              ...prevState.specificationDetails,
+                                            ];
+                                            newSpecificationDetails[index] = {
+                                              ...newSpecificationDetails[index],
+                                              budget: e.target.value,
+                                            };
+                                            return {
+                                              ...prevState,
+                                              specificationDetails:
+                                                newSpecificationDetails,
+                                            };
+                                          })
+                                        }
+                                      />
+                                      <button
+                                        className="btn btn-danger"
+                                        onClick={() => handleRemoveEntry(index)}
+                                        disabled={
+                                          step2FormData.specificationDetails
+                                            .length === 1
+                                        }
+                                      >
+                                        <i className="far">X</i>
+                                      </button>
+                                    </div>
+                                    {index ===
+                                      step2FormData.specificationDetails
+                                        .length -
+                                        1 && (
+                                      <button
+                                        className="btn btn-success bk"
                                         onClick={handleNewEntry}
-                                        className="fa-regular icon fa-plus"
-                                      ></i>
-                                    </button>
-                                  )}
-                                </div>
-                              ))}
+                                      >
+                                        <i
+                                          onClick={handleNewEntry}
+                                          className="fa-regular icon fa-plus"
+                                        ></i>
+                                      </button>
+                                    )}
+                                  </div>
+                                )
+                              )}
                             </div>
                           </div>
                         </div>
-                        <button className="btn btn-success">
+                        <button
+                          className="btn btn-success"
+                          onClick={handleProposalSubmitPosting}
+                        >
                           Add-New-Specification-Section
                         </button>
                       </div>
@@ -958,36 +999,37 @@ const Estimator = () => {
                         <label htmlFor="projectName" className="form-label">
                           <strong>Services (Inclusions & Exclusions):</strong>
                         </label>
-                        {serviceTypes.map((service, id) => (
-                          <div key={id} className="mb-2 d-flex">
-                            <input
-                              type="text"
-                              className="form-control serviceInput"
-                              placeholder={`Service ${id + 1}`}
-                              value={ServiceData[id]} // Display the service name
-                              readOnly
-                            />
-                            <select
-                              name="#"
-                              id=""
-                              value={service.type}
-                              onChange={(e) => {
-                                // Update the service type when the user selects a new value
-                                const updatedServiceTypes = [...serviceTypes];
-                                updatedServiceTypes[id].type = e.target.value;
-                                setServiceTypes(updatedServiceTypes);
-                              }}
-                            >
-                              <option value="Exclusion">Exclusion</option>
-                              <option value="Inclusion">Inclusion</option>
-                            </select>
-                          </div>
-                        ))}
+                        <div>
+                          {services.map((service, id) => (
+                            <div key={id} className="mb-2 d-flex">
+                              <input
+                                type="text"
+                                className="form-control serviceInput"
+                                placeholder={`Service ${id + 1}`}
+                                value={service.name}
+                                readOnly
+                              />
+                              <select
+                                name={`service${id}`}
+                                id={`service${id}`}
+                                value={service.type}
+                                onChange={(e) => {
+                                  const updatedServiceTypes = [...services];
+                                  updatedServiceTypes[id].type = e.target.value;
+                                  setServices(updatedServiceTypes);
+                                }}
+                              >
+                                <option value="Exclusion">Exclusion</option>
+                                <option value="Inclusion">Inclusion</option>
+                              </select>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     )}
 
                     <div className="mt-1">
-                      {activeStep <= 2 ? (
+                      {activeStep < 3 ? (
                         <div className="parentbtnsdiv">
                           <div className="spacebtns">
                             <Button
@@ -1020,7 +1062,8 @@ const Estimator = () => {
                             <Button
                               variant="contained"
                               color="primary"
-                              type="submit"
+                              type="button"
+                              onClick={handleProposalSubmitPosting}
                             >
                               Submit
                             </Button>

@@ -42,34 +42,81 @@ class Estimating(models.Model):
     estimator = models.ForeignKey(User,verbose_name="Estimator", related_name='estimations_as_estimator', limit_choices_to=models.Q(roles__name='Estimator'), on_delete=models.SET_NULL, null=True)
     bidder = models.CharField(verbose_name="bidder ",max_length=1500, null=True)
     
+
+
+
+
     def save(self, *args, **kwargs):
-        # Check if the object is new (doesn't have an ID yet)
-        is_new = self.pk is None
-        super().save(*args, **kwargs)
-
-        if is_new:
-            # Create the initial Estimating_detail instances
-            initial_detail_data = [
-                {'drctry_name': 'Addendums'},
-                {'drctry_name': 'Bid'},
-                {'drctry_name': 'Plans'},
-                {'drctry_name': 'Pre Bid RFIs'},
-                {'drctry_name': 'Quotes'},
-                {'drctry_name': 'Specs'},
-                {'drctry_name': 'Wages Rates For Distribution'},
-            ]
-
-            for data in initial_detail_data:
-                Estimating_detail.objects.create(
-                    Estimating=self, 
-                    drctry_name=data['drctry_name'],
-                    prnt_id=None,  
-                    file_type=None, 
-                    output_Table_Name=None,  
-                )
+        # Check if this is a new instance (i.e., being created and not updated)
+        is_new = not self.pk
     
-    def __str__(self):
-        return self.Prjct_Name
+        # First, save the Estimating instance (either create or update)
+        super(Estimating, self).save(*args, **kwargs)
+    
+        if is_new:
+            # Top Level Entries
+            top_level_names = ['Addendums', 'Bid', 'Plans', 'Pre Bid RFIs', 'Quotes', 'Specs']
+            top_objects = {}
+            for name in top_level_names:
+                detail = Estimating_detail.objects.create(Estimating=self, drctry_name=name)
+                top_objects[name] = detail
+
+            # Second Level Entries
+            second_level_data = [
+                {'name': 'Add. 3', 'parent': 'Addendums'},
+                {'name': 'Bid', 'parent': 'Bid'},
+                {'name': 'Bidders', 'parent': 'Bid'},
+                {'name': 'Scope', 'parent': 'Bid'},
+                {'name': 'Plans', 'parent': 'Plans'},
+                {'name': 'Takeoff', 'parent': 'Plans'},
+                {'name': '00 Quote Request Plans-Specs', 'parent': 'Quotes'},
+                {'name': '00A - MC Request Form', 'parent': 'Quotes'},
+                {'name': '00B - Price Comparison', 'parent': 'Quotes'},
+                {'name': 'Material Quotes', 'parent': 'Quotes'},
+                {'name': 'Plaster', 'parent': 'Quotes'},
+                {'name': 'Scaffold', 'parent': 'Quotes'},
+                {'name': 'Biding Specs', 'parent': 'Specs'},
+                {'name': 'Specs', 'parent': 'Specs'}
+            ]
+            second_level_objects = {}
+            for item in second_level_data:
+                parent_obj = top_objects[item['parent']]
+                detail = Estimating_detail.objects.create(Estimating=self, drctry_name=item['name'], prnt_id=parent_obj.id)
+                second_level_objects[item['name']] = detail
+        
+            # Third Level Entries
+            third_level_data = [
+                {'name': 'Emails Pertaining to Job', 'parent': 'Bid'},
+                {'name': 'FINAL Proposal', 'parent': 'Bid'},
+                {'name': 'Reference Docs', 'parent': 'Bid'},
+                {'name': 'Harris', 'parent': 'Bidders'},
+                {'name': 'OLD', 'parent': '00B - Price Comparison'},
+                {'name': 'AGS - LOCKED 04-08-2022', 'parent': 'Material Quotes'},
+                {'name': 'CWalla', 'parent': 'Material Quotes'},
+                {'name': 'FBM', 'parent': 'Material Quotes'},
+                {'name': 'Steeler', 'parent': 'Material Quotes'}
+            ]
+            third_level_objects = {}
+            for item in third_level_data:
+                parent_obj = second_level_objects[item['parent']]
+                detail = Estimating_detail.objects.create(Estimating=self, drctry_name=item['name'], prnt_id=parent_obj.id)
+                third_level_objects[item['name']] = detail
+
+            # Fourth Level Entries
+            fourth_level_data = [
+                {'name': 'Bid Results', 'parent': 'FINAL Proposal'},              
+                {'name': 'OLD', 'parent': 'AGS - LOCKED 04-08-2022'},
+                {'name': 'OLD', 'parent': 'CWalla'},
+                {'name': 'OLD', 'parent': 'FBM'},
+                {'name': 'OLD', 'parent': 'Steeler'}
+            ]
+            for item in fourth_level_data:
+                parent_obj = third_level_objects[item['parent']]
+                Estimating_detail.objects.create(Estimating=self, drctry_name=item['name'], prnt_id=parent_obj.id)
+
+
+        def __str__(self):
+            return self.Prjct_Name
 
 
 
@@ -78,14 +125,16 @@ class Estimating(models.Model):
 
 
 class Estimating_detail(models.Model):
-    Estimating=models.ForeignKey(Estimating, verbose_name="Add Estimating", on_delete=models.CASCADE)
-    prnt_id = models.PositiveIntegerField(verbose_name="Folder Parent ID",null=True, blank=True) 
+    Estimating=models.ForeignKey(Estimating,related_name='estimating_details', verbose_name="Add Estimating", on_delete=models.CASCADE)
+    prnt = models.ForeignKey('self', verbose_name="Folder Parent ID", on_delete=models.CASCADE, null=True, blank=True, related_name="children") 
     drctry_name = models.CharField(verbose_name="Folder Name",max_length=255)
     file_type = models.CharField(verbose_name="Type Name",max_length=100, null=True, blank=True) 
     output_Table_Name = models.CharField(verbose_name="file Name",max_length=100, null=True, blank=True) 
     file_field = models.FileField(upload_to='Files/', null=True)
     file_binary_data = models.BinaryField(null=True, blank=True)
 
+
+#which file uploaded the name of file is equal to the output_Table_Name and file type is equal to the file_type
     def save(self, *args, **kwargs):
         if self.file_field:
             with open(self.file_field.path, 'rb') as f:
@@ -99,7 +148,8 @@ class Estimating_detail(models.Model):
         
         super().save(*args, **kwargs)
 
-
+    def __str__(self):
+        return self.drctry_name
 
 
 
@@ -149,7 +199,7 @@ class Proposal(models.Model):
         max_length=50)
 
     def __str__(self):
-        return f"Proposal {self.id} by {self.architect_name}"
+        return f"Proposal {self.id} by {self.architect_name}",f"Proposal {self.id} by {self.self.estimating}"
 
 
 

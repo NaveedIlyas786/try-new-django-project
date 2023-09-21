@@ -58,19 +58,13 @@ const Estimator = () => {
       addendumDate: "",
     },
   ]);
+  const [specentries, setSpecEntries] = useState([
+    {
+      specName: "",
+      specNumber: "",
+    },
+  ]);
 
-  // // Define functions to handle data changes
-  // const handleAddendumNumberChange = (index, value) => {
-  //   const updatedEntries = [...entries];
-  //   updatedEntries[index].addendumNumber = value;
-  //   setEntries(updatedEntries);
-  // };
-
-  // const handleAddendumDateChange = (index, value) => {
-  //   const updatedEntries = [...entries];
-  //   updatedEntries[index].addendumDate = value;
-  //   setEntries(updatedEntries);
-  // };
   const [addendumNumber, setAddendumNumber] = useState("");
   const [addendumDate, setAddendumDate] = useState("");
 
@@ -240,14 +234,53 @@ const Estimator = () => {
       });
   };
   //************* Define the handleProposalSubmitPosting function
-  const [proposalFormData, setProposalFormData] = useState({});
-  const [selectedProjectName, setSelectedProjectName] = useState({});
+
+  const [selectedEstimatingID, setSelectedEstimatingID] = useState();
+  const [step0FormData, setStep0FormData] = useState({
+    date: "",
+    architect_name: "",
+    architect_firm: "",
+    estimating: selectedEstimatingID,
+  });
+
+  console.log(
+    "Submitting proposal with estimating ID:",
+    step0FormData.estimating
+  );
+
+  const [step2FormData, setStep2FormData] = useState({
+    specific_name: "",
+    budget: "",
+    sefic: [],
+    specificationDetails: [], // Initialize an empty array for specification details
+  });
+
+  // Function to add a new specification detail
+  const handleAddSpecificationDetail = () => {
+    setStep2FormData((prevState) => ({
+      ...prevState,
+      specificationDetails: [
+        ...prevState.specificationDetails,
+        { name: "", number: "" },
+      ],
+    }));
+  };
+
+  // Function to remove a specification detail by index
+  const handleRemoveSpecificationDetail = (index) => {
+    setStep2FormData((prevState) => ({
+      ...prevState,
+      specificationDetails: prevState.specificationDetails.filter(
+        (_, i) => i !== index
+      ),
+    }));
+  };
+
   const [step1FormData, setStep1FormData] = useState({
-    Addendums: [],
+    Addendums: [], // Make sure it's an array
   });
 
   const [services, setServices] = useState([]);
-  const [serviceTypes, setServiceTypes] = useState([]);
   useEffect(() => {
     // Define an async function to fetch data from the API
     async function fetchServiceData() {
@@ -260,15 +293,17 @@ const Estimator = () => {
         }
 
         const data = await response.json();
-
         // Map the data to the serviceTypes array
-        const updatedServiceTypes = data.map((service, id) => ({
-          serviceId: id,
-          type: "Exclusion", // Default type, you can change it to 'Inclusion' if needed
-          name: service.name, // Assign the service name from the API
-        }));
+        // const updatedServiceTypes = data.map((myservice, id) => ({
+        //   proposal: myservice.proposal, // Provide a value for 'proposal'
+        //   service: myservice.service,   // Provide a value for 'service'
+        //   type: "Exclusion",           // Default type, you can change it to 'Inclusion' if needed
+        //   name: myservice.name,         // Assign the service name from the API
+        // }));
 
-        setServices(updatedServiceTypes);
+        console.log(data);
+
+        // setServices(data);
       } catch (error) {
         console.error("Error fetching service data:", error);
       }
@@ -277,36 +312,8 @@ const Estimator = () => {
     // Call the fetchServiceData function when the component mounts
     fetchServiceData();
   }, []);
-
-  const [selectedEstimatingID, setSelectedEstimatingID] = useState();
-  const [step0FormData, setStep0FormData] = useState({
-    date: "",
-    architect_name: "",
-    architect_firm: "",
-    estimating: selectedEstimatingID,
-  });
-  const [step2FormData, setStep2FormData] = useState({
-    specificationName: "",
-    specificationBudget: "",
-    specificationDetails: [],
-  });
-  const specificationDetails = step2FormData.specificationDetails.map(
-    (item) => ({
-      specific_name: item.specificName, // Map your specificName field
-      budget: item.budget, // Map your budget field
-      sefic: item.sefic, // Map your sefic field (assuming it's an array)
-    })
-  );
-  console.log(
-    "Submitting proposal with estimating ID:",
-    step0FormData.estimating
-  );
   const handleProposalSubmitPosting = async (e) => {
     e.preventDefault();
-    if (!step0FormData.estimating) {
-      alert("Please select an Estimating ID.");
-      return; // Prevent form submission
-    }
 
     try {
       const response = await fetch(
@@ -314,40 +321,41 @@ const Estimator = () => {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json", // Set the content type to JSON
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            // date: step0FormData.date,
-            // estimating: step0FormData.estimating,
-            // architect_name: step0FormData.architect_name,
-            // architect_firm: step0FormData.architect_firm,
-            // Addendums: step1FormData.Addendums,
-            // specificationName: step2FormData.specificationName,
-            // specificationBudget: step2FormData.specificationBudget,
-            // specificationDetails: step2FormData.specificationDetails,
-            // services: serviceTypes,
             date: step0FormData.date,
             estimating: step0FormData.estimating,
             architect_name: step0FormData.architect_name,
             architect_firm: step0FormData.architect_firm,
-            Addendums: step1FormData.Addendums,
-            spcifc: specificationDetails, // Use the correctly formatted specification data here
-            services: serviceTypes,
+            Addendums: step1FormData.Addendums.map((addendum) => ({
+              addendum_Number: addendum.addendum_Number,
+              date: addendum.date,
+            })),
+            spcifc: [
+              {
+                specific_name: step2FormData.specific_name,
+                budget: step2FormData.budget,
+                sefic: step2FormData.specificationDetails.map((detail) => ({
+                  sefic: step2FormData.specific_name, // This might need adjustment based on your data structure
+                  number: detail.number,
+                  name: detail.name,
+                })),
+              },
+            ],
+            services: "",
           }),
         }
       );
 
       if (response.ok) {
-        // Handle success, e.g., display a success message or navigate to another page
         console.log("Proposal data submitted successfully");
       } else {
-        // Handle errors, e.g., display an error message
         console.error("Error submitting proposal data");
-        const errorResponse = await response.json(); // Parse the error response as JSON
+        const errorResponse = await response.json();
         console.error("Error response:", errorResponse);
       }
     } catch (error) {
-      // Handle network errors or other exceptions
       console.error("An error occurred:", error);
     }
   };
@@ -701,7 +709,7 @@ const Estimator = () => {
                             }
                           />
                         </div>
-                        <div className="mb-2 mt-3">
+                        {/* <div className="mb-2 mt-3">
                           <label htmlFor="ProjectID" className="form-label">
                             Estimating ID:
                           </label>
@@ -719,7 +727,7 @@ const Estimator = () => {
                             }
                             readOnly
                           />
-                        </div>
+                        </div> */}
 
                         <div className="mb-2 mt-3">
                           <label htmlFor="ArchitectName" className="form-label">
@@ -774,52 +782,55 @@ const Estimator = () => {
                               <input
                                 id={"proposalAddendumNumber" + index}
                                 type="number"
-                                name="number"
+                                name="addendum_Number" // Set the name attribute to differentiate
                                 className="form-control"
                                 value={
-                                  step1FormData.Addendums?.[index]?.Addendums ||
-                                  ""
+                                  step1FormData.Addendums?.[index]
+                                    ?.addendum_Number || ""
                                 }
-                                onChange={(e) =>
+                                onChange={(e) => {
+                                  const { name, value } = e.target;
                                   setStep1FormData((prevState) => {
                                     const newAddendumEntries = [
-                                      ...(prevState.Addendums || []), // Ensure addendumEntries is an array
+                                      ...(prevState.Addendums || []), // Ensure Addendums is an array
                                     ];
-                                    newAddendumEntries[index] = {
-                                      ...newAddendumEntries[index],
-                                      addendumNumber: e.target.value,
+                                    const updatedAddendum = {
+                                      ...(newAddendumEntries[index] || {}), // Get the existing Addendum or an empty object
+                                      [name]: value, // Dynamically set the field (addendum_Number)
                                     };
+                                    newAddendumEntries[index] = updatedAddendum;
                                     return {
                                       ...prevState,
-                                      addendumEntries: newAddendumEntries,
+                                      Addendums: newAddendumEntries, // Update Addendums in the state
                                     };
-                                  })
-                                }
+                                  });
+                                }}
                               />
                               <input
                                 id={"proposalAddendumDate" + index}
                                 type="date"
-                                name="date"
+                                name="date" // Set the name attribute to differentiate
                                 className="form-control"
                                 value={
-                                  step1FormData.addendumEntries?.[index]
-                                    ?.addendumDate || ""
+                                  step1FormData.Addendums?.[index]?.date || ""
                                 }
-                                onChange={(e) =>
+                                onChange={(e) => {
+                                  const { name, value } = e.target;
                                   setStep1FormData((prevState) => {
                                     const newAddendumEntries = [
-                                      ...(prevState.addendumEntries || []), // Ensure addendumEntries is an array
+                                      ...(prevState.Addendums || []), // Ensure Addendums is an array
                                     ];
-                                    newAddendumEntries[index] = {
-                                      ...newAddendumEntries[index],
-                                      addendumDate: e.target.value,
+                                    const updatedAddendum = {
+                                      ...(newAddendumEntries[index] || {}), // Get the existing Addendum or an empty object
+                                      [name]: value, // Dynamically set the field (date)
                                     };
+                                    newAddendumEntries[index] = updatedAddendum;
                                     return {
                                       ...prevState,
-                                      addendumEntries: newAddendumEntries,
+                                      Addendums: newAddendumEntries, // Update Addendums in the state
                                     };
-                                  })
-                                }
+                                  });
+                                }}
                               />
                               <button
                                 className="btn btn-danger"
@@ -871,11 +882,11 @@ const Estimator = () => {
                               type="text"
                               className="form-control"
                               id="specificName"
-                              value={step2FormData.specificationName || ""}
+                              value={step2FormData.specific_name || ""}
                               onChange={(e) =>
                                 setStep2FormData({
                                   ...step2FormData,
-                                  specificationName: e.target.value,
+                                  specific_name: e.target.value,
                                 })
                               }
                             />
@@ -891,99 +902,108 @@ const Estimator = () => {
                               type="number"
                               className="form-control"
                               id="specificbudget"
-                              value={step2FormData.specificationBudget || ""}
+                              value={step2FormData.budget || ""}
                               onChange={(e) =>
                                 setStep2FormData({
                                   ...step2FormData,
-                                  specificationBudget: e.target.value,
+                                  budget: e.target.value,
                                 })
                               }
                             />
                           </div>
 
                           <div className="mt-2">
-                            <label className="form-label">
-                              Specification Details
-                            </label>
-                            <div className={`wholediv`}>
-                              {step2FormData.specificationDetails.map(
-                                (item, index) => (
-                                  <div key={index} className="mb-2 mt-3">
-                                    <div className="input-group">
-                                      <input
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="Specification Name"
-                                        value={item.specificName || ""}
-                                        onChange={(e) =>
-                                          setStep2FormData((prevState) => {
-                                            const newSpecificationDetails = [
-                                              ...prevState.specificationDetails,
-                                            ];
-                                            newSpecificationDetails[index] = {
-                                              ...newSpecificationDetails[index],
-                                              specificName: e.target.value,
-                                            };
-                                            return {
-                                              ...prevState,
-                                              specificationDetails:
-                                                newSpecificationDetails,
-                                            };
-                                          })
-                                        }
-                                      />
-                                      <input
-                                        type="number"
-                                        className="form-control"
-                                        placeholder="Budget"
-                                        value={item.budget || ""}
-                                        onChange={(e) =>
-                                          setStep2FormData((prevState) => {
-                                            const newSpecificationDetails = [
-                                              ...prevState.specificationDetails,
-                                            ];
-                                            newSpecificationDetails[index] = {
-                                              ...newSpecificationDetails[index],
-                                              budget: e.target.value,
-                                            };
-                                            return {
-                                              ...prevState,
-                                              specificationDetails:
-                                                newSpecificationDetails,
-                                            };
-                                          })
-                                        }
-                                      />
-                                      <button
-                                        className="btn btn-danger"
-                                        onClick={() => handleRemoveEntry(index)}
-                                        disabled={
-                                          step2FormData.specificationDetails
-                                            .length === 1
-                                        }
-                                      >
-                                        <i className="far">X</i>
-                                      </button>
-                                    </div>
-                                    {index ===
-                                      step2FormData.specificationDetails
-                                        .length -
-                                        1 && (
-                                      <button
-                                        className="btn btn-success bk"
-                                        onClick={handleNewEntry}
-                                      >
-                                        <i
-                                          onClick={handleNewEntry}
-                                          className="fa-regular icon fa-plus"
-                                        ></i>
-                                      </button>
-                                    )}
-                                  </div>
-                                )
-                              )}
+                        {/* Render the entries */}
+                        <label className="form-label">
+                          Specification Details
+                        </label>
+                        {specentries.map((entry, index) => (
+                          <div key={index} className="mb-2 mt-3">
+                            <div
+                              id={"proposalAddendumDiv" + index}
+                              className="input-group"
+                            >
+                              <input
+                                id={"proposalAddendumNumber" + index}
+                                type="number"
+                                name="spec_Number" // Set the name attribute to differentiate
+                                className="form-control"
+                                value={
+                                  step2FormData.sefic?.[index]
+                                    ?.specNumber || ""
+                                }
+                                onChange={(e) => {
+                                  const { name, value } = e.target;
+                                  setStep1FormData((prevState) => {
+                                    const newAddendumEntries = [
+                                      ...(prevState.Addendums || []), // Ensure Addendums is an array
+                                    ];
+                                    const updatedAddendum = {
+                                      ...(newAddendumEntries[index] || {}), // Get the existing Addendum or an empty object
+                                      [name]: value, // Dynamically set the field (addendum_Number)
+                                    };
+                                    newAddendumEntries[index] = updatedAddendum;
+                                    return {
+                                      ...prevState,
+                                      sefic: newAddendumEntries, // Update Addendums in the state
+                                    };
+                                  });
+                                }}
+                              />
+                              <input
+                                id={"proposalAddendumDate" + index}
+                                type="date"
+                                name="date" // Set the name attribute to differentiate
+                                className="form-control"
+                                value={
+                                  step1FormData.Addendums?.[index]?.date || ""
+                                }
+                                onChange={(e) => {
+                                  const { name, value } = e.target;
+                                  setStep1FormData((prevState) => {
+                                    const newAddendumEntries = [
+                                      ...(prevState.Addendums || []), // Ensure Addendums is an array
+                                    ];
+                                    const updatedAddendum = {
+                                      ...(newAddendumEntries[index] || {}), // Get the existing Addendum or an empty object
+                                      [name]: value, // Dynamically set the field (date)
+                                    };
+                                    newAddendumEntries[index] = updatedAddendum;
+                                    return {
+                                      ...prevState,
+                                      Addendums: newAddendumEntries, // Update Addendums in the state
+                                    };
+                                  });
+                                }}
+                              />
+                              <button
+                                className="btn btn-danger"
+                                onClick={() => handleRemoveEntry(index)}
+                              >
+                                <i className="far">X</i>
+                              </button>
                             </div>
+                            {index === entries.length - 1 && (
+                              <button
+                                className="btn btn-success bk"
+                                onClick={handleNewEntry}
+                              >
+                                <i className="fa-regular icon fa-plus"></i>
+                              </button>
+                            )}
                           </div>
+                        ))}
+
+                        {/* Initial "New-Entry" button */}
+                        {entries.length === 0 && (
+                          <button
+                            className="btn btn-success ms-3 rounded-0"
+                            onClick={handleNewEntry}
+                          >
+                            New-Entry
+                          </button>
+                        )}
+                      </div>
                         </div>
                         <button
                           className="btn btn-success"
@@ -1010,8 +1030,6 @@ const Estimator = () => {
                                 readOnly
                               />
                               <select
-                                name={`service${id}`}
-                                id={`service${id}`}
                                 value={service.type}
                                 onChange={(e) => {
                                   const updatedServiceTypes = [...services];

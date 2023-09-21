@@ -265,7 +265,10 @@ input:focus {
 .myrowInputgrouup{
   margin-bottom: 10px !important;
 }
-
+.addEntrybtn{
+  margin-top: -5px;
+  border-radius: 10px !important;
+}
 .dropbtn {
   background-color: #4CAF50;
   color: white;

@@ -248,13 +248,6 @@ const Estimator = () => {
     step0FormData.estimating
   );
 
-  const [step2FormData, setStep2FormData] = useState({
-    specific_name: "",
-    budget: "",
-    sefic: [],
-    specificationDetails: [], // Initialize an empty array for specification details
-  });
-
   // Function to add a new specification detail
   const handleAddSpecificationDetail = () => {
     setStep2FormData((prevState) => ({
@@ -312,6 +305,12 @@ const Estimator = () => {
     // Call the fetchServiceData function when the component mounts
     fetchServiceData();
   }, []);
+
+  const [step2FormData, setStep2FormData] = useState({
+    specific_name: "",
+    budget: "",
+    sefic: [],
+  });
   const handleProposalSubmitPosting = async (e) => {
     e.preventDefault();
 
@@ -336,8 +335,8 @@ const Estimator = () => {
               {
                 specific_name: step2FormData.specific_name,
                 budget: step2FormData.budget,
-                sefic: step2FormData.specificationDetails.map((detail) => ({
-                  sefic: step2FormData.specific_name, // This might need adjustment based on your data structure
+                sefic: step2FormData.sefic.map((detail) => ({
+                  sefic: detail.specific_name, // This might need adjustment based on your data structure
                   number: detail.number,
                   name: detail.name,
                 })),
@@ -434,34 +433,61 @@ const Estimator = () => {
   const handleCompanyNameChange = (e) => {
     setCompany(e.target.value);
   };
+  // ********************************
+  // const [step2FormData, setStep2FormData] = useState({
+  //   specific_name: "",
+  //   budget: "",
+  //   sefic: [], // This will hold the specification details
+  // });
 
-  const [inputGroups, setInputGroups] = useState([
-    {
-      id: 1,
-      specificationNumber: "",
-      specificationDescription: "",
-    },
-  ]);
+  const handleSpecificationInputChange = (index, key, value) => {
+    // Clone the current sefic array to avoid mutating the state directly
+    const updatedSefic = [...step2FormData.sefic];
 
-  const addInputGroup = (e) => {
-    e.preventDefault();
-    setInputGroups((prevInputGroups) => [
-      ...prevInputGroups,
-      {
-        id: Date.now(),
-        specificationNumber: "",
-        specificationDescription: "",
-      },
-    ]);
+    // Update the specific property for the specified index
+    updatedSefic[index][key] = value;
+
+    // Update the state
+    setStep2FormData({
+      ...step2FormData,
+      sefic: updatedSefic,
+    });
   };
 
-  const handleSpecificDetailDelete = (indexToDelete) => {
-    setInputGroups((prevInputGroups) =>
-      prevInputGroups.filter((_, index) => index !== indexToDelete)
-    );
+  const handleAddSpecificationEntry = (e) => {
+    e.preventDefault()
+    // Clone the current sefic array to avoid mutating the state directly
+    const updatedSefic = [...step2FormData.sefic];
+
+    // Add a new entry with default values
+    updatedSefic.push({
+      specific_name: "",
+      budget: "",
+      sefic: "",
+      number: "",
+      name: "",
+    });
+
+    // Update the state
+    setStep2FormData({
+      ...step2FormData,
+      sefic: updatedSefic,
+    });
   };
 
+  const handleRemoveSpecificationEntry = (index) => {
+    // Clone the current sefic array to avoid mutating the state directly
+    const updatedSefic = [...step2FormData.sefic];
 
+    // Remove the entry at the specified index
+    updatedSefic.splice(index, 1);
+
+    // Update the state
+    setStep2FormData({
+      ...step2FormData,
+      sefic: updatedSefic,
+    });
+  };
 
   return (
     <>
@@ -946,46 +972,42 @@ const Estimator = () => {
                             >
                               Specification Details
                             </label>
-                            {inputGroups.map((group,index) => (
+                            {step2FormData.sefic.map((entry, index) => (
                               <div
-                                key={group.id}
+                                key={index}
                                 className="input-group myrowInputgrouup bg-primary"
                               >
                                 <input
                                   type="text"
                                   className="form-control"
                                   placeholder="Specification Number"
-                                  value={group.specificationNumber}
-                                  onChange={(e) => {
-                                    const updatedInputGroups = [...inputGroups];
-                                    const index = updatedInputGroups.findIndex(
-                                      (item) => item.id === group.id
-                                    );
-                                    updatedInputGroups[
-                                      index
-                                    ].specificationNumber = e.target.value;
-                                    setInputGroups(updatedInputGroups);
-                                  }}
+                                  value={entry.number}
+                                  onChange={(e) =>
+                                    handleSpecificationInputChange(
+                                      index,
+                                      "number",
+                                      e.target.value
+                                    )
+                                  }
                                 />
                                 <input
                                   type="text"
                                   className="form-control"
                                   placeholder="Specification Description"
-                                  value={group.specificationDescription}
-                                  onChange={(e) => {
-                                    const updatedInputGroups = [...inputGroups];
-                                    const index = updatedInputGroups.findIndex(
-                                      (item) => item.id === group.id
-                                    );
-                                    updatedInputGroups[
-                                      index
-                                    ].specificationDescription = e.target.value;
-                                    setInputGroups(updatedInputGroups);
-                                  }}
+                                  value={entry.name}
+                                  onChange={(e) =>
+                                    handleSpecificationInputChange(
+                                      index,
+                                      "name",
+                                      e.target.value
+                                    )
+                                  }
                                 />
                                 <button
                                   className="btn btn-danger"
-                                  onClick={()=>handleSpecificDetailDelete(index)}
+                                  onClick={() =>
+                                    handleRemoveSpecificationEntry(index)
+                                  }
                                 >
                                   <i className="far">X</i>
                                 </button>
@@ -993,10 +1015,16 @@ const Estimator = () => {
                             ))}
                             <button
                               className="btn btn-success bk"
-                              onClick={addInputGroup}
+                              onClick={handleAddSpecificationEntry}
                             >
                               <i className="fa-regular icon fa-plus"></i> Add
                               New Entry
+                            </button>
+                            <button
+                              className="btn btn-primary"
+                              onClick={handleProposalSubmitPosting}
+                            >
+                              Submit Proposal
                             </button>
                           </div>
                         </div>

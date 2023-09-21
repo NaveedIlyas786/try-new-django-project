@@ -248,13 +248,9 @@ input:focus {
   flex-direction: column;
 }
 .bk{
-  width: 30px  !important;
-  /* height: 30px !important; */
-  border-radius: 0 !important;
-  margin-top: -10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  margin-top:5px;
+  margin-left: 2px;
+  border-radius: 10px !important;
 }
 .icon{
   /* background-color: aqua; */
@@ -266,7 +262,9 @@ input:focus {
   background-color: rgb(182, 181, 181) !important;
 }
 /* ************************ */
-
+.myrowInputgrouup{
+  margin-bottom: 10px !important;
+}
 
 .dropbtn {
   background-color: #4CAF50;

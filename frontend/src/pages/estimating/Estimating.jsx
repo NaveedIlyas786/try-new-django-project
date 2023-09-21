@@ -434,7 +434,35 @@ const Estimator = () => {
   const handleCompanyNameChange = (e) => {
     setCompany(e.target.value);
   };
-  const errorMessage = "";
+
+  const [inputGroups, setInputGroups] = useState([
+    {
+      id: 1,
+      specificationNumber: "",
+      specificationDescription: "",
+    },
+  ]);
+
+  const addInputGroup = (e) => {
+    e.preventDefault();
+    setInputGroups((prevInputGroups) => [
+      ...prevInputGroups,
+      {
+        id: Date.now(),
+        specificationNumber: "",
+        specificationDescription: "",
+      },
+    ]);
+  };
+
+  const handleSpecificDetailDelete = (indexToDelete) => {
+    setInputGroups((prevInputGroups) =>
+      prevInputGroups.filter((_, index) => index !== indexToDelete)
+    );
+  };
+
+
+
   return (
     <>
       <div className={`estimator px-5 ${showModal ? "modal-active" : ""}`}>
@@ -911,104 +939,68 @@ const Estimator = () => {
                               }
                             />
                           </div>
-
-                          <div className="mt-2">
-                        {/* Render the entries */}
-                        <label className="form-label">
-                          Specification Details
-                        </label>
-                        {specentries.map((entry, index) => (
-                          <div key={index} className="mb-2 mt-3">
-                            <div
-                              id={"proposalAddendumDiv" + index}
-                              className="input-group"
+                          <div className="mb-2 mt-3">
+                            <label
+                              htmlFor="specificdetails"
+                              className="form-label"
                             >
-                              <input
-                                id={"proposalAddendumNumber" + index}
-                                type="number"
-                                name="spec_Number" // Set the name attribute to differentiate
-                                className="form-control"
-                                value={
-                                  step2FormData.sefic?.[index]
-                                    ?.specNumber || ""
-                                }
-                                onChange={(e) => {
-                                  const { name, value } = e.target;
-                                  setStep1FormData((prevState) => {
-                                    const newAddendumEntries = [
-                                      ...(prevState.Addendums || []), // Ensure Addendums is an array
-                                    ];
-                                    const updatedAddendum = {
-                                      ...(newAddendumEntries[index] || {}), // Get the existing Addendum or an empty object
-                                      [name]: value, // Dynamically set the field (addendum_Number)
-                                    };
-                                    newAddendumEntries[index] = updatedAddendum;
-                                    return {
-                                      ...prevState,
-                                      sefic: newAddendumEntries, // Update Addendums in the state
-                                    };
-                                  });
-                                }}
-                              />
-                              <input
-                                id={"proposalAddendumDate" + index}
-                                type="date"
-                                name="date" // Set the name attribute to differentiate
-                                className="form-control"
-                                value={
-                                  step1FormData.Addendums?.[index]?.date || ""
-                                }
-                                onChange={(e) => {
-                                  const { name, value } = e.target;
-                                  setStep1FormData((prevState) => {
-                                    const newAddendumEntries = [
-                                      ...(prevState.Addendums || []), // Ensure Addendums is an array
-                                    ];
-                                    const updatedAddendum = {
-                                      ...(newAddendumEntries[index] || {}), // Get the existing Addendum or an empty object
-                                      [name]: value, // Dynamically set the field (date)
-                                    };
-                                    newAddendumEntries[index] = updatedAddendum;
-                                    return {
-                                      ...prevState,
-                                      Addendums: newAddendumEntries, // Update Addendums in the state
-                                    };
-                                  });
-                                }}
-                              />
-                              <button
-                                className="btn btn-danger"
-                                onClick={() => handleRemoveEntry(index)}
+                              Specification Details
+                            </label>
+                            {inputGroups.map((group,index) => (
+                              <div
+                                key={group.id}
+                                className="input-group myrowInputgrouup bg-primary"
                               >
-                                <i className="far">X</i>
-                              </button>
-                            </div>
-                            {index === entries.length - 1 && (
-                              <button
-                                className="btn btn-success bk"
-                                onClick={handleNewEntry}
-                              >
-                                <i className="fa-regular icon fa-plus"></i>
-                              </button>
-                            )}
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="Specification Number"
+                                  value={group.specificationNumber}
+                                  onChange={(e) => {
+                                    const updatedInputGroups = [...inputGroups];
+                                    const index = updatedInputGroups.findIndex(
+                                      (item) => item.id === group.id
+                                    );
+                                    updatedInputGroups[
+                                      index
+                                    ].specificationNumber = e.target.value;
+                                    setInputGroups(updatedInputGroups);
+                                  }}
+                                />
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="Specification Description"
+                                  value={group.specificationDescription}
+                                  onChange={(e) => {
+                                    const updatedInputGroups = [...inputGroups];
+                                    const index = updatedInputGroups.findIndex(
+                                      (item) => item.id === group.id
+                                    );
+                                    updatedInputGroups[
+                                      index
+                                    ].specificationDescription = e.target.value;
+                                    setInputGroups(updatedInputGroups);
+                                  }}
+                                />
+                                <button
+                                  className="btn btn-danger"
+                                  onClick={()=>handleSpecificDetailDelete(index)}
+                                >
+                                  <i className="far">X</i>
+                                </button>
+                              </div>
+                            ))}
+                            <button
+                              className="btn btn-success bk"
+                              onClick={addInputGroup}
+                            >
+                              <i className="fa-regular icon fa-plus"></i> Add
+                              New Entry
+                            </button>
                           </div>
-                        ))}
-
-                        {/* Initial "New-Entry" button */}
-                        {entries.length === 0 && (
-                          <button
-                            className="btn btn-success ms-3 rounded-0"
-                            onClick={handleNewEntry}
-                          >
-                            New-Entry
-                          </button>
-                        )}
-                      </div>
                         </div>
-                        <button
-                          className="btn btn-success"
-                          onClick={handleProposalSubmitPosting}
-                        >
+                        <button className="btn btn-success" onClick={() => {}}>
                           Add-New-Specification-Section
                         </button>
                       </div>

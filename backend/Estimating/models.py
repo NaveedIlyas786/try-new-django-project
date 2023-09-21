@@ -125,8 +125,8 @@ class Estimating(models.Model):
 
 
 class Estimating_detail(models.Model):
-    Estimating=models.ForeignKey(Estimating, verbose_name="Add Estimating", on_delete=models.CASCADE)
-    prnt_id = models.PositiveIntegerField(verbose_name="Folder Parent ID",null=True, blank=True) 
+    Estimating=models.ForeignKey(Estimating,related_name='estimating_details', verbose_name="Add Estimating", on_delete=models.CASCADE)
+    prnt = models.ForeignKey('self', verbose_name="Folder Parent ID", on_delete=models.CASCADE, null=True, blank=True, related_name="children") 
     drctry_name = models.CharField(verbose_name="Folder Name",max_length=255)
     file_type = models.CharField(verbose_name="Type Name",max_length=100, null=True, blank=True) 
     output_Table_Name = models.CharField(verbose_name="file Name",max_length=100, null=True, blank=True) 

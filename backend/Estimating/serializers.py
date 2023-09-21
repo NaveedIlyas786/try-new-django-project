@@ -12,9 +12,31 @@ from datetime import datetime
 
 
 
+class RecursiveEstimatingDetailSerializer(serializers.Serializer):
+    """Serializer for recursive Estimating_detail children."""
+    def to_representation(self, value):
+        serializer = EstimatingDetailSerializer(value, context=self.context)
+        return serializer.data
 
 
 
+
+
+class EstimatingDetailSerializer(serializers.ModelSerializer):
+    children = RecursiveEstimatingDetailSerializer(many=True)
+
+    class Meta:
+        model = Estimating_detail
+        fields = ['id', 'Estimating', 'prnt', 'drctry_name', 'file_type', 'output_Table_Name', 'children']
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['Estimating'] = instance.Estimating.Prjct_Name if instance.Estimating else None
+        return representation
+
+
+
+    
 class EstimatingSerializer(serializers.ModelSerializer):
     due_date = serializers.DateField(
         format='%Y-%m-%d', input_formats=['%Y-%m-%d', 'iso-8601'])
@@ -71,16 +93,6 @@ class EstimatingSerializer(serializers.ModelSerializer):
 
 
 # Estimating Folder Derectory
-class EstimatingDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Estimating_detail
-        fields = ['id', 'Estimating', 'prnt_id',
-                  'drctry_name', 'file_type', 'output_Table_Name']
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation['Estimating'] = instance.Estimating.Prjct_Name if instance.Estimating else None
-        return representation
 
 
 

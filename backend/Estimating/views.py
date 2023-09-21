@@ -65,8 +65,8 @@ class EstimatingListView(APIView):
 
 class Estimating_detailView(APIView):
     def get(self,request):
-        estimating_detail=Estimating_detail.objects.all()
-        serializer=EstimatingDetailSerializer(estimating_detail,many=True)
+        top_level_details = Estimating_detail.objects.filter(prnt_id__isnull=True)
+        serializer = EstimatingDetailSerializer(top_level_details, many=True)
         return Response(serializer.data)
 
 

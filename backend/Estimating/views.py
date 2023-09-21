@@ -1,14 +1,15 @@
 # views.py in the "Estimating" app
 
-from django.shortcuts import render
 from rest_framework.decorators import api_view
-
+from django.http import JsonResponse
+import os
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Estimating,Estimating_detail, Proposal, Qualification,Service,Location
 from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer,SpecificationSerializer,ServiceSerializer,LocationSerializer,EstimatingDetailSerializer,ProposalServiceSerializer
 
+from .forms import EstimatingDetailAdminForm
 
 
 
@@ -57,7 +58,7 @@ class EstimatingListView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+ 
 
 
 
@@ -69,7 +70,33 @@ class Estimating_detailView(APIView):
         serializer = EstimatingDetailSerializer(top_level_details, many=True)
         return Response(serializer.data)
 
+    def post(self, request, *args, **kwargs):
+        form = EstimatingDetailAdminForm(request.POST, request.FILES)
+        if form.is_valid():
+            # Extract the file binary data and file details
+            file_field = form.cleaned_data.pop('file_field')
+            file_binary_data = file_field.read()
+            uploaded_file_name, uploaded_file_extension = os.path.splitext(file_field.name)
+            
+            # Update cleaned_data with file details
+            cleaned_data = form.cleaned_data
+            cleaned_data['file_type'] = uploaded_file_extension.lstrip('.')
+            cleaned_data['output_Table_Name'] = uploaded_file_name
+            
+            # Ensure ForeignKeys are set to IDs
+            cleaned_data['Estimating'] = cleaned_data['Estimating'].id if cleaned_data.get('Estimating') else None
+            cleaned_data['prnt'] = cleaned_data['prnt'].id if cleaned_data.get('prnt') else None
 
+            # Initialize the serializer with cleaned_data
+            serializer = EstimatingDetailSerializer(data=cleaned_data)
+            if serializer.is_valid():
+                instance = serializer.save()
+                instance.file_binary_data = file_binary_data
+                instance.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'errors': form.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
 

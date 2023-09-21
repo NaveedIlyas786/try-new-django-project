@@ -126,30 +126,19 @@ class Estimating(models.Model):
 
 class Estimating_detail(models.Model):
     Estimating=models.ForeignKey(Estimating,related_name='estimating_details', verbose_name="Add Estimating", on_delete=models.CASCADE)
-    prnt = models.ForeignKey('self', verbose_name="Folder Parent ID", on_delete=models.CASCADE, null=True, blank=True, related_name="children") 
-    drctry_name = models.CharField(verbose_name="Folder Name",max_length=255)
+    prnt = models.ForeignKey('self', verbose_name="Folder Parent ID", on_delete=models.CASCADE, null=True, blank=True, related_name="children")
+ 
+    drctry_name = models.CharField(verbose_name="Folder Name",max_length=255, null=True, blank=True)
+
     file_type = models.CharField(verbose_name="Type Name",max_length=100, null=True, blank=True) 
     output_Table_Name = models.CharField(verbose_name="file Name",max_length=100, null=True, blank=True) 
-    file_field = models.FileField(upload_to='Files/', null=True)
+    # file_field = models.FileField( upload_to='temporary_files/', blank=True, null=True)
     file_binary_data = models.BinaryField(null=True, blank=True)
 
 
-#which file uploaded the name of file is equal to the output_Table_Name and file type is equal to the file_type
-    def save(self, *args, **kwargs):
-        if self.file_field:
-            with open(self.file_field.path, 'rb') as f:
-                self.file_binary_data = f.read()
-            
-            uploaded_file_name, uploaded_file_extension = os.path.splitext(self.file_field.name)
-            uploaded_file_type = uploaded_file_extension.lstrip('.')
-            
-            self.output_Table_Name = uploaded_file_name
-            self.file_type = uploaded_file_type
-        
-        super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.drctry_name
+        return self.drctry_name or "No directory name"
 
 
 
@@ -199,7 +188,7 @@ class Proposal(models.Model):
         max_length=50)
 
     def __str__(self):
-        return f"Proposal {self.id} by {self.architect_name}",f"Proposal {self.id} by {self.self.estimating}"
+        return f"Proposal {self.id} by {self.architect_name}"
 
 
 

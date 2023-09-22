@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import "./Estimating.css";
-import { Link, useNavigate } from "react-router-dom";
+// import {  useNavigate } from "react-router-dom";
 import "font-awesome/css/font-awesome.min.css";
 
 import axios from "axios";
 import {
   Modal,
-  TextField,
+  // TextField,
   Button,
   Stepper,
   Step,
   StepLabel,
-  Typography,
+  // Typography,
 } from "@mui/material";
-import { styled } from "@mui/system";
+// import { styled } from "@mui/system";
 
 const Estimator = () => {
   const [data, setData] = useState([]);
@@ -26,7 +26,7 @@ const Estimator = () => {
   const [location, setLocation] = useState("");
   const [bidAmount, setBidAmount] = useState("");
   const [company, setCompany] = useState(1); // Updated to store company name as a string
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   // ***********************************
   const [openRow, setOpenRow] = useState(null);
 
@@ -58,12 +58,12 @@ const Estimator = () => {
       addendumDate: "",
     },
   ]);
-  const [specentries, setSpecEntries] = useState([
-    {
-      specName: "",
-      specNumber: "",
-    },
-  ]);
+  // const [specentries, setSpecEntries] = useState([
+  //   {
+  //     specName: "",
+  //     specNumber: "",
+  //   },
+  // ]);
 
   const [addendumNumber, setAddendumNumber] = useState("");
   const [addendumDate, setAddendumDate] = useState("");
@@ -151,7 +151,7 @@ const Estimator = () => {
 
   // ****************************Getting Services Entries from Api start
 
-  const [ServiceData, setServiceData] = useState([]);
+  const [setServiceData] = useState([]);
 
   useEffect(() => {
     // Fetch data from the API
@@ -407,9 +407,7 @@ const Estimator = () => {
     document.body.classList.remove("modal-active");
   };
 
-  const movetoPurposalPage = () => {
-    navigate("/homepage/purposal");
-  };
+
 
   const handleDueDateChange = (e) => {
     // Get the selected date from the input field

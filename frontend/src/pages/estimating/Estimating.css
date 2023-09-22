@@ -67,7 +67,7 @@ td {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 99;
-  height: 500px;
+  height: 550px;
   width: 950px;
   background-color: rgb(224, 222, 222);
   border-radius: 8px;
@@ -200,7 +200,7 @@ input:focus {
   justify-content: center !important;
   align-items: center;
   flex-direction: column;
-  background-color: #283897;
+  background-color: #f7f7f7;
   border-radius: 5px;
 }
 .dropbtns {
@@ -208,12 +208,12 @@ input:focus {
   padding: 0 !important;
   font-size: 15px !important;
   border-radius: 2px !important;
-  color: white;
+  color: rgb(0, 0, 0);
   margin: 1px 0;
 }
 .dropbtns:hover{
-  background-color: aliceblue;
-  color: black;
+  background-color: #283897;
+  color: rgb(255, 255, 255);
   padding: 0.3px 0 !important;
 }
 

@@ -243,78 +243,96 @@ const Estimator = () => {
     estimating: selectedEstimatingID,
   });
 
-  console.log(
-    "Submitting proposal with estimating ID:",
-    step0FormData.estimating
-  );
-
-  // Function to add a new specification detail
-  const handleAddSpecificationDetail = () => {
-    setStep2FormData((prevState) => ({
-      ...prevState,
-      specificationDetails: [
-        ...prevState.specificationDetails,
-        { name: "", number: "" },
-      ],
-    }));
-  };
-
-  // Function to remove a specification detail by index
-  const handleRemoveSpecificationDetail = (index) => {
-    setStep2FormData((prevState) => ({
-      ...prevState,
-      specificationDetails: prevState.specificationDetails.filter(
-        (_, i) => i !== index
-      ),
-    }));
-  };
-
   const [step1FormData, setStep1FormData] = useState({
     Addendums: [], // Make sure it's an array
   });
-
-  const [services, setServices] = useState([]);
-  useEffect(() => {
-    // Define an async function to fetch data from the API
-    async function fetchServiceData() {
-      try {
-        const response = await fetch(
-          "http://127.0.0.1:8000/api/estimating/service/"
-        );
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        const data = await response.json();
-        // Map the data to the serviceTypes array
-        // const updatedServiceTypes = data.map((myservice, id) => ({
-        //   proposal: myservice.proposal, // Provide a value for 'proposal'
-        //   service: myservice.service,   // Provide a value for 'service'
-        //   type: "Exclusion",           // Default type, you can change it to 'Inclusion' if needed
-        //   name: myservice.name,         // Assign the service name from the API
-        // }));
-
-        console.log(data);
-
-        // setServices(data);
-      } catch (error) {
-        console.error("Error fetching service data:", error);
-      }
-    }
-
-    // Call the fetchServiceData function when the component mounts
-    fetchServiceData();
-  }, []);
-
   const [step2FormData, setStep2FormData] = useState({
     specific_name: "",
     budget: "",
     sefic: [],
   });
+
+  const [services, setServices] = useState([]);
+  async function fetchServiceData() {
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/estimating/service/"
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      const updatedServiceTypes = data.map((myservice, id) => ({
+        proposal: id + 1,
+        service: myservice.service || id + 1,
+        type: myservice.type || "EX",
+        name: myservice.name,
+      }));
+      console.log(updatedServiceTypes);
+      // Make sure each 'service' object has a 'type' key
+      updatedServiceTypes.forEach((service) => {
+        if (typeof service.type === "undefined") {
+          service.type = "EX"; // Set a default 'type' value if it's missing
+        }
+      });
+
+      setServices(updatedServiceTypes);
+    } catch (error) {
+      console.error("Error fetching service data:", error.message);
+    }
+  }
+
+  // Call fetchServiceData when the component mounts
+  useEffect(() => {
+    fetchServiceData();
+  }, []);
+
+  const handleTypeChange = (index) => {
+    // Create a copy of the services array
+    const updatedServices = [...services];
+
+    // Update the type property based on the current value
+    updatedServices[index].type =
+      updatedServices[index].type === "IN" ? "EX" : "IN";
+
+    // If the current service is set to "IN," set its proposal to 1
+    if (updatedServices[index].type === "IN") {
+      updatedServices[index].proposal = 1;
+    } else {
+      // If the current service is set to "EX," calculate the proposal value
+      // based on the index of the first "EX" service + 1
+      const firstEXIndex = updatedServices.findIndex(
+        (service) => service.type === "EX"
+      );
+      if (firstEXIndex !== -1) {
+        updatedServices[index].proposal = firstEXIndex + 2; // Add 1 to the index
+      } else {
+        // If there are no "EX" services, set the proposal to 1
+        updatedServices[index].proposal = 1;
+      }
+    }
+
+    // Update the services state with the modified array
+    setServices(updatedServices);
+  };
+
   const handleProposalSubmitPosting = async (e) => {
     e.preventDefault();
 
     try {
+      console.log("Services data to be sent:", services);
+
+      // Check if all elements in the services array have the 'service' key
+      const hasMissingService = services.some(
+        (service) => typeof service.proposal === "undefined"
+      );
+
+      if (hasMissingService) {
+        console.error("Missing 'perposal' key in services array");
+        return;
+      }
+
       const response = await fetch(
         "http://127.0.0.1:8000/api/estimating/proposals/",
         {
@@ -336,29 +354,33 @@ const Estimator = () => {
                 specific_name: step2FormData.specific_name,
                 budget: step2FormData.budget,
                 sefic: step2FormData.sefic.map((detail) => ({
-                  sefic: detail.specific_name, // This might need adjustment based on your data structure
+                  sefic: detail.specific_name,
                   number: detail.number,
                   name: detail.name,
                 })),
               },
             ],
-            services: "",
+            services: services.map((service) => ({
+              proposal: service.proposal,
+              service: service.service,
+              type: service.type === "IN" ? "IN" : "EX",
+            })),
           }),
         }
       );
 
       if (response.ok) {
-        console.log("Proposal data submitted successfully");
+        const responseData = await response.json();
+        console.log("Response data:", responseData);
       } else {
         console.error("Error submitting proposal data");
-        const errorResponse = await response.json();
+        const errorResponse = await response.text(); // Read the response as text
         console.error("Error response:", errorResponse);
       }
     } catch (error) {
-      console.error("An error occurred:", error);
+      console.error("An error occurred:", error.message);
     }
   };
-
   const filteredData = data.filter((customer) => {
     return (
       (customer.Prjct_Name &&
@@ -455,7 +477,7 @@ const Estimator = () => {
   };
 
   const handleAddSpecificationEntry = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     // Clone the current sefic array to avoid mutating the state directly
     const updatedSefic = [...step2FormData.sefic];
 
@@ -747,7 +769,7 @@ const Estimator = () => {
                         <div className="mb-2 mt-3">
                           <label htmlFor="dateID" className="form-label">
                             {/* Updated ID to "ProposalID" */}
-                            Current Date:
+                            Proposal Date:
                           </label>
                           <input
                             type="date"
@@ -1017,14 +1039,7 @@ const Estimator = () => {
                               className="btn btn-success bk"
                               onClick={handleAddSpecificationEntry}
                             >
-                              <i className="fa-regular icon fa-plus"></i> Add
-                              New Entry
-                            </button>
-                            <button
-                              className="btn btn-primary"
-                              onClick={handleProposalSubmitPosting}
-                            >
-                              Submit Proposal
+                              <i className="fa-regular icon fa-plus"></i>
                             </button>
                           </div>
                         </div>
@@ -1037,11 +1052,22 @@ const Estimator = () => {
                     {activeStep === 3 && (
                       <div className="mb-2 mt-3">
                         <label htmlFor="projectName" className="form-label">
-                          <strong>Services (Inclusions & Exclusions):</strong>
+                          <strong>Services (INs & EXs):</strong>
                         </label>
                         <div>
                           {services.map((service, id) => (
-                            <div key={id} className="mb-2 d-flex">
+                            <div
+                              key={id}
+                              className="mb-2 d-flex justify-content-center align-items-center bg-white"
+                            >
+                              {/* ... other input elements */}
+                              {/* <input
+                                type="number"
+                                className="form-control serviceInput"
+                                placeholder={`Proposal ${id}`}
+                                value={services.proposal}
+                                readOnly
+                              /> */}
                               <input
                                 type="text"
                                 className="form-control serviceInput"
@@ -1049,17 +1075,21 @@ const Estimator = () => {
                                 value={service.name}
                                 readOnly
                               />
-                              <select
-                                value={service.type}
-                                onChange={(e) => {
-                                  const updatedServiceTypes = [...services];
-                                  updatedServiceTypes[id].type = e.target.value;
-                                  setServices(updatedServiceTypes);
-                                }}
-                              >
-                                <option value="Exclusion">Exclusion</option>
-                                <option value="Inclusion">Inclusion</option>
-                              </select>
+                              <label className="switch">
+                                <input
+                                  type="checkbox"
+                                  checked={service.type === "IN"}
+                                  onChange={() => {
+                                    handleTypeChange(id);
+                                    console.log(
+                                      "Proposal value after toggle:",
+                                      services[id].proposal
+                                    );
+                                  }}
+                                />
+
+                                <span className="slider round"></span>
+                              </label>
                             </div>
                           ))}
                         </div>

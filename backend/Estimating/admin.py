@@ -1,10 +1,12 @@
 from django.contrib import admin
 from .models import Location,Estimating,Estimating_detail
+from django.core.files.storage import default_storage
 
-
+import os
 from django.contrib import admin
 from .models import Estimating,Proposal,Service,Addendum,Specification,Spec_detail,Qualification,ProposalService
 from nested_admin import NestedStackedInline, NestedModelAdmin
+from .forms import EstimatingDetailAdminForm
 
 
 # Register your models here
@@ -33,9 +35,21 @@ class EstimatingAdmin(admin.ModelAdmin):
 
 
 class EstimatingDetailAdmin(admin.ModelAdmin):
-    list_display=['id','prnt_id','Estimating','drctry_name','file_type','output_Table_Name','file_field']
+    list_display=['id','prnt_id','Estimating','drctry_name','file_type','output_Table_Name']
 
+    form = EstimatingDetailAdminForm
+    def save_model(self, request, obj, form, change):
+        if 'file_field' in form.cleaned_data:
+            uploaded_file = form.cleaned_data['file_field']
+            obj.file_binary_data = uploaded_file.read()
 
+            uploaded_file_name, uploaded_file_extension = os.path.splitext(uploaded_file.name)
+            uploaded_file_type = uploaded_file_extension.lstrip('.')
+            
+            obj.output_Table_Name = uploaded_file_name
+            obj.file_type = uploaded_file_type
+
+        super().save_model(request, obj, form, change)
 
 
 

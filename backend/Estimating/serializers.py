@@ -23,7 +23,7 @@ class RecursiveEstimatingDetailSerializer(serializers.Serializer):
 
 
 class EstimatingDetailSerializer(serializers.ModelSerializer):
-    children = RecursiveEstimatingDetailSerializer(many=True)
+    children = RecursiveEstimatingDetailSerializer(many=True,read_only=True)
 
     class Meta:
         model = Estimating_detail

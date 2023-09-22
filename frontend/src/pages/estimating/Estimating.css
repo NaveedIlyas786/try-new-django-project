@@ -67,9 +67,9 @@ td {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 99;
-  height: 500px;
+  height: 650px;
   width: 950px;
-  background-color: rgb(224, 222, 222);
+  background-color: rgb(255, 255, 255);
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
   opacity: 0; /* Initially hide the modal */
@@ -193,27 +193,37 @@ input:focus {
   display: none;
   transition: opacity 0.3s ease-in-out;
 }
-
+.relative-container {
+  position: relative;
+}
 .mydiv.open {
   opacity: 1;
   display: flex;
   justify-content: center !important;
   align-items: center;
   flex-direction: column;
-  background-color: #283897;
-  border-radius: 5px;
+  background-color: #ffffff;
+  border: 0.4px solid rgb(214, 212, 212);
+  width: 80px !important;
+  position: absolute;
+  box-shadow: 2px 2px 5px rgb(211, 209, 209);
+  top: 30px;
+  right: 50px !important;
+
+  /* border-radius: 5px; */
 }
+
 .dropbtns {
-  width: 100px !important;
+  width: 100% !important;
   padding: 0 !important;
   font-size: 15px !important;
   border-radius: 2px !important;
-  color: white;
+  color: rgb(10, 10, 10);
   margin: 1px 0;
 }
-.dropbtns:hover{
-  background-color: aliceblue;
-  color: black;
+.dropbtns:hover {
+  background-color: #1976d2;
+  color: rgb(255, 255, 255);
   padding: 0.3px 0 !important;
 }
 
@@ -230,8 +240,8 @@ input:focus {
 .mydiv {
   position: absolute;
   z-index: 99;
-  right: 70px;
-  top: 10px;
+  right: 0;
+  top: 40px;
   opacity: 0;
   display: none;
   transition: opacity 0.3s ease-in-out;
@@ -247,30 +257,30 @@ input:focus {
   display: block; /* or display: initial; depending on your layout */
   flex-direction: column;
 }
-.bk{
-  margin-top:5px;
-  margin-left: 2px;
+.bk {
+  margin-top: 5px;
+  margin-left: 20px;
   border-radius: 10px !important;
 }
-.icon{
+.icon {
   /* background-color: aqua; */
   margin-top: 7px;
 }
-.wholediv{
+.wholediv {
   /* padding: 10px   !important; */
   border-radius: 10px;
   background-color: rgb(182, 181, 181) !important;
 }
 /* ************************ */
-.myrowInputgrouup{
+.myrowInputgrouup {
   margin-bottom: 10px !important;
 }
-.addEntrybtn{
+.addEntrybtn {
   margin-top: -5px;
   border-radius: 10px !important;
 }
 .dropbtn {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   padding: 16px;
   font-size: 16px;
@@ -289,7 +299,7 @@ input:focus {
   left: 0;
   background-color: #f9f9f9;
   min-width: 120px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
 
@@ -300,7 +310,9 @@ input:focus {
   display: block;
 }
 
-.dropdown-content a:hover {background-color: #f1f1f1}
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
 
 .dropdown:hover .dropdown-content {
   display: block;
@@ -309,13 +321,18 @@ input:focus {
 .dropdown:hover .dropbtn {
   background-color: #3e8e41;
 }
-.serviceInput{
-  border-radius: 0 !important;
+.serviceInput {
+  border-radius: 10px !important;
+  border: none !important;
 }
-.sarviceSection{
+.sarviceSection {
   max-height: 350px !important;
   overflow-y: scroll;
   scroll-behavior: smooth;
+}
+.switch {
+  margin: 0 5px;
+  /* padding: 0 50px !important; */
 }
 /* Style the scrollbar for WebKit-based browsers */
 .sarviceSection::-webkit-scrollbar {
@@ -331,14 +348,50 @@ input:focus {
   border-radius: 10px; /*Round the corners of the thumb*/
   background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
 }
-.jloop{
+.jloop {
   border-radius: 20px 20px 0 0 !important;
   margin-top: 50px !important;
   max-height: 200px !important;
 }
+.parentSpecification {
+  position: relative;
+}
+.specSectionADD {
+  position: absolute;
+  right: 5px;
+  margin-top: 5px !important;
+  /* margin-bottom: 55px !important; */
+}
+.specificationEntry {
+  border-radius: 5px !important;
+  background-color: #e9e6e6;
+  margin-bottom: 30px !important;
+  padding: 10px !important;
+}
+.myservices {
+  max-height: 420px !important;
+  border-radius: 10px !important;
+  background-color: #e6e2e2;
+  /* border: none !important;
+  outline: none !important; */
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
 
+.myservices::-webkit-scrollbar {
+  width: 10px; /* Set the width of the scrollbar */
+}
+
+.myservices::-webkit-scrollbar-thumb {
+  background-color: #5d5d5f; /* Set the color of the scrollbar track (the non-draggable part) */
+  border-radius: 10px 50px 50px 10px; /*Round the corners of the thumb*/
+}
+
+.myservices::-webkit-scrollbar-track {
+  border-radius: 10px; /*Round the corners of the thumb*/
+  background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
+}
 /* ***************************For radio Button */
-
 
 .switch {
   position: relative;
@@ -350,7 +403,7 @@ input:focus {
   padding: 0 30px;
 }
 
-.switch input { 
+.switch input {
   opacity: 0;
   width: 0;
   height: 0;
@@ -364,8 +417,8 @@ input:focus {
   right: 0;
   bottom: 0;
   background-color: #cccccc;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 .slider:before {
@@ -376,16 +429,16 @@ input:focus {
   left: 6px;
   bottom: 4px;
   background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 input:checked + .slider {
-  background-color: #2196F3;
+  background-color: #1976d2;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
+  box-shadow: 0 0 1px #2196f3;
 }
 
 input:checked + .slider:before {

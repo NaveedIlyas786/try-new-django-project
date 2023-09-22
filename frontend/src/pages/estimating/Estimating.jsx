@@ -236,21 +236,55 @@ const Estimator = () => {
   //************* Define the handleProposalSubmitPosting function
 
   const [selectedEstimatingID, setSelectedEstimatingID] = useState();
+  const getCurrentDate = () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Add leading zero if needed
+    const day = String(currentDate.getDate()).padStart(2, "0"); // Add leading zero if needed
+    return `${year}-${month}-${day}`;
+  };
   const [step0FormData, setStep0FormData] = useState({
-    date: "",
+    date: getCurrentDate(),
     architect_name: "",
     architect_firm: "",
     estimating: selectedEstimatingID,
   });
-
   const [step1FormData, setStep1FormData] = useState({
     Addendums: [], // Make sure it's an array
   });
   const [step2FormData, setStep2FormData] = useState({
     specific_name: "",
-    budget: "",
+    budget: null,
     sefic: [],
   });
+
+  const formatNumber = (value) => {
+    // Remove any existing commas and non-numeric characters
+    const numericValue = value.replace(/[^0-9]/g, "");
+
+    // Check if the numeric value is not empty
+    if (numericValue.length > 0) {
+      // Convert the numeric value to a number
+      const numberValue = parseFloat(numericValue);
+
+      // Format the number with commas for thousands and millions
+      const formattedValue = numberValue.toLocaleString("en-US");
+
+      return formattedValue;
+    }
+
+    return ""; // Return an empty string if the input is empty or contains non-numeric characters
+  };
+
+  const handleBudgetChange = (e) => {
+    const inputValue = e.target.value;
+    const formattedValue = formatNumber(inputValue);
+
+    setStep2FormData({
+      ...step2FormData,
+      budget: formattedValue,
+    });
+  };
 
   const [services, setServices] = useState([]);
   async function fetchServiceData() {
@@ -382,13 +416,15 @@ const Estimator = () => {
     }
   };
   const filteredData = data.filter((customer) => {
+    console.log("Filter:", filter);
+  console.log("Status:", customer.status);
     return (
       (customer.Prjct_Name &&
         customer.Prjct_Name.toUpperCase().includes(filter.toUpperCase())) ||
       (customer.status &&
-        customer.status.toUpperCase().includes(filter.toUpperCase())) ||
-      (customer.due_date &&
-        customer.due_date.toUpperCase().includes(filter.toUpperCase())) ||
+        customer.status.trim().toUpperCase().includes(filter.trim().toUpperCase())) ||
+      (customer.estimator &&
+        customer.estimator.toUpperCase().includes(filter.toUpperCase())) ||
       (customer.bidder &&
         customer.bidder.toUpperCase().includes(filter.toUpperCase())) ||
       (customer.bid_amount &&
@@ -398,6 +434,7 @@ const Estimator = () => {
           .includes(filter.toUpperCase()))
     );
   });
+  
 
   // Define a function to handle modal close
   const closeModal = () => {
@@ -456,12 +493,30 @@ const Estimator = () => {
     setCompany(e.target.value);
   };
   // ********************************
-  // const [step2FormData, setStep2FormData] = useState({
-  //   specific_name: "",
-  //   budget: "",
-  //   sefic: [], // This will hold the specification details
-  // });
+  // Function to format the integer value with commas
+  const formatNumberWithCommas = (value) => {
+    if (value === null) return ""; // Return an empty string if the value is null
+    return value.toLocaleString("en-US");
+  };
 
+  // Event handler for the budget input
+  const handlebudgetchange = (e) => {
+    const inputValue = e.target.value;
+    const numericValue = parseInt(inputValue.replace(/[^0-9]/g, ""), 10); // Parse the input to an integer
+
+    setStep2FormData({
+      ...step2FormData,
+      budget: isNaN(numericValue) ? null : numericValue, // Store as integer or null if not a valid number
+    });
+  };
+
+  // **********************
+
+  const [selectedSpecification, setSelectedSpecification] = useState("");
+
+  const handleSpecificationChange = (e) => {
+    setSelectedSpecification(e.target.value);
+  };
   const handleSpecificationInputChange = (index, key, value) => {
     // Clone the current sefic array to avoid mutating the state directly
     const updatedSefic = [...step2FormData.sefic];
@@ -511,9 +566,14 @@ const Estimator = () => {
     });
   };
 
+  const formatBidAmount = (amount) => {
+    if (amount === null) return ""; // Return an empty string if the amount is null
+    return amount.toLocaleString("en-US");
+  };
+
   return (
     <>
-      <div className={`estimator px-5 ${showModal ? "modal-active" : ""}`}>
+      <div className={`estimator  px-5 ${showModal ? "modal-active" : ""}`}>
         <h3>Estimating Summary</h3>
         <div className="inputbtn d-flex gap-2 px-5">
           <input
@@ -536,10 +596,11 @@ const Estimator = () => {
               <tr>
                 <th>Due Date</th>
                 <th>Project Name</th>
-                <th>Status</th>
+                <th>Area</th>
                 <th>Estimator</th>
-                <th>Bidder</th>
-                <th>Bid Amount</th>
+                <th>Status</th>
+                <th>Bidders</th>
+                <th>Bid Amount ($)</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -548,10 +609,11 @@ const Estimator = () => {
                 <tr key={item.id}>
                   <td className="mytd">{item.due_date}</td>
                   <td className="mytd myproject">{item.Prjct_Name}</td>
-                  <td className="mytd">{item.status}</td>
-                  <td className="mytd">{item.estimator}</td>
+                  <td className="mytd ">{item.location}</td>
+                  <td className="mytd myestimator">{item.estimator}</td>
+                  <td className="mytd mystatus">{item.status}</td>
                   <td className="mytdbidder">{item.bidder}</td>
-                  <td className="mytd">{item.bid_amount}</td>
+                  <td className="mytd">{formatBidAmount(item.bid_amount)}</td>
                   <td className="mytd">
                     <div className="relative-container">
                       <i
@@ -575,6 +637,7 @@ const Estimator = () => {
                             setSelectedEstimatingID(item.id); // Set the selected estimating ID
                             setPurposalModal(true);
                           }}
+                          // onClick={movetoPurposalPage}
                         >
                           Proposal
                         </button>
@@ -592,7 +655,7 @@ const Estimator = () => {
       </div>
       {/* New Estimating Entry Posting-Code */}
       {showModal && (
-        <div className={`modal-container pt-5 ps-2 ${showModal ? "show" : ""}`}>
+        <div className={`modal-container bg-white pt-5 ps-2 ${showModal ? "show" : ""}`}>
           <h4 className="text-center addnewtxt">Add New Estimating Entry</h4>
           <button className="close-btn" onClick={closeModal}></button>
           <div className="modal-content px-5">
@@ -946,7 +1009,7 @@ const Estimator = () => {
                         >
                           <strong>Specifications</strong>
                         </label>
-                        <div className="specificationEntry bg-warning">
+                        <div className="specificationEntry">
                           <div className="mb-2 mt-3">
                             <label
                               htmlFor="specificName"
@@ -954,7 +1017,7 @@ const Estimator = () => {
                             >
                               Specification Name
                             </label>
-                            <input
+                            {/* <input
                               type="text"
                               className="form-control"
                               id="specificName"
@@ -965,7 +1028,40 @@ const Estimator = () => {
                                   specific_name: e.target.value,
                                 })
                               }
-                            />
+                            /> */}
+                            {/* ************************ */}
+                            <select
+                              className="form-select"
+                              aria-label="Select Specification"
+                              value={step2FormData.specific_name || ""}
+                              onChange={(e) =>
+                                setStep2FormData({
+                                  ...step2FormData,
+                                  specific_name: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="" disabled>
+                                Select Specification
+                              </option>
+                              <option value="Add/Alt Building Insulation">
+                                Add/Alt Building Insulation
+                              </option>
+                              <option value="Add/Alt Interior Wall Insulation">
+                                Add/Alt Interior Wall Insulation
+                              </option>
+                              <option value="Add/Alt Weather Barriers">
+                                Add/Alt Weather Barriers
+                              </option>
+                              <option value="Base Bid Drywall/Framing/Plaster">
+                                Base Bid Drywall/Framing/Plaster
+                              </option>
+                              <option value=" Add/Alt Integrated Ceiling Assemblies">
+                                Add/Alt Integrated Ceiling Assemblies
+                              </option>
+                            </select>
+
+                            {/* ************************ */}
                           </div>
                           <div className="mb-2 mt-3">
                             <label
@@ -975,16 +1071,14 @@ const Estimator = () => {
                               Specification Budget
                             </label>
                             <input
-                              type="number"
+                              type="text" // Use type "text" to allow non-numeric characters (e.g., commas)
                               className="form-control"
                               id="specificbudget"
-                              value={step2FormData.budget || ""}
-                              onChange={(e) =>
-                                setStep2FormData({
-                                  ...step2FormData,
-                                  budget: e.target.value,
-                                })
-                              }
+                              value={formatNumberWithCommas(
+                                step2FormData.budget
+                              )} // Format with commas when displaying
+                              onChange={handlebudgetchange}
+                              onBlur={handlebudgetchange}
                             />
                           </div>
                           <div className="mb-2 mt-3">
@@ -997,7 +1091,7 @@ const Estimator = () => {
                             {step2FormData.sefic.map((entry, index) => (
                               <div
                                 key={index}
-                                className="input-group myrowInputgrouup bg-primary"
+                                className="input-group myrowInputgrouup"
                               >
                                 <input
                                   type="text"
@@ -1054,7 +1148,7 @@ const Estimator = () => {
                         <label htmlFor="projectName" className="form-label">
                           <strong>Services (INs & EXs):</strong>
                         </label>
-                        <div>
+                        <div className=" myservices p-3">
                           {services.map((service, id) => (
                             <div
                               key={id}
@@ -1070,7 +1164,7 @@ const Estimator = () => {
                               /> */}
                               <input
                                 type="text"
-                                className="form-control serviceInput"
+                                className="form-control bg-white serviceInput"
                                 placeholder={`Service ${id + 1}`}
                                 value={service.name}
                                 readOnly

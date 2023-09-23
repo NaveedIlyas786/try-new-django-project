@@ -188,7 +188,6 @@ const Purposal = () => {
               <li>Scaffolding for our scope of work only</li>
               <li>Badging for our workers only</li>
               <li>Cold-formed metal framing for our scope of work only</li>
-                           
               <li>Cold-formed metal framing for our scope of work only</li>
               <li>
                 Fire-stopping and joint sealants for our scope of work only

@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./Estimating.css";
 // import {  useNavigate } from "react-router-dom";
 import "font-awesome/css/font-awesome.min.css";
@@ -321,7 +321,7 @@ const Estimator = () => {
   useEffect(() => {
     fetchServiceData();
   }, []);
-
+  const [isFocused, setIsFocused] = useState(false);
   const handleTypeChange = (index) => {
     // Create a copy of the services array
     const updatedServices = [...services];
@@ -417,12 +417,15 @@ const Estimator = () => {
   };
   const filteredData = data.filter((customer) => {
     console.log("Filter:", filter);
-  console.log("Status:", customer.status);
+    console.log("Status:", customer.status);
     return (
       (customer.Prjct_Name &&
         customer.Prjct_Name.toUpperCase().includes(filter.toUpperCase())) ||
       (customer.status &&
-        customer.status.trim().toUpperCase().includes(filter.trim().toUpperCase())) ||
+        customer.status
+          .trim()
+          .toUpperCase()
+          .includes(filter.trim().toUpperCase())) ||
       (customer.estimator &&
         customer.estimator.toUpperCase().includes(filter.toUpperCase())) ||
       (customer.bidder &&
@@ -434,7 +437,6 @@ const Estimator = () => {
           .includes(filter.toUpperCase()))
     );
   });
-  
 
   // Define a function to handle modal close
   const closeModal = () => {
@@ -443,8 +445,6 @@ const Estimator = () => {
     // Remove the 'modal-active' class when the modal is closed
     document.body.classList.remove("modal-active");
   };
-
-
 
   const handleDueDateChange = (e) => {
     // Get the selected date from the input field
@@ -573,6 +573,48 @@ const Estimator = () => {
     <>
       <div className={`estimator  px-5 ${showModal ? "modal-active" : ""}`}>
         <h3>Estimating Summary</h3>
+        <div
+          class="modal fade"
+          id="staticBackdrop"
+          data-bs-backdrop="static"
+          data-bs-keyboard="false"
+          tabindex="-1"
+          aria-labelledby="staticBackdropLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">
+                  Modal Header
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-dialog modal-dialog-scrollable">
+                <h1>Main Section</h1>
+                <h1>Main Section</h1>
+              </div>
+              <div class="modal-footer">
+                <h5>Footer</h5>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button type="button" class="btn btn-primary">
+                  Understood
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="inputbtn d-flex gap-2 px-5">
           <input
             type="text"
@@ -588,9 +630,9 @@ const Estimator = () => {
             New
           </button>
         </div>
-        <div className="table-responsive pt-3">
+        <div className="table-responsive mt-4">
           <table className="table table-striped  table-bordered table-hover text-center">
-            <thead>
+            {/* <thead> */}
               <tr>
                 <th>Due Date</th>
                 <th>Project Name</th>
@@ -601,15 +643,15 @@ const Estimator = () => {
                 <th>Bid Amount ($)</th>
                 <th>Actions</th>
               </tr>
-            </thead>
-            <tbody className="cursor-pointer  bg-info jloop">
+            {/* </thead> */}
+            {/* <tbody className="cursor-pointer  bg-info jloop"> */}
               {filteredData.map((item) => (
-                <tr key={item.id}>
+                <tr key={item.id} >
                   <td className="mytd">{item.due_date}</td>
                   <td className="mytd myproject">{item.Prjct_Name}</td>
-                  <td className="mytd ">{item.location}</td>
-                  <td className="mytd myestimator">{item.estimator}</td>
-                  <td className="mytd mystatus">{item.status}</td>
+                  <td className="mytd">{item.location}</td>
+                  <td className="mytd">{item.estimator}</td>
+                  <td className="mytd">{item.status}</td>
                   <td className="mytdbidder">{item.bidder}</td>
                   <td className="mytd">{formatBidAmount(item.bid_amount)}</td>
                   <td className="mytd">
@@ -640,39 +682,76 @@ const Estimator = () => {
                           Proposal
                         </button>
 
-                        <button className="btn dropbtns">Project</button>
+                        <button
+                          type="button"
+                          className="btn dropbtns"
+                          data-bs-toggle="modal"
+                          data-bs-target="#staticBackdrop"
+                        >
+                          Projects
+                        </button>
                         <button className="btn dropbtns">Status</button>
                       </div>
                     </div>
                   </td>
                 </tr>
               ))}
-            </tbody>
+            {/* </tbody> */}
           </table>
         </div>
       </div>
       {/* New Estimating Entry Posting-Code */}
       {showModal && (
-        <div className={`modal-container bg-white pt-5 ps-2 ${showModal ? "show" : ""}`}>
+        <div
+          className={`modal-container bg-white pt-5 ps-2 ${
+            showModal ? "show" : ""
+          }`}
+        >
           <h4 className="text-center addnewtxt">Add New Estimating Entry</h4>
           <button className="close-btn" onClick={closeModal}></button>
           <div className="modal-content px-5">
-            <form onSubmit={handleSubmit} className="d-flex flex-column">
-              <div className="mb-3">
-                <label htmlFor="dueDate" className="form-label">
-                  Due_Date:
-                </label>
-                <input
-                  type="date"
-                  className="form-control"
-                  id="dueDate"
-                  value={dueDate}
-                  onChange={handleDueDateChange}
-                />
+            <form onSubmit={handleSubmit} className="MyForm">
+              <div className="bothDiv mt-5">
+                <div className="Oneline">
+                  <label htmlFor="dueDate" className="form-label">
+                    Due Date:
+                  </label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    id="dueDate"
+                    value={dueDate}
+                    onChange={handleDueDateChange}
+                  />
+                </div>
+                <div className="Oneline">
+                  <label htmlFor="companyName" className="form-label">
+                    Company
+                  </label>
+                  <select
+                    className="form-select"
+                    id="companyName"
+                    value={company}
+                    onChange={handleCompanyNameChange}
+                  >
+                    {/* <option value="">Select Company</option> */}
+                    {companyName && companyName.length > 0 ? (
+                      companyName.map((companyItem) => (
+                        <option value={companyItem} key={companyItem}>
+                          {companyItem}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="" disabled>
+                        {companyName ? "No companies available" : "Loading..."}
+                      </option>
+                    )}
+                  </select>
+                </div>
               </div>
-              <div className="mb-3">
+              <div>
                 <label htmlFor="projectName" className="form-label">
-                  Project_Name:
+                  Project Name:
                 </label>
                 <input
                   type="text"
@@ -682,104 +761,97 @@ const Estimator = () => {
                   onChange={handleProjectNameChange}
                 />
               </div>
-              {/* ******************* */}
-              <div className="mb-3">
-                <label htmlFor="companyName" className="form-label">
-                  Company
-                </label>
-                <select
-                  className="form-select"
-                  id="companyName"
-                  value={company}
-                  onChange={handleCompanyNameChange}
-                >
-                  {/* <option value="">Select Company</option> */}
-                  {companyName && companyName.length > 0 ? (
-                    companyName.map((companyItem) => (
-                      <option value={companyItem} key={companyItem}>
-                        {companyItem}
-                      </option>
-                    ))
-                  ) : (
-                    <option value="" disabled>
-                      {companyName ? "No companies available" : "Loading..."}
-                    </option>
-                  )}
-                </select>
-              </div>
-              <div className="mb-3">
-                <label htmlFor="estimatorName" className="form-label">
-                  Estimator_Name:
-                </label>
-                <select
-                  className="form-select"
-                  id="estimatorName"
-                  value={estimatorName}
-                  onChange={handleEstimatorNameChange}
-                >
-                  <option value="">Select Estimator Name</option>
 
-                  {EstimatorName && EstimatorName.length > 0 ? (
-                    EstimatorName.map((user) => (
-                      <option value={user.id} key={user.id}>
-                        {user.full_Name}
-                      </option>
-                    ))
-                  ) : (
-                    <option value="" disabled>
-                      Loading...
-                    </option>
-                  )}
-                </select>
-              </div>
-              <div className="mb-3">
-                <label htmlFor="location" className="form-label">
-                  Location:
-                </label>
-                <select
-                  className="form-select"
-                  id="location"
-                  value={location}
-                  onChange={handleLocationChange}
-                >
-                  <option value="">Select Location</option>
+              <div className="bothDiv">
+                <div className="Oneline">
+                  <label htmlFor="estimatorName" className="form-label">
+                    Estimator Name:
+                  </label>
+                  <select
+                    className="form-select"
+                    id="estimatorName"
+                    value={estimatorName}
+                    onChange={handleEstimatorNameChange}
+                  >
+                    <option value="">Select Estimator Name</option>
 
-                  {userLocation && userLocation.length > 0 ? (
-                    userLocation.map((place) => (
-                      <option value={place.id} key={place.id}>
-                        {place.name}
+                    {EstimatorName && EstimatorName.length > 0 ? (
+                      EstimatorName.map((user) => (
+                        <option value={user.id} key={user.id}>
+                          {user.full_Name}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="" disabled>
+                        Loading...
                       </option>
-                    ))
-                  ) : (
-                    <option value="" disabled>
-                      Loading...
-                    </option>
-                  )}
-                </select>
+                    )}
+                  </select>
+                </div>
+                <div className="Oneline">
+                  <label htmlFor="location" className="form-label">
+                    Location:
+                  </label>
+                  <select
+                    className="form-select"
+                    id="location"
+                    value={location}
+                    onChange={handleLocationChange}
+                  >
+                    <option value="">Select Location</option>
+
+                    {userLocation && userLocation.length > 0 ? (
+                      userLocation.map((place) => (
+                        <option value={place.id} key={place.id}>
+                          {place.name}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="" disabled>
+                        Loading...
+                      </option>
+                    )}
+                  </select>
+                </div>
               </div>
-              <div className="mb-3">
-                <label htmlFor="bidAmount" className="form-label">
-                  Bid-Amount:
-                </label>
-                <input
-                  type="number"
-                  className="form-control"
-                  id="bidAmount"
-                  value={bidAmount}
-                  onChange={handleBidAmountChange}
-                />
+              <div className="bothDiv">
+                <div className="Oneline">
+                  <label htmlFor="bidAmount" className="form-label">
+                    Bid-Amount:
+                  </label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="bidAmount"
+                    value={bidAmount}
+                    onChange={handleBidAmountChange}
+                  />
+                </div>
+                <div className="Oneline">
+                  <label htmlFor="bidderName" className="form-label">
+                    Bidder Name:
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="bidderName"
+                    value={bidderName}
+                    onChange={handleBidderChange}
+                  />
+                </div>
               </div>
-              <div className="mb-3">
-                <label htmlFor="bidderName" className="form-label">
-                  Bidder Name:
+              <div>
+                <label htmlFor="bidderDetails" className="form-label">
+                  Bidder Details:
                 </label>
-                <input
-                  type="text"
+                <textarea
+                  name="#"
                   className="form-control"
-                  id="bidderName"
-                  value={bidderName}
-                  onChange={handleBidderChange}
-                />
+                  id="bidderDetails"
+                  placeholder="Write your details!"
+                  cols="10"
+                  rows="10"
+                ></textarea>
               </div>
               <button type="submit" className="btn btn-submit mt-3 mb-4">
                 Add
@@ -1144,13 +1216,13 @@ const Estimator = () => {
                     {activeStep === 3 && (
                       <div className="mb-2 mt-3">
                         <label htmlFor="projectName" className="form-label">
-                          <strong>Services (INs & EXs):</strong>
+                          <strong>Services (Inclusions & Exclusions):</strong>
                         </label>
                         <div className=" myservices p-3">
                           {services.map((service, id) => (
                             <div
                               key={id}
-                              className="mb-2 d-flex justify-content-center align-items-center bg-white"
+                              className="mb-2 serviceDiv d-flex justify-content-center align-items-center"
                             >
                               {/* ... other input elements */}
                               {/* <input
@@ -1162,25 +1234,32 @@ const Estimator = () => {
                               /> */}
                               <input
                                 type="text"
-                                className="form-control bg-white serviceInput"
+                                className={`serviceInput ${
+                                  isFocused ? "focused" : ""
+                                }`}
                                 placeholder={`Service ${id + 1}`}
                                 value={service.name}
                                 readOnly
+                                onFocus={() => setIsFocused(true)}
+                                onBlur={() => setIsFocused(false)}
                               />
                               <label className="switch">
-                                <input
-                                  type="checkbox"
-                                  checked={service.type === "IN"}
-                                  onChange={() => {
-                                    handleTypeChange(id);
-                                    console.log(
-                                      "Proposal value after toggle:",
-                                      services[id].proposal
-                                    );
-                                  }}
-                                />
+                                <div className="bg-info">
+                                  <input
+                                    type="checkbox"
+                                    className="checkCircle"
+                                    checked={service.type === "IN"}
+                                    onChange={() => {
+                                      handleTypeChange(id);
+                                      console.log(
+                                        "Proposal value after toggle:",
+                                        services[id].proposal
+                                      );
+                                    }}
+                                  />
 
-                                <span className="slider round"></span>
+                                  <span className="slider round"></span>
+                                </div>
                               </label>
                             </div>
                           ))}

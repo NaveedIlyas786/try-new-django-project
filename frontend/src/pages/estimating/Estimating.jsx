@@ -276,15 +276,15 @@ const Estimator = () => {
     return ""; // Return an empty string if the input is empty or contains non-numeric characters
   };
 
-  const handleBudgetChange = (e) => {
-    const inputValue = e.target.value;
-    const formattedValue = formatNumber(inputValue);
+  // const handleBudgetChange = (e) => {
+  //   const inputValue = e.target.value;
+  //   const formattedValue = formatNumber(inputValue);
 
-    setStep2FormData({
-      ...step2FormData,
-      budget: formattedValue,
-    });
-  };
+  //   setStep2FormData({
+  //     ...step2FormData,
+  //     budget: formattedValue,
+  //   });
+  // };
 
   const [services, setServices] = useState([]);
   async function fetchServiceData() {
@@ -510,11 +510,6 @@ const Estimator = () => {
 
   // **********************
 
-  const [selectedSpecification, setSelectedSpecification] = useState("");
-
-  const handleSpecificationChange = (e) => {
-    setSelectedSpecification(e.target.value);
-  };
   const handleSpecificationInputChange = (index, key, value) => {
     // Clone the current sefic array to avoid mutating the state directly
     const updatedSefic = [...step2FormData.sefic];
@@ -574,47 +569,74 @@ const Estimator = () => {
       <div className={`estimator  px-5 ${showModal ? "modal-active" : ""}`}>
         <h3>Estimating Summary</h3>
         <div
-          class="modal fade"
+          className="modal fade modalContainer"
           id="staticBackdrop"
           data-bs-backdrop="static"
           data-bs-keyboard="false"
-          tabindex="-1"
+          tabIndex="-1"
           aria-labelledby="staticBackdropLabel"
           aria-hidden="true"
         >
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">
+          <div className="modal-dialog bg-primary">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="staticBackdropLabel">
                   Modal Header
                 </h5>
                 <button
                   type="button"
-                  class="btn-close"
+                  className="btn-close"
                   data-bs-dismiss="modal"
                   aria-label="Close"
                 ></button>
               </div>
-              <div class="modal-dialog modal-dialog-scrollable">
+              <div
+                className="modal-body"
+                style={{ maxHeight: "calc(100vh - 220px)", overflowY: "auto" }}
+              >
                 <h1>Main Section</h1>
                 <h1>Main Section</h1>
+                <h1>Main Section</h1>
+                <h1>Main Section</h1>
+                <h1>Main Section</h1>
+                <h1>Main Section</h1>
+                <h1>Main Section</h1>
+                <h1>Main Section</h1>
+                <h1>Main Section</h1>
+                <h1>Main Section</h1>
+                <h1>Main Section</h1>
+                <h1>Main Section</h1>
+                <h1>Main Section</h1>
+                <h1>Main Section</h1>
+                <h1>Main Section</h1>
+                <h1>Main Section</h1>
+                <h1>Main Section</h1>
+                <h1>Main Section</h1>
+                <h1>Main Section</h1>
+                <h1>Main Section</h1>
+                <h1>Main Section</h1>
+                <h1>Main Section</h1>
+                <h1>Main Section</h1>
+                <h1>Main Section</h1>
+                {/* Your content goes here */}
               </div>
-              <div class="modal-footer">
+              <div className="modal-footer">
                 <h5>Footer</h5>
                 <button
                   type="button"
-                  class="btn btn-secondary"
+                  className="btn btn-secondary"
                   data-bs-dismiss="modal"
                 >
                   Close
                 </button>
-                <button type="button" class="btn btn-primary">
+                <button type="button" className="btn btn-primary">
                   Understood
                 </button>
               </div>
             </div>
           </div>
         </div>
+
         <div className="inputbtn d-flex gap-2 px-5">
           <input
             type="text"
@@ -633,69 +655,67 @@ const Estimator = () => {
         <div className="table-responsive mt-4">
           <table className="table table-striped  table-bordered table-hover text-center">
             {/* <thead> */}
-              <tr>
-                <th>Due Date</th>
-                <th>Project Name</th>
-                <th>Area</th>
-                <th>Estimator</th>
-                <th>Status</th>
-                <th>Bidders</th>
-                <th>Bid Amount ($)</th>
-                <th>Actions</th>
-              </tr>
+            <tr>
+              <th>Due Date</th>
+              <th>Project Name</th>
+              <th>Area</th>
+              <th>Estimator</th>
+              <th>Status</th>
+              <th>Bidders</th>
+              <th>Bid Amount ($)</th>
+              <th>Actions</th>
+            </tr>
             {/* </thead> */}
             {/* <tbody className="cursor-pointer  bg-info jloop"> */}
-              {filteredData.map((item) => (
-                <tr key={item.id} >
-                  <td className="mytd">{item.due_date}</td>
-                  <td className="mytd myproject">{item.Prjct_Name}</td>
-                  <td className="mytd">{item.location}</td>
-                  <td className="mytd">{item.estimator}</td>
-                  <td className="mytd">{item.status}</td>
-                  <td className="mytdbidder">{item.bidder}</td>
-                  <td className="mytd">{formatBidAmount(item.bid_amount)}</td>
-                  <td className="mytd">
-                    <div className="relative-container">
-                      <i
-                        onClick={() => toggleDropdown(item.id)}
-                        style={{ cursor: "pointer" }}
-                        className="fa-solid threeDotIcon fa-ellipsis-vertical"
-                      ></i>
-                      <div
-                        className={`mydiv ${
-                          openRow === item.id ? "open" : " "
-                        }`}
+            {filteredData.map((item) => (
+              <tr key={item.id}>
+                <td className="mytd">{item.due_date}</td>
+                <td className="mytd myproject">{item.Prjct_Name}</td>
+                <td className="mytd">{item.location}</td>
+                <td className="mytd">{item.estimator}</td>
+                <td className="mytd">{item.status}</td>
+                <td className="mytdbidder">{item.bidder}</td>
+                <td className="mytd">{formatBidAmount(item.bid_amount)}</td>
+                <td className="mytd">
+                  <div className="relative-container">
+                    <i
+                      onClick={() => toggleDropdown(item.id)}
+                      style={{ cursor: "pointer" }}
+                      className="fa-solid threeDotIcon fa-ellipsis-vertical"
+                    ></i>
+                    <div
+                      className={`mydiv ${openRow === item.id ? "open" : " "}`}
+                    >
+                      <button
+                        className="btn dropbtns"
+                        onClick={() => {
+                          console.log(item.id);
+                          setStep0FormData({
+                            ...step0FormData,
+                            estimating: item.id,
+                          });
+                          setSelectedEstimatingID(item.id); // Set the selected estimating ID
+                          setPurposalModal(true);
+                        }}
+                        // onClick={movetoPurposalPage}
                       >
-                        <button
-                          className="btn dropbtns"
-                          onClick={() => {
-                            console.log(item.id);
-                            setStep0FormData({
-                              ...step0FormData,
-                              estimating: item.id,
-                            });
-                            setSelectedEstimatingID(item.id); // Set the selected estimating ID
-                            setPurposalModal(true);
-                          }}
-                          // onClick={movetoPurposalPage}
-                        >
-                          Proposal
-                        </button>
+                        Proposal
+                      </button>
 
-                        <button
-                          type="button"
-                          className="btn dropbtns"
-                          data-bs-toggle="modal"
-                          data-bs-target="#staticBackdrop"
-                        >
-                          Projects
-                        </button>
-                        <button className="btn dropbtns">Status</button>
-                      </div>
+                      <button
+                        type="button"
+                        className="btn dropbtns"
+                        data-bs-toggle="modal"
+                        data-bs-target="#staticBackdrop"
+                      >
+                        Projects
+                      </button>
+                      <button className="btn dropbtns">Status</button>
                     </div>
-                  </td>
-                </tr>
-              ))}
+                  </div>
+                </td>
+              </tr>
+            ))}
             {/* </tbody> */}
           </table>
         </div>

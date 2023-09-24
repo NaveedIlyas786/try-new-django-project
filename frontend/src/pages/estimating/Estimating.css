@@ -548,3 +548,28 @@ td:nth-child(2), td:nth-child(6),td:nth-child(8){
 .modal{
   max-height: 400px !important;
 }
+
+.modalContainer{
+  min-height: 100vh !important;
+}
+.modal-dialog{
+  min-width: 70vw !important;
+  min-height: 85vh !important;
+}
+.modal-content{
+  min-height: 85vh !important;
+}
+
+.modal-body::-webkit-scrollbar {
+  width: 10px; /* Set the width of the scrollbar */
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background-color: #5d5d5f; /* Set the color of the scrollbar track (the non-draggable part) */
+  border-radius: 10px 50px 50px 10px; /*Round the corners of the thumb*/
+}
+
+.modal-body::-webkit-scrollbar-track {
+  border-radius: 10px; /*Round the corners of the thumb*/
+  background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
+}

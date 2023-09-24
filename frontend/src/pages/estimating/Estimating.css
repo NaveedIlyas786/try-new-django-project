@@ -554,12 +554,16 @@ td:nth-child(2), td:nth-child(6),td:nth-child(8){
 }
 .modal-dialog{
   min-width: 70vw !important;
-  min-height: 85vh !important;
+  /* min-height: 85vh !important; */
 }
-.modal-content{
-  min-height: 85vh !important;
+.modal-body{
+  padding-top: 100px !important;
+  max-height: 70vh !important;
+  overflow-y: scroll;
 }
-
+.projName{
+  width: 96%;
+}
 .modal-body::-webkit-scrollbar {
   width: 10px; /* Set the width of the scrollbar */
 }

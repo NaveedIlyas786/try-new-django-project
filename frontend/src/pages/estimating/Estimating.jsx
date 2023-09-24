@@ -577,12 +577,12 @@ const Estimator = () => {
           aria-labelledby="staticBackdropLabel"
           aria-hidden="true"
         >
-          <div className="modal-dialog bg-primary">
+          <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="staticBackdropLabel">
-                  Modal Header
-                </h5>
+                <h1 className="modal-title" id="staticBackdropLabel">
+                  Project Details
+                </h1>
                 <button
                   type="button"
                   className="btn-close"
@@ -591,37 +591,188 @@ const Estimator = () => {
                 ></button>
               </div>
               <div
-                className="modal-body"
-                style={{ maxHeight: "calc(100vh - 220px)", overflowY: "auto" }}
+                className="modal-body d-flex justify-content-center align-items-center flex-column gap-3  pb-5  px-5"
               >
-                <h1>Main Section</h1>
-                <h1>Main Section</h1>
-                <h1>Main Section</h1>
-                <h1>Main Section</h1>
-                <h1>Main Section</h1>
-                <h1>Main Section</h1>
-                <h1>Main Section</h1>
-                <h1>Main Section</h1>
-                <h1>Main Section</h1>
-                <h1>Main Section</h1>
-                <h1>Main Section</h1>
-                <h1>Main Section</h1>
-                <h1>Main Section</h1>
-                <h1>Main Section</h1>
-                <h1>Main Section</h1>
-                <h1>Main Section</h1>
-                <h1>Main Section</h1>
-                <h1>Main Section</h1>
-                <h1>Main Section</h1>
-                <h1>Main Section</h1>
-                <h1>Main Section</h1>
-                <h1>Main Section</h1>
-                <h1>Main Section</h1>
-                <h1>Main Section</h1>
-                {/* Your content goes here */}
+                <div className="bothDiv gap-3">
+               <div className="projName Oneline">
+                <label htmlFor="projectName" className="form-label">
+                Start Date:
+                </label>
+                <input
+                  type="date"
+                  className="form-control"
+                  id="projectName"
+                  value={projectName}
+                  onChange={handleProjectNameChange}
+                />
+              </div>
+               <div className="projName Oneline">
+                <label htmlFor="projectName" className="form-label">
+                  Job No#:
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="projectName"
+                  value={projectName}
+                  onChange={handleProjectNameChange}
+                />
+              </div>
+                
+              </div>
+               <div className="bothDiv gap-3">
+                <div className="Oneline">
+                  <label htmlFor="estimatorName" className="form-label">
+                    Project Manager:
+                  </label>
+                  <select
+                    className="form-select"
+                    id="estimatorName"
+                    value={estimatorName}
+                    onChange={handleEstimatorNameChange}
+                  >
+                    <option value="">Select Estimator Name</option>
+
+                    {EstimatorName && EstimatorName.length > 0 ? (
+                      EstimatorName.map((user) => (
+                        <option value={user.id} key={user.id}>
+                          {user.full_Name}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="" disabled>
+                        Loading...
+                      </option>
+                    )}
+                  </select>
+                </div>
+                <div className="Oneline">
+                  <label htmlFor="location" className="form-label">
+                    Foreman:
+                  </label>
+                  <select
+                    className="form-select"
+                    id="location"
+                    value={location}
+                    onChange={handleLocationChange}
+                  >
+                    <option value="">Select Location</option>
+
+                    {userLocation && userLocation.length > 0 ? (
+                      userLocation.map((place) => (
+                        <option value={place.id} key={place.id}>
+                          {place.name}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="" disabled>
+                        Loading...
+                      </option>
+                    )}
+                  </select>
+                </div>
+              </div>
+              <div className="projName">
+                <label htmlFor="projectName" className="form-label">
+                  Project Name:
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="projectName"
+                  placeholder="AutoPopulate"
+
+                  value={projectName}
+                  onChange={handleProjectNameChange}
+                />
+              </div>
+               <div className="bothDiv gap-3">
+                <div className="Oneline">
+                  <label htmlFor="estimatorName" className="form-label">
+                    Bim Operator:
+                  </label>
+                  <select
+                    className="form-select"
+                    id="estimatorName"
+                    value={estimatorName}
+                    onChange={handleEstimatorNameChange}
+                  >
+                    <option value="">Select Estimator Name</option>
+
+                    {EstimatorName && EstimatorName.length > 0 ? (
+                      EstimatorName.map((user) => (
+                        <option value={user.id} key={user.id}>
+                          {user.full_Name}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="" disabled>
+                        Loading...
+                      </option>
+                    )}
+                  </select>
+                </div>
+                <div className="Oneline">
+                  <label htmlFor="location" className="form-label">
+                    Project Engineer:
+                  </label>
+                  <select
+                    className="form-select"
+                    id="location"
+                    value={location}
+                    onChange={handleLocationChange}
+                  >
+                    <option value="">Select Location</option>
+
+                    {userLocation && userLocation.length > 0 ? (
+                      userLocation.map((place) => (
+                        <option value={place.id} key={place.id}>
+                          {place.name}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="" disabled>
+                        Loading...
+                      </option>
+                    )}
+                  </select>
+                </div>
+              </div>
+               <div className="bothDiv gap-3">
+               
+               <div className="projName Oneline">
+                <label htmlFor="projectName" className="form-label">
+                  Bidder Name:
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="AutoPopulate"
+                  id="projectName"
+                  value={projectName}
+                  onChange={handleProjectNameChange}
+                />
+              </div>
+               <div className="projName Oneline">
+                <label htmlFor="projectName" className="form-label">
+                  Company Name:
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="AutoPopulate"
+                  id="projectName"
+                  value={projectName}
+                  onChange={handleProjectNameChange}
+                />
+              </div>
+                
+              </div>
+               
+                
               </div>
               <div className="modal-footer">
-                <h5>Footer</h5>
+                {/* <h5>Footer</h5> */}
                 <button
                   type="button"
                   className="btn btn-secondary"
@@ -630,7 +781,7 @@ const Estimator = () => {
                   Close
                 </button>
                 <button type="button" className="btn btn-primary">
-                  Understood
+                  Submit
                 </button>
               </div>
             </div>

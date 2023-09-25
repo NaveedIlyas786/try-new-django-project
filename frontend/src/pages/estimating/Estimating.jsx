@@ -135,29 +135,6 @@ const Estimator = () => {
       });
   }, []);
 
-  // useEffect(() => {
-  //   // Make the API request using Axios
-  //   axios
-  //     .get("http://127.0.0.1:8000/api/estimating/company/")
-  //     .then((response) => {
-  //       // Check if the response status is OK (200)
-  //       if (response.status === 200) {
-  //         // Parse the response JSON
-  //         const data = response.data;
-
-  //         // Assuming the data is an array of objects with a "Cmpny_Name" property
-  //         const companyNames = data.map((item) =>
-  //         item.Cmpny_Name,
-  //         console.log(companyNames);
-  //         setCompanyName(companyNames);
-  //       } else {
-  //         throw new Error("Failed to fetch data");
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // }, []);
 
   // ****************************Getting Services Entries from Api End
   const [EstimatorName, setestimatorName] = useState([]);
@@ -177,8 +154,109 @@ const Estimator = () => {
       });
   }, []);
 
+  // ************************projectManager Role Seleted **********
+
+  const [projectManager, setProjectManager] = useState([]);
+  const [selectedProjectManager, setSelectedProjectManager] = useState(""); // To store the selected Project Manager
+
+  useEffect(() => {
+    // Fetch data from the API
+    axios
+      .get("http://127.0.0.1:8000/api/user/Userapi/")
+      .then((response) => response.data)
+      .then((data) => {
+        const managerUser = data.filter((user) =>
+          user.roles.includes("Project Manager")
+        );
+        console.log(managerUser);
+        setProjectManager(managerUser);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  const handleProjectManagerChange = (e) => {
+    setSelectedProjectManager(e.target.value); // Store the selected Project Manager ID
+  };
+
+  // ************************Forman Role Seleted **********
+  const [formanName, setFormanName] = useState([]);
+  const [selectedForman, setSelectedForman] = useState(""); // To store the selected Forman
+
+  useEffect(() => {
+    // Fetch data from the API
+    axios
+      .get("http://127.0.0.1:8000/api/user/Userapi/")
+      .then((response) => response.data)
+      .then((data) => {
+        const formanUser = data.filter((user) => user.roles.includes("Forman"));
+        console.log(formanUser);
+        setFormanName(formanUser);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  const handleFormanNameChange = (e) => {
+    setSelectedForman(e.target.value); // Store the selected Forman ID
+  };
+
+  // ************************BimOperator Role Seleted **********
+
+  const [BimOperator, setBimOperator] = useState([]);
+  const [selectedBimOperator, setSelectedBimOperator] = useState(""); // To store the selected Bim Operator
+
+  useEffect(() => {
+    // Fetch data from the API
+    axios
+      .get("http://127.0.0.1:8000/api/user/Userapi/")
+      .then((response) => response.data)
+      .then((data) => {
+        const bimOperatorUser = data.filter((user) =>
+          user.roles.includes("Bim Operator")
+        );
+        setBimOperator(bimOperatorUser);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  const handleBimOperatorNameChange = (e) => {
+    setSelectedBimOperator(e.target.value); // Store the selected Bim Operator ID
+  };
+  // ************************Project Engineer Role Seleted **********
+
+  const [ProjEnger, setProjEnger] = useState([]);
+  const [selectedProjEnger, setSelectedProjEnger] = useState(""); // To store the selected Bim Operator
+
+  useEffect(() => {
+    // Fetch data from the API
+    axios
+      .get("http://127.0.0.1:8000/api/user/Userapi/")
+      .then((response) => response.data)
+      .then((data) => {
+        const ProjEngerUser = data.filter((user) =>
+          user.roles.includes("Project Engineer")
+        );
+        setProjEnger(ProjEngerUser);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  const handleProjEngerNameChange = (e) => {
+    setSelectedProjEnger(e.target.value); // Store the selected Bim Operator ID
+  };
+
+
+
   //************ To show bidder Names in dropdown in estimating post field
   const [bidderName, setbidderName] = useState("");
+  const [bidder_detail, setBidder_detail] = useState("");
 
   //************* Define the handleSubmit function
   const handleSubmit = (event) => {
@@ -193,6 +271,7 @@ const Estimator = () => {
       location: location,
       bid_amount: bidAmount,
       bidder: bidderName, // Use BidderName here, not bidder
+      bidder_deatil: bidder_detail,
     };
 
     // Send a POST request to the API
@@ -209,6 +288,7 @@ const Estimator = () => {
         setLocation("");
         setBidAmount("");
         setbidderName("");
+        setBidder_detail("");
         // Close the modal
         closeModal();
       })
@@ -232,13 +312,13 @@ const Estimator = () => {
   };
   const [ProjectFormData, setProjectFormData] = useState({
     // date: getCurrentDate(),
-    start_date:"",
+    start_date: "",
     estimating: selectedProjectID,
-    job_num:"",
-    prjct_mngr:[],
-    prjct_engnr:[],
-    bim_oprtr:[],
-    Forman:[],
+    job_num: "",
+    prjct_mngr: [],
+    prjct_engnr: [],
+    bim_oprtr: [],
+    Forman: [],
   });
   const [step0FormData, setStep0FormData] = useState({
     date: getCurrentDate(),
@@ -473,6 +553,9 @@ const Estimator = () => {
   const handleBidderChange = (e) => {
     setbidderName(e.target.value);
   };
+  const handleBidderDetailChange = (e) => {
+    setBidder_detail(e.target.value);
+  };
 
   const handleCompanyNameChange = (e) => {
     setCompany(e.target.value);
@@ -577,7 +660,7 @@ const Estimator = () => {
                   aria-label="Close"
                 ></button>
               </div>
-              <div className="modal-body d-flex justify-content-center align-items-center flex-column gap-4  pb-5  px-5">
+              <div className="modal-body d-flex justify-content-center align-items-center flex-column gap-5  pb-5  px-5">
                 <div className="bothDiv gap-3">
                   <div className="projName Oneline">
                     <label htmlFor="projectName" className="form-label">
@@ -611,14 +694,13 @@ const Estimator = () => {
                     </label>
                     <select
                       className="form-select"
-                      id="estimatorName"
-                      value={estimatorName}
-                      onChange={handleEstimatorNameChange}
+                      id="projectManagerName"
+                      value={selectedProjectManager} // Use the selectedProjectManager value
+                      onChange={handleProjectManagerChange}
                     >
-                      <option value="">Select Estimator Name</option>
-
-                      {EstimatorName && EstimatorName.length > 0 ? (
-                        EstimatorName.map((user) => (
+                      <option value="">Select Project Manager</option>
+                      {projectManager && projectManager.length > 0 ? (
+                        projectManager.map((user) => (
                           <option value={user.id} key={user.id}>
                             {user.full_Name}
                           </option>
@@ -636,16 +718,15 @@ const Estimator = () => {
                     </label>
                     <select
                       className="form-select"
-                      id="location"
-                      value={location}
-                      onChange={handleLocationChange}
+                      id="estimatorName"
+                      value={selectedForman} // Use the selectedForman value
+                      onChange={handleFormanNameChange}
                     >
-                      <option value="">Select Location</option>
-
-                      {userLocation && userLocation.length > 0 ? (
-                        userLocation.map((place) => (
-                          <option value={place.id} key={place.id}>
-                            {place.name}
+                      <option value="">Select Forman</option>
+                      {formanName.length > 0 ? (
+                        formanName.map((user) => (
+                          <option value={user.id} key={user.id}>
+                            {user.full_Name}
                           </option>
                         ))
                       ) : (
@@ -656,7 +737,7 @@ const Estimator = () => {
                     </select>
                   </div>
                 </div>
-                <div className="projName">
+                {/* <div className="projName">
                   <label htmlFor="projectName" className="form-label">
                     Project Name:
                   </label>
@@ -665,20 +746,20 @@ const Estimator = () => {
                     className="form-control"
                     id="projectName"
                     placeholder="AutoPopulate not show on frontend"
-                    // value={selectedEstimatingID}
-                    // onChange={(e) =>{
+                    value={selectedProjectID}
+                    onChange={(e) =>{
 
-                    //   setStep0FormData({
-                    //       estimating: e.target.value,
-                    //     })
-                    // }}
+                      setStep0FormData({
+                          estimating: e.target.value,
+                        })
+                    }}
                     
                     // onChange={(e)=>{
 
                     // }}
                     
                   />
-                </div>
+                </div> */}
                 <div className="bothDiv gap-3">
                   <div className="Oneline">
                     <label htmlFor="estimatorName" className="form-label">
@@ -686,14 +767,13 @@ const Estimator = () => {
                     </label>
                     <select
                       className="form-select"
-                      id="estimatorName"
-                      value={estimatorName}
-                      onChange={handleEstimatorNameChange}
+                      id="bimOperatorName"
+                      value={selectedBimOperator} // Use the selectedBimOperator value
+                      onChange={handleBimOperatorNameChange}
                     >
-                      <option value="">Select Estimator Name</option>
-
-                      {EstimatorName && EstimatorName.length > 0 ? (
-                        EstimatorName.map((user) => (
+                      <option value="">Select Bim Operator</option>
+                      {BimOperator && BimOperator.length > 0 ? (
+                        BimOperator.map((user) => (
                           <option value={user.id} key={user.id}>
                             {user.full_Name}
                           </option>
@@ -712,15 +792,15 @@ const Estimator = () => {
                     <select
                       className="form-select"
                       id="location"
-                      value={location}
-                      onChange={handleLocationChange}
+                      value={selectedProjEnger}
+                      onChange={handleProjEngerNameChange}
                     >
                       <option value="">Select Location</option>
 
-                      {userLocation && userLocation.length > 0 ? (
-                        userLocation.map((place) => (
-                          <option value={place.id} key={place.id}>
-                            {place.name}
+                      {ProjEnger && ProjEnger.length > 0 ? (
+                        ProjEnger.map((user) => (
+                          <option value={user.id} key={user.id}>
+                            {user.full_Name}
                           </option>
                         ))
                       ) : (
@@ -731,7 +811,7 @@ const Estimator = () => {
                     </select>
                   </div>
                 </div>
-                <div className="bothDiv gap-3">
+                {/* <div className="bothDiv gap-3">
                   <div className="projName Oneline">
                     <label htmlFor="projectName" className="form-label">
                       Bidder Name:
@@ -758,7 +838,7 @@ const Estimator = () => {
                       onChange={handleProjectNameChange}
                     />
                   </div>
-                </div>
+                </div> */}
               </div>
               <div className="modal-footer">
                 {/* <h5>Footer</h5> */}
@@ -814,7 +894,9 @@ const Estimator = () => {
                 <td className="mytd">{item.location}</td>
                 <td className="mytd">{item.estimator}</td>
                 <td className="mytd">{item.status}</td>
-                <td className="mytdbidder">{item.bidder}</td>
+                <td className="mytdbidder">
+                  {item.bidder + " " + item.bidder_deatil}
+                </td>
                 <td className="mytd">$ {formatBidAmount(item.bid_amount)}</td>
                 <td className="mytd">
                   <div className="relative-container">
@@ -850,7 +932,7 @@ const Estimator = () => {
                         onClick={() => {
                           console.log(item.Prjct_Name);
 
-                          setSelectedEstimatingID(item.Prjct_Name); // Set the selected estimating ID
+                          setSelectedProjectID(item.Prjct_Name); // Set the selected estimating ID
                         }}
                       >
                         Projects
@@ -903,8 +985,7 @@ const Estimator = () => {
                     {companyName && companyName.length > 0 ? (
                       companyName.map((companyItem) => (
                         <option value={companyItem.id} key={companyItem.id}>
-                          {companyItem.Cmpny_Name}{" "}
-                          {/* Display the company name */}
+                          {companyItem.Cmpny_Name}
                         </option>
                       ))
                     ) : (
@@ -1017,6 +1098,8 @@ const Estimator = () => {
                   placeholder="Write your details!"
                   cols="10"
                   rows="10"
+                  value={bidder_detail}
+                  onChange={handleBidderDetailChange}
                 ></textarea>
               </div>
               <button type="submit" className="btn btn-submit mt-3 mb-4">

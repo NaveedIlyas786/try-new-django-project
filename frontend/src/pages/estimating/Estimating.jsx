@@ -591,7 +591,7 @@ const Estimator = () => {
                 ></button>
               </div>
               <div
-                className="modal-body d-flex justify-content-center align-items-center flex-column gap-3  pb-5  px-5"
+                className="modal-body d-flex justify-content-center align-items-center flex-column gap-4  pb-5  px-5"
               >
                 <div className="bothDiv gap-3">
                <div className="projName Oneline">
@@ -768,8 +768,6 @@ const Estimator = () => {
               </div>
                 
               </div>
-               
-                
               </div>
               <div className="modal-footer">
                 {/* <h5>Footer</h5> */}
@@ -791,9 +789,9 @@ const Estimator = () => {
         <div className="inputbtn d-flex gap-2 px-5">
           <input
             type="text"
-            placeholder="Filter by Project Name,Status"
+            placeholder="Filter by Project Name, Estimator Name, Bidders, Bid Amount, Status"
             value={filter}
-            className="myinput p-2 rounded"
+            className="myinput p-2"
             onChange={(e) => setFilter(e.target.value)}
           />
           <button
@@ -813,7 +811,7 @@ const Estimator = () => {
               <th>Estimator</th>
               <th>Status</th>
               <th>Bidders</th>
-              <th>Bid Amount ($)</th>
+              <th>Bid Amount</th>
               <th>Actions</th>
             </tr>
             {/* </thead> */}
@@ -826,7 +824,7 @@ const Estimator = () => {
                 <td className="mytd">{item.estimator}</td>
                 <td className="mytd">{item.status}</td>
                 <td className="mytdbidder">{item.bidder}</td>
-                <td className="mytd">{formatBidAmount(item.bid_amount)}</td>
+                <td className="mytd">$ {formatBidAmount(item.bid_amount)}</td>
                 <td className="mytd">
                   <div className="relative-container">
                     <i
@@ -1041,7 +1039,7 @@ const Estimator = () => {
           <button className="close-btn" onClick={closeModal}></button>
           <div className="purposal-content px-5">
             {/* ************* Implementation of Multistep-Form using Material UI */}
-            Proposal {/* Updated text to "Proposal" */}
+            Proposal 
             <Modal
               open={purposalModal}
               onClose={closeModal}

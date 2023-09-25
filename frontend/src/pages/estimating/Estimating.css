@@ -18,15 +18,17 @@ td {
   top: 2.5rem;
 }
 .myinput {
-  min-width: 350px;
+  min-width: 318px;
   background-color: white;
   color: black;
   border: 1px solid black;
   transition: all 0.5s ease-in-out;
+  border-radius: 10px ;
 }
 .myinput:focus {
   min-width: 550px;
   border: 1px solid black !important;
+  border-radius: 0 !important;
   transition: all 0.5s ease-in-out;
 }
 #myInput {
@@ -236,6 +238,7 @@ input:focus {
   position: relative;
   max-width: 150px !important;
 }
+
 
 .mydiv {
   position: absolute;
@@ -557,7 +560,7 @@ td:nth-child(2), td:nth-child(6),td:nth-child(8){
   /* min-height: 85vh !important; */
 }
 .modal-body{
-  padding-top: 100px !important;
+  padding-top: 120px !important;
   max-height: 70vh !important;
   overflow-y: scroll;
 }

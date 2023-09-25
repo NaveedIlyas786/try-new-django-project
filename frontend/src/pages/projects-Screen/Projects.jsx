@@ -244,15 +244,7 @@ const Projects = () => {
   // };
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState("");
-  const [showModal, setShowModal] = useState(false); // State to control modal visibility
   const [purposalModal, setPurposalModal] = useState(false); // State to control modal visibility
-  const [dueDate, setDueDate] = useState("");
-  const [projectName, setProjectName] = useState("");
-  const [estimatorName, setEstimatorName] = useState("");
-  const [location, setLocation] = useState("");
-  const [bidAmount, setBidAmount] = useState("");
-  const [company, setCompany] = useState(1); // Updated to store company name as a string
-  // const navigate = useNavigate();
   // ***********************************
   const [openRow, setOpenRow] = useState(null);
 
@@ -268,7 +260,7 @@ const Projects = () => {
   useEffect(() => {
     // Fetch data from the API
     axios
-      .get("http://127.0.0.1:8000/api/estimating/estimating/")
+      .get("http://127.0.0.1:8000/api/project/ProjectList/")
       .then((response) => response.data)
       .then((data) => {
         // console.log(data);
@@ -279,88 +271,25 @@ const Projects = () => {
       });
   }, []);
 
-  //************ To show locations in dropdown in estimating post field
-
-  const [userLocation, setUserLocation] = useState([]);
-
-  useEffect(() => {
-    // Fetch data from the API
-    axios
-      .get("http://127.0.0.1:8000/api/estimating/location/")
-      .then((response) => response.data)
-      .then((data) => {
-        // console.log(data);
-        setUserLocation(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []);
-
-  //************ To show Company Names in dropdown in estimating post field
-
-  const [companyName, setCompanyName] = useState([]);
-
-  useEffect(() => {
-    // Make the API request using Axios
-    axios
-      .get("http://127.0.0.1:8000/api/project/company/")
-      .then((response) => {
-        // Check if the response status is OK (200)
-        if (response.status === 200) {
-          // Parse the response JSON
-          const data = response.data;
-
-          // Assuming the data is an array of objects with a "Cmpny_Name" property
-          const companyNames = data.map((item) => item.Cmpny_Name);
-          setCompanyName(companyNames);
-        } else {
-          throw new Error("Failed to fetch data");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
-
-  // ****************************Getting Services Entries from Api End
-  const [EstimatorName, setestimatorName] = useState([]);
-
-  useEffect(() => {
-    // Fetch data from the API
-    axios
-      .get("http://127.0.0.1:8000/api/user/Userapi/")
-      .then((response) => response.data)
-      .then((data) => {
-        const bidUser = data.filter((user) => user.roles.includes("Estimator"));
-        // console.log(bidUser);
-        setestimatorName(bidUser);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []);
 
   const filteredData = data.filter((customer) => {
     console.log("Filter:", filter);
-    console.log("Status:", customer.status);
+    console.log("job_num:", customer.job_num);
     return (
-      (customer.Prjct_Name &&
-        customer.Prjct_Name.toUpperCase().includes(filter.toUpperCase())) ||
-      (customer.status &&
-        customer.status
-          .trim()
-          .toUpperCase()
-          .includes(filter.trim().toUpperCase())) ||
-      (customer.estimator &&
-        customer.estimator.toUpperCase().includes(filter.toUpperCase())) ||
-      (customer.bidder &&
-        customer.bidder.toUpperCase().includes(filter.toUpperCase())) ||
-      (customer.bid_amount &&
-        customer.bid_amount
-          .toString()
-          .toUpperCase()
-          .includes(filter.toUpperCase()))
+      (customer.estimating &&
+        customer.estimating.toUpperCase().includes(filter.toUpperCase())) ||
+      (customer.job_num &&
+        customer.job_num
+        .toString()
+        .toUpperCase()
+        .includes(filter.toUpperCase())) ||
+      (customer.prjct_engnr &&
+        customer.prjct_engnr.toUpperCase().includes(filter.toUpperCase())) ||
+      (customer.bim_oprtr &&
+        customer.bim_oprtr.toUpperCase().includes(filter.toUpperCase())) ||
+      (customer.Forman &&
+        customer.Forman.toUpperCase().includes(filter.toUpperCase()))
+          
     );
   });
 
@@ -369,13 +298,13 @@ const Projects = () => {
     return amount.toLocaleString("en-US");
   };
   return (
-    <div className={`estimator  px-5 ${showModal ? "modal-active" : ""}`}>
+    <div className="parentDiv mt-5 pt-5 px-5">
       <h3>Project Summary</h3>
 
-      <div className="inputbtn d-flex  px-5">
+      <div className="inputbtn d-flex mt-5  px-5">
         <input
           type="text"
-          placeholder="Filter by Project Name, Estimator Name, Bidders, Bid Amount, Status"
+          placeholder="Filter by Project Name, prjct_engnr Name, bim_oprtrs, Bid Amount, job_num"
           value={filter}
           className="myinput p-2 "
           onChange={(e) => setFilter(e.target.value)}
@@ -384,30 +313,26 @@ const Projects = () => {
       </div>
       <div className="table-responsive mt-4">
         <table className="table table-striped  table-bordered table-hover text-center">
-          {/* <thead> */}
+          <thead>
           <tr>
             <th>Start Date</th>
             <th>Project Name</th>
             <th>Project Manager</th>
             <th>Project Engineer</th>
-            <th>Company Name</th>
             <th>Bim Operator</th>
-            <th>Bidders</th>
             <th>Foreman</th>
-            <th>Job No#</th>
-            {/* <th>Actions</th> */}
+            <th>Actions</th>
           </tr>
-          {/* </thead> */}
-          {/* <tbody className="cursor-pointer  bg-info jloop"> */}
+          </thead>
+          <tbody className="cursor-pointer  bg-info jloop">
           {filteredData.map((item) => (
             <tr key={item.id}>
-              <td className="mytd">{item.due_date}</td>
-              <td className="mytd myproject">{item.Prjct_Name}</td>
-              <td className="mytd">{item.location}</td>
-              <td className="mytd">{item.estimator}</td>
-              <td className="mytd">{item.status}</td>
-              <td className="mytdbidder">{item.bidder}</td>
-              <td className="mytd">$ {formatBidAmount(item.bid_amount)}</td>
+              <td className="mytd">{item.start_date}</td>
+              <td className="mytd">{item.estimating}</td>
+              <td className="mytd">{item.prjct_mngr}</td>
+              <td className="mytd">{item.prjct_engnr}</td>
+              <td className="mytd">{item.bim_oprtr}</td>
+              <td className="mytd">{item.Forman}</td>
               <td className="mytd">
                 <div className="relative-container">
                   <i
@@ -442,13 +367,13 @@ const Projects = () => {
                     >
                       Projects
                     </button>
-                    <button className="btn dropbtns">Status</button>
+                    <button className="btn dropbtns">job_num</button>
                   </div>
                 </div>
               </td>
             </tr>
           ))}
-          {/* </tbody> */}
+          </tbody>
         </table>
       </div>
     </div>

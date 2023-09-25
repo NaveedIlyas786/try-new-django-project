@@ -25,7 +25,7 @@ const Estimator = () => {
   const [estimatorName, setEstimatorName] = useState("");
   const [location, setLocation] = useState("");
   const [bidAmount, setBidAmount] = useState("");
-  const [company, setCompany] = useState(1); // Updated to store company name as a string
+  const [company, setCompany] = useState("DMS"); // Updated to store company name as a string
   // const navigate = useNavigate();
   // ***********************************
   const [openRow, setOpenRow] = useState(null);
@@ -58,12 +58,7 @@ const Estimator = () => {
       addendumDate: "",
     },
   ]);
-  // const [specentries, setSpecEntries] = useState([
-  //   {
-  //     specName: "",
-  //     specNumber: "",
-  //   },
-  // ]);
+
 
   const [addendumNumber, setAddendumNumber] = useState("");
   const [addendumDate, setAddendumDate] = useState("");
@@ -139,6 +134,7 @@ const Estimator = () => {
 
           // Assuming the data is an array of objects with a "Cmpny_Name" property
           const companyNames = data.map((item) => item.Cmpny_Name);
+          console.log(companyNames);
           setCompanyName(companyNames);
         } else {
           throw new Error("Failed to fetch data");
@@ -151,27 +147,27 @@ const Estimator = () => {
 
   // ****************************Getting Services Entries from Api start
 
-  const [setServiceData] = useState([]);
+  // const [setServiceData] = useState([]);
 
-  useEffect(() => {
-    // Fetch data from the API
-    axios
-      .get("http://127.0.0.1:8000/api/estimating/service/")
-      .then((response) => response.data)
-      .then((data) => {
-        if (data.length > 0) {
-          // Extract service names and store them in the state
-          const serviceNames = data.map((service) => service.name);
-          setServiceData(serviceNames);
-          // console.log(serviceNames);
-        } else {
-          console.log("No services found.");
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   // Fetch data from the API
+  //   axios
+  //     .get("http://127.0.0.1:8000/api/estimating/service/")
+  //     .then((response) => response.data)
+  //     .then((data) => {
+  //       if (data.length > 0) {
+  //         // Extract service names and store them in the state
+  //         const serviceNames = data.map((service) => service.name);
+  //         setServiceData(serviceNames);
+  //         // console.log(serviceNames);
+  //       } else {
+  //         console.log("No services found.");
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching data:", error);
+  //     });
+  // }, []);
 
   // ****************************Getting Services Entries from Api End
   const [EstimatorName, setestimatorName] = useState([]);
@@ -275,16 +271,6 @@ const Estimator = () => {
 
     return ""; // Return an empty string if the input is empty or contains non-numeric characters
   };
-
-  // const handleBudgetChange = (e) => {
-  //   const inputValue = e.target.value;
-  //   const formattedValue = formatNumber(inputValue);
-
-  //   setStep2FormData({
-  //     ...step2FormData,
-  //     budget: formattedValue,
-  //   });
-  // };
 
   const [services, setServices] = useState([]);
   async function fetchServiceData() {
@@ -416,8 +402,8 @@ const Estimator = () => {
     }
   };
   const filteredData = data.filter((customer) => {
-    console.log("Filter:", filter);
-    console.log("Status:", customer.status);
+    // console.log("Filter:", filter);
+    // console.log("Status:", customer.status);
     return (
       (customer.Prjct_Name &&
         customer.Prjct_Name.toUpperCase().includes(filter.toUpperCase())) ||
@@ -681,9 +667,13 @@ const Estimator = () => {
                   className="form-control"
                   id="projectName"
                   placeholder="AutoPopulate"
-
-                  value={projectName}
-                  onChange={handleProjectNameChange}
+                  value={selectedEstimatingID}
+                  onChange={(e) =>
+                    setStep0FormData({
+                      
+                      estimating: e.target.value,
+                    })
+                  }
                 />
               </div>
                <div className="bothDiv gap-3">
@@ -838,12 +828,12 @@ const Estimator = () => {
                       <button
                         className="btn dropbtns"
                         onClick={() => {
-                          console.log(item.id);
+                          console.log(item.Prjct_Name);
                           setStep0FormData({
                             ...step0FormData,
                             estimating: item.id,
                           });
-                          setSelectedEstimatingID(item.id); // Set the selected estimating ID
+                          setSelectedEstimatingID(item.Prjct_Name); // Set the selected estimating ID
                           setPurposalModal(true);
                         }}
                         // onClick={movetoPurposalPage}
@@ -856,6 +846,11 @@ const Estimator = () => {
                         className="btn dropbtns"
                         data-bs-toggle="modal"
                         data-bs-target="#staticBackdrop"
+                        onClick={() => {
+                          console.log(item.Prjct_Name);
+                         
+                          setSelectedEstimatingID(item.Prjct_Name); // Set the selected estimating ID
+                        }}
                       >
                         Projects
                       </button>
@@ -1087,12 +1082,12 @@ const Estimator = () => {
                             }
                           />
                         </div>
-                        {/* <div className="mb-2 mt-3">
+                        <div className="mb-2 mt-3">
                           <label htmlFor="ProjectID" className="form-label">
                             Estimating ID:
                           </label>
                           <input
-                            type="number"
+                            type="text"
                             className="form-control"
                             id="ProjectID"
                             name="ProjectID"
@@ -1105,7 +1100,7 @@ const Estimator = () => {
                             }
                             readOnly
                           />
-                        </div> */}
+                        </div>
 
                         <div className="mb-2 mt-3">
                           <label htmlFor="ArchitectName" className="form-label">

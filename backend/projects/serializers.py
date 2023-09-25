@@ -10,6 +10,16 @@ class ProjectSerializer(serializers.ModelSerializer):
         model = Project
         fields = ['id','estimating','job_num','prjct_engnr','bim_oprtr','Forman','prjct_mngr','start_date']
 
+        extra_kwargs = {
+            'estimating': {'required': True},
+            'job_num': {'required': True},
+            'prjct_engnr': {'required': True},
+            'bim_oprtr': {'required': True},
+            'Forman': {'required': True},
+            'prjct_mngr': {'required': True},
+            'start_date': {'required': True},
+        }
+
 
 
     def to_representation(self, instance):

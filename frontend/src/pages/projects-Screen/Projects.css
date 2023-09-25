@@ -31,20 +31,20 @@
 }
 /********************Project Summary Section***************/
 
-
-.estimator {
-  margin-top: 70px;
-  position: relative;
+.parentDiv {
+  margin-top: 100px;
   padding-top: 2.5rem;
-  /* background-color: rgb(190, 184, 184) !important; */
 }
-
-.inputbtn {
-  /* min-width: 350px; */
-  position: absolute;
-  right: 0;
-  color: black;
-  top: 2.5rem;
+.titleWithSearch {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* background-color: blueviolet; */
+}
+.inputSearchDiv{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .myinput {
   min-width: 318px;
@@ -53,6 +53,7 @@
   border: 1px solid black;
   border-radius: 5px 0 0 5px !important;
   transition: all 0.5s ease-in-out;
+  padding: 7px;
 }
 .myinput:focus {
   border-radius: 5px 0 0 5px !important;
@@ -84,7 +85,6 @@ input:focus {
   color: rgb(255, 255, 255);
   padding: 0.3px 0 !important;
 }
-
 
 .mytd {
   position: relative;

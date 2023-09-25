@@ -289,7 +289,6 @@ const Projects = () => {
         customer.bim_oprtr.toUpperCase().includes(filter.toUpperCase())) ||
       (customer.Forman &&
         customer.Forman.toUpperCase().includes(filter.toUpperCase()))
-          
     );
   });
 
@@ -298,37 +297,40 @@ const Projects = () => {
     return amount.toLocaleString("en-US");
   };
   return (
-    <div className="parentDiv mt-5 pt-5 px-5">
+    <div className="parentDiv px-5">
+      <div className="titleWithSearch">
       <h3>Project Summary</h3>
-
-      <div className="inputbtn d-flex mt-5  px-5">
+      <div className="inputSearchDiv">
         <input
           type="text"
-          placeholder="Filter by Project Name, prjct_engnr Name, bim_oprtrs, Bid Amount, job_num"
+          placeholder="Filter by Project Name, prjct_engnr Name, bim_oprtrs, job_num"
           value={filter}
-          className="myinput p-2 "
+          className="myinput"
           onChange={(e) => setFilter(e.target.value)}
         />
         <button className="btn btn-success searchbtn">Search</button>
       </div>
+      </div>
       <div className="table-responsive mt-4">
         <table className="table table-striped  table-bordered table-hover text-center">
-          <thead>
+          {/* <thead> */}
           <tr>
             <th>Start Date</th>
             <th>Project Name</th>
+            <th>Job Number</th>
             <th>Project Manager</th>
             <th>Project Engineer</th>
             <th>Bim Operator</th>
             <th>Foreman</th>
             <th>Actions</th>
           </tr>
-          </thead>
-          <tbody className="cursor-pointer  bg-info jloop">
+          {/* </thead> */}
+          {/* <tbody className="cursor-pointer  bg-info jloop"> */}
           {filteredData.map((item) => (
             <tr key={item.id}>
               <td className="mytd">{item.start_date}</td>
               <td className="mytd">{item.estimating}</td>
+              <td className="mytd">{item.job_num}</td>
               <td className="mytd">{item.prjct_mngr}</td>
               <td className="mytd">{item.prjct_engnr}</td>
               <td className="mytd">{item.bim_oprtr}</td>
@@ -373,7 +375,7 @@ const Projects = () => {
               </td>
             </tr>
           ))}
-          </tbody>
+          {/* </tbody> */}
         </table>
       </div>
     </div>

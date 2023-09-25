@@ -15,6 +15,14 @@ class ProjectListCreateView(APIView):
         serializer = ProjectSerializer(project, many=True)
         return Response(serializer.data)
 
+    def post(self, request, format=None):
+        serializer = ProjectSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class ProjectDetailListCreateView(generics.ListCreateAPIView):
     queryset = Project_detail.objects.all()
     serializer_class = ProjectDetailSerializer

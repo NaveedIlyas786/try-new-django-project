@@ -65,6 +65,7 @@ class EstimatingSerializer(serializers.ModelSerializer):
             'location',
             'estimator',
             'bidder',
+            'bidder_deatil',
         ]
         extra_kwargs = {
             'Prjct_Name': {'required': True},

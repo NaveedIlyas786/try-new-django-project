@@ -4,10 +4,21 @@ from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework import status
 
-from Estimating.models import Estimating, Estimating_detail, Proposal, Addendum, Qualification, Spec_detail, Specification, ProposalService, Service, Location
+from Estimating.models import Company,Estimating, Estimating_detail, Proposal, Addendum, Qualification, Spec_detail, Specification, ProposalService, Service, Location
 
 
 from datetime import datetime
+
+
+
+
+
+class CompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = ['id','Cmpny_Name','adress','office_phone_number','fax_number','license_number','logo','email']
+
+
 
 
 
@@ -27,7 +38,7 @@ class EstimatingDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Estimating_detail
-        fields = ['id', 'Estimating', 'prnt', 'drctry_name', 'file_type', 'output_Table_Name', 'children']
+        fields = ['id', 'Estimating', 'prnt', 'drctry_name', 'file_type', 'file_name', 'children']
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)

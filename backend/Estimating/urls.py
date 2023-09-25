@@ -1,7 +1,11 @@
 from django.urls import path
-from .views import EstimatingListView,QualificationView,LocationViews,Estimating_detailView,create_proposal,ServiceViews
+from .views import  CompanyListView,EstimatingListView,QualificationView,LocationViews,Estimating_detailView,create_proposal,ServiceViews
 
 urlpatterns = [
+    path('company/',CompanyListView.as_view(),name='Company Detail'),
+    path('company/<int:id>/',CompanyListView.as_view(),name='Company Detail'),
+
+
     path('estimating/',EstimatingListView.as_view(),name='estimating list'),
     path('estimating/<int:id>/', EstimatingListView.as_view(), name='estimating-detail'),
 

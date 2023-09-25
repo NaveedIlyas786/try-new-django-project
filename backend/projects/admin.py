@@ -1,26 +1,12 @@
 from django.contrib import admin
-from .models import Project_detail,Project,Company
-
-
-
-
-
-# Register your models here.
-
-
-class CompanyAdmin(admin.ModelAdmin):
-    list_display = ('id', 'Cmpny_Name','adress',
-                    'office_phone_number','fax_number',
-                    'license_number','email')
-
-
-
+from .models import Project_detail,Project
 
 
 
 
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('id', 'prjct_Name', 'company')
+    list_display = ('id','estimating','job_num','prjct_engnr','bim_oprtr','Forman','prjct_mngr','start_date')
+                    
 
 
 
@@ -29,7 +15,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 class ProjectDetailAdmin(admin.ModelAdmin):
-    list_display = ('id','prnt_ID','drctry_Name','file_type','output_Table_Name','prjct_ID')
+    list_display = ('id','prnt_ID','drctry_Name','file_type','file_name','prjct_ID')
 
 
 
@@ -37,6 +23,5 @@ class ProjectDetailAdmin(admin.ModelAdmin):
 
 
 # Register the models with their respective admin views
-admin.site.register(Company, CompanyAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Project_detail, ProjectDetailAdmin)

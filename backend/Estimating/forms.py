@@ -8,4 +8,10 @@ class EstimatingDetailAdminForm(forms.ModelForm):
 
     class Meta:
         model = Estimating_detail
-        fields = ['Estimating', 'prnt', 'drctry_name', 'file_type', 'output_Table_Name']
+        fields = ['Estimating', 'prnt', 'drctry_name', 'file_type', 'file_name']
+    
+    def clean_file_field(self):
+        file = self.cleaned_data.get('file_field')
+        if not file.name.endswith('.pdf'):
+            raise forms.ValidationError("Only PDF files are allowed.")
+        return file

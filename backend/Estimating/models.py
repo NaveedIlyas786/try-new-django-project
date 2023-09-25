@@ -1,17 +1,38 @@
 from django.db import models
+from .validation import validate_file_extension
+
 from django.core.exceptions import ValidationError
 import os
 from django.utils import timezone
 # from pytz import timezone as pytz_timezone
 
-from projects.models import Company
 from accounts.models import User
 
 # Create your models here.
 
 
+class Company(models.Model):
+    Cmpny_Name = models.CharField(verbose_name="Company Name",max_length=50, null=False, blank=False)
+    adress=models.CharField(verbose_name="Adress",max_length=70, null=False, blank=False)
+    office_phone_number = models.CharField(max_length=10, null=False, blank=False)
+    fax_number = models.CharField(max_length=10, null=False, blank=False)
+    license_number = models.CharField(max_length=50, null=False, blank=False)
+    logo = models.ImageField(upload_to='logos/', validators=[validate_file_extension], null=False, blank=False)
+    email = models.EmailField(default="estimating@dmsmgt.com", editable=False)
+
+
+    def __str__(self):
+        return self.Cmpny_Name
+
+
+
 
 # create Estimating 
+
+
+
+
+
 
 class Location(models.Model):
     name=models.CharField(verbose_name="Location Name",max_length=50,blank=False,null=False)
@@ -40,10 +61,11 @@ class Estimating(models.Model):
     bid_amount=models.IntegerField(verbose_name="Bid Amount",blank=False)
     location=models.ForeignKey(Location,on_delete=models.CASCADE,blank=False,null=True)
     estimator = models.ForeignKey(User,verbose_name="Estimator", related_name='estimations_as_estimator', limit_choices_to=models.Q(roles__name='Estimator'), on_delete=models.SET_NULL, null=True)
-    bidder = models.CharField(verbose_name="bidder ",max_length=1500, null=True)
+    bidder = models.CharField(verbose_name="Bidder Name",max_length=1500, null=True)
+    bidder_deatil=models.CharField(verbose_name="Bidder Detail",max_length=50,null=True)
     
 
-
+ 
 
 
     def save(self, *args, **kwargs):
@@ -127,14 +149,10 @@ class Estimating(models.Model):
 class Estimating_detail(models.Model):
     Estimating=models.ForeignKey(Estimating,related_name='estimating_details', verbose_name="Add Estimating", on_delete=models.CASCADE)
     prnt = models.ForeignKey('self', verbose_name="Folder Parent ID", on_delete=models.CASCADE, null=True, blank=True, related_name="children")
- 
     drctry_name = models.CharField(verbose_name="Folder Name",max_length=255, null=True, blank=True)
-
     file_type = models.CharField(verbose_name="Type Name",max_length=100, null=True, blank=True) 
-    output_Table_Name = models.CharField(verbose_name="file Name",max_length=100, null=True, blank=True) 
-    # file_field = models.FileField( upload_to='temporary_files/', blank=True, null=True)
+    file_name = models.CharField(verbose_name="file Name",max_length=100, null=True, blank=True) 
     file_binary_data = models.BinaryField(null=True, blank=True)
-
 
 
     def __str__(self):

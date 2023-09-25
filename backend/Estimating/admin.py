@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Location,Estimating,Estimating_detail
+from .models import Location,Estimating,Estimating_detail,Company
 from django.core.files.storage import default_storage
 
 import os
@@ -10,6 +10,15 @@ from .forms import EstimatingDetailAdminForm
 
 
 # Register your models here
+
+
+
+
+class CompanyAdmin(admin.ModelAdmin):
+    list_display = ('id', 'Cmpny_Name','adress',
+                    'office_phone_number','fax_number',
+                    'license_number','email')
+
 class LocationAdmin(admin.ModelAdmin):
     list_display=['id','name']
 
@@ -19,8 +28,10 @@ class LocationAdmin(admin.ModelAdmin):
 
 
 class EstimatingAdmin(admin.ModelAdmin):
-    list_display = ['id', 'start_date', 'Prjct_Name', 'due_date', 'status',
-                    'company', 'bid_amount', 'location', 'estimator', 'bidder']
+    list_display = ['id', 'start_date', 'Prjct_Name',
+                    'due_date', 'status','company',
+                    'bid_amount', 'location', 'estimator',
+                    'bidder','bidder_deatil']
     list_filter = ['estimator']  # Use 'username' or another field that exists in the 'User' model
 
     def get_queryset(self, request):
@@ -35,7 +46,7 @@ class EstimatingAdmin(admin.ModelAdmin):
 
 
 class EstimatingDetailAdmin(admin.ModelAdmin):
-    list_display=['id','prnt_id','Estimating','drctry_name','file_type','output_Table_Name']
+    list_display=['id','prnt_id','Estimating','drctry_name','file_type','file_name']
 
     form = EstimatingDetailAdminForm
     def save_model(self, request, obj, form, change):
@@ -46,7 +57,7 @@ class EstimatingDetailAdmin(admin.ModelAdmin):
             uploaded_file_name, uploaded_file_extension = os.path.splitext(uploaded_file.name)
             uploaded_file_type = uploaded_file_extension.lstrip('.')
             
-            obj.output_Table_Name = uploaded_file_name
+            obj.file_name = uploaded_file_name
             obj.file_type = uploaded_file_type
 
         super().save_model(request, obj, form, change)
@@ -100,35 +111,13 @@ class ProposalAdmin(NestedModelAdmin):
 class QualificationAdmin(admin.ModelAdmin):
     list_display=['id','detail']
 
+
+
+
+admin.site.register(Company, CompanyAdmin)
 admin.site.register(Location,LocationAdmin)
 admin.site.register(Estimating, EstimatingAdmin)
 admin.site.register(Proposal,ProposalAdmin)
 admin.site.register(Service,ServiceAdmin)
 admin.site.register(Qualification,QualificationAdmin)
 admin.site.register(Estimating_detail,EstimatingDetailAdmin)
-
-
-
-
-
-
-# class ProposalsAdmin(admin.ModelAdmin):
-       
-#     list_display = ['id', 'estimating', 'date', 'architect_name', 'architect_firm']
-#     search_fields = ['architect_name', 'architect_firm']
-#     list_filter = ['date']
-
-
-# class ServiceAdmin(admin.ModelAdmin):
-#     list_display = ['id', 'name', 'type']
-#     search_fields = ['name']
-#     list_filter = ['type']
-
-
-
-
-
-# class ProposalServiceAdmin(admin.ModelAdmin):
-#     list_display = ['id', 'proposal', 'service', 'type', 'edited_type']
-#     search_fields = ['service__name']
-#     list_filter = ['type', 'edited_type']

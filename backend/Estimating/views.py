@@ -6,10 +6,49 @@ import os
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Estimating,Estimating_detail, Proposal, Qualification,Service,Location
-from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer,SpecificationSerializer,ServiceSerializer,LocationSerializer,EstimatingDetailSerializer,ProposalServiceSerializer
+from .models import Company, Estimating,Estimating_detail, Proposal, Qualification,Service,Location
+from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer,SpecificationSerializer,ServiceSerializer,LocationSerializer,EstimatingDetailSerializer,ProposalServiceSerializer,CompanySerializer
 
 from .forms import EstimatingDetailAdminForm
+
+
+class CompanyListView(APIView):
+
+
+    def get(self, request, format=None):
+        Cmpany = Company.objects.all()
+        serializer = CompanySerializer(Cmpany, many=True)
+        return Response(serializer.data)
+
+
+    def post(self, request, format=None):
+        serializer = CompanySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, id, format=None):
+        try:
+            Cmpany = Company.objects.get(id=id)
+        except Company.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = CompanySerializer(Cmpany, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id, format=None):
+        try:
+            Cmpany = Company.objects.get(id=id)
+        except Company.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        Cmpany.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 
@@ -81,7 +120,7 @@ class Estimating_detailView(APIView):
             # Update cleaned_data with file details
             cleaned_data = form.cleaned_data
             cleaned_data['file_type'] = uploaded_file_extension.lstrip('.')
-            cleaned_data['output_Table_Name'] = uploaded_file_name
+            cleaned_data['file_name'] = uploaded_file_name
             
             # Ensure ForeignKeys are set to IDs
             cleaned_data['Estimating'] = cleaned_data['Estimating'].id if cleaned_data.get('Estimating') else None

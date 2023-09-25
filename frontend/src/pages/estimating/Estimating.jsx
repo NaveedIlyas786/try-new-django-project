@@ -25,7 +25,7 @@ const Estimator = () => {
   const [estimatorName, setEstimatorName] = useState("");
   const [location, setLocation] = useState("");
   const [bidAmount, setBidAmount] = useState("");
-  const [company, setCompany] = useState("DMS"); // Updated to store company name as a string
+  const [company, setCompany] = useState(""); // Updated to store company name as a string
   // const navigate = useNavigate();
   // ***********************************
   const [openRow, setOpenRow] = useState(null);
@@ -58,7 +58,6 @@ const Estimator = () => {
       addendumDate: "",
     },
   ]);
-
 
   const [addendumNumber, setAddendumNumber] = useState("");
   const [addendumDate, setAddendumDate] = useState("");
@@ -123,49 +122,40 @@ const Estimator = () => {
   const [companyName, setCompanyName] = useState([]);
 
   useEffect(() => {
-    // Make the API request using Axios
+    // Fetch data from the API
     axios
-      .get("http://127.0.0.1:8000/api/project/company/")
-      .then((response) => {
-        // Check if the response status is OK (200)
-        if (response.status === 200) {
-          // Parse the response JSON
-          const data = response.data;
-
-          // Assuming the data is an array of objects with a "Cmpny_Name" property
-          const companyNames = data.map((item) => item.Cmpny_Name);
-          console.log(companyNames);
-          setCompanyName(companyNames);
-        } else {
-          throw new Error("Failed to fetch data");
-        }
+      .get("http://127.0.0.1:8000/api/estimating/company/")
+      .then((response) => response.data)
+      .then((data) => {
+        // console.log(data);
+        setCompanyName(data);
       })
       .catch((error) => {
-        console.error(error);
+        console.error("Error fetching data:", error);
       });
   }, []);
 
-  // ****************************Getting Services Entries from Api start
-
-  // const [setServiceData] = useState([]);
-
   // useEffect(() => {
-  //   // Fetch data from the API
+  //   // Make the API request using Axios
   //   axios
-  //     .get("http://127.0.0.1:8000/api/estimating/service/")
-  //     .then((response) => response.data)
-  //     .then((data) => {
-  //       if (data.length > 0) {
-  //         // Extract service names and store them in the state
-  //         const serviceNames = data.map((service) => service.name);
-  //         setServiceData(serviceNames);
-  //         // console.log(serviceNames);
+  //     .get("http://127.0.0.1:8000/api/estimating/company/")
+  //     .then((response) => {
+  //       // Check if the response status is OK (200)
+  //       if (response.status === 200) {
+  //         // Parse the response JSON
+  //         const data = response.data;
+
+  //         // Assuming the data is an array of objects with a "Cmpny_Name" property
+  //         const companyNames = data.map((item) =>
+  //         item.Cmpny_Name,
+  //         console.log(companyNames);
+  //         setCompanyName(companyNames);
   //       } else {
-  //         console.log("No services found.");
+  //         throw new Error("Failed to fetch data");
   //       }
   //     })
   //     .catch((error) => {
-  //       console.error("Error fetching data:", error);
+  //       console.error(error);
   //     });
   // }, []);
 
@@ -232,6 +222,7 @@ const Estimator = () => {
   //************* Define the handleProposalSubmitPosting function
 
   const [selectedEstimatingID, setSelectedEstimatingID] = useState();
+  const [selectedProjectID, setSelectedProjectID] = useState();
   const getCurrentDate = () => {
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -239,6 +230,16 @@ const Estimator = () => {
     const day = String(currentDate.getDate()).padStart(2, "0"); // Add leading zero if needed
     return `${year}-${month}-${day}`;
   };
+  const [ProjectFormData, setProjectFormData] = useState({
+    // date: getCurrentDate(),
+    start_date:"",
+    estimating: selectedProjectID,
+    job_num:"",
+    prjct_mngr:[],
+    prjct_engnr:[],
+    bim_oprtr:[],
+    Forman:[],
+  });
   const [step0FormData, setStep0FormData] = useState({
     date: getCurrentDate(),
     architect_name: "",
@@ -576,188 +577,188 @@ const Estimator = () => {
                   aria-label="Close"
                 ></button>
               </div>
-              <div
-                className="modal-body d-flex justify-content-center align-items-center flex-column gap-4  pb-5  px-5"
-              >
+              <div className="modal-body d-flex justify-content-center align-items-center flex-column gap-4  pb-5  px-5">
                 <div className="bothDiv gap-3">
-               <div className="projName Oneline">
-                <label htmlFor="projectName" className="form-label">
-                Start Date:
-                </label>
-                <input
-                  type="date"
-                  className="form-control"
-                  id="projectName"
-                  value={projectName}
-                  onChange={handleProjectNameChange}
-                />
-              </div>
-               <div className="projName Oneline">
-                <label htmlFor="projectName" className="form-label">
-                  Job No#:
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="projectName"
-                  value={projectName}
-                  onChange={handleProjectNameChange}
-                />
-              </div>
-                
-              </div>
-               <div className="bothDiv gap-3">
-                <div className="Oneline">
-                  <label htmlFor="estimatorName" className="form-label">
-                    Project Manager:
-                  </label>
-                  <select
-                    className="form-select"
-                    id="estimatorName"
-                    value={estimatorName}
-                    onChange={handleEstimatorNameChange}
-                  >
-                    <option value="">Select Estimator Name</option>
-
-                    {EstimatorName && EstimatorName.length > 0 ? (
-                      EstimatorName.map((user) => (
-                        <option value={user.id} key={user.id}>
-                          {user.full_Name}
-                        </option>
-                      ))
-                    ) : (
-                      <option value="" disabled>
-                        Loading...
-                      </option>
-                    )}
-                  </select>
+                  <div className="projName Oneline">
+                    <label htmlFor="projectName" className="form-label">
+                      Start Date:
+                    </label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      id="projectName"
+                      value={projectName}
+                      onChange={handleProjectNameChange}
+                    />
+                  </div>
+                  <div className="projName Oneline">
+                    <label htmlFor="projectName" className="form-label">
+                      Job No#:
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="projectName"
+                      value={projectName}
+                      onChange={handleProjectNameChange}
+                    />
+                  </div>
                 </div>
-                <div className="Oneline">
-                  <label htmlFor="location" className="form-label">
-                    Foreman:
-                  </label>
-                  <select
-                    className="form-select"
-                    id="location"
-                    value={location}
-                    onChange={handleLocationChange}
-                  >
-                    <option value="">Select Location</option>
+                <div className="bothDiv gap-3">
+                  <div className="Oneline">
+                    <label htmlFor="estimatorName" className="form-label">
+                      Project Manager:
+                    </label>
+                    <select
+                      className="form-select"
+                      id="estimatorName"
+                      value={estimatorName}
+                      onChange={handleEstimatorNameChange}
+                    >
+                      <option value="">Select Estimator Name</option>
 
-                    {userLocation && userLocation.length > 0 ? (
-                      userLocation.map((place) => (
-                        <option value={place.id} key={place.id}>
-                          {place.name}
+                      {EstimatorName && EstimatorName.length > 0 ? (
+                        EstimatorName.map((user) => (
+                          <option value={user.id} key={user.id}>
+                            {user.full_Name}
+                          </option>
+                        ))
+                      ) : (
+                        <option value="" disabled>
+                          Loading...
                         </option>
-                      ))
-                    ) : (
-                      <option value="" disabled>
-                        Loading...
-                      </option>
-                    )}
-                  </select>
-                </div>
-              </div>
-              <div className="projName">
-                <label htmlFor="projectName" className="form-label">
-                  Project Name:
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="projectName"
-                  placeholder="AutoPopulate"
-                  value={selectedEstimatingID}
-                  onChange={(e) =>
-                    setStep0FormData({
-                      
-                      estimating: e.target.value,
-                    })
-                  }
-                />
-              </div>
-               <div className="bothDiv gap-3">
-                <div className="Oneline">
-                  <label htmlFor="estimatorName" className="form-label">
-                    Bim Operator:
-                  </label>
-                  <select
-                    className="form-select"
-                    id="estimatorName"
-                    value={estimatorName}
-                    onChange={handleEstimatorNameChange}
-                  >
-                    <option value="">Select Estimator Name</option>
+                      )}
+                    </select>
+                  </div>
+                  <div className="Oneline">
+                    <label htmlFor="location" className="form-label">
+                      Foreman:
+                    </label>
+                    <select
+                      className="form-select"
+                      id="location"
+                      value={location}
+                      onChange={handleLocationChange}
+                    >
+                      <option value="">Select Location</option>
 
-                    {EstimatorName && EstimatorName.length > 0 ? (
-                      EstimatorName.map((user) => (
-                        <option value={user.id} key={user.id}>
-                          {user.full_Name}
+                      {userLocation && userLocation.length > 0 ? (
+                        userLocation.map((place) => (
+                          <option value={place.id} key={place.id}>
+                            {place.name}
+                          </option>
+                        ))
+                      ) : (
+                        <option value="" disabled>
+                          Loading...
                         </option>
-                      ))
-                    ) : (
-                      <option value="" disabled>
-                        Loading...
-                      </option>
-                    )}
-                  </select>
+                      )}
+                    </select>
+                  </div>
                 </div>
-                <div className="Oneline">
-                  <label htmlFor="location" className="form-label">
-                    Project Engineer:
+                <div className="projName">
+                  <label htmlFor="projectName" className="form-label">
+                    Project Name:
                   </label>
-                  <select
-                    className="form-select"
-                    id="location"
-                    value={location}
-                    onChange={handleLocationChange}
-                  >
-                    <option value="">Select Location</option>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="projectName"
+                    placeholder="AutoPopulate not show on frontend"
+                    // value={selectedEstimatingID}
+                    // onChange={(e) =>{
 
-                    {userLocation && userLocation.length > 0 ? (
-                      userLocation.map((place) => (
-                        <option value={place.id} key={place.id}>
-                          {place.name}
-                        </option>
-                      ))
-                    ) : (
-                      <option value="" disabled>
-                        Loading...
-                      </option>
-                    )}
-                  </select>
+                    //   setStep0FormData({
+                    //       estimating: e.target.value,
+                    //     })
+                    // }}
+                    
+                    // onChange={(e)=>{
+
+                    // }}
+                    
+                  />
                 </div>
-              </div>
-               <div className="bothDiv gap-3">
-               
-               <div className="projName Oneline">
-                <label htmlFor="projectName" className="form-label">
-                  Bidder Name:
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="AutoPopulate"
-                  id="projectName"
-                  value={projectName}
-                  onChange={handleProjectNameChange}
-                />
-              </div>
-               <div className="projName Oneline">
-                <label htmlFor="projectName" className="form-label">
-                  Company Name:
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="AutoPopulate"
-                  id="projectName"
-                  value={projectName}
-                  onChange={handleProjectNameChange}
-                />
-              </div>
-                
-              </div>
+                <div className="bothDiv gap-3">
+                  <div className="Oneline">
+                    <label htmlFor="estimatorName" className="form-label">
+                      Bim Operator:
+                    </label>
+                    <select
+                      className="form-select"
+                      id="estimatorName"
+                      value={estimatorName}
+                      onChange={handleEstimatorNameChange}
+                    >
+                      <option value="">Select Estimator Name</option>
+
+                      {EstimatorName && EstimatorName.length > 0 ? (
+                        EstimatorName.map((user) => (
+                          <option value={user.id} key={user.id}>
+                            {user.full_Name}
+                          </option>
+                        ))
+                      ) : (
+                        <option value="" disabled>
+                          Loading...
+                        </option>
+                      )}
+                    </select>
+                  </div>
+                  <div className="Oneline">
+                    <label htmlFor="location" className="form-label">
+                      Project Engineer:
+                    </label>
+                    <select
+                      className="form-select"
+                      id="location"
+                      value={location}
+                      onChange={handleLocationChange}
+                    >
+                      <option value="">Select Location</option>
+
+                      {userLocation && userLocation.length > 0 ? (
+                        userLocation.map((place) => (
+                          <option value={place.id} key={place.id}>
+                            {place.name}
+                          </option>
+                        ))
+                      ) : (
+                        <option value="" disabled>
+                          Loading...
+                        </option>
+                      )}
+                    </select>
+                  </div>
+                </div>
+                <div className="bothDiv gap-3">
+                  <div className="projName Oneline">
+                    <label htmlFor="projectName" className="form-label">
+                      Bidder Name:
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="AutoPopulate not show on frontend"
+                      id="projectName"
+                      value={projectName}
+                      onChange={handleProjectNameChange}
+                    />
+                  </div>
+                  <div className="projName Oneline">
+                    <label htmlFor="projectName" className="form-label">
+                      Company Name:
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="AutoPopulate not show on frontend"
+                      id="projectName"
+                      value={projectName}
+                      onChange={handleProjectNameChange}
+                    />
+                  </div>
+                </div>
               </div>
               <div className="modal-footer">
                 {/* <h5>Footer</h5> */}
@@ -848,7 +849,7 @@ const Estimator = () => {
                         data-bs-target="#staticBackdrop"
                         onClick={() => {
                           console.log(item.Prjct_Name);
-                         
+
                           setSelectedEstimatingID(item.Prjct_Name); // Set the selected estimating ID
                         }}
                       >
@@ -898,11 +899,12 @@ const Estimator = () => {
                     value={company}
                     onChange={handleCompanyNameChange}
                   >
-                    {/* <option value="">Select Company</option> */}
+                    <option value="">Select Company</option>
                     {companyName && companyName.length > 0 ? (
                       companyName.map((companyItem) => (
-                        <option value={companyItem} key={companyItem}>
-                          {companyItem}
+                        <option value={companyItem.id} key={companyItem.id}>
+                          {companyItem.Cmpny_Name}{" "}
+                          {/* Display the company name */}
                         </option>
                       ))
                     ) : (
@@ -1034,7 +1036,7 @@ const Estimator = () => {
           <button className="close-btn" onClick={closeModal}></button>
           <div className="purposal-content px-5">
             {/* ************* Implementation of Multistep-Form using Material UI */}
-            Proposal 
+            Proposal
             <Modal
               open={purposalModal}
               onClose={closeModal}

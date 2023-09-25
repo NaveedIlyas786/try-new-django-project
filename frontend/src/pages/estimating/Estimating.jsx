@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import "./Estimating.css";
-// import {  useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import "font-awesome/css/font-awesome.min.css";
 
 import axios from "axios";
@@ -135,7 +135,6 @@ const Estimator = () => {
       });
   }, []);
 
-
   // ****************************Getting Services Entries from Api End
   const [EstimatorName, setestimatorName] = useState([]);
 
@@ -154,10 +153,79 @@ const Estimator = () => {
       });
   }, []);
 
+  //**************************To Post Project-Form Data To the api start here *********************** */
+const navigate=useNavigate();
+  // Initialize state variables to hold form data
+  const [startDate, setStartDate] = useState("");
+  const [jobNo, setJobNo] = useState("");
+  const [selectedForeman, setSelectedForeman] = useState("");
+  const [selectedProjectEngineer, setSelectedProjectEngineer] = useState("");
+  const [selectedProjectID, setSelectedProjectID] = useState("");
+  const [selectedProjectManager, setSelectedProjectManager] = useState("");
+  const [selectedBimOperator, setSelectedBimOperator] = useState("");
+
+  // Event handlers for form inputs
+  const handleStartDateChange = (e) => setStartDate(e.target.value);
+  const handleJobNoChange = (e) => setJobNo(e.target.value);
+  const handleForemanChange = (e) => setSelectedForeman(e.target.value);
+  const handleBimOperatorChange = (e) => setSelectedBimOperator(e.target.value);
+  const handleProjectEngineerChange = (e) =>
+    setSelectedProjectEngineer(e.target.value);
+  const handleProjectManagerChange = (e) =>
+    setSelectedProjectManager(e.target.value);
+  const handleProjectIDChange = (e) => setSelectedProjectID(e.target.value);
+
+  // Function to handle form submission
+  const [ProjectformModal, setProjectformModal] = useState(true); // Initially set to true to show the modal
+
+  const handleProjectFormSubmit = (e) => {
+    e.preventDefault();
+  
+    const formData = {
+      start_date: startDate,
+      job_num: jobNo,
+      estimating: selectedProjectID,
+      prjct_mngr: selectedProjectManager,
+      Forman: selectedForeman,
+      bim_oprtr: selectedBimOperator,
+      prjct_engnr: selectedProjectEngineer,
+    };
+  
+    console.log("formData to be sent", formData);
+  
+    // Send a POST request using Axios
+    axios
+      .post("http://127.0.0.1:8000/api/project/ProjectList/", formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log("Data successfully submitted", response.data);
+  
+        // Clear the form fields by resetting the state variables
+        setStartDate(""); // Clear the startDate
+        setJobNo(""); // Clear the jobNo
+        setSelectedProjectID(""); // Clear the selectedProjectID
+        setSelectedProjectManager(""); // Clear the selectedProjectManager
+        setSelectedForeman(""); // Clear the selectedForeman
+        setSelectedBimOperator(""); // Clear the selectedBimOperator
+        setSelectedProjectEngineer(""); // Clear the selectedProjectEngineer
+
+        setTimeout(() => {
+          navigate('/homepage/projects')
+        }, 1000);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // Handle errors here
+      });
+  };
+  
+
   // ************************projectManager Role Seleted **********
 
   const [projectManager, setProjectManager] = useState([]);
-  const [selectedProjectManager, setSelectedProjectManager] = useState(""); // To store the selected Project Manager
 
   useEffect(() => {
     // Fetch data from the API
@@ -176,13 +244,8 @@ const Estimator = () => {
       });
   }, []);
 
-  const handleProjectManagerChange = (e) => {
-    setSelectedProjectManager(e.target.value); // Store the selected Project Manager ID
-  };
-
   // ************************Forman Role Seleted **********
   const [formanName, setFormanName] = useState([]);
-  const [selectedForman, setSelectedForman] = useState(""); // To store the selected Forman
 
   useEffect(() => {
     // Fetch data from the API
@@ -199,15 +262,9 @@ const Estimator = () => {
       });
   }, []);
 
-  const handleFormanNameChange = (e) => {
-    setSelectedForman(e.target.value); // Store the selected Forman ID
-  };
-
   // ************************BimOperator Role Seleted **********
 
   const [BimOperator, setBimOperator] = useState([]);
-  const [selectedBimOperator, setSelectedBimOperator] = useState(""); // To store the selected Bim Operator
-
   useEffect(() => {
     // Fetch data from the API
     axios
@@ -224,13 +281,9 @@ const Estimator = () => {
       });
   }, []);
 
-  const handleBimOperatorNameChange = (e) => {
-    setSelectedBimOperator(e.target.value); // Store the selected Bim Operator ID
-  };
   // ************************Project Engineer Role Seleted **********
 
   const [ProjEnger, setProjEnger] = useState([]);
-  const [selectedProjEnger, setSelectedProjEnger] = useState(""); // To store the selected Bim Operator
 
   useEffect(() => {
     // Fetch data from the API
@@ -248,17 +301,11 @@ const Estimator = () => {
       });
   }, []);
 
-  const handleProjEngerNameChange = (e) => {
-    setSelectedProjEnger(e.target.value); // Store the selected Bim Operator ID
-  };
-
-
-
   //************ To show bidder Names in dropdown in estimating post field
   const [bidderName, setbidderName] = useState("");
   const [bidder_detail, setBidder_detail] = useState("");
 
-  //************* Define the handleSubmit function
+  //************* Define the handleSubmit function below
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
 
@@ -290,7 +337,10 @@ const Estimator = () => {
         setbidderName("");
         setBidder_detail("");
         // Close the modal
-        closeModal();
+        setTimeout(() => {
+          setShowModal(false)
+        }, 1000);
+        // closeModal();
       })
       .catch((error) => {
         // Handle any errors that occurred during the POST request
@@ -299,10 +349,10 @@ const Estimator = () => {
         console.log("Response data:", error.response.data);
       });
   };
+
   //************* Define the handleProposalSubmitPosting function
 
   const [selectedEstimatingID, setSelectedEstimatingID] = useState();
-  const [selectedProjectID, setSelectedProjectID] = useState();
   const getCurrentDate = () => {
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -310,16 +360,7 @@ const Estimator = () => {
     const day = String(currentDate.getDate()).padStart(2, "0"); // Add leading zero if needed
     return `${year}-${month}-${day}`;
   };
-  const [ProjectFormData, setProjectFormData] = useState({
-    // date: getCurrentDate(),
-    start_date: "",
-    estimating: selectedProjectID,
-    job_num: "",
-    prjct_mngr: [],
-    prjct_engnr: [],
-    bim_oprtr: [],
-    Forman: [],
-  });
+
   const [step0FormData, setStep0FormData] = useState({
     date: getCurrentDate(),
     architect_name: "",
@@ -638,6 +679,7 @@ const Estimator = () => {
     <>
       <div className={`estimator  px-5 ${showModal ? "modal-active" : ""}`}>
         <h3>Estimating Summary</h3>
+        {/* {ProjectformModal && ( */}
         <div
           className="modal fade modalContainer"
           id="staticBackdrop"
@@ -660,186 +702,153 @@ const Estimator = () => {
                   aria-label="Close"
                 ></button>
               </div>
-              <div className="modal-body d-flex justify-content-center align-items-center flex-column gap-5  pb-5  px-5">
-                <div className="bothDiv gap-3">
-                  <div className="projName Oneline">
+              {/* <form className="myform" onSubmit={handleProjectFormSubmit}> */}
+              
+                <div className="modal-body d-flex justify-content-center align-items-center flex-column gap-5 pb-5 px-5">
+                  {/* <div className="projName">
                     <label htmlFor="projectName" className="form-label">
-                      Start Date:
-                    </label>
-                    <input
-                      type="date"
-                      className="form-control"
-                      id="projectName"
-                      value={projectName}
-                      onChange={handleProjectNameChange}
-                    />
-                  </div>
-                  <div className="projName Oneline">
-                    <label htmlFor="projectName" className="form-label">
-                      Job No#:
+                      Project Name:
                     </label>
                     <input
                       type="text"
                       className="form-control"
                       id="projectName"
-                      value={projectName}
-                      onChange={handleProjectNameChange}
+                      placeholder="AutoPopulate not shown on frontend"
+                      value={selectedProjectID}
+                      onChange={handleProjectIDChange}
                     />
+                  </div> */}
+                  <div className="bothDiv gap-3">
+                    <div className="projName Oneline">
+                      <label htmlFor="projectName" className="form-label">
+                        Start Date:
+                      </label>
+                      <input
+                        type="date"
+                        className="form-control"
+                        id="DateId"
+                        value={startDate}
+                        onChange={handleStartDateChange}
+                      />
+                    </div>
+                    <div className="projName Oneline">
+                      <label htmlFor="projectName" className="form-label">
+                        Job No#:
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="projectID"
+                        value={jobNo}
+                        onChange={handleJobNoChange}
+                      />
+                    </div>
+                  </div>
+                  <div className="bothDiv gap-3">
+                    <div className="Oneline">
+                      <label htmlFor="estimatorName" className="form-label">
+                        Project Manager:
+                      </label>
+                      <select
+                        className="form-select"
+                        id="projectManagerID"
+                        value={selectedProjectManager}
+                        onChange={handleProjectManagerChange}
+                      >
+                        <option value="">Select Project Manager</option>
+                        {projectManager && projectManager.length > 0 ? (
+                          projectManager.map((user) => (
+                            <option value={user.id} key={user.id}>
+                              {user.full_Name}
+                            </option>
+                          ))
+                        ) : (
+                          <option value="" disabled>
+                            Loading...
+                          </option>
+                        )}
+                      </select>
+                    </div>
+                    <div className="Oneline">
+                      <label htmlFor="location" className="form-label">
+                        Foreman:
+                      </label>
+                      <select
+                        className="form-select"
+                        id="estimatorNameID"
+                        value={selectedForeman}
+                        onChange={handleForemanChange}
+                      >
+                        <option value="">Select Forman</option>
+                        {formanName.length > 0 ? (
+                          formanName.map((user) => (
+                            <option value={user.id} key={user.id}>
+                              {user.full_Name}
+                            </option>
+                          ))
+                        ) : (
+                          <option value="" disabled>
+                            Loading...
+                          </option>
+                        )}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="bothDiv gap-3">
+                    <div className="Oneline">
+                      <label htmlFor="estimatorName" className="form-label">
+                        Bim Operator:
+                      </label>
+                      <select
+                        className="form-select"
+                        id="bimOperatorID"
+                        value={selectedBimOperator} // Use the selectedBimOperator value
+                        onChange={handleBimOperatorChange}
+                      >
+                        <option value="">Select Bim Operator</option>
+                        {BimOperator && BimOperator.length > 0 ? (
+                          BimOperator.map((user) => (
+                            <option value={user.id} key={user.id}>
+                              {user.full_Name}
+                            </option>
+                          ))
+                        ) : (
+                          <option value="" disabled>
+                            Loading...
+                          </option>
+                        )}
+                      </select>
+                    </div>
+                    <div className="Oneline">
+                      <label htmlFor="location" className="form-label">
+                        Project Engineer:
+                      </label>
+                      <select
+                        className="form-select"
+                        id="ProjectEngineerID"
+                        value={selectedProjectEngineer}
+                        onChange={handleProjectEngineerChange}
+                      >
+                        <option value="">Select Location</option>
+
+                        {ProjEnger && ProjEnger.length > 0 ? (
+                          ProjEnger.map((user) => (
+                            <option value={user.id} key={user.id}>
+                              {user.full_Name}
+                            </option>
+                          ))
+                        ) : (
+                          <option value="" disabled>
+                            Loading...
+                          </option>
+                        )}
+                      </select>
+                    </div>
                   </div>
                 </div>
-                <div className="bothDiv gap-3">
-                  <div className="Oneline">
-                    <label htmlFor="estimatorName" className="form-label">
-                      Project Manager:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="projectManagerName"
-                      value={selectedProjectManager} // Use the selectedProjectManager value
-                      onChange={handleProjectManagerChange}
-                    >
-                      <option value="">Select Project Manager</option>
-                      {projectManager && projectManager.length > 0 ? (
-                        projectManager.map((user) => (
-                          <option value={user.id} key={user.id}>
-                            {user.full_Name}
-                          </option>
-                        ))
-                      ) : (
-                        <option value="" disabled>
-                          Loading...
-                        </option>
-                      )}
-                    </select>
-                  </div>
-                  <div className="Oneline">
-                    <label htmlFor="location" className="form-label">
-                      Foreman:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="estimatorName"
-                      value={selectedForman} // Use the selectedForman value
-                      onChange={handleFormanNameChange}
-                    >
-                      <option value="">Select Forman</option>
-                      {formanName.length > 0 ? (
-                        formanName.map((user) => (
-                          <option value={user.id} key={user.id}>
-                            {user.full_Name}
-                          </option>
-                        ))
-                      ) : (
-                        <option value="" disabled>
-                          Loading...
-                        </option>
-                      )}
-                    </select>
-                  </div>
-                </div>
-                {/* <div className="projName">
-                  <label htmlFor="projectName" className="form-label">
-                    Project Name:
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="projectName"
-                    placeholder="AutoPopulate not show on frontend"
-                    value={selectedProjectID}
-                    onChange={(e) =>{
-
-                      setStep0FormData({
-                          estimating: e.target.value,
-                        })
-                    }}
-                    
-                    // onChange={(e)=>{
-
-                    // }}
-                    
-                  />
-                </div> */}
-                <div className="bothDiv gap-3">
-                  <div className="Oneline">
-                    <label htmlFor="estimatorName" className="form-label">
-                      Bim Operator:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="bimOperatorName"
-                      value={selectedBimOperator} // Use the selectedBimOperator value
-                      onChange={handleBimOperatorNameChange}
-                    >
-                      <option value="">Select Bim Operator</option>
-                      {BimOperator && BimOperator.length > 0 ? (
-                        BimOperator.map((user) => (
-                          <option value={user.id} key={user.id}>
-                            {user.full_Name}
-                          </option>
-                        ))
-                      ) : (
-                        <option value="" disabled>
-                          Loading...
-                        </option>
-                      )}
-                    </select>
-                  </div>
-                  <div className="Oneline">
-                    <label htmlFor="location" className="form-label">
-                      Project Engineer:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="location"
-                      value={selectedProjEnger}
-                      onChange={handleProjEngerNameChange}
-                    >
-                      <option value="">Select Location</option>
-
-                      {ProjEnger && ProjEnger.length > 0 ? (
-                        ProjEnger.map((user) => (
-                          <option value={user.id} key={user.id}>
-                            {user.full_Name}
-                          </option>
-                        ))
-                      ) : (
-                        <option value="" disabled>
-                          Loading...
-                        </option>
-                      )}
-                    </select>
-                  </div>
-                </div>
-                {/* <div className="bothDiv gap-3">
-                  <div className="projName Oneline">
-                    <label htmlFor="projectName" className="form-label">
-                      Bidder Name:
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="AutoPopulate not show on frontend"
-                      id="projectName"
-                      value={projectName}
-                      onChange={handleProjectNameChange}
-                    />
-                  </div>
-                  <div className="projName Oneline">
-                    <label htmlFor="projectName" className="form-label">
-                      Company Name:
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="AutoPopulate not show on frontend"
-                      id="projectName"
-                      value={projectName}
-                      onChange={handleProjectNameChange}
-                    />
-                  </div>
-                </div> */}
-              </div>
+                
+              {/* </form> */}
               <div className="modal-footer">
                 {/* <h5>Footer</h5> */}
                 <button
@@ -849,13 +858,14 @@ const Estimator = () => {
                 >
                   Close
                 </button>
-                <button type="button" className="btn btn-primary">
+                <button type="button" onClick={handleProjectFormSubmit} className="btn btn-primary">
                   Submit
                 </button>
               </div>
             </div>
           </div>
         </div>
+        {/* )} */}
 
         <div className="inputbtn d-flex gap-2 px-5">
           <input
@@ -930,9 +940,9 @@ const Estimator = () => {
                         data-bs-toggle="modal"
                         data-bs-target="#staticBackdrop"
                         onClick={() => {
-                          console.log(item.Prjct_Name);
+                          console.log(item.id);
 
-                          setSelectedProjectID(item.Prjct_Name); // Set the selected estimating ID
+                          setSelectedProjectID(item.id); // Set the selected estimating ID
                         }}
                       >
                         Projects

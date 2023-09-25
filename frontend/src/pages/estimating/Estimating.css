@@ -539,11 +539,11 @@ td {
   max-height: 120px !important;
 }
 
-td:nth-child(2), td:nth-child(6){
+/* td:nth-child(2), td:nth-child(6){
   overflow: hidden;
   white-space:nowrap;
   text-overflow: ellipsis;
-}
+} */
 td:nth-child(2), td:nth-child(6),td:nth-child(8){
   padding: 0 10px !important;
 }
@@ -559,10 +559,16 @@ td:nth-child(2), td:nth-child(6),td:nth-child(8){
   min-width: 70vw !important;
   /* min-height: 85vh !important; */
 }
-.modal-body{
+/* .modal-body{
   padding-top: 50px !important;
   max-height: 65vh !important;
   overflow-y: scroll;
+} */
+.myform{
+  padding-top: 50px !important;
+  max-height: 65vh !important;
+  overflow-y: scroll;
+  /* margin-top: 150px !important; */
 }
 .projName{
   width: 96%;

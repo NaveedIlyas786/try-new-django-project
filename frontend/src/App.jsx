@@ -20,6 +20,7 @@ import HrPayRoll from "./pages/hrPayRoll/HrPayRoll"
 import BIM from "./pages/bim/BIM";
 import PostEstimating from "./pages/estimating/PostEstimating";
 import Purposal from "./pages/purposal/Purposal";
+import ProjectDirectory from "./pages/projects-Screen/ProjectDirectory";
 
 function App() {
 
@@ -33,6 +34,7 @@ function App() {
         <Route path="/homepage/" element={<HomePage />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="projects" element={<Projects />} />
+          <Route path="projects/:id" element={<ProjectDirectory />} />
           <Route path="purposal" element={<Purposal />} />
           <Route path="bim" element={<BIM/>} />
           <Route path="estimating" element={<Estimating/>} />

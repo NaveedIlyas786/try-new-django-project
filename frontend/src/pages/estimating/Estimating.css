@@ -199,12 +199,13 @@ input:focus {
   position: relative;
 }
 .mydiv.open {
-  opacity: 1;
+  /* opacity: 1; */
   display: flex;
   justify-content: center !important;
   align-items: center;
   flex-direction: column;
   background-color: #ffffff;
+  opacity: 0;
   border: 0.4px solid rgb(214, 212, 212);
   width: 80px !important;
   position: absolute;

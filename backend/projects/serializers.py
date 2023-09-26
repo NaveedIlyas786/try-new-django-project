@@ -4,7 +4,6 @@ from .models import Project, Project_detail
 
 
 
-
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
@@ -34,8 +33,20 @@ class ProjectSerializer(serializers.ModelSerializer):
         return representation
         
 
+
+
+
+
+class RecursiveProjectDetailSerializer(serializers.Serializer):
+    """Serializer for recursive Estimating_detail children."""
+    def to_representation(self, value):
+        serializer = ProjectDetailSerializer(value, context=self.context)
+        return serializer.data
+
 class ProjectDetailSerializer(serializers.ModelSerializer):
+    children = RecursiveProjectDetailSerializer(many=True, read_only=True)
+
     class Meta:
         model = Project_detail
-        fields = ['id','drctry_Name','prjct_ID','prnt_ID','file_type','file_name']
-  
+        fields = ['id', 'drctry_Name', 'prjct_id', 'prnt_id', 'file_type', 'file_name', 'children']
+

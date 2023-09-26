@@ -15,7 +15,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 class ProjectDetailAdmin(admin.ModelAdmin):
-    list_display = ('id','prnt_ID','drctry_Name','file_type','file_name','prjct_ID')
+    list_display = ('id','prnt_id','drctry_Name','file_type','file_name','prjct_id')
 
 
 

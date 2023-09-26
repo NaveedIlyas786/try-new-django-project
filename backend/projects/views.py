@@ -1,5 +1,7 @@
 # views.py
 from rest_framework import generics
+from rest_framework import viewsets
+
 from .models import Project, Project_detail
 from .serializers import ProjectSerializer, ProjectDetailSerializer
 from rest_framework.response import Response
@@ -23,6 +25,12 @@ class ProjectListCreateView(APIView):
     
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ProjectDetailListCreateView(generics.ListCreateAPIView):
-    queryset = Project_detail.objects.all()
-    serializer_class = ProjectDetailSerializer
+class ProjectDetailListCreateView(APIView):
+    def get(self,request):
+        top_level_details = Project_detail.objects.filter(prnt_id__isnull=True)
+        serializer = ProjectDetailSerializer(top_level_details, many=True)
+        return Response(serializer.data)
+    
+# class ProjectDetailListCreateView(viewsets.ReadOnlyModelViewSet):
+#     queryset = Project_detail.objects.filter(prnt_id__isnull=True)  # This fetches top-level directories
+#     serializer_class = ProjectDetailSerializer

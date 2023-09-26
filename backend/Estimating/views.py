@@ -104,10 +104,13 @@ class EstimatingListView(APIView):
 
 
 class Estimating_detailView(APIView):
+
+    
     def get(self,request):
         top_level_details = Estimating_detail.objects.filter(prnt_id__isnull=True)
         serializer = EstimatingDetailSerializer(top_level_details, many=True)
         return Response(serializer.data)
+
 
     def post(self, request, *args, **kwargs):
         form = EstimatingDetailAdminForm(request.POST, request.FILES)

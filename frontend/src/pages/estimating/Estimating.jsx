@@ -153,6 +153,9 @@ const Estimator = () => {
       });
   }, []);
 
+
+
+
   //**************************To Post Project-Form Data To the api start here *********************** */
   const navigate = useNavigate();
   // Initialize state variables to hold form data
@@ -185,6 +188,8 @@ const Estimator = () => {
   const closeDiv = () => {
     setIsDivOpen(false);
   };
+  
+
   const handleProjectFormSubmit = (e) => {
     e.preventDefault();
 
@@ -221,7 +226,8 @@ const Estimator = () => {
 
         setTimeout(() => {
           navigate("/homepage/projects");
-        }, 1000);
+          window.location.reload();
+        }, 1);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -759,7 +765,7 @@ const Estimator = () => {
                   </div>
                   <div className="projName Oneline">
                     <label htmlFor="projectName" className="form-label">
-                      Job No#:
+                      Job Number:
                     </label>
                     <input
                       type="text"
@@ -1109,7 +1115,7 @@ const Estimator = () => {
               <div className="bothDiv">
                 <div className="Oneline">
                   <label htmlFor="bidAmount" className="form-label">
-                    Bid-Amount:
+                    Bid Amount:
                   </label>
                   <input
                     type="number"

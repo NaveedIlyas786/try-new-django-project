@@ -84,7 +84,7 @@ const Projects = () => {
                 key={item.id}
                 className="mytr"
                 onClick={() => navigateToLink(item.id)}
-                value={item.id}
+                value={item.Prjct_Name}
               >
                 <td className="mytd">{item.start_date}</td>
                 <td className="mytd">{item.estimating}</td>

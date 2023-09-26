@@ -51,7 +51,18 @@ class Project(models.Model):
             # Top Level Entries
 
 
-
+            for estimating_detail in Estimating_detail.objects.all():
+                estimating_parent = estimating_detail.prnt
+                parent_directory = estimating_to_project.get(estimating_parent) if estimating_parent else None
+                directory = Project_detail.objects.create(
+                    prjct_id=self,
+                    drctry_Name=estimating_detail.drctry_name,
+                    prnt_id=parent_directory,
+                    file_type=estimating_detail.file_type,
+                    file_name=estimating_detail.file_name,
+                    file_binary_data=estimating_detail.file_binary_data
+                )
+                estimating_to_project[estimating_detail] = directory
 
 
             for name in ['Accounting', 'Certified Payroll', 'Change Orders','Insurance', 'Contract', 'Estimating', 'PM', 'Safety', 'Subcontractors']:
@@ -271,18 +282,7 @@ class Project(models.Model):
                 create_directory(item['name'], item['parent'])
 
 
-            for estimating_detail in Estimating_detail:
-                estimating_parent = estimating_detail.prnt
-                parent_directory = estimating_to_project.get(estimating_parent) if estimating_parent else None
-                directory = Project_detail.objects.create(
-                    prjct_id=self,
-                    drctry_Name=estimating_detail.drctry_name,
-                    prnt_id=parent_directory,
-                    file_type=estimating_detail.file_type,
-                    file_name=estimating_detail.file_name,
-                    file_binary_data=estimating_detail.file_binary_data
-                )
-                estimating_to_project[estimating_detail] = directory
+
 
 
 

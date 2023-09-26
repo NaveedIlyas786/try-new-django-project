@@ -24,7 +24,7 @@
 ul {
   display: flex;
   flex-direction: column;
-  gap: 15px !important;
+  gap: 10px !important;
   padding: 0 10px;
   /* background-color: #c74040; */
 }
@@ -39,16 +39,18 @@ ul {
 }
 
 .sublist {
-  padding: 5px !important;
+  padding: 0 5px !important;
   text-decoration: none;
   list-style-type: none;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.1s ease-in;
+  margin-top: 5px !important;
+
 }
 .mylist:hover {
-  padding: 5px 0 0 0  !important;
+  /* padding: 5px 0 0 0  !important; */
   background-color: rgb(121, 121, 255);
     color: white;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.1s ease-out;
   cursor: pointer;
   border-radius: 2px;
 }
@@ -65,9 +67,7 @@ ul {
   background-color: white;
   color: black;
 }
-.sublist{
-  margin-top: 10px !important;
-}
+
 .sublist:hover{
   background-color: rgb(177, 175, 175);
   color: black;

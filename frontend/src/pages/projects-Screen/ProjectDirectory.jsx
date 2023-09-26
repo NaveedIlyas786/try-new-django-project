@@ -26,21 +26,17 @@ const ProjectDirectory = () => {
       name: "Estimating",
       children: ["Addendums", "Bid", "Plans","Pre Bid RFIs","Quotes","Specs"],
     },
+    
     {
       id: 6,
-      name: "Addendums",
-      children: ["Addendum 1", "Addendum 2", "Addendum 3"],
-    },
-    {
-      id: 7,
       name: "Insurance",
     },
     {
-      id: 8,
+      id: 7,
       name: "PM",
     },
     {
-      id: 9,
+      id: 8,
       name: "Safety",
     },
   ];
@@ -60,7 +56,7 @@ const ProjectDirectory = () => {
             <ul>
         {AllFolders.map((folder) => (
           <li className="mylist" key={folder.id}>
-            <span className="spanParent" onClick={() => handleFolderClick(folder.id)}>{folder.name}<i class="fa-light fa  fa-angle-down"></i></span>
+            <span className="spanParent" onClick={() => handleFolderClick(folder.id)}>{folder.name}<i className="fa-light fa  fa-angle-down"></i></span>
             {folder.id === openFolderId && folder.children && (
               <ul className="mt-2 subSection">
                 {folder.children.map((child, index) => (

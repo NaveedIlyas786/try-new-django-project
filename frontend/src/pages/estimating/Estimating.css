@@ -221,6 +221,9 @@ input:focus {
 .mydiv:hover{
   opacity: 1;
 }
+.modal-title{
+  color: black;
+}
 .dropbtns {
   width: 100% !important;
   padding: 0 !important;
@@ -571,7 +574,7 @@ td:nth-child(2), td:nth-child(6),td:nth-child(8){
   min-height: 100vh !important;
 }
 .modal-dialog{
-  min-width: 70vw !important;
+  min-width: 60vw !important;
   /* min-height: 85vh !important; */
 }
 /* .modal-body{

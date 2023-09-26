@@ -31,11 +31,12 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forgotScreen" element={<Forgot />} />
+          {/* <Route path="/purposal" element={<Purposal />} /> */}
         <Route path="/homepage/" element={<HomePage />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="projects" element={<Projects />} />
-          <Route path="projects/:id" element={<ProjectDirectory />} />
           <Route path="purposal" element={<Purposal />} />
+          <Route path="projects/:id" element={<ProjectDirectory />} />
           <Route path="bim" element={<BIM/>} />
           <Route path="estimating" element={<Estimating/>} />
           <Route path="reports" element={<Reports/>} />

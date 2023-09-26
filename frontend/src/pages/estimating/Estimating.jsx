@@ -705,7 +705,10 @@ const Estimator = () => {
     if (amount === null) return ""; // Return an empty string if the amount is null
     return amount.toLocaleString("en-US");
   };
+  const viewpdf = () => {
+    navigate("/homepage/purposal");
 
+  }
   return (
     <>
       <div className={`estimator  px-5 ${showModal ? "modal-active" : ""}`}>
@@ -988,7 +991,7 @@ const Estimator = () => {
                         >
                           Projects
                         </button>
-                        {/* <button className="btn dropbtns">Status</button> */}
+                        <button className="btn dropbtns" onClick={viewpdf}>View Propsal</button>
                       </div>
                     </div>
                   </td>
@@ -1220,7 +1223,7 @@ const Estimator = () => {
                         </div>
                         <div className="mb-2 mt-3">
                           <label htmlFor="ProjectID" className="form-label">
-                            Estimating ID:
+                            Estimating Name:
                           </label>
                           <input
                             type="text"

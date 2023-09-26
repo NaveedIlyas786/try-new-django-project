@@ -71,7 +71,7 @@ const EstimatingDirectory = () => {
     <li className="sublist" key={child.name}>
       {child.name}
       {child.children && (
-        <ul className="mt-2">
+        <ul className="mt-4">
           {child.children.map(renderChild)}
         </ul>
       )}
@@ -79,32 +79,39 @@ const EstimatingDirectory = () => {
   );
 
   return (
-    <div className="EstimatingDirectoryParent">
-      <aside className="aside">
-        <div className="asideData">
-          <h6 className="Projtitle">CCC Applied Technology Bldg</h6>
-          <div className="folders mt-4">
+    <div>
+      <div className="projectDirectoryParent">
+        <aside className="aside">
+          <div className="asideData ">
+            <h6 className="Projtitle">CCC Applied Technology Bldg</h6>
+            <div className="folders mt-4">
             <ul>
-              {AllFolders.map((folder) => (
-                <li className="mylist" key={folder.id}>
-                  <span className="spanParent" onClick={() => handleFolderClick(folder.id)}>
-                    {folder.name}
-                    <i className="fa-light fa ms-2 fa-angle-down"></i>
-                  </span>
-                  {folder.id === openFolderId && folder.children && (
-                    <ul className="mt-2">
-                      {folder.children.map(renderChild)}
-                    </ul>
-                  )}
-                </li>
-              ))}
-            </ul>
+        {AllFolders.map((folder) => (
+          <li className="mylist" key={folder.id}>
+
+            <span className="spanParent" onClick={() => handleFolderClick(folder.id)}>{folder.name}<i className="fa-light fa  fa-angle-down"></i></span>
+            {folder.id === openFolderId && folder.children && (
+              <ul className="mt-2 subSection">
+                {folder.children.map((child, index) => (
+                  <li className="sublist" key={index}>{child}</li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+            </div>
           </div>
-        </div>
-      </aside>
-      <main className="main">
-        <img className="mainimg" src="../../../src/assets/logo1.avif" alt="Logo" />
-      </main>
+        </aside>
+        <main className="main">
+          
+          <img
+            className="mainimg"
+            src="../../../src/assets/logo1.avif"
+            alt=""
+          />
+        </main>
+      </div>
     </div>
   );
 };

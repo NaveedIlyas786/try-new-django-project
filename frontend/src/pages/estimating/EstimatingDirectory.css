@@ -4,7 +4,7 @@
     align-items: flex-start; /* Align items at the start (top) of the flex container */
   }
   
-  .aside {
+.aside {
     flex: 0 0 280px; /* Fixed width of 200px */
     padding: 20px;
     box-sizing: border-box; /* Include padding in the width */
@@ -32,25 +32,45 @@
     /* background-color: aqua; */
   }
   .mylist {
-    padding: 5px 20px !important;
+    /* padding: 5px 20px !important; */
     text-decoration: none;
     list-style-type: none;
     transition: all 0.3s ease-in-out;
   }
+  
   .sublist {
-    /* padding: 5px  !important; */
+    padding: 5px !important;
     text-decoration: none;
     list-style-type: none;
     transition: all 0.3s ease-in-out;
   }
   .mylist:hover {
-    /* background-color: rgb(121, 121, 255);
-      color: white; */
+    padding: 5px 0 0 0  !important;
+    background-color: rgb(121, 121, 255);
+      color: white;
     transition: all 0.3s ease-in-out;
     cursor: pointer;
+    border-radius: 2px;
   }
   .spanParent{
     font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+  }
+  
+  .subSection{
+    width: 100%;
+    background-color: white;
+    color: black;
+  }
+  .sublist{
+    margin-top: 10px !important;
+  }
+  .sublist:hover{
+    background-color: rgb(177, 175, 175);
+    color: black;
   }
   .Projtitle {
     font-weight: bold;
@@ -78,3 +98,4 @@
   h3 {
     color: #fff;
   }
+  

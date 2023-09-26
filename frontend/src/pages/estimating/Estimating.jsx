@@ -224,10 +224,9 @@ const Estimator = () => {
         setSelectedBimOperator(""); // Clear the selectedBimOperator
         setSelectedProjectEngineer(""); // Clear the selectedProjectEngineer
 
-        setTimeout(() => {
-          navigate("/homepage/projects");
-          window.location.reload();
-        }, 1);
+        navigate("/homepage/projects");
+        window.location.reload();
+        
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -865,7 +864,7 @@ const Estimator = () => {
                       value={selectedProjectEngineer}
                       onChange={handleProjectEngineerChange}
                     >
-                      <option value="">Select Location</option>
+                      <option value="">Select Project Engineer</option>
 
                       {ProjEnger && ProjEnger.length > 0 ? (
                         ProjEnger.map((user) => (
@@ -964,6 +963,7 @@ const Estimator = () => {
                         className={`mydiv ${
                           openRow === item.id ? "open" : " "
                         }`}
+                        // className="mydiv"
                       >
                         <button
                           className="btn dropbtns"
@@ -993,7 +993,7 @@ const Estimator = () => {
                         >
                           Projects
                         </button>
-                        <button className="btn dropbtns">Status</button>
+                        {/* <button className="btn dropbtns">Status</button> */}
                       </div>
                     </div>
                   </td>

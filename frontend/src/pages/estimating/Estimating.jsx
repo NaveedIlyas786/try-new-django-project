@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import "./Estimating.css";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "font-awesome/css/font-awesome.min.css";
 
 import axios from "axios";
@@ -51,7 +51,7 @@ const Estimator = () => {
     console.log(activeStep);
   };
 
-  //*********************Multistep Purposal-form Addendum Section***********************/
+  //********************Multistep Purposal-form Addendum Section**********************/
   const [entries, setEntries] = useState([
     {
       addendumNumber: "",
@@ -154,7 +154,7 @@ const Estimator = () => {
   }, []);
 
   //**************************To Post Project-Form Data To the api start here *********************** */
-const navigate=useNavigate();
+  const navigate = useNavigate();
   // Initialize state variables to hold form data
   const [startDate, setStartDate] = useState("");
   const [jobNo, setJobNo] = useState("");
@@ -176,11 +176,18 @@ const navigate=useNavigate();
   const handleProjectIDChange = (e) => setSelectedProjectID(e.target.value);
 
   // Function to handle form submission
-  const [ProjectformModal, setProjectformModal] = useState(true); // Initially set to true to show the modal
+  const [isDivOpen, setIsDivOpen] = useState(false); // State variable to track div visibility
 
+  const openDiv = () => {
+    setIsDivOpen(true);
+  };
+
+  const closeDiv = () => {
+    setIsDivOpen(false);
+  };
   const handleProjectFormSubmit = (e) => {
     e.preventDefault();
-  
+
     const formData = {
       start_date: startDate,
       job_num: jobNo,
@@ -190,9 +197,9 @@ const navigate=useNavigate();
       bim_oprtr: selectedBimOperator,
       prjct_engnr: selectedProjectEngineer,
     };
-  
+
     console.log("formData to be sent", formData);
-  
+
     // Send a POST request using Axios
     axios
       .post("http://127.0.0.1:8000/api/project/ProjectList/", formData, {
@@ -202,7 +209,7 @@ const navigate=useNavigate();
       })
       .then((response) => {
         console.log("Data successfully submitted", response.data);
-  
+
         // Clear the form fields by resetting the state variables
         setStartDate(""); // Clear the startDate
         setJobNo(""); // Clear the jobNo
@@ -213,7 +220,7 @@ const navigate=useNavigate();
         setSelectedProjectEngineer(""); // Clear the selectedProjectEngineer
 
         setTimeout(() => {
-          navigate('/homepage/projects')
+          navigate("/homepage/projects");
         }, 1000);
       })
       .catch((error) => {
@@ -221,7 +228,6 @@ const navigate=useNavigate();
         // Handle errors here
       });
   };
-  
 
   // ************************projectManager Role Seleted **********
 
@@ -338,7 +344,7 @@ const navigate=useNavigate();
         setBidder_detail("");
         // Close the modal
         setTimeout(() => {
-          setShowModal(false)
+          setShowModal(false);
         }, 1000);
         // closeModal();
       })
@@ -458,7 +464,13 @@ const navigate=useNavigate();
     // Update the services state with the modified array
     setServices(updatedServices);
   };
-
+  // Define a function to handle modal close
+  const closeModal = () => {
+    setShowModal(false);
+    setPurposalModal(false);
+    // Remove the 'modal-active' class when the modal is closed
+    document.body.classList.remove("modal-active");
+  };
   const handleProposalSubmitPosting = async (e) => {
     e.preventDefault();
 
@@ -514,6 +526,27 @@ const navigate=useNavigate();
       if (response.ok) {
         const responseData = await response.json();
         console.log("Response data:", responseData);
+        // Clear form fields after successful submission
+        setStep0FormData({
+          date: getCurrentDate(),
+          estimating: "",
+          architect_name: "",
+          architect_firm: "",
+        });
+
+        setStep1FormData({
+          Addendums: [],
+        });
+
+        setStep2FormData({
+          specific_name: "",
+          budget: "",
+          sefic: [],
+        });
+
+        setTimeout(() => {
+          closeModal();
+        }, 1000);
       } else {
         console.error("Error submitting proposal data");
         const errorResponse = await response.text(); // Read the response as text
@@ -546,14 +579,6 @@ const navigate=useNavigate();
     );
   });
 
-  // Define a function to handle modal close
-  const closeModal = () => {
-    setShowModal(false);
-    setPurposalModal(false);
-    // Remove the 'modal-active' class when the modal is closed
-    document.body.classList.remove("modal-active");
-  };
-
   const handleDueDateChange = (e) => {
     // Get the selected date from the input field
     const selectedDate = e.target.value;
@@ -575,6 +600,7 @@ const navigate=useNavigate();
     }
   };
 
+  // };
   const handleProjectNameChange = (e) => {
     setProjectName(e.target.value);
   };
@@ -703,9 +729,9 @@ const navigate=useNavigate();
                 ></button>
               </div>
               {/* <form className="myform" onSubmit={handleProjectFormSubmit}> */}
-              
-                <div className="modal-body d-flex justify-content-center align-items-center flex-column gap-5 pb-5 px-5">
-                  {/* <div className="projName">
+
+              <div className="modal-body d-flex justify-content-center align-items-center flex-column gap-5 pb-5 px-5">
+                {/* <div className="projName">
                     <label htmlFor="projectName" className="form-label">
                       Project Name:
                     </label>
@@ -718,136 +744,136 @@ const navigate=useNavigate();
                       onChange={handleProjectIDChange}
                     />
                   </div> */}
-                  <div className="bothDiv gap-3">
-                    <div className="projName Oneline">
-                      <label htmlFor="projectName" className="form-label">
-                        Start Date:
-                      </label>
-                      <input
-                        type="date"
-                        className="form-control"
-                        id="DateId"
-                        value={startDate}
-                        onChange={handleStartDateChange}
-                      />
-                    </div>
-                    <div className="projName Oneline">
-                      <label htmlFor="projectName" className="form-label">
-                        Job No#:
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="projectID"
-                        value={jobNo}
-                        onChange={handleJobNoChange}
-                      />
-                    </div>
+                <div className="bothDiv gap-3">
+                  <div className="projName Oneline">
+                    <label htmlFor="projectName" className="form-label">
+                      Start Date:
+                    </label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      id="DateId"
+                      value={startDate}
+                      onChange={handleStartDateChange}
+                    />
                   </div>
-                  <div className="bothDiv gap-3">
-                    <div className="Oneline">
-                      <label htmlFor="estimatorName" className="form-label">
-                        Project Manager:
-                      </label>
-                      <select
-                        className="form-select"
-                        id="projectManagerID"
-                        value={selectedProjectManager}
-                        onChange={handleProjectManagerChange}
-                      >
-                        <option value="">Select Project Manager</option>
-                        {projectManager && projectManager.length > 0 ? (
-                          projectManager.map((user) => (
-                            <option value={user.id} key={user.id}>
-                              {user.full_Name}
-                            </option>
-                          ))
-                        ) : (
-                          <option value="" disabled>
-                            Loading...
-                          </option>
-                        )}
-                      </select>
-                    </div>
-                    <div className="Oneline">
-                      <label htmlFor="location" className="form-label">
-                        Foreman:
-                      </label>
-                      <select
-                        className="form-select"
-                        id="estimatorNameID"
-                        value={selectedForeman}
-                        onChange={handleForemanChange}
-                      >
-                        <option value="">Select Forman</option>
-                        {formanName.length > 0 ? (
-                          formanName.map((user) => (
-                            <option value={user.id} key={user.id}>
-                              {user.full_Name}
-                            </option>
-                          ))
-                        ) : (
-                          <option value="" disabled>
-                            Loading...
-                          </option>
-                        )}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="bothDiv gap-3">
-                    <div className="Oneline">
-                      <label htmlFor="estimatorName" className="form-label">
-                        Bim Operator:
-                      </label>
-                      <select
-                        className="form-select"
-                        id="bimOperatorID"
-                        value={selectedBimOperator} // Use the selectedBimOperator value
-                        onChange={handleBimOperatorChange}
-                      >
-                        <option value="">Select Bim Operator</option>
-                        {BimOperator && BimOperator.length > 0 ? (
-                          BimOperator.map((user) => (
-                            <option value={user.id} key={user.id}>
-                              {user.full_Name}
-                            </option>
-                          ))
-                        ) : (
-                          <option value="" disabled>
-                            Loading...
-                          </option>
-                        )}
-                      </select>
-                    </div>
-                    <div className="Oneline">
-                      <label htmlFor="location" className="form-label">
-                        Project Engineer:
-                      </label>
-                      <select
-                        className="form-select"
-                        id="ProjectEngineerID"
-                        value={selectedProjectEngineer}
-                        onChange={handleProjectEngineerChange}
-                      >
-                        <option value="">Select Location</option>
-
-                        {ProjEnger && ProjEnger.length > 0 ? (
-                          ProjEnger.map((user) => (
-                            <option value={user.id} key={user.id}>
-                              {user.full_Name}
-                            </option>
-                          ))
-                        ) : (
-                          <option value="" disabled>
-                            Loading...
-                          </option>
-                        )}
-                      </select>
-                    </div>
+                  <div className="projName Oneline">
+                    <label htmlFor="projectName" className="form-label">
+                      Job No#:
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="projectID"
+                      value={jobNo}
+                      onChange={handleJobNoChange}
+                    />
                   </div>
                 </div>
-                
+                <div className="bothDiv gap-3">
+                  <div className="Oneline">
+                    <label htmlFor="estimatorName" className="form-label">
+                      Project Manager:
+                    </label>
+                    <select
+                      className="form-select"
+                      id="projectManagerID"
+                      value={selectedProjectManager}
+                      onChange={handleProjectManagerChange}
+                    >
+                      <option value="">Select Project Manager</option>
+                      {projectManager && projectManager.length > 0 ? (
+                        projectManager.map((user) => (
+                          <option value={user.id} key={user.id}>
+                            {user.full_Name}
+                          </option>
+                        ))
+                      ) : (
+                        <option value="" disabled>
+                          Loading...
+                        </option>
+                      )}
+                    </select>
+                  </div>
+                  <div className="Oneline">
+                    <label htmlFor="location" className="form-label">
+                      Foreman:
+                    </label>
+                    <select
+                      className="form-select"
+                      id="estimatorNameID"
+                      value={selectedForeman}
+                      onChange={handleForemanChange}
+                    >
+                      <option value="">Select Forman</option>
+                      {formanName.length > 0 ? (
+                        formanName.map((user) => (
+                          <option value={user.id} key={user.id}>
+                            {user.full_Name}
+                          </option>
+                        ))
+                      ) : (
+                        <option value="" disabled>
+                          Loading...
+                        </option>
+                      )}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="bothDiv gap-3">
+                  <div className="Oneline">
+                    <label htmlFor="estimatorName" className="form-label">
+                      Bim Operator:
+                    </label>
+                    <select
+                      className="form-select"
+                      id="bimOperatorID"
+                      value={selectedBimOperator} // Use the selectedBimOperator value
+                      onChange={handleBimOperatorChange}
+                    >
+                      <option value="">Select Bim Operator</option>
+                      {BimOperator && BimOperator.length > 0 ? (
+                        BimOperator.map((user) => (
+                          <option value={user.id} key={user.id}>
+                            {user.full_Name}
+                          </option>
+                        ))
+                      ) : (
+                        <option value="" disabled>
+                          Loading...
+                        </option>
+                      )}
+                    </select>
+                  </div>
+                  <div className="Oneline">
+                    <label htmlFor="location" className="form-label">
+                      Project Engineer:
+                    </label>
+                    <select
+                      className="form-select"
+                      id="ProjectEngineerID"
+                      value={selectedProjectEngineer}
+                      onChange={handleProjectEngineerChange}
+                    >
+                      <option value="">Select Location</option>
+
+                      {ProjEnger && ProjEnger.length > 0 ? (
+                        ProjEnger.map((user) => (
+                          <option value={user.id} key={user.id}>
+                            {user.full_Name}
+                          </option>
+                        ))
+                      ) : (
+                        <option value="" disabled>
+                          Loading...
+                        </option>
+                      )}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
               {/* </form> */}
               <div className="modal-footer">
                 {/* <h5>Footer</h5> */}
@@ -858,7 +884,11 @@ const navigate=useNavigate();
                 >
                   Close
                 </button>
-                <button type="button" onClick={handleProjectFormSubmit} className="btn btn-primary">
+                <button
+                  type="button"
+                  onClick={handleProjectFormSubmit}
+                  className="btn btn-primary"
+                >
                   Submit
                 </button>
               </div>
@@ -882,78 +912,83 @@ const navigate=useNavigate();
             New
           </button>
         </div>
-        <div className="table-responsive mt-4">
-          <table className="table table-striped  table-bordered table-hover text-center">
-            {/* <thead> */}
-            <tr>
-              <th>Due Date</th>
-              <th>Project Name</th>
-              <th>Area</th>
-              <th>Estimator</th>
-              <th>Status</th>
-              <th>Bidders</th>
-              <th>Bid Amount</th>
-              <th>Actions</th>
-            </tr>
-            {/* </thead> */}
-            {/* <tbody className="cursor-pointer  bg-info jloop"> */}
-            {filteredData.map((item) => (
-              <tr key={item.id}>
-                <td className="mytd">{item.due_date}</td>
-                <td className="mytd myproject">{item.Prjct_Name}</td>
-                <td className="mytd">{item.location}</td>
-                <td className="mytd">{item.estimator}</td>
-                <td className="mytd">{item.status}</td>
-                <td className="mytdbidder">
-                  {item.bidder + " " + item.bidder_deatil}
-                </td>
-                <td className="mytd">$ {formatBidAmount(item.bid_amount)}</td>
-                <td className="mytd">
-                  <div className="relative-container">
-                    <i
-                      onClick={() => toggleDropdown(item.id)}
-                      style={{ cursor: "pointer" }}
-                      className="fa-solid threeDotIcon fa-ellipsis-vertical"
-                    ></i>
-                    <div
-                      className={`mydiv ${openRow === item.id ? "open" : " "}`}
-                    >
-                      <button
-                        className="btn dropbtns"
-                        onClick={() => {
-                          console.log(item.Prjct_Name);
-                          setStep0FormData({
-                            ...step0FormData,
-                            estimating: item.id,
-                          });
-                          setSelectedEstimatingID(item.Prjct_Name); // Set the selected estimating ID
-                          setPurposalModal(true);
-                        }}
-                        // onClick={movetoPurposalPage}
-                      >
-                        Proposal
-                      </button>
-
-                      <button
-                        type="button"
-                        className="btn dropbtns"
-                        data-bs-toggle="modal"
-                        data-bs-target="#staticBackdrop"
-                        onClick={() => {
-                          console.log(item.id);
-
-                          setSelectedProjectID(item.id); // Set the selected estimating ID
-                        }}
-                      >
-                        Projects
-                      </button>
-                      <button className="btn dropbtns">Status</button>
-                    </div>
-                  </div>
-                </td>
+        <div className="table-responsive proposalTable mt-4">
+          <table className="table table-striped table-bordered table-hover">
+            <thead className="proposalHeader">
+              <tr>
+                <th>Due Date</th>
+                <th>Project Name</th>
+                <th>Area</th>
+                <th>Estimator</th>
+                <th>Status</th>
+                <th>Bidders</th>
+                <th>Bid Amount</th>
+                <th>Actions</th>
               </tr>
-            ))}
-            {/* </tbody> */}
+            </thead>
+            <tbody className="cursor-pointer bg-info jloop">
+              {filteredData.map((item) => (
+                <tr key={item.id}>
+                  <td className="mytd centered-td">{item.due_date}</td>
+                  <td className="mytd myproject centered-td">
+                    {item.Prjct_Name}
+                  </td>
+                  <td className="mytd centered-td">{item.location}</td>
+                  <td className="mytd centered-td">{item.estimator}</td>
+                  <td className="mytd centered-td">{item.status}</td>
+                  <td className="mytdbidder centered-td">
+                    {item.bidder + " " + item.bidder_deatil}
+                  </td>
+                  <td className="mytd centered-td">
+                    $ {formatBidAmount(item.bid_amount)}
+                  </td>
+                  <td className="mytd centered-td">
+                    <div className="relative-container">
+                      <i
+                        onClick={() => toggleDropdown(item.id)}
+                        style={{ cursor: "pointer" }}
+                        className="fa-solid threeDotIcon fa-ellipsis-vertical"
+                      ></i>
+                      <div
+                        className={`mydiv ${
+                          openRow === item.id ? "open" : " "
+                        }`}
+                      >
+                        <button
+                          className="btn dropbtns"
+                          onClick={() => {
+                            console.log(item.Prjct_Name);
+                            setStep0FormData({
+                              ...step0FormData,
+                              estimating: item.id,
+                            });
+                            setSelectedEstimatingID(item.Prjct_Name); // Set the selected estimating ID
+                            setPurposalModal(true);
+                          }}
+                          // onClick={movetoPurposalPage}
+                        >
+                          Proposal
+                        </button>
+
+                        <button
+                          type="button"
+                          className="btn dropbtns"
+                          data-bs-toggle="modal"
+                          data-bs-target="#staticBackdrop"
+                          onClick={() => {
+                            console.log(item.id);
+                            setSelectedProjectID(item.id); // Set the selected estimating ID
+                          }}
+                        >
+                          Projects
+                        </button>
+                        <button className="btn dropbtns">Status</button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
       </div>
@@ -1426,7 +1461,7 @@ const navigate=useNavigate();
                                   type="text"
                                   className="form-control"
                                   placeholder="Specification Number"
-                                  value={entry.number}
+                                  value={formatNumber(entry.number)}
                                   onChange={(e) =>
                                     handleSpecificationInputChange(
                                       index,
@@ -1487,7 +1522,7 @@ const navigate=useNavigate();
                               {/* <input
                                 type="number"
                                 className="form-control serviceInput"
-                                placeholder={`Proposal ${id}`}
+                                placeholder={Proposal ${id}}
                                 value={services.proposal}
                                 readOnly
                               /> */}

@@ -89,8 +89,31 @@ input:focus {
 .mytd {
   position: relative;
   max-width: 150px !important;
+  text-align: center; /* Center horizontally */
+  vertical-align: middle; /* Center vertically */
+}
+.projectTable{
+  max-height: 70vh !important;
+  overflow: auto;
+  position: relative;
+}
+.projectTable::-webkit-scrollbar {
+  width: 10px; /* Set the width of the scrollbar */
 }
 
+.projectTable::-webkit-scrollbar-thumb {
+  background-color: #5d5d5f; /* Set the color of the scrollbar track (the non-draggable part) */
+  border-radius: 10px 50px 50px 10px; /*Round the corners of the thumb*/
+}
+
+.projectTable::-webkit-scrollbar-track {
+  border-radius: 10px; /*Round the corners of the thumb*/
+  background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
+}
+/* .projectHeader{
+  position: fixed !important;
+  top: 0 !important;
+} */
 .mydiv {
   position: absolute;
   z-index: 99;

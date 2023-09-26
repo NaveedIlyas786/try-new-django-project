@@ -538,7 +538,10 @@ td {
   border: 1px solid rgb(216, 213, 213) !important;
   max-height: 120px !important;
 }
-
+th{
+  background-color: #1976d2 !important;
+  color: white !important;
+}
 /* td:nth-child(2), td:nth-child(6){
   overflow: hidden;
   white-space:nowrap;
@@ -546,6 +549,10 @@ td {
 } */
 td:nth-child(2), td:nth-child(6),td:nth-child(8){
   padding: 0 10px !important;
+}
+.centered-td {
+  text-align: center; /* Center horizontally */
+  vertical-align: middle; /* Center vertically */
 }
 
 .modal{
@@ -583,6 +590,23 @@ td:nth-child(2), td:nth-child(6),td:nth-child(8){
 }
 
 .modal-body::-webkit-scrollbar-track {
+  border-radius: 10px; /*Round the corners of the thumb*/
+  background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
+}
+.proposalTable{
+  max-height: 70vh !important;
+  overflow: auto;
+}
+.proposalTable::-webkit-scrollbar {
+  width: 10px; /* Set the width of the scrollbar */
+}
+
+.proposalTable::-webkit-scrollbar-thumb {
+  background-color: #5d5d5f; /* Set the color of the scrollbar track (the non-draggable part) */
+  border-radius: 10px 50px 50px 10px; /*Round the corners of the thumb*/
+}
+
+.proposalTable::-webkit-scrollbar-track {
   border-radius: 10px; /*Round the corners of the thumb*/
   background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
 }

@@ -21,6 +21,7 @@ import BIM from "./pages/bim/BIM";
 import PostEstimating from "./pages/estimating/PostEstimating";
 import Purposal from "./pages/purposal/Purposal";
 import ProjectDirectory from "./pages/projects-Screen/ProjectDirectory";
+import EstimatingDirectory from "./pages/estimating/EstimatingDirectory";
 
 function App() {
 
@@ -38,6 +39,9 @@ function App() {
           <Route path="purposal" element={<Purposal />} />
           <Route path="bim" element={<BIM/>} />
           <Route path="estimating" element={<Estimating/>} />
+
+          <Route path="estimating/:id" element={<EstimatingDirectory/>} />
+
           <Route path="reports" element={<Reports/>} />
           <Route path="contacts" element={<Contacts />} />
           <Route path="hrPayroll" element={<HrPayRoll/>} />

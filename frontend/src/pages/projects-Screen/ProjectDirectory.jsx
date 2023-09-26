@@ -55,7 +55,7 @@ const ProjectDirectory = () => {
             <ul>
         {AllFolders.map((folder) => (
           <li className="mylist" key={folder.id}>
-            <span onClick={() => handleFolderClick(folder.id)}>{folder.name}<i class="fa-light fa ms-2 fa-angle-down"></i></span>
+            <span onClick={() => handleFolderClick(folder.id)}>{folder.name}<i className= "fa-light fa ms-2 fa-angle-down"></i></span>
             {folder.id === openFolderId && folder.children && (
               <ul className="mt-2">
                 {folder.children.map((child, index) => (

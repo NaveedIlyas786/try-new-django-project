@@ -706,6 +706,9 @@ const Estimator = () => {
     if (amount === null) return ""; // Return an empty string if the amount is null
     return amount.toLocaleString("en-US");
   };
+  const navigateToLink = (itemId) => {
+    navigate(`/homepage/Estimating/${itemId}`);
+  };
 
   return (
     <>
@@ -934,7 +937,9 @@ const Estimator = () => {
             </thead>
             <tbody className="cursor-pointer bg-info jloop">
               {filteredData.map((item) => (
-                <tr key={item.id}>
+                <tr key={item.id}
+                onClick={() => navigateToLink(item.id)}
+                >
                   <td className="mytd centered-td">{item.due_date}</td>
                   <td className="mytd myproject centered-td">
                     {item.Prjct_Name}

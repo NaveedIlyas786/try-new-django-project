@@ -52,7 +52,7 @@ const Projects = () => {
   return (
     <div className="parentDiv px-5">
       <div className="titleWithSearch">
-        <h3>Projects Summary</h3>
+        <h3 className="text-black">Projects Summary</h3>
         <div className="inputSearchDiv">
           <input
             type="text"

@@ -710,7 +710,7 @@ const Estimator = () => {
   return (
     <>
       <div className={`estimator  px-5 ${showModal ? "modal-active" : ""}`}>
-        <h3>Estimating Summary</h3>
+        <h3 className="text-black">Estimating Summary</h3>
         {/* {ProjectformModal && ( */}
         <div
           className="modal fade modalContainer"

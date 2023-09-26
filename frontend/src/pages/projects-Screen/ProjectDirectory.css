@@ -1,49 +1,77 @@
 .projectDirectoryParent {
-    margin-top: 70px;
-    display: flex;
-    align-items: flex-start; /* Align items at the start (top) of the flex container */
-  }
-  
-  .aside {
-    flex: 0 0 280px; /* Fixed width of 200px */
-    padding: 20px;
-    box-sizing: border-box; /* Include padding in the width */
-    min-height: 92.5vh;
-    box-shadow: 1px 2px 5px 0.2px rgb(133, 132, 132);
+  margin-top: 70px;
+  display: flex;
+  align-items: flex-start; /* Align items at the start (top) of the flex container */
 }
-.asideData{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    color: black;
+
+.aside {
+  flex: 0 0 280px; /* Fixed width of 200px */
+  padding: 20px;
+  box-sizing: border-box; /* Include padding in the width */
+  min-height: 92.5vh;
+  box-shadow: 1px 2px 5px 0.2px rgb(133, 132, 132);
 }
-.asideData h1{
-    text-align: left;
-    padding: 0 5px 0 10px;
+.asideData {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  color: black;
 }
-.Projtitle{
-    font-weight: bold;
-    font-size: 16px;
-    text-decoration: underline;
+.asideData h1 {
+  text-align: left;
+  padding: 0 5px 0 10px;
+}
+ul {
+  display: flex;
+  flex-direction: column;
+  gap: 15px !important;
+  padding: 0 10px;
+  /* background-color: #c74040; */
+}
+.folders {
+  /* background-color: aqua; */
+}
+.mylist {
+  padding: 5px 20px !important;
+  text-decoration: none;
+  list-style-type: none;
+  transition: all 0.3s ease-in-out;
+}
+.sublist {
+  /* padding: 5px  !important; */
+  text-decoration: none;
+  list-style-type: none;
+  transition: all 0.3s ease-in-out;
+}
+.mylist:hover {
+  /* background-color: rgb(121, 121, 255);
+    color: white; */
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
+.Projtitle {
+  font-weight: bold;
+  font-size: 16px;
+  text-decoration: underline;
 }
 .main {
-    /* background-color: #007bff; */
-    min-height: 92.5vh;
-    flex-grow: 1; /* Allow main section to grow and fill the available space */
-    padding: 20px;
-    box-sizing: border-box; /* Include padding in the width */
-    display: grid;
-    align-items: center;
-    justify-content: center;
-  }
-  .mainimg{
-    border-radius: 50%;
-    height: 500px;
-    width: 500px;
-  }
-  
-  /* Additional styles for h1 and h3 elements */
-  h1, h3 {
-    color: #fff;
-  }
-  
+  /* background-color: #007bff; */
+  min-height: 92.5vh;
+  flex-grow: 1; /* Allow main section to grow and fill the available space */
+  padding: 20px;
+  box-sizing: border-box; /* Include padding in the width */
+  display: grid;
+  align-items: center;
+  justify-content: center;
+}
+.mainimg {
+  border-radius: 50%;
+  height: 500px;
+  width: 500px;
+}
+
+/* Additional styles for h1 and h3 elements */
+h1,
+h3 {
+  color: #fff;
+}

@@ -3,7 +3,9 @@ import "./Dashboard.css"
 const Dashboard = () => {
   return (
     <div className='dashboard'>
-    <div className='bgimg'></div>
+    {/* <div className='bgimg'></div> */}
+      <h1>Dashboard</h1>
+     
     </div>
   )
 }

@@ -4,11 +4,17 @@ from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework import status
 
-from Estimating.models import Company,Estimating, Estimating_detail, Proposal, Addendum, Qualification, Spec_detail, Specification, ProposalService, Service, Location
+from Estimating.models import Company,Estimating, Estimating_detail, Proposal, Addendum, Qualification, Spec_detail, Specification, ProposalService, Service, Location,Urls
 
 
 from datetime import datetime
 
+
+
+class UrlsSerializers(serializers.ModelSerializer):
+    class Meta:
+        model=Urls
+        fields=['id','url','territory','web_name','ps']
 
 
 
@@ -45,12 +51,20 @@ class EstimatingDetailSerializer(serializers.ModelSerializer):
         representation['Estimating'] = instance.Estimating.Prjct_Name if instance.Estimating else None
         return representation
 
+class Time12HourField(serializers.TimeField):
+    format = "%I:%M %p"
 
+    def to_representation(self, value):
+        return value.strftime(self.format)
 
     
 class EstimatingSerializer(serializers.ModelSerializer):
+
+    time = Time12HourField(format='%I:%M %p', input_formats=['%I:%M %p'])
+
     due_date = serializers.DateField(
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'])
+ 
     start_date = serializers.DateField(
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
 
@@ -61,6 +75,8 @@ class EstimatingSerializer(serializers.ModelSerializer):
             'id',
             'Prjct_Name',
             'due_date',
+            'time',
+            'timezone',
             'status',
             'start_date',
             'bid_amount',
@@ -78,6 +94,9 @@ class EstimatingSerializer(serializers.ModelSerializer):
             'estimator': {'required': True},
             'bidder': {'required': True},
             'due_date': {'required': True},
+            'time': {'required': True},
+            'timezone': {'required': True},
+
         }
 
 

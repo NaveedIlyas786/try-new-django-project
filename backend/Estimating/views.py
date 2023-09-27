@@ -6,10 +6,28 @@ import os
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Company, Estimating,Estimating_detail, Proposal, Qualification,Service,Location
-from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer,SpecificationSerializer,ServiceSerializer,LocationSerializer,EstimatingDetailSerializer,ProposalServiceSerializer,CompanySerializer
+from .models import Company, Estimating,Estimating_detail, Proposal, Qualification,Service,Location,Urls
+from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer,SpecificationSerializer,ServiceSerializer,LocationSerializer,EstimatingDetailSerializer,ProposalServiceSerializer,CompanySerializer,UrlsSerializers
 
 from .forms import EstimatingDetailAdminForm
+
+
+
+class UrlsListViews(APIView):
+    def get(self,request):
+        url=Urls.objects.all()
+        serializer=UrlsSerializers(url, many=True)
+        return Response(serializer.data)
+    def post(self,request):
+        serializer=UrlsSerializers(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        
+
+
 
 
 class CompanyListView(APIView):
@@ -105,7 +123,7 @@ class EstimatingListView(APIView):
 
 class Estimating_detailView(APIView):
 
-    
+
     def get(self,request):
         top_level_details = Estimating_detail.objects.filter(prnt_id__isnull=True)
         serializer = EstimatingDetailSerializer(top_level_details, many=True)

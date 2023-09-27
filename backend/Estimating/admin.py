@@ -4,13 +4,14 @@ from django.core.files.storage import default_storage
 
 import os
 from django.contrib import admin
-from .models import Estimating,Proposal,Service,Addendum,Specification,Spec_detail,Qualification,ProposalService
+from .models import Estimating,Proposal,Service,Addendum,Specification,Spec_detail,Qualification,ProposalService,Urls
 from nested_admin import NestedStackedInline, NestedModelAdmin
-from .forms import EstimatingDetailAdminForm
+from .forms import EstimatingDetailAdminForm,EstimatingAdminForm
 
 
 # Register your models here
-
+class UrlsAdmin(admin.ModelAdmin):
+    list_display=('id','url','territory','web_name','ps')
 
 
 
@@ -28,7 +29,8 @@ class LocationAdmin(admin.ModelAdmin):
 
 
 class EstimatingAdmin(admin.ModelAdmin):
-    list_display = ['id', 'start_date', 'Prjct_Name',
+    form=EstimatingAdminForm
+    list_display = ['id', 'start_date', 'Prjct_Name','time','timezone',
                     'due_date', 'status','company',
                     'bid_amount', 'location', 'estimator',
                     'bidder','bidder_deatil']
@@ -113,7 +115,7 @@ class QualificationAdmin(admin.ModelAdmin):
 
 
 
-
+admin.site.register(Urls,UrlsAdmin)
 admin.site.register(Company, CompanyAdmin)
 admin.site.register(Location,LocationAdmin)
 admin.site.register(Estimating, EstimatingAdmin)

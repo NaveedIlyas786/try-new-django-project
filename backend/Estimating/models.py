@@ -42,24 +42,46 @@ class Location(models.Model):
 
 
 
-
-
-
+class Urls(models.Model):
+    territory=models.CharField(verbose_name="Territory/Invo", max_length=50)
+    web_name=models.CharField(verbose_name="Web Site Name", max_length=50)
+    url=models.URLField(verbose_name="Add URL", max_length=200)
+    ps=models.CharField(verbose_name="ID/PS", max_length=50)
 
 class Estimating(models.Model):
+
+
+    time = models.TimeField(verbose_name="Time", null=True, blank=True)
+
+    timezone = models.CharField(
+        max_length=3, 
+        choices= [
+        ('PDT', 'PDT'),
+        ('CT', 'CT'),
+        ('PST', 'PST'),], 
+        default='PDT',
+        verbose_name="Time Zone", null=True, blank=True
+    )
+
+
     Prjct_Name=models.CharField(verbose_name="Estimate Project Name", max_length=50)
-    due_date=models.DateField(verbose_name="Due Date(YYYY-MM-DD)")
-    # Areas = 
-    status=models.CharField(
+
+
+    due_date=models.DateField(verbose_name="Due Date")
+
+
+    status=models.CharField(max_length=7,
         choices=[
             ('Working','Working'),
             ('Pending','Pending'),
             ('Won','Won'),
-            ('Lost','Lost'),],default='Working',max_length=50)
-    start_date = models.DateField(verbose_name="start Date(YYYY-MM-DD)",null=True,blank=True)
+            ('Lost','Lost'),],default='Working')
+    
+
+    start_date = models.DateField(verbose_name="start Date",null=True,blank=True)
 
     company = models.ForeignKey(Company, verbose_name="Company", on_delete=models.CASCADE,blank=False)
-    bid_amount=models.IntegerField(verbose_name="Bid Amount",blank=False)
+    bid_amount=models.IntegerField(verbose_name="DMS ",blank=False)
     location=models.ForeignKey(Location,on_delete=models.CASCADE,blank=False,null=True)
     estimator = models.ForeignKey(User,verbose_name="Estimator", related_name='estimations_as_estimator', limit_choices_to=models.Q(roles__name='Estimator'), on_delete=models.SET_NULL, null=True)
     bidder = models.CharField(verbose_name="Bidder Name",max_length=1500, null=True)
@@ -253,8 +275,8 @@ class Addendum(models.Model):
 
 class Specification(models.Model):
     proposal=models.ForeignKey(Proposal, on_delete=models.CASCADE,related_name='spcifc')
-    specific_name=models.CharField(verbose_name="Specification Name", max_length=250)
-    budget=models.IntegerField(verbose_name="Budget")
+    specific_name=models.CharField(verbose_name="Scope of Work Name", max_length=250)
+    budget=models.IntegerField(verbose_name="Scope of Work Price")
 
     def __str__(self) -> str:
         return self.specific_name

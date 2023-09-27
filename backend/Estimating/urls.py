@@ -1,7 +1,8 @@
 from django.urls import path
-from .views import  CompanyListView,EstimatingListView,QualificationView,LocationViews,Estimating_detailView,create_proposal,ServiceViews
+from .views import  CompanyListView,EstimatingListView,QualificationView,LocationViews,Estimating_detailView,create_proposal,ServiceViews,UrlsListViews
 
 urlpatterns = [
+    path('Urllist/',UrlsListViews.as_view(),name='Url View'),
     path('company/',CompanyListView.as_view(),name='Company Detail'),
     path('company/<int:id>/',CompanyListView.as_view(),name='Company Detail'),
 

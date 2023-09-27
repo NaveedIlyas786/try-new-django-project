@@ -52,9 +52,10 @@ class Estimating(models.Model):
     # Areas = 
     status=models.CharField(
         choices=[
-            ('On Hold','On Hold'),
             ('Working','Working'),
-            ('Complete','Complete')],default='Working',max_length=50)
+            ('Pending','Pending'),
+            ('Won','Won'),
+            ('Lost','Lost'),],default='Working',max_length=50)
     start_date = models.DateField(verbose_name="start Date(YYYY-MM-DD)",null=True,blank=True)
 
     company = models.ForeignKey(Company, verbose_name="Company", on_delete=models.CASCADE,blank=False)

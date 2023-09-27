@@ -50,7 +50,10 @@ class EstimatingDetailSerializer(serializers.ModelSerializer):
     
 class EstimatingSerializer(serializers.ModelSerializer):
     due_date = serializers.DateField(
-        format='%Y-%m-%d', input_formats=['%Y-%m-%d', 'iso-8601'])
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'])
+    start_date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+
 
     class Meta:
         model = Estimating
@@ -87,18 +90,18 @@ class EstimatingSerializer(serializers.ModelSerializer):
         representation['location'] = instance.location.name if instance.location else None
         representation['estimator'] = instance.estimator.full_Name if instance.estimator else None
 
-        # Formatting date fields
-        representation['due_date'] = self.format_date(instance.due_date)
-        representation['start_date'] = self.format_date(instance.start_date)
+        # # Formatting date fields
+        # representation['due_date'] = self.format_date(instance.due_date)
+        # representation['start_date'] = self.format_date(instance.start_date)
 
         return representation
 
 
 
-    def format_date(self, value):
-        if isinstance(value, datetime):
-            return value.date()
-        return value
+    # def format_date(self, value):
+    #     if isinstance(value, datetime):
+    #         return value.strftime('%m-%d-%y', 'iso-8601') 
+    #     return value
 
 
 

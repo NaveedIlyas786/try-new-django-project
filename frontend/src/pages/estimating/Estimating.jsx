@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import "./Estimating.css";
 import { useNavigate } from "react-router-dom";
 import "font-awesome/css/font-awesome.min.css";
-
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import axios from "axios";
 import {
   Modal,
@@ -153,13 +154,17 @@ const Estimator = () => {
       });
   }, []);
 
-
-
-
   //**************************To Post Project-Form Data To the api start here *********************** */
   const navigate = useNavigate();
   // Initialize state variables to hold form data
-  const [startDate, setStartDate] = useState("");
+  const getCurrentDate = () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Add leading zero if needed
+    const day = String(currentDate.getDate()).padStart(2, "0"); // Add leading zero if needed
+    return `${year}-${month}-${day}`;
+  };
+  const [startDate, setStartDate] = useState(getCurrentDate());
   const [jobNo, setJobNo] = useState("");
   const [selectedForeman, setSelectedForeman] = useState("");
   const [selectedProjectEngineer, setSelectedProjectEngineer] = useState("");
@@ -188,7 +193,6 @@ const Estimator = () => {
   const closeDiv = () => {
     setIsDivOpen(false);
   };
-  
 
   const handleProjectFormSubmit = (e) => {
     e.preventDefault();
@@ -226,7 +230,6 @@ const Estimator = () => {
 
         navigate("/homepage/projects");
         window.location.reload();
-        
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -364,13 +367,6 @@ const Estimator = () => {
   //************* Define the handleProposalSubmitPosting function
 
   const [selectedEstimatingID, setSelectedEstimatingID] = useState();
-  const getCurrentDate = () => {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Add leading zero if needed
-    const day = String(currentDate.getDate()).padStart(2, "0"); // Add leading zero if needed
-    return `${year}-${month}-${day}`;
-  };
 
   const [step0FormData, setStep0FormData] = useState({
     date: getCurrentDate(),
@@ -583,7 +579,9 @@ const Estimator = () => {
           .includes(filter.toUpperCase()))
     );
   });
-
+  const handlestartDateChange = (e) => {
+    setStartDate(e.target.value);
+  };
   const handleDueDateChange = (e) => {
     // Get the selected date from the input field
     const selectedDate = e.target.value;
@@ -650,6 +648,11 @@ const Estimator = () => {
     });
   };
 
+  const [selectedTime, setSelectedTime] = useState(null);
+
+  const handleTimeChange = (time) => {
+    setSelectedTime(time);
+  };
   // **********************
 
   const handleSpecificationInputChange = (index, key, value) => {
@@ -707,8 +710,7 @@ const Estimator = () => {
   };
   const viewpdf = () => {
     navigate("/homepage/purposal");
-
-  }
+  };
   return (
     <>
       <div className={`estimator  px-5 ${showModal ? "modal-active" : ""}`}>
@@ -913,6 +915,12 @@ const Estimator = () => {
             className="myinput p-2"
             onChange={(e) => setFilter(e.target.value)}
           />
+          <button className="btn btn-warning" onClick={() => {}}>
+            Dashboard
+          </button>
+          <button className="btn btn-primary" onClick={() => {}}>
+            URL
+          </button>
           <button
             className="btn btn-success"
             onClick={() => setShowModal(true)}
@@ -924,22 +932,22 @@ const Estimator = () => {
           <table className="table table-striped table-bordered table-hover">
             <thead className="proposalHeader">
               <tr>
-                <th>Due Date</th>
+                <th>Start Date</th>
+                <th>Time</th>
                 <th>Project Name</th>
                 <th>Area</th>
                 <th>Estimator</th>
                 <th>Status</th>
                 <th>Bidders</th>
-                <th>Bid Amount</th>
+                <th>DMS Directory</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody className="cursor-pointer bg-info jloop">
               {filteredData.map((item) => (
-                <tr key={item.id}
-                onClick={() => navigateToLink(item.id)}
-                >
+                <tr key={item.id} onClick={() => navigateToLink(item.id)}>
                   <td className="mytd centered-td">{item.due_date}</td>
+                  <td className="mytd centered-td">Due Time</td>
                   <td className="mytd myproject centered-td">
                     {item.Prjct_Name}
                   </td>
@@ -950,7 +958,7 @@ const Estimator = () => {
                     {item.bidder + " " + item.bidder_deatil}
                   </td>
                   <td className="mytd centered-td">
-                    $ {formatBidAmount(item.bid_amount)}
+                    {/* $ {formatBidAmount(item.bid_amount)} */}
                   </td>
                   <td className="mytd centered-td">
                     <div className="relative-container">
@@ -993,7 +1001,9 @@ const Estimator = () => {
                         >
                           Projects
                         </button>
-                        <button className="btn dropbtns" onClick={viewpdf}>View Propsal</button>
+                        <button className="btn dropbtns" onClick={viewpdf}>
+                          View Propsal
+                        </button>
                       </div>
                     </div>
                   </td>
@@ -1014,19 +1024,20 @@ const Estimator = () => {
           <button className="close-btn" onClick={closeModal}></button>
           <div className="modal-content px-5">
             <form onSubmit={handleSubmit} className="MyForm">
-              <div className="bothDiv mt-5">
+              <div className="bothDiv gap-2 mt-5">
                 <div className="Oneline">
                   <label htmlFor="dueDate" className="form-label">
-                    Due Date:
+                    Start Date:
                   </label>
                   <input
                     type="date"
                     className="form-control"
                     id="dueDate"
-                    value={dueDate}
-                    onChange={handleDueDateChange}
+                    value={startDate}
+                    onChange={handlestartDateChange}
                   />
                 </div>
+
                 <div className="Oneline">
                   <label htmlFor="companyName" className="form-label">
                     Company
@@ -1140,6 +1151,36 @@ const Estimator = () => {
                     id="bidderName"
                     value={bidderName}
                     onChange={handleBidderChange}
+                  />
+                </div>
+              </div>
+              <div className="bothDiv">
+                <div className="Oneline">
+                  <label htmlFor="dueDate" className="form-label">
+                    Due Date:
+                  </label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    id="dueDate"
+                    value={dueDate}
+                    onChange={handleDueDateChange}
+                  />
+                </div>
+                <div className="Oneline timefield">
+                  <label htmlFor="time" className="form-label">
+                    Time:
+                  </label>
+                  <DatePicker
+                    selected={selectedTime}
+                    onChange={handleTimeChange}
+                    showTimeSelect
+                    showTimeSelectOnly
+                    // timeIntervals={15}
+                    timeCaption="Time"
+                    dateFormat="h:mm aa"
+                    placeholderText="Select Time"
+                    className="form-control"
                   />
                 </div>
               </div>
@@ -1382,7 +1423,7 @@ const Estimator = () => {
                           htmlFor="projectName"
                           className="form-label mt-2"
                         >
-                          <strong>Specifications</strong>
+                          <strong> Scope Of Work</strong>
                         </label>
                         <div className="specificationEntry">
                           <div className="mb-2 mt-3">
@@ -1390,7 +1431,7 @@ const Estimator = () => {
                               htmlFor="specificName"
                               className="form-label"
                             >
-                              Specification Name
+                              Scope Of Work Name
                             </label>
                             {/* <input
                               type="text"
@@ -1417,7 +1458,7 @@ const Estimator = () => {
                               }
                             >
                               <option value="" disabled>
-                                Select Specification
+                                Select Scope Of Work
                               </option>
                               <option value="Add/Alt Building Insulation">
                                 Add/Alt Building Insulation
@@ -1443,7 +1484,7 @@ const Estimator = () => {
                               htmlFor="specificbudget"
                               className="form-label"
                             >
-                              Specification Budget
+                              Scope Of Work Price
                             </label>
                             <input
                               type="text" // Use type "text" to allow non-numeric characters (e.g., commas)
@@ -1461,7 +1502,7 @@ const Estimator = () => {
                               htmlFor="specificdetails"
                               className="form-label"
                             >
-                              Specification Details
+                              Scope Of Work Alternatives
                             </label>
                             {step2FormData.sefic.map((entry, index) => (
                               <div
@@ -1471,7 +1512,7 @@ const Estimator = () => {
                                 <input
                                   type="text"
                                   className="form-control"
-                                  placeholder="Specification Number"
+                                  placeholder=" Scope Of Work Number"
                                   value={formatNumber(entry.number)}
                                   onChange={(e) =>
                                     handleSpecificationInputChange(
@@ -1484,7 +1525,7 @@ const Estimator = () => {
                                 <input
                                   type="text"
                                   className="form-control"
-                                  placeholder="Specification Description"
+                                  placeholder=" Scope Of Work Description"
                                   value={entry.name}
                                   onChange={(e) =>
                                     handleSpecificationInputChange(
@@ -1513,7 +1554,7 @@ const Estimator = () => {
                           </div>
                         </div>
                         <button className="btn btn-success" onClick={() => {}}>
-                          Add-New-Specification-Section
+                          Add-New-Scope Of Work
                         </button>
                       </div>
                     )}

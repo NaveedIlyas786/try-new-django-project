@@ -607,6 +607,7 @@ td:nth-child(2), td:nth-child(6),td:nth-child(8){
 .proposalTable{
   max-height: 70vh !important;
   overflow: auto;
+  border-radius: 10px !important;
 }
 .proposalTable::-webkit-scrollbar {
   width: 10px; /* Set the width of the scrollbar */
@@ -621,3 +622,66 @@ td:nth-child(2), td:nth-child(6),td:nth-child(8){
   border-radius: 10px; /*Round the corners of the thumb*/
   background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
 }
+.timefield{
+  display: flex;
+  flex-direction: column !important;
+  /* padding: 5px; */
+}
+/* Customize the time picker dropdown */
+/* Customize the time picker dropdown container */
+.react-datepicker__time-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 150px; /* Set the width */
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+/* Customize the individual time options */
+.react-datepicker__time-list {
+  list-style: none;
+  overflow-y: auto; /* Add vertical scrolling */
+  overflow-x: hidden;
+  max-height: 150px; /* Set a maximum height for the dropdown */
+}
+
+/* Style the scrollbar */
+.react-datepicker__time-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.react-datepicker__time-list::-webkit-scrollbar-thumb {
+  background-color: #5d5d5f;
+  border-radius: 10px;
+}
+
+.react-datepicker__time-list::-webkit-scrollbar-track {
+  background-color: white;
+}
+
+/* Style individual time options */
+.react-datepicker__time-list-item {
+  cursor: pointer;
+  text-align: center;
+  /* width: 150px !important; */
+  margin: -2px  !important; 
+}
+
+/* Style the selected time option */
+.react-datepicker__time-list-item--selected {
+  background-color: #82bfff;
+  color: white;
+  margin: -5px !important;
+  font-weight: bold;
+}
+
+/* Style time options on hover */
+.react-datepicker__time-list-item:hover {
+  background-color: #ddd;
+}
+
+

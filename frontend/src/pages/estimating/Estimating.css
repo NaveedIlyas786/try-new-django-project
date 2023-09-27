@@ -678,6 +678,18 @@ td:nth-child(2), td:nth-child(6),td:nth-child(8){
   margin: -5px !important;
   font-weight: bold;
 }
+.mypicker{
+  outline: none;
+  /* border: 2px solid red; */
+  border-radius: 10px 0 0 10px !important;
+}
+.selectpicker{
+  border-radius: 0 10px 10px 0 !important;
+  border-color: #dbdcdd;
+  outline: none;
+  background-color: white !important;
+  color: black;
+}
 
 /* Style time options on hover */
 .react-datepicker__time-list-item:hover {

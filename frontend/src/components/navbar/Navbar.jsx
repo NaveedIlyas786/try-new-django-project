@@ -86,13 +86,13 @@ const Navbar = () => {
               <li>HR/Payroll</li>
             </Link>
             <Link
-              className={`nav-item ${
+              className={`nav-item  ${
                 activeLink === "Contacts" ? "active" : ""
               } contacts`}
               to="contacts"
               onClick={() => handleLinkClick("Contacts")}
             >
-              <li>Contacts</li>
+              <li>DMS Directory</li>
             </Link>
           </ul>
         </div>

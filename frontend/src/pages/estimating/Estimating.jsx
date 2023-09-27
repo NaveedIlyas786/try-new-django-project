@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import "./Estimating.css";
 import { useNavigate } from "react-router-dom";
 import "font-awesome/css/font-awesome.min.css";
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
+import { parse, isValid, format } from "date-fns";
 import {
   Modal,
   // TextField,
@@ -121,6 +122,7 @@ const Estimator = () => {
   //************ To show Company Names in dropdown in estimating post field
 
   const [companyName, setCompanyName] = useState([]);
+  // const [SelectedTimeZone, setSelectedTimeZone] = useState([]);
 
   useEffect(() => {
     // Fetch data from the API
@@ -320,12 +322,76 @@ const Estimator = () => {
   const [bidder_detail, setBidder_detail] = useState("");
 
   //************* Define the handleSubmit function below
+  const [selectedTime, setSelectedTime] = useState("");
+  const [timezone, settimezone] = useState("");
+
+  const handleTimeZoneChange=(e)=>{
+    settimezone(e.target.value)
+  }
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
+  
+  // Function to validate and format the time input
+ 
+  console.log("Selected Time before validation:", selectedTime);
+  const validateAndFormatTime = (time) => {
+    // Split the time into hours and minutes
+    const [hours, minutes] = time.split(':').map(Number);
+  
+    // Check if hours and minutes are valid
+    if (Number.isNaN(hours) || Number.isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+      // Invalid hours or minutes
+      console.log("Invalid hours or minutes");
+      return "";
+    }
+  
+    // Format the time as "hh:mm AM" or "hh:mm PM"
+    let formattedTime = `${String(hours % 12).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${hours >= 12 ? 'PM' : 'AM'}`;
+  
+    return formattedTime;
+  };
+  
 
+  // validateAndFormatTime()
+  
+  
+  
+  
+  console.log("Selected Time:", selectedTime);
+
+  // const validateAndFormatTime = (time) => {
+  //   // Regular expressions to match the "hh:mm [AM|PM]" format and 24-hour format
+  //   const amPmRegex = /^(1[0-2]|0?[0-9]):([0-5][0-9]) (AM|PM)$/i; // Case-insensitive
+  //   const twentyFourHourRegex = /^(1[0-9]|2[0-3]|0?[0-9]):([0-5][0-9])$/;
+  
+  //   if (amPmRegex.test(time)) {
+  //     // If the input matches the "hh:mm AM/PM" format, return it as is
+  //     return time;
+  //   } else if (twentyFourHourRegex.test(time)) {
+  //     // If the input matches the 24-hour format, add "AM" by default
+  //     return `${time} AM`;
+  //   } else {
+  //     // If the input doesn't match either format, return an empty string (or handle it as needed)
+  //     return "";
+  //   }
+  // };
+
+    // Validate and format the selectedTime
+    const formattedTime = validateAndFormatTime(selectedTime);
+    console.log("Formatted Time: ", formattedTime);
+  
+    if (!formattedTime) {
+      // Handle invalid time format here, display an error message or prevent form submission
+      console.error("Invalid time format");
+      return;
+    }
+  
     // Create a data object with the form values
     const formData = {
       due_date: dueDate,
+      start_date: startDate,
+      time: formattedTime,
+      timezone: timezone,
       Prjct_Name: projectName,
       company: company, // Use the company state directly
       estimator: estimatorName,
@@ -334,7 +400,7 @@ const Estimator = () => {
       bidder: bidderName, // Use BidderName here, not bidder
       bidder_deatil: bidder_detail,
     };
-
+  
     // Send a POST request to the API
     axios
       .post("http://127.0.0.1:8000/api/estimating/estimating/", formData)
@@ -343,6 +409,9 @@ const Estimator = () => {
         console.log("Data successfully submitted:", response.data);
         // You can also reset the form fields here if needed
         setDueDate("");
+        setSelectedTime("");
+        setStartDate("");
+        settimezone("");
         setProjectName("");
         setCompany(""); // Reset companyName here
         setEstimatorName("");
@@ -354,7 +423,6 @@ const Estimator = () => {
         setTimeout(() => {
           setShowModal(false);
         }, 1000);
-        // closeModal();
       })
       .catch((error) => {
         // Handle any errors that occurred during the POST request
@@ -363,6 +431,9 @@ const Estimator = () => {
         console.log("Response data:", error.response.data);
       });
   };
+  
+
+  
 
   //************* Define the handleProposalSubmitPosting function
 
@@ -623,6 +694,9 @@ const Estimator = () => {
   const handleBidderChange = (e) => {
     setbidderName(e.target.value);
   };
+  const handlepickerTimeChange = (e) => {
+    setSelectedTime(e.target.value);
+  };
   const handleBidderDetailChange = (e) => {
     setBidder_detail(e.target.value);
   };
@@ -648,11 +722,6 @@ const Estimator = () => {
     });
   };
 
-  const [selectedTime, setSelectedTime] = useState(null);
-
-  const handleTimeChange = (time) => {
-    setSelectedTime(time);
-  };
   // **********************
 
   const handleSpecificationInputChange = (index, key, value) => {
@@ -939,7 +1008,6 @@ const Estimator = () => {
                 <th>Estimator</th>
                 <th>Status</th>
                 <th>Bidders</th>
-                <th>DMS Directory</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -956,9 +1024,6 @@ const Estimator = () => {
                   <td className="mytd centered-td">{item.status}</td>
                   <td className="mytdbidder centered-td">
                     {item.bidder + " " + item.bidder_deatil}
-                  </td>
-                  <td className="mytd centered-td">
-                    {/* $ {formatBidAmount(item.bid_amount)} */}
                   </td>
                   <td className="mytd centered-td">
                     <div className="relative-container">
@@ -1171,17 +1236,26 @@ const Estimator = () => {
                   <label htmlFor="time" className="form-label">
                     Time:
                   </label>
-                  <DatePicker
-                    selected={selectedTime}
-                    onChange={handleTimeChange}
-                    showTimeSelect
-                    showTimeSelectOnly
-                    // timeIntervals={15}
-                    timeCaption="Time"
-                    dateFormat="h:mm aa"
-                    placeholderText="Select Time"
-                    className="form-control"
-                  />
+                  <div className="d-flex bg-white">
+                    <input
+                      type="time"
+                      placeholder="Select Time"
+                      value={selectedTime}
+                      onChange={(e) => setSelectedTime(e.target.value)}
+                    />
+                    {/* <p>Selected Time: {selectedTime}</p> */}
+                    <select
+                      value={timezone}
+                      onChange={handleTimeZoneChange}
+                      name="#"
+                      id="#"
+                      className="selectpicker"
+                    >
+                      <option value="">Select TimeZone</option>
+                      <option value="PDT">PDT</option>
+                      <option value="PDT">CT</option>
+                    </select>
+                  </div>
                 </div>
               </div>
               <div>

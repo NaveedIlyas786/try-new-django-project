@@ -325,67 +325,72 @@ const Estimator = () => {
   const [selectedTime, setSelectedTime] = useState("");
   const [timezone, settimezone] = useState("");
 
-  const handleTimeZoneChange=(e)=>{
-    settimezone(e.target.value)
-  }
+  const handleTimeZoneChange = (e) => {
+    settimezone(e.target.value);
+  };
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
-  
-  // Function to validate and format the time input
- 
-  console.log("Selected Time before validation:", selectedTime);
-  const validateAndFormatTime = (time) => {
-    // Split the time into hours and minutes
-    const [hours, minutes] = time.split(':').map(Number);
-  
-    // Check if hours and minutes are valid
-    if (Number.isNaN(hours) || Number.isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
-      // Invalid hours or minutes
-      console.log("Invalid hours or minutes");
-      return "";
-    }
-  
-    // Format the time as "hh:mm AM" or "hh:mm PM"
-    let formattedTime = `${String(hours % 12).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${hours >= 12 ? 'PM' : 'AM'}`;
-  
-    return formattedTime;
-  };
-  
 
-  // validateAndFormatTime()
-  
-  
-  
-  
-  console.log("Selected Time:", selectedTime);
+    // Function to validate and format the time input
 
-  // const validateAndFormatTime = (time) => {
-  //   // Regular expressions to match the "hh:mm [AM|PM]" format and 24-hour format
-  //   const amPmRegex = /^(1[0-2]|0?[0-9]):([0-5][0-9]) (AM|PM)$/i; // Case-insensitive
-  //   const twentyFourHourRegex = /^(1[0-9]|2[0-3]|0?[0-9]):([0-5][0-9])$/;
-  
-  //   if (amPmRegex.test(time)) {
-  //     // If the input matches the "hh:mm AM/PM" format, return it as is
-  //     return time;
-  //   } else if (twentyFourHourRegex.test(time)) {
-  //     // If the input matches the 24-hour format, add "AM" by default
-  //     return `${time} AM`;
-  //   } else {
-  //     // If the input doesn't match either format, return an empty string (or handle it as needed)
-  //     return "";
-  //   }
-  // };
+    console.log("Selected Time before validation:", selectedTime);
+    const validateAndFormatTime = (time) => {
+      // Split the time into hours and minutes
+      const [hours, minutes] = time.split(":").map(Number);
+
+      // Check if hours and minutes are valid
+      if (
+        Number.isNaN(hours) ||
+        Number.isNaN(minutes) ||
+        hours < 0 ||
+        hours > 23 ||
+        minutes < 0 ||
+        minutes > 59
+      ) {
+        // Invalid hours or minutes
+        console.log("Invalid hours or minutes");
+        return "";
+      }
+
+      // Format the time as "hh:mm AM" or "hh:mm PM"
+      let formattedTime = `${String(hours % 12).padStart(2, "0")}:${String(
+        minutes
+      ).padStart(2, "0")} ${hours >= 12 ? "PM" : "AM"}`;
+
+      return formattedTime;
+    };
+
+    // validateAndFormatTime()
+
+    console.log("Selected Time:", selectedTime);
+
+    // const validateAndFormatTime = (time) => {
+    //   // Regular expressions to match the "hh:mm [AM|PM]" format and 24-hour format
+    //   const amPmRegex = /^(1[0-2]|0?[0-9]):([0-5][0-9]) (AM|PM)$/i; // Case-insensitive
+    //   const twentyFourHourRegex = /^(1[0-9]|2[0-3]|0?[0-9]):([0-5][0-9])$/;
+
+    //   if (amPmRegex.test(time)) {
+    //     // If the input matches the "hh:mm AM/PM" format, return it as is
+    //     return time;
+    //   } else if (twentyFourHourRegex.test(time)) {
+    //     // If the input matches the 24-hour format, add "AM" by default
+    //     return `${time} AM`;
+    //   } else {
+    //     // If the input doesn't match either format, return an empty string (or handle it as needed)
+    //     return "";
+    //   }
+    // };
 
     // Validate and format the selectedTime
     const formattedTime = validateAndFormatTime(selectedTime);
     console.log("Formatted Time: ", formattedTime);
-  
+
     if (!formattedTime) {
       // Handle invalid time format here, display an error message or prevent form submission
       console.error("Invalid time format");
       return;
     }
-  
+
     // Create a data object with the form values
     const formData = {
       due_date: dueDate,
@@ -400,7 +405,7 @@ const Estimator = () => {
       bidder: bidderName, // Use BidderName here, not bidder
       bidder_deatil: bidder_detail,
     };
-  
+
     // Send a POST request to the API
     axios
       .post("http://127.0.0.1:8000/api/estimating/estimating/", formData)
@@ -431,10 +436,6 @@ const Estimator = () => {
         console.log("Response data:", error.response.data);
       });
   };
-  
-
-  
-
   //************* Define the handleProposalSubmitPosting function
 
   const [selectedEstimatingID, setSelectedEstimatingID] = useState();
@@ -780,6 +781,41 @@ const Estimator = () => {
   const viewpdf = () => {
     navigate("/homepage/purposal");
   };
+
+  // ************************************************
+
+  const [newStatus, setNewStatus] = useState("");
+
+  const handleStatusChange = async (event, item) => {
+    const updatedStatus = event.target.value;
+
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/estimating/estimating/",
+        {
+          method: "PUT", // You might use POST or another appropriate method
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ newStatus: updatedStatus }), // Send the new status to the backend
+        }
+      );
+
+      if (response.ok) {
+        // Update the frontend display with the new status
+        setNewStatus(updatedStatus);
+        // You may need to refresh the UI or update the specific row accordingly
+      } else {
+        console.error("Failed to update status");
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
+  };
+
+  const MovetoURLpage=()=>{
+    navigate("/homepage/urlpage")
+  }
   return (
     <>
       <div className={`estimator  px-5 ${showModal ? "modal-active" : ""}`}>
@@ -984,10 +1020,10 @@ const Estimator = () => {
             className="myinput p-2"
             onChange={(e) => setFilter(e.target.value)}
           />
-          <button className="btn btn-warning" onClick={() => {}}>
+          <button className="btn btn-warning" >
             Dashboard
           </button>
-          <button className="btn btn-primary" onClick={() => {}}>
+          <button className="btn btn-primary" onClick={MovetoURLpage}>
             URL
           </button>
           <button
@@ -1013,15 +1049,28 @@ const Estimator = () => {
             </thead>
             <tbody className="cursor-pointer bg-info jloop">
               {filteredData.map((item) => (
-                <tr key={item.id} onClick={() => navigateToLink(item.id)}>
+                <tr key={item.id}>
                   <td className="mytd centered-td">{item.due_date}</td>
-                  <td className="mytd centered-td">Due Time</td>
+                  <td className="mytd centered-td">{item.time}</td>
                   <td className="mytd myproject centered-td">
                     {item.Prjct_Name}
                   </td>
                   <td className="mytd centered-td">{item.location}</td>
                   <td className="mytd centered-td">{item.estimator}</td>
-                  <td className="mytd centered-td">{item.status}</td>
+                  <td className="mytd centered-td">
+                    <select
+                      className="statusUpdation p-2 m-2"
+                      name="#"
+                      id="#"
+                      onChange={(event) => handleStatusChange(event, item)}
+                      value={newStatus}
+                    >
+                      <option value="">{item.status}</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Won">Won</option>
+                      <option value="Lost">Lost</option>
+                    </select>
+                  </td>
                   <td className="mytdbidder centered-td">
                     {item.bidder + " " + item.bidder_deatil}
                   </td>
@@ -1051,7 +1100,7 @@ const Estimator = () => {
                           }}
                           // onClick={movetoPurposalPage}
                         >
-                          Proposal
+                          Create Proposal
                         </button>
 
                         <button
@@ -1064,7 +1113,7 @@ const Estimator = () => {
                             setSelectedProjectID(item.id); // Set the selected estimating ID
                           }}
                         >
-                          Projects
+                          Create Project
                         </button>
                         <button className="btn dropbtns" onClick={viewpdf}>
                           View Propsal

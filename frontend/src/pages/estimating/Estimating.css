@@ -258,9 +258,16 @@ input:focus {
   top: 40px;
   opacity: 0;
   display: none;
+  min-width: 150px !important;
   transition: opacity 0.3s ease-in-out;
 }
-
+.statusUpdation{
+  background-color: transparent !important;
+  color: black;
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+}
 .threeDotIcon {
   /* background-color: #283897; */
   padding: 10px;
@@ -540,7 +547,7 @@ th {
   color: white;
 }
 tr:hover {
-  cursor: pointer;
+  /* cursor: pointer; */
   background-color: #eaebec !important;
   color: rgb(44, 44, 44);
 }

@@ -22,6 +22,7 @@ import PostEstimating from "./pages/estimating/PostEstimating";
 import Purposal from "./pages/purposal/Purposal";
 import ProjectDirectory from "./pages/projects-Screen/ProjectDirectory";
 import EstimatingDirectory from "./pages/estimating/EstimatingDirectory";
+import URLPage from "./pages/urlPage/URLPage";
 
 function App() {
 
@@ -37,6 +38,7 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="projects" element={<Projects />} />
           <Route path="purposal" element={<Purposal />} />
+          <Route path="urlpage" element={<URLPage />} />
           <Route path="projects/:id" element={<ProjectDirectory />} />
           <Route path="bim" element={<BIM/>} />
           <Route path="estimating" element={<Estimating/>} />

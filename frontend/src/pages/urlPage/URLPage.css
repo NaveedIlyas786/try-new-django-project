@@ -1,0 +1,136 @@
+.myaside {
+    border: 1px solid purple;
+    width: 200px;
+    height: 150vh;
+  }
+  .myaside ul {
+    margin: 0;
+    padding: 0;
+  }
+  .projects {
+    margin-top: 70px;
+    display: flex;
+  }
+  .aside_li {
+    height: 40px;
+    list-style-type: none;
+    text-decoration: none;
+    padding: 0 0 0 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: blueviolet;
+  }
+  .aside_li:hover {
+    background-color: aliceblue;
+  }
+  .main-content {
+    background-color: rgb(14, 223, 153);
+    width: 100%;
+  }
+  /********************Project Summary Section***************/
+  
+  .parentDiv {
+    margin-top: 70px;
+    padding-top: 2.5rem;
+  }
+  .titleWithSearch {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* background-color: blueviolet; */
+  }
+  .inputSearchDiv{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .myinput {
+    min-width: 318px;
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    border-radius: 5px 0 0 5px !important;
+    transition: all 0.5s ease-in-out;
+    padding: 7px;
+  }
+  .myinput:focus {
+    border-radius: 5px 0 0 5px !important;
+    min-width: 550px;
+    border: 1px solid black !important;
+    transition: all 0.5s ease-in-out;
+  }
+  
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(100%);
+    cursor: pointer; /* Invert the colors (black icon on white background) */
+  }
+  
+  input:focus {
+    border: none !important;
+    outline: none !important;
+  }
+  
+  .dropbtns {
+    width: 100% !important;
+    padding: 0 !important;
+    font-size: 15px !important;
+    border-radius: 2px !important;
+    color: rgb(10, 10, 10);
+    margin: 1px 0;
+  }
+  .dropbtns:hover {
+    background-color: #1976d2;
+    color: rgb(255, 255, 255);
+    padding: 0.3px 0 !important;
+  }
+  
+  .mytd {
+    position: relative;
+    max-width: 150px !important;
+    text-align: center; /* Center horizontally */
+    vertical-align: middle; /* Center vertically */
+  }
+  .projectTable{
+    max-height: 70vh !important;
+    overflow: auto;
+    position: relative;
+  }
+  .projectTable::-webkit-scrollbar {
+    width: 10px; /* Set the width of the scrollbar */
+  }
+  
+  .projectTable::-webkit-scrollbar-thumb {
+    background-color: #5d5d5f; /* Set the color of the scrollbar track (the non-draggable part) */
+    border-radius: 10px 50px 50px 10px; /*Round the corners of the thumb*/
+  }
+  
+  .projectTable::-webkit-scrollbar-track {
+    border-radius: 10px; /*Round the corners of the thumb*/
+    background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
+  }
+  /* .projectHeader{
+    position: fixed !important;
+    top: 0 !important;
+  } */
+  .mydiv {
+    position: absolute;
+    z-index: 99;
+    right: 0;
+    top: 40px;
+    opacity: 0;
+    display: none;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .threeDotIcon {
+    /* background-color: #283897; */
+    padding: 10px;
+  }
+  .searchbtn {
+    border-radius: 0 10px 10px 0 !important;
+  }
+  .jloop{
+    min-width: 100% !important;
+  }

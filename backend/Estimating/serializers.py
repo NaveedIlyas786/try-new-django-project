@@ -109,7 +109,6 @@ class EstimatingSerializer(serializers.ModelSerializer):
         representation['location'] = instance.location.name if instance.location else None
         representation['estimator'] = instance.estimator.full_Name if instance.estimator else None
 
-        # # Formatting date fields
         # representation['due_date'] = self.format_date(instance.due_date)
         # representation['start_date'] = self.format_date(instance.start_date)
 

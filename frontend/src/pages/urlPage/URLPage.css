@@ -61,7 +61,9 @@
     border: 1px solid black !important;
     transition: all 0.5s ease-in-out;
   }
-  
+  .modal-container{
+    height: 80vh !important;
+  }
   input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(100%);
     cursor: pointer; /* Invert the colors (black icon on white background) */
@@ -110,10 +112,7 @@
     border-radius: 10px; /*Round the corners of the thumb*/
     background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
   }
-  /* .projectHeader{
-    position: fixed !important;
-    top: 0 !important;
-  } */
+
   .mydiv {
     position: absolute;
     z-index: 99;
@@ -125,7 +124,6 @@
   }
   
   .threeDotIcon {
-    /* background-color: #283897; */
     padding: 10px;
   }
   .searchbtn {
@@ -133,4 +131,7 @@
   }
   .jloop{
     min-width: 100% !important;
+  }
+  .UrlTable{
+    border-radius: 10px;
   }

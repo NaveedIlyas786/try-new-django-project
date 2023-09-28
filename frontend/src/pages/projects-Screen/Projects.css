@@ -96,6 +96,7 @@ input:focus {
   max-height: 70vh !important;
   overflow: auto;
   position: relative;
+  border-radius: 10px;
 }
 .projectTable::-webkit-scrollbar {
   width: 10px; /* Set the width of the scrollbar */

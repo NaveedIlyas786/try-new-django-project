@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./URLPage.css";
@@ -10,7 +9,7 @@ const URLPage = () => {
   // Fetch data from the API
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/project/ProjectList/")
+      .get("http://127.0.0.1:8000/api/estimating/Urllist/")
       .then((response) => response.data)
       .then((data) => {
         setData(data);
@@ -22,19 +21,16 @@ const URLPage = () => {
 
   const filteredData = data.filter((customer) => {
     return (
-      (customer.estimating &&
-        customer.estimating.toUpperCase().includes(filter.toUpperCase())) ||
-      (customer.job_num &&
-        customer.job_num
+      (customer.web_name &&
+        customer.web_name.toUpperCase().includes(filter.toUpperCase())) ||
+      (customer.territory &&
+        customer.territory
           .toString()
           .toUpperCase()
           .includes(filter.toUpperCase())) ||
-      (customer.prjct_engnr &&
-        customer.prjct_engnr.toUpperCase().includes(filter.toUpperCase())) ||
-      (customer.bim_oprtr &&
-        customer.bim_oprtr.toUpperCase().includes(filter.toUpperCase())) ||
-      (customer.Forman &&
-        customer.Forman.toUpperCase().includes(filter.toUpperCase()))
+      (customer.url &&
+        customer.url.toUpperCase().includes(filter.toUpperCase())) ||
+      (customer.ps && customer.ps.toUpperCase().includes(filter.toUpperCase()))
     );
   });
 
@@ -48,7 +44,63 @@ const URLPage = () => {
   const navigateToLink = (itemId) => {
     navigate(`/homepage/URLPage/${itemId}`);
   };
+  const [showModal, setShowModal] = useState(false);
+  const [WebName, setWebName] = useState("");
+  const [TerritoryName, setTerritoryName] = useState("");
+  const [URLlink, setURLlink] = useState("");
+  const [PS, setPS] = useState("");
 
+  const handleURLChange = (e) => {
+    setURLlink(e.target.value);
+  };
+  const handleWebNameChange = (e) => {
+    setWebName(e.target.value);
+  };
+  const handleTerritoryNameChange = (e) => {
+    setTerritoryName(e.target.value);
+  };
+  const handleIDorPSChange = (e) => {
+    setPS(e.target.value);
+  };
+
+  const handleURLSubmit = (event) => {
+    event.preventDefault(); // Prevent the default form submission behavior
+
+    // Create a data object with the form values
+    const formData = {
+      web_name: WebName,
+      territory: TerritoryName,
+      url: URLlink,
+      ps: PS,
+    };
+
+    // Send a POST request to the API
+    axios
+      .post("http://127.0.0.1:8000/api/estimating/Urllist/", formData)
+      .then((response) => {
+        // Handle the response if needed
+        console.log("Data successfully submitted:", response.data);
+        // You can also reset the form fields here if needed
+        setWebName("");
+        setTerritoryName("");
+        setURLlink("");
+        setPS("");
+        setTimeout(() => {
+          setShowModal(false);
+        }, 1000);
+      })
+      .catch((error) => {
+        // Handle any errors that occurred during the POST request
+        console.error("Error submitting data:", error);
+        // Log the response data for more details
+        console.log("Response data:", error.response.data);
+      });
+  };
+  const closeModal = () => {
+    setShowModal(false);
+    // Remove the 'modal-active' class when the modal is closed
+    document.body.classList.remove("modal-active");
+  };
   return (
     <div className="parentDiv px-5">
       <div className="titleWithSearch">
@@ -61,38 +113,105 @@ const URLPage = () => {
             className="myinput"
             onChange={(e) => setFilter(e.target.value)}
           />
-          <button className="btn btn-success searchbtn">Search</button>
+          <button
+            className="btn btn-success ms-2"
+            onClick={() => setShowModal(true)}
+          >
+            New
+          </button>
         </div>
       </div>
 
-      <div className="table-responsive projectTable mt-4">
+      {showModal && (
+        <div
+          className={`modal-container bg-white pt-5 ps-2 ${
+            showModal ? "show" : ""
+          }`}
+        >
+          <h4 className="text-center addnewtxt">Add New URL Entry</h4>
+          <button className="close-btn" onClick={closeModal}></button>
+          <div className="modal-content px-5">
+            <form onSubmit={handleURLSubmit} className="MyForm">
+              <div className="bothDiv gap-2 mt-5">
+                <div className="Oneline">
+                  <label htmlFor="webname" className="form-label">
+                    Website Name:
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="webname"
+                    value={WebName}
+                    onChange={handleWebNameChange}
+                  />
+                </div>
+                <div className="Oneline">
+                  <label htmlFor="Territory" className="form-label">
+                   Enter Territory/Invo:
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="Territory"
+                    value={TerritoryName}
+                    onChange={handleTerritoryNameChange}
+                  />
+                </div>
+              </div>
+              <div>
+                <label htmlFor="URLId" className="form-label">
+                  Enter URL:
+                </label>
+                <input
+                  type="url"
+                  className="form-control"
+                  id="URLId"
+                  value={URLlink}
+                  onChange={handleURLChange}
+                />
+              </div>
+              <div>
+                <label htmlFor="IDPS" className="form-label">
+                  Enter ID/PS:
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="IDPS"
+                  value={PS}
+                  onChange={handleIDorPSChange}
+                />
+              </div>
+
+              <button type="submit" className="btn btn-submit mt-3 mb-4">
+                Add
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      <div className="table-responsive UrlTable mt-4">
         <table className="table table-striped   table-bordered table-hover text-center">
           <thead className="projectHeader">
             <tr>
-              <th>Start Date</th>
-              <th>Project Name</th>
-              <th>Job Number</th>
-              <th>Project Manager</th>
-              <th>Project Engineer</th>
-              <th>Bim Operator</th>
-              <th>Foreman</th>
+              <th>Website name</th>
+              <th>Territory/Invo</th>
+              <th>URL</th>
+              <th>ID/PS</th>
             </tr>
           </thead>
           <tbody className="cursor-pointer  bg-info jloop">
             {filteredData.map((item) => (
-              <tr
-                key={item.id}
-                className="mytr"
-                onClick={() => navigateToLink(item.id)}
-                value={item.Prjct_Name}
-              >
-                <td className="mytd">{item.start_date}</td>
-                <td className="mytd">{item.estimating}</td>
-                <td className="mytd">{item.job_num}</td>
-                <td className="mytd">{item.prjct_mngr}</td>
-                <td className="mytd">{item.prjct_engnr}</td>
-                <td className="mytd">{item.bim_oprtr}</td>
-                <td className="mytd">{item.Forman}</td>
+              <tr key={item.id} className="mytr">
+                <td className="mytd">{item.web_name}</td>
+                <td className="mytd">{item.territory}</td>
+                <td className="mytd">
+                  <a href={item.url} target="_blank" rel="noopener noreferrer">
+                    {item.url}
+                  </a>
+                </td>
+                <td className="mytd">{item.ps}</td>
               </tr>
             ))}
           </tbody>

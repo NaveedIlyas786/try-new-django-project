@@ -4,7 +4,7 @@ from django.core.files.storage import default_storage
 
 import os
 from django.contrib import admin
-from .models import Estimating,Proposal,Service,Addendum,Specification,Spec_detail,Qualification,ProposalService,Urls
+from .models import Estimating,Proposal,Service,Addendum,Specification,Spec_detail,Qualification,ProposalService,UrlsTable
 from nested_admin import NestedStackedInline, NestedModelAdmin
 from .forms import EstimatingDetailAdminForm,EstimatingAdminForm
 
@@ -115,7 +115,6 @@ class QualificationAdmin(admin.ModelAdmin):
 
 
 
-admin.site.register(Urls,UrlsAdmin)
 admin.site.register(Company, CompanyAdmin)
 admin.site.register(Location,LocationAdmin)
 admin.site.register(Estimating, EstimatingAdmin)
@@ -123,3 +122,4 @@ admin.site.register(Proposal,ProposalAdmin)
 admin.site.register(Service,ServiceAdmin)
 admin.site.register(Qualification,QualificationAdmin)
 admin.site.register(Estimating_detail,EstimatingDetailAdmin)
+admin.site.register(UrlsTable,UrlsAdmin)

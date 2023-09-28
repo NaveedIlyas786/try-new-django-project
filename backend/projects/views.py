@@ -24,6 +24,14 @@ class ProjectListCreateView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
     
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def delete(self, request, id, format=None):
+        try:
+            project = Project.objects.get(id=id)
+        except Project.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        project.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class ProjectDetailListCreateView(APIView):
     def get(self,request):

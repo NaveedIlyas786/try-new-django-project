@@ -788,19 +788,22 @@ const Estimator = () => {
 
   const handleStatusChange = async (event, item) => {
     const updatedStatus = event.target.value;
-
+  
     try {
+      // Create a copy of the item with the updated status
+      const updatedItem = { ...item, status: updatedStatus };
+  
       const response = await fetch(
-        "http://127.0.0.1:8000/api/estimating/estimating/",
+        `http://127.0.0.1:8000/api/estimating/estimating/${item.id}/`, // Include the item's unique identifier (id) in the URL
         {
-          method: "PUT", // You might use POST or another appropriate method
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ newStatus: updatedStatus }), // Send the new status to the backend
+          body: JSON.stringify(updatedItem), // Send the updated item to the backend
         }
       );
-
+  
       if (response.ok) {
         // Update the frontend display with the new status
         setNewStatus(updatedStatus);
@@ -812,6 +815,7 @@ const Estimator = () => {
       console.error("Error updating status:", error);
     }
   };
+  
 
   const MovetoURLpage=()=>{
     navigate("/homepage/urlpage")

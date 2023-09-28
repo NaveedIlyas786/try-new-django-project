@@ -25,15 +25,6 @@ class Company(models.Model):
         return self.Cmpny_Name
 
 
-
-
-# create Estimating 
-
-
-
-
-
-
 class Location(models.Model):
     name=models.CharField(verbose_name="Location Name",max_length=50,blank=False,null=False)
 
@@ -42,12 +33,14 @@ class Location(models.Model):
 
 
 
-class Urls(models.Model):
-    territory=models.CharField(verbose_name="Territory/Invo", max_length=50)
-    web_name=models.CharField(verbose_name="Web Site Name", max_length=50)
-    url=models.URLField(verbose_name="Add URL", max_length=200)
-    ps=models.CharField(verbose_name="ID/PS", max_length=50)
+class UrlsTable(models.Model):
+    territory = models.CharField(max_length=50)
+    web_name = models.CharField(max_length=50)
+    url = models.URLField(max_length=200)
+    ps = models.CharField(max_length=50,null=True,blank=True)
 
+    def __str__(self):
+        return self.web_name
 class Estimating(models.Model):
 
 
@@ -57,10 +50,8 @@ class Estimating(models.Model):
         max_length=3, 
         choices= [
         ('PDT', 'PDT'),
-        ('CT', 'CT'),
-        ('PST', 'PST'),], 
-        default='PDT',
-        verbose_name="Time Zone", null=True, blank=True
+        ('CT', 'CT'),],
+        verbose_name="PST", null=True, blank=True
     )
 
 

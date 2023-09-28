@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework import status
 
-from Estimating.models import Company,Estimating, Estimating_detail, Proposal, Addendum, Qualification, Spec_detail, Specification, ProposalService, Service, Location,Urls
+from Estimating.models import Company,Estimating, Estimating_detail, Proposal, Addendum, Qualification, Spec_detail, Specification, ProposalService, Service, Location,UrlsTable
 
 
 from datetime import datetime
@@ -13,7 +13,7 @@ from datetime import datetime
 
 class UrlsSerializers(serializers.ModelSerializer):
     class Meta:
-        model=Urls
+        model=UrlsTable
         fields=['id','url','territory','web_name','ps']
 
 

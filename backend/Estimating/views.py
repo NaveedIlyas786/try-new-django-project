@@ -6,7 +6,7 @@ import os
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Company, Estimating,Estimating_detail, Proposal, Qualification,Service,Location,Urls
+from .models import Company, Estimating,Estimating_detail, Proposal, Qualification,Service,Location,UrlsTable
 from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer,SpecificationSerializer,ServiceSerializer,LocationSerializer,EstimatingDetailSerializer,ProposalServiceSerializer,CompanySerializer,UrlsSerializers
 
 from .forms import EstimatingDetailAdminForm
@@ -15,7 +15,7 @@ from .forms import EstimatingDetailAdminForm
 
 class UrlsListViews(APIView):
     def get(self,request):
-        url=Urls.objects.all()
+        url=UrlsTable.objects.all()
         serializer=UrlsSerializers(url, many=True)
         return Response(serializer.data)
     def post(self,request):

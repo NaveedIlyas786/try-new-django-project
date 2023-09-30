@@ -1,16 +1,11 @@
-import {configureStore} from "@reduxjs/toolkit"
-import authSlice from "../redux/authSlice"
+import { configureStore } from '@reduxjs/toolkit';
+import estimatingReducer from './EstimatingSlice';
 
-const store=configureStore({
-    reducer:{ 
-        user:authSlice
-    }
-})
-
+const store = configureStore({
+  reducer: {
+    estimating: estimatingReducer,
+    // Add other reducers here if needed
+  },
+});
 
 export default store;
-
-
-
-
-

@@ -2,10 +2,13 @@ import { useState, useEffect } from "react";
 import "./Estimating.css";
 import { useNavigate } from "react-router-dom";
 import "font-awesome/css/font-awesome.min.css";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
-import { parse, isValid, format } from "date-fns";
+import { useSelector, useDispatch } from 'react-redux';
+import { addEstimating } from "../../store/EstimatingSlice";
+import { fetchEstimatingData } from "../../store/EstimatingSlice";
+
+
 import {
   Modal,
   // TextField,
@@ -30,6 +33,10 @@ const Estimator = () => {
   const [company, setCompany] = useState(""); // Updated to store company name as a string
   // const navigate = useNavigate();
   // ***********************************
+ const dispatch = useDispatch();
+  const estimatingData = useSelector(state => state.estimating);
+  // const estimatingTabledata = useSelector((state) => state.estimating.data);
+
   const [openRow, setOpenRow] = useState(null);
 
   const toggleDropdown = (rowId) => {
@@ -89,17 +96,18 @@ const Estimator = () => {
   //************ To show data in Estimating List
   useEffect(() => {
     // Fetch data from the API
-    axios
-      .get("http://127.0.0.1:8000/api/estimating/estimating/")
-      .then((response) => response.data)
-      .then((data) => {
-        // console.log(data);
-        setData(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []);
+    // axios
+    //   .get("http://127.0.0.1:8000/api/estimating/estimating/")
+    //   .then((response) => response.data)
+    //   .then((data) => {
+    //     console.log(data);
+    //     setData(data);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error fetching data:", error);
+    //   });
+    dispatch(fetchEstimatingData());
+  }, [dispatch]);
 
   //************ To show locations in dropdown in estimating post field
 
@@ -328,6 +336,9 @@ const Estimator = () => {
   const handleTimeZoneChange = (e) => {
     settimezone(e.target.value);
   };
+
+ 
+
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
 
@@ -364,23 +375,6 @@ const Estimator = () => {
 
     console.log("Selected Time:", selectedTime);
 
-    // const validateAndFormatTime = (time) => {
-    //   // Regular expressions to match the "hh:mm [AM|PM]" format and 24-hour format
-    //   const amPmRegex = /^(1[0-2]|0?[0-9]):([0-5][0-9]) (AM|PM)$/i; // Case-insensitive
-    //   const twentyFourHourRegex = /^(1[0-9]|2[0-3]|0?[0-9]):([0-5][0-9])$/;
-
-    //   if (amPmRegex.test(time)) {
-    //     // If the input matches the "hh:mm AM/PM" format, return it as is
-    //     return time;
-    //   } else if (twentyFourHourRegex.test(time)) {
-    //     // If the input matches the 24-hour format, add "AM" by default
-    //     return `${time} AM`;
-    //   } else {
-    //     // If the input doesn't match either format, return an empty string (or handle it as needed)
-    //     return "";
-    //   }
-    // };
-
     // Validate and format the selectedTime
     const formattedTime = validateAndFormatTime(selectedTime);
     console.log("Formatted Time: ", formattedTime);
@@ -412,6 +406,7 @@ const Estimator = () => {
       .then((response) => {
         // Handle the response if needed
         console.log("Data successfully submitted:", response.data);
+        dispatch(addEstimating(response.data));
         // You can also reset the form fields here if needed
         setDueDate("");
         setSelectedTime("");
@@ -629,28 +624,29 @@ const Estimator = () => {
       console.error("An error occurred:", error.message);
     }
   };
-  const filteredData = data.filter((customer) => {
-    // console.log("Filter:", filter);
-    // console.log("Status:", customer.status);
-    return (
-      (customer.Prjct_Name &&
-        customer.Prjct_Name.toUpperCase().includes(filter.toUpperCase())) ||
-      (customer.status &&
-        customer.status
-          .trim()
-          .toUpperCase()
-          .includes(filter.trim().toUpperCase())) ||
-      (customer.estimator &&
-        customer.estimator.toUpperCase().includes(filter.toUpperCase())) ||
-      (customer.bidder &&
-        customer.bidder.toUpperCase().includes(filter.toUpperCase())) ||
-      (customer.bid_amount &&
-        customer.bid_amount
-          .toString()
-          .toUpperCase()
-          .includes(filter.toUpperCase()))
-    );
+  const filteredData = useSelector((state) => {
+    return state.estimating.data.filter((customer) => {
+      return (
+        (customer.Prjct_Name &&
+          customer.Prjct_Name.toUpperCase().includes(filter.toUpperCase())) ||
+        (customer.status &&
+          customer.status
+            .trim()
+            .toUpperCase()
+            .includes(filter.trim().toUpperCase())) ||
+        (customer.estimator &&
+          customer.estimator.toUpperCase().includes(filter.toUpperCase())) ||
+        (customer.bidder &&
+          customer.bidder.toUpperCase().includes(filter.toUpperCase())) ||
+        (customer.bid_amount &&
+          customer.bid_amount
+            .toString()
+            .toUpperCase()
+            .includes(filter.toUpperCase()))
+      );
+    });
   });
+  
   const handlestartDateChange = (e) => {
     setStartDate(e.target.value);
   };
@@ -788,22 +784,19 @@ const Estimator = () => {
 
   const handleStatusChange = async (event, item) => {
     const updatedStatus = event.target.value;
-  
+
     try {
-      // Create a copy of the item with the updated status
-      const updatedItem = { ...item, status: updatedStatus };
-  
       const response = await fetch(
-        `http://127.0.0.1:8000/api/estimating/estimating/${item.id}/`, // Include the item's unique identifier (id) in the URL
+        "http://127.0.0.1:8000/api/estimating/estimating/",
         {
-          method: "PUT",
+          method: "PUT", // You might use POST or another appropriate method
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(updatedItem), // Send the updated item to the backend
+          body: JSON.stringify({ newStatus: updatedStatus }), // Send the new status to the backend
         }
       );
-  
+
       if (response.ok) {
         // Update the frontend display with the new status
         setNewStatus(updatedStatus);
@@ -815,11 +808,10 @@ const Estimator = () => {
       console.error("Error updating status:", error);
     }
   };
-  
 
-  const MovetoURLpage=()=>{
-    navigate("/homepage/urlpage")
-  }
+  const MovetoURLpage = () => {
+    navigate("/homepage/urlpage");
+  };
   return (
     <>
       <div className={`estimator  px-5 ${showModal ? "modal-active" : ""}`}>
@@ -1024,9 +1016,6 @@ const Estimator = () => {
             className="myinput p-2"
             onChange={(e) => setFilter(e.target.value)}
           />
-          <button className="btn btn-warning" >
-            Dashboard
-          </button>
           <button className="btn btn-primary" onClick={MovetoURLpage}>
             URL
           </button>

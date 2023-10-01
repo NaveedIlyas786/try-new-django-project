@@ -1,22 +1,25 @@
 import { useState, useEffect } from "react";
 import "./Estimating.css";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "font-awesome/css/font-awesome.min.css";
 import "react-datepicker/dist/react-datepicker.css";
-import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { addEstimating } from "../../store/EstimatingSlice";
 import { fetchEstimatingData } from "../../store/EstimatingSlice";
+import { addProject } from "../../store/ProjectFormSlice";
 import { Modal, Button, Stepper, Step, StepLabel } from "@mui/material";
 import AOS from "aos";
-import "aos/dist/aos.css";
+// import "aos/dist/aos.css";
 import ParticlesAnimation from "../../components/particleAnimation/ParticlesAnimation";
+import { createSelector } from "reselect";
 
 const Estimator = () => {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState("");
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
   const [purposalModal, setPurposalModal] = useState(false); // State to control modal visibility
+  const [showProjectModal, setshowProjectModal] = useState(false); // State to control modal visibility
   const [dueDate, setDueDate] = useState("");
   const [projectName, setProjectName] = useState("");
   const [estimatorName, setEstimatorName] = useState("");
@@ -227,7 +230,7 @@ const Estimator = () => {
       })
       .then((response) => {
         console.log("Data successfully submitted", response.data);
-
+        dispatch(addProject(response.data));
         // Clear the form fields by resetting the state variables
         setStartDate(""); // Clear the startDate
         setJobNo(""); // Clear the jobNo
@@ -236,9 +239,11 @@ const Estimator = () => {
         setSelectedForeman(""); // Clear the selectedForeman
         setSelectedBimOperator(""); // Clear the selectedBimOperator
         setSelectedProjectEngineer(""); // Clear the selectedProjectEngineer
-
-        navigate("/homepage/projects");
-        window.location.reload();
+        setTimeout(() => {
+          setshowProjectModal(false);
+        }, 200);
+        // navigate("/homepage/projects");
+        // window.location.reload();
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -259,7 +264,7 @@ const Estimator = () => {
         const managerUser = data.filter((user) =>
           user.roles.includes("Project Manager")
         );
-        console.log(managerUser);
+        // console.log(managerUser);
         setProjectManager(managerUser);
       })
       .catch((error) => {
@@ -277,7 +282,7 @@ const Estimator = () => {
       .then((response) => response.data)
       .then((data) => {
         const formanUser = data.filter((user) => user.roles.includes("Forman"));
-        console.log(formanUser);
+        // console.log(formanUser);
         setFormanName(formanUser);
       })
       .catch((error) => {
@@ -482,7 +487,7 @@ const Estimator = () => {
         type: myservice.type || "EX",
         name: myservice.name,
       }));
-      console.log(updatedServiceTypes);
+      // console.log(updatedServiceTypes);
       // Make sure each 'service' object has a 'type' key
       updatedServiceTypes.forEach((service) => {
         if (typeof service.type === "undefined") {
@@ -533,6 +538,7 @@ const Estimator = () => {
   const closeModal = () => {
     setShowModal(false);
     setPurposalModal(false);
+    setshowProjectModal(false);
     // Remove the 'modal-active' class when the modal is closed
     document.body.classList.remove("modal-active");
   };
@@ -621,8 +627,11 @@ const Estimator = () => {
       console.error("An error occurred:", error.message);
     }
   };
-  const filteredData = useSelector((state) => {
-    return state.estimating.data.filter((customer) => {
+  // ****************Get Estimating data From Store
+  const selectEstimatingData = (state) => state.estimating.data;
+
+  const selectFilteredData = createSelector([selectEstimatingData], (data) => {
+    return data.filter((customer) => {
       return (
         (customer.Prjct_Name &&
           customer.Prjct_Name.toUpperCase().includes(filter.toUpperCase())) ||
@@ -643,6 +652,8 @@ const Estimator = () => {
       );
     });
   });
+
+  const filteredData = useSelector(selectFilteredData);
 
   const handlestartDateChange = (e) => {
     setStartDate(e.target.value);
@@ -819,32 +830,16 @@ const Estimator = () => {
         <div className="estimatingTable px-5">
           <h3 className="text-black">Estimating Summary</h3>
           {/* {ProjectformModal && ( */}
-          <div
-            className="modal fade modalContainer"
-            id="staticBackdrop"
-            data-bs-backdrop="static"
-            data-bs-keyboard="false"
-            tabIndex="-1"
-            aria-labelledby="staticBackdropLabel"
-            aria-hidden="true"
-          >
-            <div className="modal-dialog">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h1 className="modal-title" id="staticBackdropLabel">
-                    Project Details
-                  </h1>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                  ></button>
-                </div>
-                {/* <form className="myform" onSubmit={handleProjectFormSubmit}> */}
-
-                <div className="modal-body d-flex justify-content-center align-items-center flex-column gap-5 pb-5 px-5">
-                  {/* <div className="projName">
+          {showProjectModal && (
+            <div
+              className={`modal-container bg-white pt-5 ps-2 ${
+                showProjectModal ? "show" : ""
+              }`}
+            >
+              <h4 className="text-center addnewtxt">Add New Project Entry</h4>
+              <button className="close-btn" onClick={closeModal}></button>
+              <div className="d-flex justify-content-center align-items-center flex-column gap-5 pb-5 px-5">
+                {/* <div className="projName">
                     <label htmlFor="projectName" className="form-label">
                       Project Name:
                     </label>
@@ -857,157 +852,144 @@ const Estimator = () => {
                       onChange={handleProjectIDChange}
                     />
                   </div> */}
-                  <div className="bothDiv gap-3">
-                    <div className="projName Oneline">
-                      <label htmlFor="projectName" className="form-label">
-                        Start Date:
-                      </label>
-                      <input
-                        type="date"
-                        className="form-control"
-                        id="DateId"
-                        value={startDate}
-                        onChange={handleStartDateChange}
-                      />
-                    </div>
-                    <div className="projName Oneline">
-                      <label htmlFor="projectName" className="form-label">
-                        Job Number:
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="projectID"
-                        value={jobNo}
-                        onChange={handleJobNoChange}
-                      />
-                    </div>
+                <div className="bothDiv gap-3 mt-3">
+                  <div className="projName Oneline">
+                    <label htmlFor="projectName" className="form-label">
+                      Start Date:
+                    </label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      id="DateId"
+                      value={startDate}
+                      onChange={handleStartDateChange}
+                    />
                   </div>
-                  <div className="bothDiv gap-3">
-                    <div className="Oneline">
-                      <label htmlFor="estimatorName" className="form-label">
-                        Project Manager:
-                      </label>
-                      <select
-                        className="form-select"
-                        id="projectManagerID"
-                        value={selectedProjectManager}
-                        onChange={handleProjectManagerChange}
-                      >
-                        <option value="">Select Project Manager</option>
-                        {projectManager && projectManager.length > 0 ? (
-                          projectManager.map((user) => (
-                            <option value={user.id} key={user.id}>
-                              {user.full_Name}
-                            </option>
-                          ))
-                        ) : (
-                          <option value="" disabled>
-                            Loading...
-                          </option>
-                        )}
-                      </select>
-                    </div>
-                    <div className="Oneline">
-                      <label htmlFor="location" className="form-label">
-                        Foreman:
-                      </label>
-                      <select
-                        className="form-select"
-                        id="estimatorNameID"
-                        value={selectedForeman}
-                        onChange={handleForemanChange}
-                      >
-                        <option value="">Select Forman</option>
-                        {formanName.length > 0 ? (
-                          formanName.map((user) => (
-                            <option value={user.id} key={user.id}>
-                              {user.full_Name}
-                            </option>
-                          ))
-                        ) : (
-                          <option value="" disabled>
-                            Loading...
-                          </option>
-                        )}
-                      </select>
-                    </div>
+                  <div className="projName Oneline">
+                    <label htmlFor="projectName" className="form-label">
+                      Job Number:
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="projectID"
+                      value={jobNo}
+                      onChange={handleJobNoChange}
+                    />
                   </div>
-
-                  <div className="bothDiv gap-3">
-                    <div className="Oneline">
-                      <label htmlFor="estimatorName" className="form-label">
-                        Bim Operator:
-                      </label>
-                      <select
-                        className="form-select"
-                        id="bimOperatorID"
-                        value={selectedBimOperator} // Use the selectedBimOperator value
-                        onChange={handleBimOperatorChange}
-                      >
-                        <option value="">Select Bim Operator</option>
-                        {BimOperator && BimOperator.length > 0 ? (
-                          BimOperator.map((user) => (
-                            <option value={user.id} key={user.id}>
-                              {user.full_Name}
-                            </option>
-                          ))
-                        ) : (
-                          <option value="" disabled>
-                            Loading...
+                </div>
+                <div className="bothDiv gap-3">
+                  <div className="Oneline">
+                    <label htmlFor="estimatorName" className="form-label">
+                      Project Manager:
+                    </label>
+                    <select
+                      className="form-select"
+                      id="projectManagerID"
+                      value={selectedProjectManager}
+                      onChange={handleProjectManagerChange}
+                    >
+                      <option value="">Select Project Manager</option>
+                      {projectManager && projectManager.length > 0 ? (
+                        projectManager.map((user) => (
+                          <option value={user.id} key={user.id}>
+                            {user.full_Name}
                           </option>
-                        )}
-                      </select>
-                    </div>
-                    <div className="Oneline">
-                      <label htmlFor="location" className="form-label">
-                        Project Engineer:
-                      </label>
-                      <select
-                        className="form-select"
-                        id="ProjectEngineerID"
-                        value={selectedProjectEngineer}
-                        onChange={handleProjectEngineerChange}
-                      >
-                        <option value="">Select Project Engineer</option>
-
-                        {ProjEnger && ProjEnger.length > 0 ? (
-                          ProjEnger.map((user) => (
-                            <option value={user.id} key={user.id}>
-                              {user.full_Name}
-                            </option>
-                          ))
-                        ) : (
-                          <option value="" disabled>
-                            Loading...
+                        ))
+                      ) : (
+                        <option value="" disabled>
+                          Loading...
+                        </option>
+                      )}
+                    </select>
+                  </div>
+                  <div className="Oneline">
+                    <label htmlFor="location" className="form-label">
+                      Foreman:
+                    </label>
+                    <select
+                      className="form-select"
+                      id="estimatorNameID"
+                      value={selectedForeman}
+                      onChange={handleForemanChange}
+                    >
+                      <option value="">Select Forman</option>
+                      {formanName.length > 0 ? (
+                        formanName.map((user) => (
+                          <option value={user.id} key={user.id}>
+                            {user.full_Name}
                           </option>
-                        )}
-                      </select>
-                    </div>
+                        ))
+                      ) : (
+                        <option value="" disabled>
+                          Loading...
+                        </option>
+                      )}
+                    </select>
                   </div>
                 </div>
 
-                {/* </form> */}
-                <div className="modal-footer">
-                  {/* <h5>Footer</h5> */}
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    data-bs-dismiss="modal"
-                  >
-                    Close
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleProjectFormSubmit}
-                    className="btn btn-primary"
-                  >
-                    Submit
-                  </button>
+                <div className="bothDiv gap-3">
+                  <div className="Oneline">
+                    <label htmlFor="estimatorName" className="form-label">
+                      Bim Operator:
+                    </label>
+                    <select
+                      className="form-select"
+                      id="bimOperatorID"
+                      value={selectedBimOperator} // Use the selectedBimOperator value
+                      onChange={handleBimOperatorChange}
+                    >
+                      <option value="">Select Bim Operator</option>
+                      {BimOperator && BimOperator.length > 0 ? (
+                        BimOperator.map((user) => (
+                          <option value={user.id} key={user.id}>
+                            {user.full_Name}
+                          </option>
+                        ))
+                      ) : (
+                        <option value="" disabled>
+                          Loading...
+                        </option>
+                      )}
+                    </select>
+                  </div>
+                  <div className="Oneline">
+                    <label htmlFor="location" className="form-label">
+                      Project Engineer:
+                    </label>
+                    <select
+                      className="form-select"
+                      id="ProjectEngineerID"
+                      value={selectedProjectEngineer}
+                      onChange={handleProjectEngineerChange}
+                    >
+                      <option value="">Select Project Engineer</option>
+
+                      {ProjEnger && ProjEnger.length > 0 ? (
+                        ProjEnger.map((user) => (
+                          <option value={user.id} key={user.id}>
+                            {user.full_Name}
+                          </option>
+                        ))
+                      ) : (
+                        <option value="" disabled>
+                          Loading...
+                        </option>
+                      )}
+                    </select>
+                  </div>
                 </div>
+                <button
+                  type="button"
+                  onClick={handleProjectFormSubmit}
+                  className="btn btn-submit m-auto mt-3 mb-4"
+                >
+                  Add Project
+                </button>
               </div>
             </div>
-          </div>
+          )}
 
           <div className="inputbtn d-flex gap-2 px-5">
             <input
@@ -1101,11 +1083,10 @@ const Estimator = () => {
                           <button
                             type="button"
                             className="btn dropbtns"
-                            data-bs-toggle="modal"
-                            data-bs-target="#staticBackdrop"
                             onClick={() => {
                               console.log(item.id);
                               setSelectedProjectID(item.id); // Set the selected estimating ID
+                              setshowProjectModal(true);
                             }}
                           >
                             Create Project

@@ -1,13 +1,13 @@
 // estimatingSlice.js
 
-import { createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
 
 const estimatingSlice = createSlice({
-  name: 'estimating',
+  name: "estimating",
   initialState: {
     data: [],
-    status: 'idle',
+    status: "idle",
     error: null,
   },
   reducers: {
@@ -21,6 +21,7 @@ const estimatingSlice = createSlice({
         state.data[index] = { ...state.data[index], ...newData };
       }
     },
+   
     // Define the setData action to update the data in your state
     setData: (state, action) => {
       state.data = action.payload;
@@ -36,19 +37,22 @@ const estimatingSlice = createSlice({
   },
 });
 
+
 // Async action to fetch estimating data from the API
 export const fetchEstimatingData = () => async (dispatch) => {
   try {
-    dispatch(estimatingSlice.actions.setStatus('loading'));
+    dispatch(estimatingSlice.actions.setStatus("loading"));
 
-    const response = await axios.get('http://127.0.0.1:8000/api/estimating/estimating/');
+    const response = await axios.get(
+      "http://127.0.0.1:8000/api/estimating/estimating/"
+    );
     const data = response.data;
 
     // Use the setData action to update the data in the state
     dispatch(estimatingSlice.actions.setData(data));
-    dispatch(estimatingSlice.actions.setStatus('succeeded'));
+    dispatch(estimatingSlice.actions.setStatus("succeeded"));
   } catch (error) {
-    dispatch(estimatingSlice.actions.setStatus('failed'));
+    dispatch(estimatingSlice.actions.setStatus("failed"));
     dispatch(estimatingSlice.actions.setError(error.message));
   }
 };

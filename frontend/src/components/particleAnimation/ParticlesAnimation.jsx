@@ -12,7 +12,8 @@ const  ParticlesAnimation=({numberOfCircles,CircleSizeMin,CircleSizeMax})=> {
   }, []);
 
   const particlesLoaded = useCallback(async (container) => {
-    await console.log(container);
+    await container;
+    // console.log(container);
   });
 
 

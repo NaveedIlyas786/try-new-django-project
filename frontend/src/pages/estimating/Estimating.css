@@ -86,7 +86,9 @@ td {
   pointer-events: auto; /* Enable mouse events */
   transform: translate(-50%, -50%) scale(1); /* Scale to 1 for the opening transition */
 }
-
+.modal-content{
+  z-index: 9999999999999999;
+}
 .modal-content,
 .purposal-content {
   height: 100%;
@@ -583,7 +585,9 @@ td:nth-child(8) {
 
 .modalContainer {
   min-height: 100vh !important;
+  background-color: #82bfff;
 }
+
 .modal-dialog {
   min-width: 60vw !important;
   /* min-height: 85vh !important; */

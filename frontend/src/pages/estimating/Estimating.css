@@ -1,8 +1,10 @@
 .estimator {
-  margin-top: 70px;
   position: relative;
+  margin-top: 70px;
   padding-top: 2.5rem;
-  background-color: rgb(255, 255, 255);
+  z-index: 99;
+  /* height: 100vh; */
+  /* background-color: rgb(247, 38, 38); */
 }
 
 td {
@@ -17,13 +19,13 @@ td {
   color: black;
   top: 2.5rem;
 }
-.myinput { 
+.myinput {
   min-width: 318px;
   background-color: white;
   color: black;
   border: 1px solid black;
   transition: all 0.5s ease-in-out;
-  border-radius: 10px ;
+  border-radius: 10px;
 }
 .myinput:focus {
   min-width: 550px;
@@ -215,13 +217,13 @@ input:focus {
 
   /* border-radius: 5px; */
 }
-.mydiv{
+.mydiv {
   opacity: 0;
 }
-.mydiv:hover{
+.mydiv:hover {
   opacity: 1;
 }
-.modal-title{
+.modal-title {
   color: black;
 }
 .dropbtns {
@@ -248,8 +250,8 @@ input:focus {
   max-width: 150px !important;
 }
 
-.proposalHeader{
- text-align: center;
+.proposalHeader {
+  text-align: center;
 }
 .mydiv {
   position: absolute;
@@ -261,7 +263,7 @@ input:focus {
   min-width: 150px !important;
   transition: opacity 0.3s ease-in-out;
 }
-.statusUpdation{
+.statusUpdation {
   background-color: transparent !important;
   color: black;
   border-radius: 5px;
@@ -322,7 +324,7 @@ input:focus {
   background-color: #f9f9f9;
   min-width: 120px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  z-index: 1;
+  z-index: 2;
 }
 
 .dropdown-content a {
@@ -371,11 +373,11 @@ input[type="text"].serviceInput.focused {
   content: "";
   height: 16px !important;
   width: 16px !important;
-  left: 10px !important; 
+  left: 10px !important;
   bottom: 4px !important;
   /* background-color: rgb(119, 116, 116) !important; */
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 /* Style the scrollbar for WebKit-based browsers */
 .sarviceSection::-webkit-scrollbar {
@@ -395,7 +397,6 @@ input[type="text"].serviceInput.focused {
   border-radius: 20px 20px 0 0 !important;
   margin-top: 50px !important;
   min-height: 50vh !important;
-
 }
 .parentSpecification {
   position: relative;
@@ -491,7 +492,7 @@ input:checked + .slider:before {
   transform: translateX(26px);
 }
 
-.serviceInput{
+.serviceInput {
   background-color: rgb(255, 255, 255);
   padding: 10px;
   width: 100%;
@@ -500,15 +501,15 @@ input:checked + .slider:before {
   border: none !important;
   outline: none !important;
 }
-.serviceInput:focus{
+.serviceInput:focus {
   border: none !important;
   outline: none !important;
 }
-.serviceDiv:first-child{
+.serviceDiv:first-child {
   background-color: rgb(255, 255, 255);
   border-radius: 10px 10px 0 0 !important;
 }
-.serviceDiv{
+.serviceDiv {
   background-color: rgb(255, 255, 255);
 }
 /* Rounded sliders */
@@ -520,19 +521,19 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-.bothDiv{
+.bothDiv {
   display: flex;
   justify-content: space-between;
 }
-.Oneline{
+.Oneline {
   width: 390px !important;
 }
-.MyForm{
+.MyForm {
   display: flex;
   flex-direction: column;
   gap: 20px !important;
 }
-#bidderDetails{
+#bidderDetails {
   height: 120px !important;
 }
 table tr > th,
@@ -557,7 +558,7 @@ td {
   border: 1px solid rgb(216, 213, 213) !important;
   max-height: 120px !important;
 }
-th{
+th {
   background-color: #1976d2 !important;
   color: white !important;
 }
@@ -566,7 +567,9 @@ th{
   white-space:nowrap;
   text-overflow: ellipsis;
 } */
-td:nth-child(2), td:nth-child(6),td:nth-child(8){
+td:nth-child(2),
+td:nth-child(6),
+td:nth-child(8) {
   padding: 0 10px !important;
 }
 .centered-td {
@@ -574,14 +577,14 @@ td:nth-child(2), td:nth-child(6),td:nth-child(8){
   vertical-align: middle; /* Center vertically */
 }
 
-.modal{
+.modal {
   max-height: 400px !important;
 }
 
-.modalContainer{
+.modalContainer {
   min-height: 100vh !important;
 }
-.modal-dialog{
+.modal-dialog {
   min-width: 60vw !important;
   /* min-height: 85vh !important; */
 }
@@ -590,13 +593,13 @@ td:nth-child(2), td:nth-child(6),td:nth-child(8){
   max-height: 65vh !important;
   overflow-y: scroll;
 } */
-.myform{
+.myform {
   padding-top: 50px !important;
   max-height: 65vh !important;
   overflow-y: scroll;
   /* margin-top: 150px !important; */
 }
-.projName{
+.projName {
   width: 96%;
 }
 .modal-body::-webkit-scrollbar {
@@ -612,10 +615,14 @@ td:nth-child(2), td:nth-child(6),td:nth-child(8){
   border-radius: 10px; /*Round the corners of the thumb*/
   background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
 }
-.proposalTable{
-  max-height: 70vh !important;
+.proposalTable {
+  max-height: 71vh !important;
   overflow: auto;
   border-radius: 10px !important;
+}
+.jktable{
+  opacity: 0.8;
+  background-color: #ddd;
 }
 .proposalTable::-webkit-scrollbar {
   width: 10px; /* Set the width of the scrollbar */
@@ -630,7 +637,7 @@ td:nth-child(2), td:nth-child(6),td:nth-child(8){
   border-radius: 10px; /*Round the corners of the thumb*/
   background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
 }
-.timefield{
+.timefield {
   display: flex;
   flex-direction: column !important;
   /* padding: 5px; */
@@ -676,7 +683,7 @@ td:nth-child(2), td:nth-child(6),td:nth-child(8){
   cursor: pointer;
   text-align: center;
   /* width: 150px !important; */
-  margin: -2px  !important; 
+  margin: -2px !important;
 }
 
 /* Style the selected time option */
@@ -686,12 +693,12 @@ td:nth-child(2), td:nth-child(6),td:nth-child(8){
   margin: -5px !important;
   font-weight: bold;
 }
-.mypicker{
+.mypicker {
   outline: none;
   /* border: 2px solid red; */
   border-radius: 10px 0 0 10px !important;
 }
-.selectpicker{
+.selectpicker {
   border-radius: 0 10px 10px 0 !important;
   border-color: #dbdcdd;
   outline: none;
@@ -703,5 +710,37 @@ td:nth-child(2), td:nth-child(6),td:nth-child(8){
 .react-datepicker__time-list-item:hover {
   background-color: #ddd;
 }
-
-
+.ParentAllDiv {
+  position: relative;
+  /* z-index: -99; */
+  /* background-color: #4caf50; */
+}
+.AllbackDivs {
+  background-color: #b1b0b0;
+  position: absolute;
+  border-radius: 50%;
+  top: -60px;
+  left: -60px;
+  width: 250px;
+  height: 250px;
+  z-index: -99;
+}
+.backDiv1 {
+  background-color: #fdfdfd;
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  border-radius: 50%;
+  top: 100px;
+  left:80px;
+}
+/* .backDiv1 {
+  background-color: #757eff;
+  width: 10px;
+  height: 170px;
+  position: absolute;
+  border-radius: 50%;
+  top: 20px;
+  left:80px;
+  rotate: -25deg;
+} */

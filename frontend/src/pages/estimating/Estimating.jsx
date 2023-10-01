@@ -4,21 +4,13 @@ import { useNavigate } from "react-router-dom";
 import "font-awesome/css/font-awesome.min.css";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
 import { addEstimating } from "../../store/EstimatingSlice";
 import { fetchEstimatingData } from "../../store/EstimatingSlice";
-
-
-import {
-  Modal,
-  // TextField,
-  Button,
-  Stepper,
-  Step,
-  StepLabel,
-  // Typography,
-} from "@mui/material";
-// import { styled } from "@mui/system";
+import { Modal, Button, Stepper, Step, StepLabel } from "@mui/material";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import ParticlesAnimation from "../../components/particleAnimation/ParticlesAnimation";
 
 const Estimator = () => {
   const [data, setData] = useState([]);
@@ -33,12 +25,30 @@ const Estimator = () => {
   const [company, setCompany] = useState(""); // Updated to store company name as a string
   // const navigate = useNavigate();
   // ***********************************
- const dispatch = useDispatch();
-  const estimatingData = useSelector(state => state.estimating);
-  // const estimatingTabledata = useSelector((state) => state.estimating.data);
+  const dispatch = useDispatch();
+
+  const [numberOfCircles, setNumberOfCircles] = useState();
+
+  const handleNumberOfCirclesChange = (event) => {
+    setNumberOfCircles(Number(event.target.value));
+  };
+
+  useEffect(() => {
+    const newNumberOfCircles = 100; // Set the desired number of circles
+    handleNumberOfCirclesChange({ target: { value: newNumberOfCircles } });
+  }, []);
+
+  window.onload = () => {
+    const newNumberOfCircles = 100; // Set the desired number of circles
+    handleNumberOfCirclesChange({ target: { value: newNumberOfCircles } });
+  };
+
+  //! For AOS page scrolling Aimation ↴↴
+  useEffect(() => {
+    AOS.init({ duration: 2000 });
+  }, []);
 
   const [openRow, setOpenRow] = useState(null);
-
   const toggleDropdown = (rowId) => {
     if (openRow === rowId) {
       setOpenRow(null); // Close the dropdown if it's already open
@@ -95,17 +105,6 @@ const Estimator = () => {
   };
   //************ To show data in Estimating List
   useEffect(() => {
-    // Fetch data from the API
-    // axios
-    //   .get("http://127.0.0.1:8000/api/estimating/estimating/")
-    //   .then((response) => response.data)
-    //   .then((data) => {
-    //     console.log(data);
-    //     setData(data);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error fetching data:", error);
-    //   });
     dispatch(fetchEstimatingData());
   }, [dispatch]);
 
@@ -336,8 +335,6 @@ const Estimator = () => {
   const handleTimeZoneChange = (e) => {
     settimezone(e.target.value);
   };
-
- 
 
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
@@ -646,7 +643,7 @@ const Estimator = () => {
       );
     });
   });
-  
+
   const handlestartDateChange = (e) => {
     setStartDate(e.target.value);
   };
@@ -813,36 +810,41 @@ const Estimator = () => {
     navigate("/homepage/urlpage");
   };
   return (
-    <>
-      <div className={`estimator  px-5 ${showModal ? "modal-active" : ""}`}>
-        <h3 className="text-black">Estimating Summary</h3>
-        {/* {ProjectformModal && ( */}
-        <div
-          className="modal fade modalContainer"
-          id="staticBackdrop"
-          data-bs-backdrop="static"
-          data-bs-keyboard="false"
-          tabIndex="-1"
-          aria-labelledby="staticBackdropLabel"
-          aria-hidden="true"
-        >
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h1 className="modal-title" id="staticBackdropLabel">
-                  Project Details
-                </h1>
-                <button
-                  type="button"
-                  className="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              {/* <form className="myform" onSubmit={handleProjectFormSubmit}> */}
+    <div className="ParentAllDiv">
+      <div className={`estimator ${showModal ? "modal-active" : ""}`}>
+        <div className="AllbackDivs">
+          <div className="backDiv1"></div>
+          <div className="backDiv1"></div>
+        </div>
+        <div className="estimatingTable px-5">
+          <h3 className="text-black">Estimating Summary</h3>
+          {/* {ProjectformModal && ( */}
+          <div
+            className="modal fade modalContainer"
+            id="staticBackdrop"
+            data-bs-backdrop="static"
+            data-bs-keyboard="false"
+            tabIndex="-1"
+            aria-labelledby="staticBackdropLabel"
+            aria-hidden="true"
+          >
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h1 className="modal-title" id="staticBackdropLabel">
+                    Project Details
+                  </h1>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                {/* <form className="myform" onSubmit={handleProjectFormSubmit}> */}
 
-              <div className="modal-body d-flex justify-content-center align-items-center flex-column gap-5 pb-5 px-5">
-                {/* <div className="projName">
+                <div className="modal-body d-flex justify-content-center align-items-center flex-column gap-5 pb-5 px-5">
+                  {/* <div className="projName">
                     <label htmlFor="projectName" className="form-label">
                       Project Name:
                     </label>
@@ -855,269 +857,270 @@ const Estimator = () => {
                       onChange={handleProjectIDChange}
                     />
                   </div> */}
-                <div className="bothDiv gap-3">
-                  <div className="projName Oneline">
-                    <label htmlFor="projectName" className="form-label">
-                      Start Date:
-                    </label>
-                    <input
-                      type="date"
-                      className="form-control"
-                      id="DateId"
-                      value={startDate}
-                      onChange={handleStartDateChange}
-                    />
+                  <div className="bothDiv gap-3">
+                    <div className="projName Oneline">
+                      <label htmlFor="projectName" className="form-label">
+                        Start Date:
+                      </label>
+                      <input
+                        type="date"
+                        className="form-control"
+                        id="DateId"
+                        value={startDate}
+                        onChange={handleStartDateChange}
+                      />
+                    </div>
+                    <div className="projName Oneline">
+                      <label htmlFor="projectName" className="form-label">
+                        Job Number:
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="projectID"
+                        value={jobNo}
+                        onChange={handleJobNoChange}
+                      />
+                    </div>
                   </div>
-                  <div className="projName Oneline">
-                    <label htmlFor="projectName" className="form-label">
-                      Job Number:
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="projectID"
-                      value={jobNo}
-                      onChange={handleJobNoChange}
-                    />
-                  </div>
-                </div>
-                <div className="bothDiv gap-3">
-                  <div className="Oneline">
-                    <label htmlFor="estimatorName" className="form-label">
-                      Project Manager:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="projectManagerID"
-                      value={selectedProjectManager}
-                      onChange={handleProjectManagerChange}
-                    >
-                      <option value="">Select Project Manager</option>
-                      {projectManager && projectManager.length > 0 ? (
-                        projectManager.map((user) => (
-                          <option value={user.id} key={user.id}>
-                            {user.full_Name}
+                  <div className="bothDiv gap-3">
+                    <div className="Oneline">
+                      <label htmlFor="estimatorName" className="form-label">
+                        Project Manager:
+                      </label>
+                      <select
+                        className="form-select"
+                        id="projectManagerID"
+                        value={selectedProjectManager}
+                        onChange={handleProjectManagerChange}
+                      >
+                        <option value="">Select Project Manager</option>
+                        {projectManager && projectManager.length > 0 ? (
+                          projectManager.map((user) => (
+                            <option value={user.id} key={user.id}>
+                              {user.full_Name}
+                            </option>
+                          ))
+                        ) : (
+                          <option value="" disabled>
+                            Loading...
                           </option>
-                        ))
-                      ) : (
-                        <option value="" disabled>
-                          Loading...
-                        </option>
-                      )}
-                    </select>
-                  </div>
-                  <div className="Oneline">
-                    <label htmlFor="location" className="form-label">
-                      Foreman:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="estimatorNameID"
-                      value={selectedForeman}
-                      onChange={handleForemanChange}
-                    >
-                      <option value="">Select Forman</option>
-                      {formanName.length > 0 ? (
-                        formanName.map((user) => (
-                          <option value={user.id} key={user.id}>
-                            {user.full_Name}
+                        )}
+                      </select>
+                    </div>
+                    <div className="Oneline">
+                      <label htmlFor="location" className="form-label">
+                        Foreman:
+                      </label>
+                      <select
+                        className="form-select"
+                        id="estimatorNameID"
+                        value={selectedForeman}
+                        onChange={handleForemanChange}
+                      >
+                        <option value="">Select Forman</option>
+                        {formanName.length > 0 ? (
+                          formanName.map((user) => (
+                            <option value={user.id} key={user.id}>
+                              {user.full_Name}
+                            </option>
+                          ))
+                        ) : (
+                          <option value="" disabled>
+                            Loading...
                           </option>
-                        ))
-                      ) : (
-                        <option value="" disabled>
-                          Loading...
-                        </option>
-                      )}
-                    </select>
+                        )}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="bothDiv gap-3">
+                    <div className="Oneline">
+                      <label htmlFor="estimatorName" className="form-label">
+                        Bim Operator:
+                      </label>
+                      <select
+                        className="form-select"
+                        id="bimOperatorID"
+                        value={selectedBimOperator} // Use the selectedBimOperator value
+                        onChange={handleBimOperatorChange}
+                      >
+                        <option value="">Select Bim Operator</option>
+                        {BimOperator && BimOperator.length > 0 ? (
+                          BimOperator.map((user) => (
+                            <option value={user.id} key={user.id}>
+                              {user.full_Name}
+                            </option>
+                          ))
+                        ) : (
+                          <option value="" disabled>
+                            Loading...
+                          </option>
+                        )}
+                      </select>
+                    </div>
+                    <div className="Oneline">
+                      <label htmlFor="location" className="form-label">
+                        Project Engineer:
+                      </label>
+                      <select
+                        className="form-select"
+                        id="ProjectEngineerID"
+                        value={selectedProjectEngineer}
+                        onChange={handleProjectEngineerChange}
+                      >
+                        <option value="">Select Project Engineer</option>
+
+                        {ProjEnger && ProjEnger.length > 0 ? (
+                          ProjEnger.map((user) => (
+                            <option value={user.id} key={user.id}>
+                              {user.full_Name}
+                            </option>
+                          ))
+                        ) : (
+                          <option value="" disabled>
+                            Loading...
+                          </option>
+                        )}
+                      </select>
+                    </div>
                   </div>
                 </div>
 
-                <div className="bothDiv gap-3">
-                  <div className="Oneline">
-                    <label htmlFor="estimatorName" className="form-label">
-                      Bim Operator:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="bimOperatorID"
-                      value={selectedBimOperator} // Use the selectedBimOperator value
-                      onChange={handleBimOperatorChange}
-                    >
-                      <option value="">Select Bim Operator</option>
-                      {BimOperator && BimOperator.length > 0 ? (
-                        BimOperator.map((user) => (
-                          <option value={user.id} key={user.id}>
-                            {user.full_Name}
-                          </option>
-                        ))
-                      ) : (
-                        <option value="" disabled>
-                          Loading...
-                        </option>
-                      )}
-                    </select>
-                  </div>
-                  <div className="Oneline">
-                    <label htmlFor="location" className="form-label">
-                      Project Engineer:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="ProjectEngineerID"
-                      value={selectedProjectEngineer}
-                      onChange={handleProjectEngineerChange}
-                    >
-                      <option value="">Select Project Engineer</option>
-
-                      {ProjEnger && ProjEnger.length > 0 ? (
-                        ProjEnger.map((user) => (
-                          <option value={user.id} key={user.id}>
-                            {user.full_Name}
-                          </option>
-                        ))
-                      ) : (
-                        <option value="" disabled>
-                          Loading...
-                        </option>
-                      )}
-                    </select>
-                  </div>
+                {/* </form> */}
+                <div className="modal-footer">
+                  {/* <h5>Footer</h5> */}
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleProjectFormSubmit}
+                    className="btn btn-primary"
+                  >
+                    Submit
+                  </button>
                 </div>
-              </div>
-
-              {/* </form> */}
-              <div className="modal-footer">
-                {/* <h5>Footer</h5> */}
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Close
-                </button>
-                <button
-                  type="button"
-                  onClick={handleProjectFormSubmit}
-                  className="btn btn-primary"
-                >
-                  Submit
-                </button>
               </div>
             </div>
           </div>
-        </div>
-        {/* )} */}
 
-        <div className="inputbtn d-flex gap-2 px-5">
-          <input
-            type="text"
-            placeholder="Filter by Project Name, Estimator Name, Bidders, Bid Amount, Status"
-            value={filter}
-            className="myinput p-2"
-            onChange={(e) => setFilter(e.target.value)}
-          />
-          <button className="btn btn-primary" onClick={MovetoURLpage}>
-            URL
-          </button>
-          <button
-            className="btn btn-success"
-            onClick={() => setShowModal(true)}
-          >
-            New
-          </button>
-        </div>
-        <div className="table-responsive proposalTable mt-4">
-          <table className="table table-striped table-bordered table-hover">
-            <thead className="proposalHeader">
-              <tr>
-                <th>Start Date</th>
-                <th>Time</th>
-                <th>Project Name</th>
-                <th>Area</th>
-                <th>Estimator</th>
-                <th>Status</th>
-                <th>Bidders</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody className="cursor-pointer bg-info jloop">
-              {filteredData.map((item) => (
-                <tr key={item.id}>
-                  <td className="mytd centered-td">{item.due_date}</td>
-                  <td className="mytd centered-td">{item.time}</td>
-                  <td className="mytd myproject centered-td">
-                    {item.Prjct_Name}
-                  </td>
-                  <td className="mytd centered-td">{item.location}</td>
-                  <td className="mytd centered-td">{item.estimator}</td>
-                  <td className="mytd centered-td">
-                    <select
-                      className="statusUpdation p-2 m-2"
-                      name="#"
-                      id="#"
-                      onChange={(event) => handleStatusChange(event, item)}
-                      value={newStatus}
-                    >
-                      <option value="">{item.status}</option>
-                      <option value="Pending">Pending</option>
-                      <option value="Won">Won</option>
-                      <option value="Lost">Lost</option>
-                    </select>
-                  </td>
-                  <td className="mytdbidder centered-td">
-                    {item.bidder + " " + item.bidder_deatil}
-                  </td>
-                  <td className="mytd centered-td">
-                    <div className="relative-container">
-                      <i
-                        onClick={() => toggleDropdown(item.id)}
-                        style={{ cursor: "pointer" }}
-                        className="fa-solid threeDotIcon fa-ellipsis-vertical"
-                      ></i>
-                      <div
-                        className={`mydiv ${
-                          openRow === item.id ? "open" : " "
-                        }`}
-                        // className="mydiv"
-                      >
-                        <button
-                          className="btn dropbtns"
-                          onClick={() => {
-                            console.log(item.Prjct_Name);
-                            setStep0FormData({
-                              ...step0FormData,
-                              estimating: item.id,
-                            });
-                            setSelectedEstimatingID(item.Prjct_Name); // Set the selected estimating ID
-                            setPurposalModal(true);
-                          }}
-                          // onClick={movetoPurposalPage}
-                        >
-                          Create Proposal
-                        </button>
-
-                        <button
-                          type="button"
-                          className="btn dropbtns"
-                          data-bs-toggle="modal"
-                          data-bs-target="#staticBackdrop"
-                          onClick={() => {
-                            console.log(item.id);
-                            setSelectedProjectID(item.id); // Set the selected estimating ID
-                          }}
-                        >
-                          Create Project
-                        </button>
-                        <button className="btn dropbtns" onClick={viewpdf}>
-                          View Propsal
-                        </button>
-                      </div>
-                    </div>
-                  </td>
+          <div className="inputbtn d-flex gap-2 px-5">
+            <input
+              type="text"
+              placeholder="Filter by Project Name, Estimator Name, Bidders, Bid Amount, Status"
+              value={filter}
+              className="myinput p-2"
+              onChange={(e) => setFilter(e.target.value)}
+            />
+            <button className="btn btn-primary" onClick={MovetoURLpage}>
+              URL
+            </button>
+            <button
+              className="btn btn-success"
+              onClick={() => setShowModal(true)}
+            >
+              New
+            </button>
+          </div>
+          <ParticlesAnimation numberOfCircles={numberOfCircles} />
+          <div className="table-responsive proposalTable mt-4">
+            <table className="table table-striped  table-bordered table-hover">
+              <thead className="proposalHeader">
+                <tr>
+                  <th>Start Date</th>
+                  <th>Time</th>
+                  <th>Project Name</th>
+                  <th>Area</th>
+                  <th>Estimator</th>
+                  <th>Status</th>
+                  <th>Bidders</th>
+                  <th>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="cursor-pointer jktable bg-info jloop">
+                {filteredData.map((item) => (
+                  <tr key={item.id}>
+                    <td className="mytd centered-td">{item.due_date}</td>
+                    <td className="mytd centered-td">{item.time}</td>
+                    <td className="mytd myproject centered-td">
+                      {item.Prjct_Name}
+                    </td>
+                    <td className="mytd centered-td">{item.location}</td>
+                    <td className="mytd centered-td">{item.estimator}</td>
+                    <td className="mytd centered-td">
+                      <select
+                        className="statusUpdation p-2 m-2"
+                        name="#"
+                        id="#"
+                        onChange={(event) => handleStatusChange(event, item)}
+                        value={newStatus}
+                      >
+                        <option value="">{item.status}</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Won">Won</option>
+                        <option value="Lost">Lost</option>
+                      </select>
+                    </td>
+                    <td className="mytdbidder centered-td">
+                      {item.bidder + " " + item.bidder_deatil}
+                    </td>
+                    <td className="mytd centered-td">
+                      <div className="relative-container">
+                        <i
+                          onClick={() => toggleDropdown(item.id)}
+                          style={{ cursor: "pointer" }}
+                          className="fa-solid threeDotIcon fa-ellipsis-vertical"
+                        ></i>
+                        <div
+                          className={`mydiv ${
+                            openRow === item.id ? "open" : " "
+                          }`}
+                          // className="mydiv"
+                        >
+                          <button
+                            className="btn dropbtns"
+                            onClick={() => {
+                              console.log(item.Prjct_Name);
+                              setStep0FormData({
+                                ...step0FormData,
+                                estimating: item.id,
+                              });
+                              setSelectedEstimatingID(item.Prjct_Name); // Set the selected estimating ID
+                              setPurposalModal(true);
+                            }}
+                            // onClick={movetoPurposalPage}
+                          >
+                            Create Proposal
+                          </button>
+
+                          <button
+                            type="button"
+                            className="btn dropbtns"
+                            data-bs-toggle="modal"
+                            data-bs-target="#staticBackdrop"
+                            onClick={() => {
+                              console.log(item.id);
+                              setSelectedProjectID(item.id); // Set the selected estimating ID
+                            }}
+                          >
+                            Create Project
+                          </button>
+                          <button className="btn dropbtns" onClick={viewpdf}>
+                            View Propsal
+                          </button>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
       {/* New Estimating Entry Posting-Code */}
@@ -1779,7 +1782,7 @@ const Estimator = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

@@ -140,8 +140,9 @@ const Estimator = () => {
       .get("http://127.0.0.1:8000/api/estimating/company/")
       .then((response) => response.data)
       .then((data) => {
-        // console.log(data);
-        setCompanyName(data);
+        const activeCompanies = data.filter(company => company.is_active);
+        // console.log('Active Companies:', activeCompanies);  // Log the filtered companies to the console
+        setCompanyName(activeCompanies);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -157,7 +158,7 @@ const Estimator = () => {
       .get("http://127.0.0.1:8000/api/user/Userapi/")
       .then((response) => response.data)
       .then((data) => {
-        const bidUser = data.filter((user) => user.roles.includes("Estimator"));
+        const bidUser = data.filter((user) => user.roles.includes("Estimator") );
         // console.log(bidUser);
         setestimatorName(bidUser);
       })

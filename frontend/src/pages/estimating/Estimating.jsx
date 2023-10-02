@@ -793,30 +793,31 @@ const Estimator = () => {
 
   const handleStatusChange = async (event, item) => {
     const updatedStatus = event.target.value;
-
+  
     try {
       const response = await fetch(
         "http://127.0.0.1:8000/api/estimating/estimating/",
         {
-          method: "PUT", // You might use POST or another appropriate method
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ newStatus: updatedStatus }), // Send the new status to the backend
+          body: JSON.stringify({ newStatus: updatedStatus }),
         }
       );
-
+  
       if (response.ok) {
-        // Update the frontend display with the new status
         setNewStatus(updatedStatus);
         // You may need to refresh the UI or update the specific row accordingly
       } else {
-        console.error("Failed to update status");
+        const responseData = await response.json();
+        console.error("Failed to update status. Server response:", responseData);
       }
     } catch (error) {
       console.error("Error updating status:", error);
     }
   };
+  
 
   const MovetoURLpage = () => {
     navigate("/homepage/urlpage");
@@ -1015,8 +1016,8 @@ const Estimator = () => {
             <table className="table table-striped  table-bordered table-hover">
               <thead className="proposalHeader">
                 <tr>
-                  <th>Start Date</th>
-                  <th>Time</th>
+                  <th>Due Date</th>
+                  <th>Time (PST)</th>
                   <th>Project Name</th>
                   <th>Area</th>
                   <th>Estimator</th>
@@ -1040,8 +1041,8 @@ const Estimator = () => {
                         className="statusUpdation p-2 m-2"
                         name="#"
                         id="#"
-                        onChange={(event) => handleStatusChange(event, item)}
-                        value={newStatus}
+                        // onChange={(event) => handleStatusChange(event, item)}
+                        // value={newStatus}
                       >
                         <option value="">{item.status}</option>
                         <option value="Pending">Pending</option>
@@ -1524,7 +1525,7 @@ const Estimator = () => {
                           htmlFor="projectName"
                           className="form-label mt-2"
                         >
-                          <strong> Scope Of Work</strong>
+                          <strong> Scope of work</strong>
                         </label>
                         <div className="specificationEntry">
                           <div className="mb-2 mt-3">
@@ -1532,7 +1533,7 @@ const Estimator = () => {
                               htmlFor="specificName"
                               className="form-label"
                             >
-                              Scope Of Work Name
+                              Scope of work name
                             </label>
                             {/* <input
                               type="text"
@@ -1558,8 +1559,11 @@ const Estimator = () => {
                                 })
                               }
                             >
-                              <option value="" disabled>
+                              {/* <option value="" disabled>
                                 Select Scope Of Work
+                              </option> */}
+                              <option value="Base Bid Drywall/Framing">
+                                Base Bid Drywall/Framing
                               </option>
                               <option value="Add/Alt Building Insulation">
                                 Add/Alt Building Insulation
@@ -1569,9 +1573,6 @@ const Estimator = () => {
                               </option>
                               <option value="Add/Alt Weather Barriers">
                                 Add/Alt Weather Barriers
-                              </option>
-                              <option value="Base Bid Drywall/Framing/Plaster">
-                                Base Bid Drywall/Framing/Plaster
                               </option>
                               <option value=" Add/Alt Integrated Ceiling Assemblies">
                                 Add/Alt Integrated Ceiling Assemblies
@@ -1585,7 +1586,7 @@ const Estimator = () => {
                               htmlFor="specificbudget"
                               className="form-label"
                             >
-                              Scope Of Work Price
+                              Scope of work price
                             </label>
                             <input
                               type="text" // Use type "text" to allow non-numeric characters (e.g., commas)
@@ -1603,7 +1604,7 @@ const Estimator = () => {
                               htmlFor="specificdetails"
                               className="form-label"
                             >
-                              Scope Of Work Alternatives
+                              Scope of work alternatives
                             </label>
                             {step2FormData.sefic.map((entry, index) => (
                               <div

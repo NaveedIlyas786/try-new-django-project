@@ -20,7 +20,7 @@ class Company(models.Model):
     logo = models.ImageField(upload_to='logos/', validators=[validate_file_extension], null=False, blank=False)
     email = models.EmailField(default="estimating@dmsmgt.com", editable=False)
 
-
+    is_active=models.BooleanField(default=False)
     def __str__(self):
         return self.Cmpny_Name
 
@@ -43,7 +43,7 @@ class UrlsTable(models.Model):
         return self.web_name
 class Estimating(models.Model):
 
-
+    link=models.URLField(verbose_name="Add link", max_length=200,null=True,blank=True)
     time = models.TimeField(verbose_name="Time", null=True, blank=True)
 
     timezone = models.CharField(
@@ -71,16 +71,13 @@ class Estimating(models.Model):
 
     start_date = models.DateField(verbose_name="start Date",null=True,blank=True)
 
-    company = models.ForeignKey(Company, verbose_name="Company", on_delete=models.CASCADE,blank=False)
+    company = models.ForeignKey(Company, verbose_name="Company",related_name='company_in_estimator',limit_choices_to=models.Q(is_active=True), on_delete=models.CASCADE,blank=False)
     bid_amount=models.IntegerField(verbose_name="DMS ",blank=False)
     location=models.ForeignKey(Location,on_delete=models.CASCADE,blank=False,null=True)
-    estimator = models.ForeignKey(User,verbose_name="Estimator", related_name='estimations_as_estimator', limit_choices_to=models.Q(roles__name='Estimator'), on_delete=models.SET_NULL, null=True)
+    estimator = models.ForeignKey(User,verbose_name="Estimator", related_name='estimations_as_estimator', limit_choices_to=models.Q(roles__name='Estimator',is_active=True), on_delete=models.SET_NULL, null=True)
     bidder = models.CharField(verbose_name="Bidder Name",max_length=1500, null=True)
     bidder_deatil=models.CharField(verbose_name="Bidder Detail",max_length=50,null=True)
     
-
- 
-
 
     def save(self, *args, **kwargs):
         # Check if this is a new instance (i.e., being created and not updated)

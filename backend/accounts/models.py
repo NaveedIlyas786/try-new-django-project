@@ -44,7 +44,7 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, full_Name, password=None,phone_number=None,signtr=None,roles=None):
         """
-        Creates and saves a superuser with the given email, full_Name ,phone Number=null,sigtr   and password.
+        Creates and saves a superuser with the given email, full_Name ,phone Number=null,sigtr and password.
         """
         user = self.create_user(
             email,

@@ -31,6 +31,7 @@ urlpatterns = [
 
 
     path('Estimating_detail/',Estimating_detailView.as_view(),name='Estimating_detail list'),
+    path('Estimating_detail/<int:id>/',Estimating_detailView.as_view(),name='Estimating_deatail'),
 
 
 

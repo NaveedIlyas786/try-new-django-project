@@ -1,12 +1,20 @@
 from django.contrib import admin
 from .models import Location,Estimating,Estimating_detail,Company
 from django.core.files.storage import default_storage
+from import_export.admin import ImportExportModelAdmin
+
 
 import os
 from django.contrib import admin
 from .models import Estimating,Proposal,Service,Addendum,Specification,Spec_detail,Qualification,ProposalService,UrlsTable
 from nested_admin import NestedStackedInline, NestedModelAdmin
 from .forms import EstimatingDetailAdminForm,EstimatingAdminForm
+
+
+
+
+
+
 
 
 # Register your models here
@@ -18,7 +26,7 @@ class UrlsAdmin(admin.ModelAdmin):
 class CompanyAdmin(admin.ModelAdmin):
     list_display = ('id', 'Cmpny_Name','adress',
                     'office_phone_number','fax_number',
-                    'license_number','email')
+                    'license_number','email','is_active')
 
 class LocationAdmin(admin.ModelAdmin):
     list_display=['id','name']
@@ -41,7 +49,8 @@ class EstimatingAdmin(admin.ModelAdmin):
         queryset = queryset.select_related('estimator')  # Optimize the number of SQL queries
         return queryset
 
-
+class ViewAdmin(ImportExportModelAdmin,EstimatingAdmin):
+    pass
 
 
 

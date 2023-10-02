@@ -157,6 +157,14 @@ class Estimating_detailView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({'errors': form.errors}, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self,request,id):
+        try:
+            estimating=Estimating_detail.objects.get(id=id)
+        except Estimating_detail.DoesNotExist:
+            return Response( status=status.HTTP_404_NOT_FOUND)
+        estimating.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 

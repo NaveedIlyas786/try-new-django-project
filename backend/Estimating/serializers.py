@@ -22,7 +22,7 @@ class UrlsSerializers(serializers.ModelSerializer):
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
-        fields = ['id','is_active','Cmpny_Name','adress','office_phone_number','fax_number','license_number','logo','email']
+        fields = ['id','is_active','Cmpny_Name','adress','office_phone_number','fax_number','license_number','logo','email','link']
 
 
 

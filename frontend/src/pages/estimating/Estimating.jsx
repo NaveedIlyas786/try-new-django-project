@@ -158,7 +158,7 @@ const Estimator = () => {
       .get("http://127.0.0.1:8000/api/user/Userapi/")
       .then((response) => response.data)
       .then((data) => {
-        const bidUser = data.filter((user) => user.roles.includes("Estimator") );
+        const bidUser = data.filter((user) => user.roles.includes("Estimator") && user.is_active );
         // console.log(bidUser);
         setestimatorName(bidUser);
       })

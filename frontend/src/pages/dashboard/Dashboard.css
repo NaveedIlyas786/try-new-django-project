@@ -1,17 +1,19 @@
-/* .bgimg{
-    height: 87.5vh;
-    background-image:url('../../assets/dash.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-} */
 .dashboard{
-    height: 70vh !important;
-    margin-top: 120px !important;
+    background-color: aqua;
+    margin-top: 71px !important;
+    padding: 20px 50px;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    height: 88.5vh;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    /* justify-content: space-around; */
 }
-.dashboard h1{
-    color: black !important;
-    font-size: 120px;
+.ProjectStatus{
+    flex-grow: 1;
+    flex-basis: 200;
+    width: 200px;
+    height: 150px;
+    display: grid;
+    place-items: center;
 }

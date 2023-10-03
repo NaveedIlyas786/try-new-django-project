@@ -38,7 +38,7 @@ class LocationAdmin(admin.ModelAdmin):
 
 class EstimatingAdmin(admin.ModelAdmin):
     form=EstimatingAdminForm
-    list_display = ['id', 'start_date', 'Prjct_Name','link','time','timezone',
+    list_display = ['id', 'start_date', 'prjct_name','link','time','timezone',
                     'due_date', 'status','company',
                     'bid_amount', 'location', 'estimator',
                     'bidder','bidder_deatil']

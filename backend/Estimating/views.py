@@ -42,9 +42,6 @@ class EstimatorSummaryView(views.APIView):
         # Preparing response
         response_data = []
 
-        # Get the current year
-        current_year = timezone.now().year
-
         for estimator in estimators:
             # Getting all estimates for the current estimator of the year 2023
             estimates = Estimating.objects.filter(estimator=estimator, start_date__year=2023)
@@ -55,33 +52,39 @@ class EstimatorSummaryView(views.APIView):
                 total_bid_amount=Sum('bid_amount')
             )
 
+            # Calculating grand total of estimates
+            grand_total_estimates = estimates.count()
+            grand_total_bid_amount = estimates.aggregate(Sum('bid_amount'))['bid_amount__sum'] or 0
+
             # Initializing summary with zeros for all statuses
             summary = {
-                'Pending': {'total': 0, 'total_bid_amount': 0},
-                'Working': {'total': 0, 'total_bid_amount': 0},
-                'Won': {'total': 0, 'total_bid_amount': 0},
-                'Lost': {'total': 0, 'total_bid_amount': 0},
+                'Pending': {'total': 0, 'total_bid_amount': 0, 'percentage': 0},
+                'Working': {'total': 0, 'total_bid_amount': 0, 'percentage': 0},
+                'Won': {'total': 0, 'total_bid_amount': 0, 'percentage': 0},
+                'Lost': {'total': 0, 'total_bid_amount': 0, 'percentage': 0},
             }
 
             # Updating summary with actual counts and bid amounts from the query
             for item in summary_data:
                 estimation_status = item['status']
-                summary[estimation_status]['total'] = item['total']
+                total = item['total']
+                summary[estimation_status]['total'] = total
                 summary[estimation_status]['total_bid_amount'] = item['total_bid_amount'] or 0
+                summary[estimation_status]['percentage'] = (total / grand_total_estimates * 100 if grand_total_estimates > 0 else 0)
 
             # Serializing the data
             serialized_estimates = EstimatingSerializer(estimates, many=True).data
 
             estimator_data = {
                 'estimator': estimator.full_Name,  # Adjust this as per your User model's field
-                'estimates': serialized_estimates,
-                'summary': summary
+                'summary': summary,
+                'grand_total_estimates': grand_total_estimates,
+                'grand_total_bid_amount': grand_total_bid_amount
             }
 
             response_data.append(estimator_data)
 
         return Response(response_data, status=200)
-
 
 
 

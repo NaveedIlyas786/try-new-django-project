@@ -1057,9 +1057,9 @@ const Estimator = () => {
                     </td>
                     <td className="mytd centered-td">{item.location}</td>
                     <td className="mytd centered-td">{item.estimator}</td>
-                    <td className="mytd centered-td" style={{ width: "50px" }}>
+                    <td className="mytd centered-td" style={{ width: "80px" }}>
                       <select
-                        className="statusUpdation p-2 m-2"
+                        className="statusUpdation p-2 m-3"
                         name="#"
                         id="#"
                         onChange={(event) => handleStatusChange(event, item.id)}

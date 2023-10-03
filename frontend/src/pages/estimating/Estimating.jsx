@@ -396,11 +396,11 @@ const Estimator = () => {
       start_date: startDate,
       time: formattedTime,
       timezone: timezone,
-      Prjct_Name: projectName,
+      prjct_name: projectName,
       company: company, // Use the company state directly
       estimator: estimatorName,
       location: location,
-      bid_amount: bidAmount,
+      // bid_amount: bidAmount,
       bidder: bidderName, // Use BidderName here, not bidder
       bidder_deatil: bidder_detail,
     };
@@ -421,7 +421,7 @@ const Estimator = () => {
         setCompany(""); // Reset companyName here
         setEstimatorName("");
         setLocation("");
-        setBidAmount("");
+        // setBidAmount("");
         setbidderName("");
         setBidder_detail("");
         // Close the modal
@@ -636,8 +636,8 @@ const Estimator = () => {
   const selectFilteredData = createSelector([selectEstimatingData], (data) => {
     return data.filter((customer) => {
       return (
-        (customer.Prjct_Name &&
-          customer.Prjct_Name.toUpperCase().includes(filter.toUpperCase())) ||
+        (customer.prjct_name &&
+          customer.prjct_name.toUpperCase().includes(filter.toUpperCase())) ||
         (customer.status &&
           customer.status
             .trim()
@@ -646,12 +646,12 @@ const Estimator = () => {
         (customer.estimator &&
           customer.estimator.toUpperCase().includes(filter.toUpperCase())) ||
         (customer.bidder &&
-          customer.bidder.toUpperCase().includes(filter.toUpperCase())) ||
-        (customer.bid_amount &&
-          customer.bid_amount
-            .toString()
-            .toUpperCase()
-            .includes(filter.toUpperCase()))
+          customer.bidder.toUpperCase().includes(filter.toUpperCase())) 
+        // (customer.bid_amount &&
+        //   customer.bid_amount
+        //     .toString()
+        //     .toUpperCase()
+        //     .includes(filter.toUpperCase()))
       );
     });
   });
@@ -808,7 +808,7 @@ const Estimator = () => {
           },
           body: JSON.stringify({
             status: updatedStatus,
-            Prjct_Name: itemToUpdate.Prjct_Name, // Include the required field
+            prjct_name: itemToUpdate.prjct_name, // Include the required field
           }),
         }
       );
@@ -1053,7 +1053,7 @@ const Estimator = () => {
                       {item.time} <strong>{item.timezone}</strong>
                     </td>
                     <td className="mytd myproject centered-td">
-                      {item.Prjct_Name}
+                      {item.prjct_name}
                     </td>
                     <td className="mytd centered-td">{item.location}</td>
                     <td className="mytd centered-td">{item.estimator}</td>
@@ -1081,12 +1081,12 @@ const Estimator = () => {
                         <button
                           className="btn dropbtns btn-success"
                           onClick={() => {
-                            console.log(item.Prjct_Name);
+                            console.log(item.prjct_name);
                             setStep0FormData({
                               ...step0FormData,
                               estimating: item.id,
                             });
-                            setSelectedEstimatingID(item.Prjct_Name); // Set the selected estimating ID
+                            setSelectedEstimatingID(item.prjct_name); // Set the selected estimating ID
                             setPurposalModal(true);
                           }}
                         >

@@ -140,7 +140,7 @@ const Estimator = () => {
       .get("http://127.0.0.1:8000/api/estimating/company/")
       .then((response) => response.data)
       .then((data) => {
-        const activeCompanies = data.filter(company => company.is_active);
+        const activeCompanies = data.filter((company) => company.is_active);
         // console.log('Active Companies:', activeCompanies);  // Log the filtered companies to the console
         setCompanyName(activeCompanies);
       })
@@ -158,7 +158,9 @@ const Estimator = () => {
       .get("http://127.0.0.1:8000/api/user/Userapi/")
       .then((response) => response.data)
       .then((data) => {
-        const bidUser = data.filter((user) => user.roles.includes("Estimator") && user.is_active );
+        const bidUser = data.filter(
+          (user) => user.roles.includes("Estimator") && user.is_active
+        );
         // console.log(bidUser);
         setestimatorName(bidUser);
       })
@@ -789,29 +791,47 @@ const Estimator = () => {
 
   // ************************************************
 
-  const [newStatus, setNewStatus] = useState("");
+  // const [newStatus, setNewStatus] = useState(""); // Initialize to an empty string
+  const [statusMap, setStatusMap] = useState({});
 
-  const handleStatusChange = async (event, item) => {
+  const handleStatusChange = async (event, itemId) => {
     const updatedStatus = event.target.value;
-  
+    // Check if itemId is valid
+    const itemToUpdate = filteredData.find((item) => item.id === itemId);
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/api/estimating/estimating/",
+        `http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ newStatus: updatedStatus }),
+          body: JSON.stringify({
+            newStatus: updatedStatus,
+            Prjct_Name: itemToUpdate.Prjct_Name, // Include the required field
+          }),
         }
       );
-  
       if (response.ok) {
-        setNewStatus(updatedStatus);
+        setStatusMap((prevStatusMap) => ({
+          ...prevStatusMap,
+          [itemId]: updatedStatus,
+        }));
+        // Log a success message to the console
+        console.log(`Status updated successfully for item with ID ${itemId}`);
         // You may need to refresh the UI or update the specific row accordingly
       } else {
-        const responseData = await response.json();
-        console.error("Failed to update status. Server response:", responseData);
+        if (response.status === 404) {
+          // Handle the case where the resource was not found (404 error)
+          console.error("Resource not found.");
+        } else {
+          // Handle other non-success responses
+          const responseData = await response.text();
+          console.error(
+            "Failed to update status. Server response:",
+            responseData
+          );
+        }
       }
     } catch (error) {
       console.error("Error updating status:", error);
@@ -1036,13 +1056,13 @@ const Estimator = () => {
                     </td>
                     <td className="mytd centered-td">{item.location}</td>
                     <td className="mytd centered-td">{item.estimator}</td>
-                    <td className="mytd centered-td">
+                    <td className="mytd centered-td" style={{ width: "50px" }}>
                       <select
                         className="statusUpdation p-2 m-2"
                         name="#"
                         id="#"
-                        // onChange={(event) => handleStatusChange(event, item)}
-                        // value={newStatus}
+                        onChange={(event) => handleStatusChange(event, item.id)}
+                        value={statusMap[item.id] || item.status}
                       >
                         <option value="">{item.status}</option>
                         <option value="Pending">Pending</option>
@@ -1055,48 +1075,38 @@ const Estimator = () => {
                     </td>
                     <td className="mytd centered-td">
                       <div className="relative-container">
-                        <i
-                          onClick={() => toggleDropdown(item.id)}
-                          style={{ cursor: "pointer" }}
-                          className="fa-solid threeDotIcon fa-ellipsis-vertical"
-                        ></i>
-                        <div
-                          className={`mydiv ${
-                            openRow === item.id ? "open" : " "
-                          }`}
-                          // className="mydiv"
+                        <button
+                          className="btn dropbtns btn-success"
+                          onClick={() => {
+                            console.log(item.Prjct_Name);
+                            setStep0FormData({
+                              ...step0FormData,
+                              estimating: item.id,
+                            });
+                            setSelectedEstimatingID(item.Prjct_Name); // Set the selected estimating ID
+                            setPurposalModal(true);
+                          }}
                         >
-                          <button
-                            className="btn dropbtns"
-                            onClick={() => {
-                              console.log(item.Prjct_Name);
-                              setStep0FormData({
-                                ...step0FormData,
-                                estimating: item.id,
-                              });
-                              setSelectedEstimatingID(item.Prjct_Name); // Set the selected estimating ID
-                              setPurposalModal(true);
-                            }}
-                            // onClick={movetoPurposalPage}
-                          >
-                            Create Proposal
-                          </button>
+                          Create Proposal
+                        </button>
 
-                          <button
-                            type="button"
-                            className="btn dropbtns"
-                            onClick={() => {
-                              console.log(item.id);
-                              setSelectedProjectID(item.id); // Set the selected estimating ID
-                              setshowProjectModal(true);
-                            }}
-                          >
-                            Create Project
-                          </button>
-                          <button className="btn dropbtns" onClick={viewpdf}>
-                            View Propsal
-                          </button>
-                        </div>
+                        <button
+                          type="button"
+                          className="btn dropbtns btn-primary"
+                          onClick={() => {
+                            console.log(item.id);
+                            setSelectedProjectID(item.id); // Set the selected estimating ID
+                            setshowProjectModal(true);
+                          }}
+                        >
+                          Create Project
+                        </button>
+                        <button
+                          className="btn dropbtns btn-secondary"
+                          onClick={viewpdf}
+                        >
+                          View Proposal
+                        </button>
                       </div>
                     </td>
                   </tr>

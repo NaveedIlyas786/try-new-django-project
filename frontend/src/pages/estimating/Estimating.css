@@ -78,7 +78,7 @@ td {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
   opacity: 0; /* Initially hide the modal */
   pointer-events: none; /* Disable mouse events on the hidden modal */
-  transition: opacity 0.5s, transform 0.5s; /*Add transition properties*/
+  transition: opacity 0.5s, transform 0.5s; 
 }
 
 .modal-container.show {
@@ -105,11 +105,11 @@ td {
 .modal-content::-webkit-scrollbar-thumb,
 .purposal-content::-webkit-scrollbar-thumb {
   background-color: #283897; /* Set the color of the scrollbar track (the non-draggable part) */
-  border-radius: 10px; /*Round the corners of the thumb*/
+  border-radius: 10px; 
 }
 
 .modal-content::-webkit-scrollbar-track {
-  border-radius: 10px; /*Round the corners of the thumb*/
+  border-radius: 10px; 
   background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
 }
 
@@ -233,12 +233,10 @@ input:focus {
   padding: 0 !important;
   font-size: 17px !important;
   border-radius: 2px !important;
-  color: rgb(70, 69, 69);
   margin: 1px 0;
+  color: white !important;
 }
 .dropbtns:hover {
-  background-color: #1976d2;
-  color: rgb(255, 255, 255);
   padding: 0.3px 0 !important;
 }
 
@@ -388,11 +386,11 @@ input[type="text"].serviceInput.focused {
 
 .sarviceSection::-webkit-scrollbar-thumb {
   background-color: #5d5d5f; /* Set the color of the scrollbar track (the non-draggable part) */
-  border-radius: 10px; /*Round the corners of the thumb*/
+  border-radius: 10px; 
 }
 
 .sarviceSection::-webkit-scrollbar-track {
-  border-radius: 10px; /*Round the corners of the thumb*/
+  border-radius: 10px; 
   background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
 }
 .jloop {
@@ -431,11 +429,11 @@ input[type="text"].serviceInput.focused {
 
 .myservices::-webkit-scrollbar-thumb {
   background-color: #5d5d5f; /* Set the color of the scrollbar track (the non-draggable part) */
-  border-radius: 10px 50px 50px 10px; /*Round the corners of the thumb*/
+  border-radius: 10px 50px 50px 10px; 
 }
 
 .myservices::-webkit-scrollbar-track {
-  border-radius: 10px; /*Round the corners of the thumb*/
+  border-radius: 10px; 
   background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
 }
 /* ***************************For radio Button */
@@ -612,11 +610,11 @@ td:nth-child(8) {
 
 .modal-body::-webkit-scrollbar-thumb {
   background-color: #5d5d5f; /* Set the color of the scrollbar track (the non-draggable part) */
-  border-radius: 10px 50px 50px 10px; /*Round the corners of the thumb*/
+  border-radius: 10px 50px 50px 10px; 
 }
 
 .modal-body::-webkit-scrollbar-track {
-  border-radius: 10px; /*Round the corners of the thumb*/
+  border-radius: 10px; 
   background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
 }
 .proposalTable {
@@ -634,11 +632,11 @@ td:nth-child(8) {
 
 .proposalTable::-webkit-scrollbar-thumb {
   background-color: #5d5d5f; /* Set the color of the scrollbar track (the non-draggable part) */
-  border-radius: 10px 50px 50px 10px; /*Round the corners of the thumb*/
+  border-radius: 10px 50px 50px 10px; 
 }
 
 .proposalTable::-webkit-scrollbar-track {
-  border-radius: 10px; /*Round the corners of the thumb*/
+  border-radius: 10px; 
   background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
 }
 .timefield {

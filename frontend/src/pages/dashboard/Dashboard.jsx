@@ -7,29 +7,29 @@ const Dashboard = () => {
         <div className=" row projectStatus justify-content-around">
           <div className=" col-md-2 p-2 ProjectStatus  text-center">
             <p>
-              <i class="fa-solid fs-5 fa fa-square-check"></i>
+              <i className="fa-solid fs-5 fa fa-square-check"></i>
             </p>
             <h4>7</h4>
             <h5>Won</h5>
           </div>
           <div className=" col-md-2 p-2 ProjectStatus  text-center">
             <p>
-            <i class="fa-solid  fa-question fs-5"></i>
+            <i className="fa-solid  fa-question fs-5"></i>
             </p>
             <h4>7</h4>
             <h5>pending</h5>
           </div>
           <div className=" col-md-2 p-2 text-center ProjectStatus">
-          <p><i class="fa-solid fa-spinner fs-5 "></i></p>
+          <p><i className="fa-solid fa-spinner fs-5 "></i></p>
           <h4>10</h4>
             <h5>Working</h5>
             <p>
-              <i class="fa-solid fa-square-this-way-up"></i>
+              <i className="fa-solid fa-square-this-way-up"></i>
             </p>
           </div>
           <div className=" col-md-2 text-center p-2 ProjectStatus">
             <p>
-              <i class="fa-solid fa fs-5 fa-square-xmark"></i>
+              <i className="fa-solid fa fs-5 fa-square-xmark"></i>
             </p>
           <h4>10</h4>
             <h5>Rejected</h5>

@@ -29,7 +29,7 @@ class CompanyAdmin(admin.ModelAdmin):
                     'license_number','email','is_active')
 
 class LocationAdmin(admin.ModelAdmin):
-    list_display=['id','name']
+    list_display=['id','name','is_active']
 
 
 
@@ -38,7 +38,7 @@ class LocationAdmin(admin.ModelAdmin):
 
 class EstimatingAdmin(admin.ModelAdmin):
     form=EstimatingAdminForm
-    list_display = ['id', 'start_date', 'Prjct_Name','time','timezone',
+    list_display = ['id', 'start_date', 'Prjct_Name','link','time','timezone',
                     'due_date', 'status','company',
                     'bid_amount', 'location', 'estimator',
                     'bidder','bidder_deatil']

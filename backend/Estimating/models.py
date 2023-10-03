@@ -27,6 +27,7 @@ class Company(models.Model):
 
 class Location(models.Model):
     name=models.CharField(verbose_name="Location Name",max_length=50,blank=False,null=False)
+    is_active=models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -55,10 +56,10 @@ class Estimating(models.Model):
     )
 
 
-    Prjct_Name=models.CharField(verbose_name="Estimate Project Name", max_length=50)
+    Prjct_Name=models.CharField(verbose_name="Estimate Project Name", max_length=250)
 
 
-    due_date=models.DateField(verbose_name="Due Date")
+    due_date=models.DateField(verbose_name="Due Date",null=True,blank=True)
 
 
     status=models.CharField(max_length=7,
@@ -71,12 +72,12 @@ class Estimating(models.Model):
 
     start_date = models.DateField(verbose_name="start Date",null=True,blank=True)
 
-    company = models.ForeignKey(Company, verbose_name="Company",related_name='company_in_estimator',limit_choices_to=models.Q(is_active=True), on_delete=models.CASCADE,blank=False)
-    bid_amount=models.IntegerField(verbose_name="DMS ",blank=False)
-    location=models.ForeignKey(Location,on_delete=models.CASCADE,blank=False,null=True)
-    estimator = models.ForeignKey(User,verbose_name="Estimator", related_name='estimations_as_estimator', limit_choices_to=models.Q(roles__name='Estimator',is_active=True), on_delete=models.SET_NULL, null=True)
-    bidder = models.CharField(verbose_name="Bidder Name",max_length=1500, null=True)
-    bidder_deatil=models.CharField(verbose_name="Bidder Detail",max_length=50,null=True)
+    company = models.ForeignKey(Company, verbose_name="Company",related_name='company_in_estimator',limit_choices_to=models.Q(is_active=True), on_delete=models.CASCADE,blank=True,null=True)
+    bid_amount=models.IntegerField(verbose_name="Bid Amount ",blank=True,null=True)
+    location=models.ForeignKey(Location,verbose_name="Add Area", related_name='estimating_as_Area',limit_choices_to=models.Q(is_active=True), on_delete=models.CASCADE,blank=True,null=True)
+    estimator = models.ForeignKey(User,verbose_name="Estimator", related_name='estimations_as_estimator', limit_choices_to=models.Q(roles__name='Estimator',is_active=True), on_delete=models.SET_NULL, null=True , blank=True)
+    bidder = models.CharField(verbose_name="Bidder Name",max_length=1500, null=True,blank=True)
+    bidder_deatil=models.CharField(verbose_name="Bidder Detail",max_length=5000,null=True)
     
 
     def save(self, *args, **kwargs):

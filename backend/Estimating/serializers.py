@@ -60,10 +60,10 @@ class Time12HourField(serializers.TimeField):
     
 class EstimatingSerializer(serializers.ModelSerializer):
 
-    time = Time12HourField(format='%I:%M %p', input_formats=['%I:%M %p'])
+    time = Time12HourField(format='%I:%M %p', input_formats=['%I:%M %p'], required=False, allow_null=True)
 
     due_date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'])
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
  
     start_date = serializers.DateField(
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
@@ -85,19 +85,20 @@ class EstimatingSerializer(serializers.ModelSerializer):
             'estimator',
             'bidder',
             'bidder_deatil',
+            'link',
         ]
-        extra_kwargs = {
-            'Prjct_Name': {'required': True},
-            'company': {'required': True},
-            'bid_amount': {'required': True},
-            'location': {'required': True},
-            'estimator': {'required': True},
-            'bidder': {'required': True},
-            'due_date': {'required': True},
-            'time': {'required': True},
-            'timezone': {'required': True},
+        # extra_kwargs = {
+        #     'Prjct_Name': {'required': True},
+        #     'company': {'required': True},
+        #     'bid_amount': {'required': True},
+        #     'location': {'required': True},
+        #     'estimator': {'required': True},
+        #     'bidder': {'required': True},
+        #     'due_date': {'required': True},
+        #     'time': {'required': True},
+        #     'timezone': {'required': True},
 
-        }
+        # }
 
 
 

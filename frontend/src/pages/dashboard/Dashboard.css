@@ -1,22 +1,58 @@
 .dashboard{
-    background-color: aqua;
+    padding: 50px 0;
+    /* gap: 20px; */
+}
+.projectStatus{
     margin-top: 71px !important;
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
-    /* justify-content: space-around; */
+    /* gap: 20px; */
+
+}
+.projectStatus h1{
+    color: black;
+    font-size: 35px !important;
+}
+.projectStatus h4,h5{
+    line-height: 14px;
+}
+.mygraph{
+    width: 100%;
+    height: 100%;
 }
 .ProjectStatus{
     /* flex-grow: 1;
     flex-basis: 200;
-    width: 200px;
-    height: 150px;
+    display: grid;
+    place-items: center; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 190px;
+    height: 70px;
+}
+.ProjectStatus{
+    border: 1px solid rgb(179, 175, 175);
+    box-shadow: 3px 3px 5px rgb(207, 206, 206);
+    border-radius: 5px;
+}
+.graphPortion{
+    box-shadow: -3px 3px 5px rgb(207, 206, 206);
+    
+}
+.middlePortion{
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    justify-content: space-between;
+    /* gap: 20px; */
+}
+.bk{
+    flex-grow: 1;
+    /* flex-basis: 200;
     display: grid;
     place-items: center; */
 }
 .graphPortion{
     max-height: 250px;
-}
-.graphPortion{
-    max-height: 200px;
 }

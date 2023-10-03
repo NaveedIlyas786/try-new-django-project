@@ -67,7 +67,7 @@ class Estimating(models.Model):
             ('Working','Working'),
             ('Pending','Pending'),
             ('Won','Won'),
-            ('Lost','Lost'),],default='Working')
+            ('Lost','Lost'),],default='Working') 
     
 
     start_date = models.DateField(verbose_name="start Date",null=True,blank=True)

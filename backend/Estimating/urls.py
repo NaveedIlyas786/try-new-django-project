@@ -1,38 +1,41 @@
 from django.urls import path
-from .views import  CompanyListView,EstimatingListView,QualificationView,LocationViews,Estimating_detailView,create_proposal,ServiceViews,UrlsListViews
+from . import views
+
+
 
 urlpatterns = [
-    path('Urllist/',UrlsListViews.as_view(),name='Url View'),
-    path('company/',CompanyListView.as_view(),name='Company Detail'),
-    path('company/<int:id>/',CompanyListView.as_view(),name='Company Detail'),
+    path('Urllist/',views.UrlsListViews.as_view(),name='Url View'),
+    path('company/',views.CompanyListView.as_view(),name='Company Detail'),
+    path('company/<int:id>/',views.CompanyListView.as_view(),name='Company Detail'),
 
 
-    path('estimating/',EstimatingListView.as_view(),name='estimating list'),
-    path('estimating/<int:id>/', EstimatingListView.as_view(), name='estimating-detail'),
-
-
-
-    path('proposals/', create_proposal, name='proposal-list'),
-    path('proposals/<int:proposal_id>/', create_proposal, name='update-delete-proposal'),
+    path('estimating/',views.EstimatingListView.as_view(),name='estimating list'),
+    path('estimating/<int:id>/', views.EstimatingListView.as_view(), name='estimating-detail'),
 
 
 
-    path('Qualification/',QualificationView.as_view(),name='Qualification list'),
-    path('Qualification/<int:id>/',QualificationView.as_view(),name='Qualification detail'),
-
-
-    path('service/',ServiceViews.as_view(),name='service list'),
-    path('service/<int:id>/',ServiceViews.as_view(),name='service'),
+    path('proposals/', views.create_proposal, name='proposal-list'),
+    path('proposals/<int:proposal_id>/', views.create_proposal, name='update-delete-proposal'),
 
 
 
-    path('location/',LocationViews.as_view(),name='location list'),
-    path('location/<int:id>/',LocationViews.as_view(),name='Location Detail'),
+    path('Qualification/',views.QualificationView.as_view(),name='Qualification list'),
+    path('Qualification/<int:id>/',views.QualificationView.as_view(),name='Qualification detail'),
 
 
-    path('Estimating_detail/',Estimating_detailView.as_view(),name='Estimating_detail list'),
-    path('Estimating_detail/<int:id>/',Estimating_detailView.as_view(),name='Estimating_deatail'),
+    path('service/',views.ServiceViews.as_view(),name='service list'),
+    path('service/<int:id>/',views.ServiceViews.as_view(),name='service'),
 
+
+
+    path('location/',views.LocationViews.as_view(),name='location list'),
+    path('location/<int:id>/',views.LocationViews.as_view(),name='Location Detail'),
+
+
+    path('Estimating_detail/',views.Estimating_detailView.as_view(),name='Estimating_detail list'),
+    path('Estimating_detail/<int:id>/',views.Estimating_detailView.as_view(),name='Estimating_deatail'),
+
+    path('api/estimators/summary/', views.EstimatorSummaryView.as_view(), name='estimators-summary'),
 
 
 ]

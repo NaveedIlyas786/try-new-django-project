@@ -1102,7 +1102,7 @@ const Estimator = () => {
                             setshowProjectModal(true);
                           }}
                         >
-                          Create Project
+                          Projects
                         </button>
                         <button
                           className="btn dropbtns btn-secondary"

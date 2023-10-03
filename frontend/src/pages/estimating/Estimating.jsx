@@ -482,8 +482,8 @@ const Estimator = () => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-
       const data = await response.json();
+      console.log(data);
       const updatedServiceTypes = data.map((myservice, id) => ({
         proposal: id + 1,
         service: myservice.service || id + 1,
@@ -807,7 +807,7 @@ const Estimator = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            newStatus: updatedStatus,
+            status: updatedStatus,
             Prjct_Name: itemToUpdate.Prjct_Name, // Include the required field
           }),
         }
@@ -837,7 +837,6 @@ const Estimator = () => {
       console.error("Error updating status:", error);
     }
   };
-  
 
   const MovetoURLpage = () => {
     navigate("/homepage/urlpage");
@@ -1037,7 +1036,7 @@ const Estimator = () => {
               <thead className="proposalHeader">
                 <tr>
                   <th>Due Date</th>
-                  <th>Time (PST)</th>
+                  <th>Due Time</th>
                   <th>Project Name</th>
                   <th>Area</th>
                   <th>Estimator</th>
@@ -1050,7 +1049,9 @@ const Estimator = () => {
                 {filteredData.map((item) => (
                   <tr key={item.id}>
                     <td className="mytd centered-td">{item.due_date}</td>
-                    <td className="mytd centered-td">{item.time}</td>
+                    <td className="mytd centered-td">
+                      {item.time} <strong>{item.timezone}</strong>
+                    </td>
                     <td className="mytd myproject centered-td">
                       {item.Prjct_Name}
                     </td>
@@ -1064,7 +1065,9 @@ const Estimator = () => {
                         onChange={(event) => handleStatusChange(event, item.id)}
                         value={statusMap[item.id] || item.status}
                       >
-                        <option value="">{item.status}</option>
+                        <option value="">
+                          {statusMap[item.id] || item.status}
+                        </option>
                         <option value="Pending">Pending</option>
                         <option value="Won">Won</option>
                         <option value="Lost">Lost</option>
@@ -1205,6 +1208,7 @@ const Estimator = () => {
                     )}
                   </select>
                 </div>
+                
                 <div className="Oneline">
                   <label htmlFor="location" className="form-label">
                     Location:
@@ -1231,32 +1235,7 @@ const Estimator = () => {
                   </select>
                 </div>
               </div>
-              <div className="bothDiv">
-                <div className="Oneline">
-                  <label htmlFor="bidAmount" className="form-label">
-                    Bid Amount:
-                  </label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    id="bidAmount"
-                    value={bidAmount}
-                    onChange={handleBidAmountChange}
-                  />
-                </div>
-                <div className="Oneline">
-                  <label htmlFor="bidderName" className="form-label">
-                    Bidder Name:
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="bidderName"
-                    value={bidderName}
-                    onChange={handleBidderChange}
-                  />
-                </div>
-              </div>
+
               <div className="bothDiv">
                 <div className="Oneline">
                   <label htmlFor="dueDate" className="form-label">
@@ -1296,6 +1275,32 @@ const Estimator = () => {
                   </div>
                 </div>
               </div>
+              {/* <div className="bothDiv"> */}
+              {/* <div className="Oneline">
+                  <label htmlFor="bidAmount" className="form-label">
+                    Bid Amount:
+                  </label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="bidAmount"
+                    value={bidAmount}
+                    onChange={handleBidAmountChange}
+                  />
+                </div> */}
+              <div>
+                <label htmlFor="bidderName" className="form-label">
+                  Bidder Name:
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="bidderName"
+                  value={bidderName}
+                  onChange={handleBidderChange}
+                />
+              </div>
+              {/* </div> */}
               <div>
                 <label htmlFor="bidderDetails" className="form-label">
                   Bidder Details:
@@ -1596,7 +1601,7 @@ const Estimator = () => {
                               htmlFor="specificbudget"
                               className="form-label"
                             >
-                              Scope of work price
+                              Scope of work amount
                             </label>
                             <input
                               type="text" // Use type "text" to allow non-numeric characters (e.g., commas)
@@ -1614,7 +1619,7 @@ const Estimator = () => {
                               htmlFor="specificdetails"
                               className="form-label"
                             >
-                              Scope of work alternatives
+                              Scope of work divisions
                             </label>
                             {step2FormData.sefic.map((entry, index) => (
                               <div
@@ -1666,7 +1671,7 @@ const Estimator = () => {
                           </div>
                         </div>
                         <button className="btn btn-success" onClick={() => {}}>
-                          Add-New-Scope Of Work
+                          Add alternate scope of work
                         </button>
                       </div>
                     )}

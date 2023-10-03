@@ -33,7 +33,9 @@ const Dashboard = () => {
               <i class="fa-solid fa fs-5 fa-square-xmark"></i>
             </p>
           </div>
-          <div className=" col-md-2 p-4 ProjectStatus">Timer</div>
+          <div className=" col-md-2 p-4 ProjectStatus">
+          
+        </div>
         </div>
 
         <div className="middlePortion ">

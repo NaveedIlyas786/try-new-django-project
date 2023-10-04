@@ -36,96 +36,75 @@ class UrlsListViews(APIView):
 class EstimatorSummaryView(views.APIView):
 
     def get(self, request, format=None):
-        estimators = User.objects.filter(roles__name='Estimator')
         response_data = []
-
-        totals = {
+        total_data = {
             'Working': {'total': 0, 'bid_amount': 0},
             'Pending': {'total': 0, 'bid_amount': 0},
             'Won': {'total': 0, 'bid_amount': 0},
             'Lost': {'total': 0, 'bid_amount': 0},
+            'Grand Total': {'total': 0, 'bid_amount': 0}
         }
 
+        # Handling the estimators
+        estimators = User.objects.filter(roles__name='Estimator')
         for estimator in estimators:
-            estimates = Estimating.objects.filter(estimator=estimator, due_date__year=2023)
-            grand_total = estimates.count()
-            grand_total_bid_amount = estimates.aggregate(Sum('bid_amount'))['bid_amount__sum'] or 0
-
-            summary = {status: {'total': 0, 'percentage': 0, 'bid_amount': 0} for status in totals.keys()}
-
-            for status in totals.keys():
-                total = estimates.filter(status=status).count()
-                bid_amount = estimates.filter(status=status).aggregate(Sum('bid_amount'))['bid_amount__sum'] or 0
-                percentage = (total / grand_total * 100) if grand_total > 0 else 0
-
-                summary[status] = {
-                    'total': total,
-                    'percentage': percentage,
-                    'bid_amount': bid_amount
-                }
-
-                totals[status]['total'] += total
-                totals[status]['bid_amount'] += bid_amount
-
-            estimator_data = {
-                'estimator': estimator.full_Name,
-                'summary': summary,
-                'grand_total': grand_total,
-                'grand_total_bid_amount': grand_total_bid_amount
-            }
-
+            estimates = Estimating.objects.filter(
+                estimator=estimator,
+                start_date__year=2023  # Changed from due_date to start_date
+            )
+            
+            estimator_data = calculate_summary(estimates)
+            estimator_data['estimator'] = estimator.full_Name  # Changed to full_name
+            
             response_data.append(estimator_data)
 
-        # Calculate unassigned
-        unassigned = Estimating.objects.filter(estimator__isnull=True, status='Working', due_date__year=2023)
-        unassigned_total = unassigned.count()
-        unassigned_percentage = (unassigned_total / (totals['Working']['total'] + unassigned_total) * 100) if (totals['Working']['total'] + unassigned_total) > 0 else 0
+            # Accumulate the totals
+            for status in total_data.keys():
+                if status in estimator_data['summary']:
+                    total_data[status]['total'] += estimator_data['summary'][status]['total']
+                    total_data[status]['bid_amount'] += estimator_data['summary'][status]['bid_amount']
 
-        unassigned_data = {
-            'estimator': 'Unassigned',
-            'summary': {
-                'Working': {
-                    'total': unassigned_total,
-                    'percentage': unassigned_percentage,
-                    'bid_amount': None  # Unassigned won't have a bid amount
-                }
-            },
-            'grand_total': unassigned_total,
-            'grand_total_bid_amount': None  # Unassigned won't have a total bid amount
-        }
+        # Handling the unassigned estimations
+        unassigned_estimations = Estimating.objects.filter(
+            estimator__isnull=True,
+            status='Working',
+            start_date__year=2023  # Changed from due_date to start_date
+        )
+
+        unassigned_data = calculate_summary(unassigned_estimations, only_working=True)
+        unassigned_data['estimator'] = 'Unassigned'
 
         response_data.append(unassigned_data)
 
         # Adding the totals row
-        total_percentage_working = (totals['Working']['total'] / (totals['Working']['total'] + unassigned_total) * 100) if (totals['Working']['total'] + unassigned_total) > 0 else 0
-
-        response_data.append({
-            'estimator': 'Total',
-            'summary': {
-                'Working': {
-                    'total': totals['Working']['total'],
-                    'percentage': total_percentage_working,
-                    'bid_amount': totals['Working']['bid_amount']
-                },
-                'Pending': {
-                    'total': totals['Pending']['total'],
-                    'bid_amount': totals['Pending']['bid_amount']
-                },
-                'Won': {
-                    'total': totals['Won']['total'],
-                    'bid_amount': totals['Won']['bid_amount']
-                },
-                'Lost': {
-                    'total': totals['Lost']['total'],
-                    'bid_amount': totals['Lost']['bid_amount']
-                },
-            },
-            'grand_total': sum(value['total'] for value in totals.values()),
-            'grand_total_bid_amount': sum(value['bid_amount'] for value in totals.values())
-        })
+        total_data['estimator'] = 'Total'
+        response_data.append(total_data)
 
         return Response(response_data, status=200)
 
+# Helper function to calculate the summary
+def calculate_summary(estimates, only_working=False):
+    grand_total = estimates.count()
+    grand_total_bid_amount = estimates.aggregate(Sum('bid_amount'))['bid_amount__sum'] or 0
+    statuses = ['Working'] if only_working else ['Working', 'Pending', 'Won', 'Lost']
+
+    summary = {}
+    for status in statuses:
+        total = estimates.filter(status=status).count()
+        bid_amount = estimates.filter(status=status).aggregate(bid_amount=Sum('bid_amount'))['bid_amount'] or 0
+        percentage = (total / grand_total * 100) if grand_total > 0 else 0
+
+        summary[status] = {
+            'total': total,
+            'percentage': percentage,
+            'bid_amount': bid_amount
+        }
+
+    return {
+        'summary': summary,
+        'ytd_total': grand_total,
+        'ytd_total_bid_amount': grand_total_bid_amount
+    }
 
 
 

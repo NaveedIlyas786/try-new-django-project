@@ -1,15 +1,20 @@
 .dashboard{
     padding: 50px 0;
     
+    
 }
+
 
 .projectStatus{
     margin-top: 71px !important;
 }
 
+
 .projectStatus h4,h5{
     line-height: 7px;
+    line-height: 7px;
 }
+
 
 .ProjectStatus{
     border: 1px solid rgb(179, 175, 175);

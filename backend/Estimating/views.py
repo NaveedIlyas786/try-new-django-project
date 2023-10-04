@@ -5,11 +5,17 @@ from django.http import JsonResponse
 import os
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status,views
 from .models import Company, Estimating,Estimating_detail, Proposal, Qualification,Service,Location,UrlsTable
 from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer,SpecificationSerializer,ServiceSerializer,LocationSerializer,EstimatingDetailSerializer,ProposalServiceSerializer,CompanySerializer,UrlsSerializers
+from accounts.models import User
 
 from .forms import EstimatingDetailAdminForm
+
+from django.db.models import Sum, Count
+from django.utils import timezone
+
+
 
 
 
@@ -26,6 +32,60 @@ class UrlsListViews(APIView):
         
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
         
+
+class EstimatorSummaryView(views.APIView):
+
+    def get(self, request, format=None):
+        # Get all unique estimators
+        estimators = User.objects.filter(roles__name='Estimator')
+
+        # Preparing response
+        response_data = []
+
+        for estimator in estimators:
+            # Getting all estimates for the current estimator of the year 2023
+            estimates = Estimating.objects.filter(estimator=estimator, start_date__year=2023)
+
+            # Calculating total counts and bid amounts for each status
+            summary_data = estimates.values('status').annotate(
+                total=Count('id'),
+                total_bid_amount=Sum('bid_amount')
+            )
+
+            # Calculating grand total of estimates
+            grand_total_estimates = estimates.count()
+            grand_total_bid_amount = estimates.aggregate(Sum('bid_amount'))['bid_amount__sum'] or 0
+
+            # Initializing summary with zeros for all statuses
+            summary = {
+                'Pending': {'total': 0, 'total_bid_amount': 0, 'percentage': 0},
+                'Working': {'total': 0, 'total_bid_amount': 0, 'percentage': 0},
+                'Won': {'total': 0, 'total_bid_amount': 0, 'percentage': 0},
+                'Lost': {'total': 0, 'total_bid_amount': 0, 'percentage': 0},
+            }
+
+            # Updating summary with actual counts and bid amounts from the query
+            for item in summary_data:
+                estimation_status = item['status']
+                total = item['total']
+                summary[estimation_status]['total'] = total
+                summary[estimation_status]['total_bid_amount'] = item['total_bid_amount'] or 0
+                summary[estimation_status]['percentage'] = (total / grand_total_estimates * 100 if grand_total_estimates > 0 else 0)
+
+            # Serializing the data
+            serialized_estimates = EstimatingSerializer(estimates, many=True).data
+
+            estimator_data = {
+                'estimator': estimator.full_Name,  # Adjust this as per your User model's field
+                'summary': summary,
+                'grand_total_estimates': grand_total_estimates,
+                'grand_total_bid_amount': grand_total_bid_amount
+            }
+
+            response_data.append(estimator_data)
+
+        return Response(response_data, status=200)
+
 
 
 

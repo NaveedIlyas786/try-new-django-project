@@ -56,7 +56,7 @@ class Estimating(models.Model):
     )
 
 
-    Prjct_Name=models.CharField(verbose_name="Estimate Project Name", max_length=250)
+    prjct_name=models.CharField(verbose_name="Estimate Project Name", max_length=250,null=True,blank=True)
 
 
     due_date=models.DateField(verbose_name="Due Date",null=True,blank=True)
@@ -67,7 +67,7 @@ class Estimating(models.Model):
             ('Working','Working'),
             ('Pending','Pending'),
             ('Won','Won'),
-            ('Lost','Lost'),],default='Working')
+            ('Lost','Lost'),],default='Working') 
     
 
     start_date = models.DateField(verbose_name="start Date",null=True,blank=True)
@@ -150,7 +150,7 @@ class Estimating(models.Model):
 
 
         def __str__(self):
-            return self.Prjct_Name
+            return self.prjct_name
 
 
 

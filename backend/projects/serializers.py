@@ -9,17 +9,6 @@ class ProjectSerializer(serializers.ModelSerializer):
         model = Project
         fields = ['id','estimating','job_num','prjct_engnr','bim_oprtr','Forman','prjct_mngr','start_date']
 
-        extra_kwargs = {
-            'estimating': {'required': True},
-            'job_num': {'required': True},
-            'prjct_engnr': {'required': True},
-            'bim_oprtr': {'required': True},
-            'Forman': {'required': True},
-            'prjct_mngr': {'required': True},
-            'start_date': {'required': True},
-        }
-
-
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -27,7 +16,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         representation['prjct_engnr'] = instance.prjct_engnr.full_Name if instance.prjct_engnr else None
         representation['bim_oprtr'] = instance.bim_oprtr.full_Name if instance.bim_oprtr else None
         representation['Forman'] = instance.Forman.full_Name if instance.Forman else None
-        representation['prjct_mngr'] = instance.prjct_engnr.full_Name if instance.prjct_mngr else None
+        representation['prjct_mngr'] = instance.prjct_mngr.full_Name if instance.prjct_mngr else None
 
 
         return representation

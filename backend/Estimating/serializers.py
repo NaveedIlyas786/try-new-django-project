@@ -48,7 +48,7 @@ class EstimatingDetailSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['Estimating'] = instance.Estimating.Prjct_Name if instance.Estimating else None
+        representation['Estimating'] = instance.Estimating.prjct_name if instance.Estimating else None
         return representation
 
 class Time12HourField(serializers.TimeField):
@@ -73,7 +73,7 @@ class EstimatingSerializer(serializers.ModelSerializer):
         model = Estimating
         fields = [
             'id',
-            'Prjct_Name',
+            'prjct_name',
             'due_date',
             'time',
             'timezone',
@@ -88,7 +88,7 @@ class EstimatingSerializer(serializers.ModelSerializer):
             'link',
         ]
         # extra_kwargs = {
-        #     'Prjct_Name': {'required': True},
+        #     'prjct_name': {'required': True},
         #     'company': {'required': True},
         #     'bid_amount': {'required': True},
         #     'location': {'required': True},

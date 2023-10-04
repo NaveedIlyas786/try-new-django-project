@@ -14,6 +14,7 @@ const Projects = () => {
       .then((response) => response.data)
       .then((data) => {
         setData(data);
+        console.log(data)
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -89,7 +90,9 @@ const Projects = () => {
                 <td className="mytd">{item.start_date}</td>
                 <td className="mytd">{item.estimating}</td>
                 <td className="mytd">{item.job_num}</td>
+                
                 <td className="mytd">{item.prjct_mngr}</td>
+                
                 <td className="mytd">{item.prjct_engnr}</td>
                 <td className="mytd">{item.bim_oprtr}</td>
                 <td className="mytd">{item.Forman}</td>

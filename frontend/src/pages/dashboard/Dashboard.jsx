@@ -24,7 +24,7 @@ const Dashboard = () => {
       <div className=" container dashboard ">
         <div className=" row projectStatus justify-content-around">
           <div className=" col-md-2 p-2 ProjectStatus  text-center">
-            <h4 className="pt-2 pb-2">9</h4>
+            <h4 className="pt-2 pb-2">{dashData.reduce((acc, e) => acc + (e?.Won?.total || 0), 0)}</h4>
             <p>
               {/* <i className="fa-solid fa-circle-check"></i> */}
               <i className="fa-solid fa-circle-check check"></i>
@@ -32,14 +32,20 @@ const Dashboard = () => {
             <h5>Won</h5>
           </div>
           <div className=" col-md-2 p-2 text-center ProjectStatus">
-            <h4 className="pt-2 pb-2">5</h4>
+            <h4 className="pt-2 pb-2">{dashData.reduce(
+                        (acc, e) => acc + (e?.Pending?.total || 0),
+                        0
+                      )}</h4>
             <p>
               <i className="fa-solid  fa-question fs-5 pend"></i>
             </p>
             <h5>pending</h5>
           </div>
           <div className=" col-md-2 p-2 text-center ProjectStatus">
-            <h4 className="pt-2 pb-2">10</h4>
+            <h4 className="pt-2 pb-2">{dashData.reduce(
+                        (acc, e) => acc + (e?.Working?.total || 0),
+                        0
+                      )}</h4>
             <p>
               <i className="fa-solid fa-spinner fs-5 working"></i>
             </p>
@@ -49,7 +55,10 @@ const Dashboard = () => {
             </p>
           </div>
           <div className=" col-md-2 p-2 text-center ProjectStatus">
-            <h4 className="pt-2 pb-2">15</h4>
+            <h4 className="pt-2 pb-2">{dashData.reduce(
+                        (acc, e) => acc + (e?.Lost?.total || 0),
+                        0
+                      )}</h4>
 
             <p>
               <i className=" mark fa-duotone fa fa-ban"></i>
@@ -91,39 +100,82 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {dashData.map((e)=>(
-                  <tr>
-                    <td>{e.estimator}</td> {/* Display the name of the first estimator */}
-                    <td>1</td>
-                    <td>2</td>
-                    <td>15</td>
-                    <td>$8,079,653</td>
-                    <td>1</td>
-                    <td>8%</td>
-                    <td>$7,350,900</td>
-                    <td>10</td>
-                    <td>77%</td>
-                    <td>$70,578,235</td>
-                    <td>13</td>
-                    <td>$86,008,788</td>
-                  </tr>
-
+                  {dashData.map((e, index) => (
+                    <tr key={index}>
+                      <td>{e.estimator}</td>
+                      <td>{e.summary?.Working?.total || 0}</td>
+                      <td>{e.summary?.Pending?.total || 0}</td>
+                      <td>{e.summary?.Pending?.percentage || 0}%</td>
+                      <td>{e.summary?.Pending?.bid_amount || 0}</td>
+                      <td>{e.summary?.Won?.total || 0}</td>
+                      <td>{e.summary?.Won?.percentage || 0}%</td>
+                      <td>{e.summary?.Won?.bid_amount || 0}</td>
+                      <td>{e.summary?.Lost?.total || 0}</td>
+                      <td>{e.summary?.Lost?.percentage || 0}%</td>
+                      <td>{e.summary?.Lost?.bid_amount || 0}</td>
+                      <td>{e.ytd_total || 0}</td>
+                      <td>{e.ytd_total_bid_amount || 0}</td>
+                    </tr>
                   ))}
-
-                  <tr className="grandtotal align-middle">
-                    <td rowSpan={2}>Grand Total 2022</td>
-                    <td rowSpan={2}>1</td>
-                    <td rowSpan={2}>50</td>
-                    <td rowSpan={2}></td>
-                    <td rowSpan={2}>39,031,806</td>
-                    <td rowSpan={2}>13</td>
-                    <td rowSpan={2}>16%</td>
-                    <td rowSpan={2}>$39,199,362</td>
-                    <td rowSpan={2}>52</td>
-                    <td rowSpan={2}>65%</td>
-                    <td rowSpan={2}>$177,784,100</td>
-                    <td rowSpan={2}>80</td>
-                    <td rowSpan={2}>$255,762,645</td>
+                  <tr>
+                    <td className="totalsection">Grand Total</td>
+                    <td className="totalsection">
+                      {dashData.reduce(
+                        (acc, e) => acc + (e?.Working?.total || 0),
+                        0
+                      )}
+                    </td>
+                    <td className="totalsection">
+                      {dashData.reduce(
+                        (acc, e) => acc + (e?.Pending?.total || 0),
+                        0
+                      )}
+                    </td>
+                    <td className="totalsection"></td>
+                    <td className="totalsection">
+                      {dashData.reduce(
+                        (acc, e) => acc + (e?.Pending?.bid_amount || 0),
+                        0
+                      )}
+                    </td>
+                    <td className="totalsection">
+                      {dashData.reduce(
+                        (acc, e) => acc + (e?.Won?.total || 0),
+                        0
+                      )}
+                    </td>
+                    <td className="totalsection"></td>
+                    <td className="totalsection">
+                      {dashData.reduce(
+                        (acc, e) => acc + (e?.Won?.bid_amount || 0),
+                        0
+                      )}
+                    </td>
+                    <td className="totalsection">
+                      {dashData.reduce(
+                        (acc, e) => acc + (e?.Lost?.total || 0),
+                        0
+                      )}
+                    </td>
+                    <td className="totalsection"></td>
+                    <td className="totalsection">
+                      {dashData.reduce(
+                        (acc, e) => acc + (e?.Lost?.bid_amount || 0),
+                        0
+                      )}
+                    </td>
+                    <td className="totalsection">
+                      {dashData.reduce(
+                        (acc, e) => acc + (e?.["Grand Total"]?.total || 0),
+                        0
+                      )}
+                    </td>
+                    <td className="totalsection">
+                      {dashData.reduce(
+                        (acc, e) => acc + (e?.["Grand Total"]?.bid_amount || 0),
+                        0
+                      )}
+                    </td>
                   </tr>
                 </tbody>
               </table>

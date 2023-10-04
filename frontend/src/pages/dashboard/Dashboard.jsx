@@ -91,25 +91,25 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                <tr>
-  <td>{dashData.estimator}</td> {/* Display the name of the first estimator */}
-  <td>0</td>
-  <td>2</td>
-  <td>15</td>
-  <td>$8,079,653</td>
-  <td>1</td>
-  <td>8%</td>
-  <td>$7,350,900</td>
-  <td>10</td>
-  <td>77%</td>
-  <td>$70,578,235</td>
-  <td>13</td>
-  <td>$86,008,788</td>
-</tr>
+                  {dashData.map((e)=>(
+                  <tr>
+                    <td>{e.estimator}</td> {/* Display the name of the first estimator */}
+                    <td>1</td>
+                    <td>2</td>
+                    <td>15</td>
+                    <td>$8,079,653</td>
+                    <td>1</td>
+                    <td>8%</td>
+                    <td>$7,350,900</td>
+                    <td>10</td>
+                    <td>77%</td>
+                    <td>$70,578,235</td>
+                    <td>13</td>
+                    <td>$86,008,788</td>
+                  </tr>
 
-                  
+                  ))}
 
-                 
                   <tr className="grandtotal align-middle">
                     <td rowSpan={2}>Grand Total 2022</td>
                     <td rowSpan={2}>1</td>

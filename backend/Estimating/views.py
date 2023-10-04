@@ -36,53 +36,93 @@ class UrlsListViews(APIView):
 class EstimatorSummaryView(views.APIView):
 
     def get(self, request, format=None):
-        # Get all unique estimators
         estimators = User.objects.filter(roles__name='Estimator')
-
-        # Preparing response
         response_data = []
 
+        totals = {
+            'Working': {'total': 0, 'bid_amount': 0},
+            'Pending': {'total': 0, 'bid_amount': 0},
+            'Won': {'total': 0, 'bid_amount': 0},
+            'Lost': {'total': 0, 'bid_amount': 0},
+        }
+
         for estimator in estimators:
-            # Getting all estimates for the current estimator of the year 2023
-            estimates = Estimating.objects.filter(estimator=estimator, start_date__year=2023)
-
-            # Calculating total counts and bid amounts for each status
-            summary_data = estimates.values('status').annotate(
-                total=Count('id'),
-                total_bid_amount=Sum('bid_amount')
-            )
-
-            # Calculating grand total of estimates
-            grand_total_estimates = estimates.count()
+            estimates = Estimating.objects.filter(estimator=estimator, due_date__year=2023)
+            grand_total = estimates.count()
             grand_total_bid_amount = estimates.aggregate(Sum('bid_amount'))['bid_amount__sum'] or 0
 
-            # Initializing summary with zeros for all statuses
-            summary = {
-                'Pending': {'total': 0, 'total_bid_amount': 0, 'percentage': 0},
-                'Working': {'total': 0, 'total_bid_amount': 0, 'percentage': 0},
-                'Won': {'total': 0, 'total_bid_amount': 0, 'percentage': 0},
-                'Lost': {'total': 0, 'total_bid_amount': 0, 'percentage': 0},
-            }
+            summary = {status: {'total': 0, 'percentage': 0, 'bid_amount': 0} for status in totals.keys()}
 
-            # Updating summary with actual counts and bid amounts from the query
-            for item in summary_data:
-                estimation_status = item['status']
-                total = item['total']
-                summary[estimation_status]['total'] = total
-                summary[estimation_status]['total_bid_amount'] = item['total_bid_amount'] or 0
-                summary[estimation_status]['percentage'] = (total / grand_total_estimates * 100 if grand_total_estimates > 0 else 0)
+            for status in totals.keys():
+                total = estimates.filter(status=status).count()
+                bid_amount = estimates.filter(status=status).aggregate(Sum('bid_amount'))['bid_amount__sum'] or 0
+                percentage = (total / grand_total * 100) if grand_total > 0 else 0
 
-            # Serializing the data
-            serialized_estimates = EstimatingSerializer(estimates, many=True).data
+                summary[status] = {
+                    'total': total,
+                    'percentage': percentage,
+                    'bid_amount': bid_amount
+                }
+
+                totals[status]['total'] += total
+                totals[status]['bid_amount'] += bid_amount
 
             estimator_data = {
-                'estimator': estimator.full_Name,  # Adjust this as per your User model's field
+                'estimator': estimator.full_Name,
                 'summary': summary,
-                'grand_total_estimates': grand_total_estimates,
+                'grand_total': grand_total,
                 'grand_total_bid_amount': grand_total_bid_amount
             }
 
             response_data.append(estimator_data)
+
+        # Calculate unassigned
+        unassigned = Estimating.objects.filter(estimator__isnull=True, status='Working', due_date__year=2023)
+        unassigned_total = unassigned.count()
+        unassigned_percentage = (unassigned_total / (totals['Working']['total'] + unassigned_total) * 100) if (totals['Working']['total'] + unassigned_total) > 0 else 0
+
+        unassigned_data = {
+            'estimator': 'Unassigned',
+            'summary': {
+                'Working': {
+                    'total': unassigned_total,
+                    'percentage': unassigned_percentage,
+                    'bid_amount': None  # Unassigned won't have a bid amount
+                }
+            },
+            'grand_total': unassigned_total,
+            'grand_total_bid_amount': None  # Unassigned won't have a total bid amount
+        }
+
+        response_data.append(unassigned_data)
+
+        # Adding the totals row
+        total_percentage_working = (totals['Working']['total'] / (totals['Working']['total'] + unassigned_total) * 100) if (totals['Working']['total'] + unassigned_total) > 0 else 0
+
+        response_data.append({
+            'estimator': 'Total',
+            'summary': {
+                'Working': {
+                    'total': totals['Working']['total'],
+                    'percentage': total_percentage_working,
+                    'bid_amount': totals['Working']['bid_amount']
+                },
+                'Pending': {
+                    'total': totals['Pending']['total'],
+                    'bid_amount': totals['Pending']['bid_amount']
+                },
+                'Won': {
+                    'total': totals['Won']['total'],
+                    'bid_amount': totals['Won']['bid_amount']
+                },
+                'Lost': {
+                    'total': totals['Lost']['total'],
+                    'bid_amount': totals['Lost']['bid_amount']
+                },
+            },
+            'grand_total': sum(value['total'] for value in totals.values()),
+            'grand_total_bid_amount': sum(value['bid_amount'] for value in totals.values())
+        })
 
         return Response(response_data, status=200)
 

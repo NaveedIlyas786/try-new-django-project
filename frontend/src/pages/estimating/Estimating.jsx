@@ -647,11 +647,6 @@ const Estimator = () => {
           customer.estimator.toUpperCase().includes(filter.toUpperCase())) ||
         (customer.bidder &&
           customer.bidder.toUpperCase().includes(filter.toUpperCase()))
-        // (customer.bid_amount &&
-        //   customer.bid_amount
-        //     .toString()
-        //     .toUpperCase()
-        //     .includes(filter.toUpperCase()))
       );
     });
   });

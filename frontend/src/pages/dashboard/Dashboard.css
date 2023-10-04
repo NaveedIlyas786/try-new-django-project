@@ -1,7 +1,5 @@
 .dashboard{
     padding: 50px 0;
-    
-    
 }
 
 
@@ -9,18 +7,16 @@
     margin-top: 71px !important;
 }
 
-
 .projectStatus h4,h5{
     line-height: 7px;
     line-height: 7px;
 }
 
-
 .ProjectStatus{
     border: 1px solid rgb(179, 175, 175);
     box-shadow: 3px 3px 5px rgb(207, 206, 206);
     border-radius: 5px;
-    height: 100px;
+    height: 120px;
 }
 
 .graph-1{
@@ -31,20 +27,27 @@
 }
 
 .check{
-    color: green;
-    font-size: 25px !important;
+    color: #4fd311;
+    font-size: 30px !important;
 }
 .mark{
-    color: red;
-    font-size: 25px !important;
+    color: rgb(224, 56, 34);
+    background-color: rgb(255, 255, 255);
+    font-size: 30px !important;
+    
+    line-height: 10px !important;
 }
 .working{
-    color: rgb(160, 204, 243);
-    font-size: 25px !important;
+    color: rgb(81, 161, 231);
+    font-size: 30px !important;
+}
+h5{
+    line-height: 5px !important;
+    /* background-color: #f7bb07; */
 }
 .pend{
     color: #f7bb07;
-    font-size: 25px !important;
+    font-size: 30px !important;
 }
 .graphimg img{
     height: 300px;
@@ -61,4 +64,20 @@
   }
   .table-design{
     max-height: 500px !important;
+    overflow-y: scroll;
+    border-radius: 10px;
+    /* background-color: red; */
+  }
+  .table-design::-webkit-scrollbar {
+    width: 10px; /* Set the width of the scrollbar */
+  }
+  
+  .table-design::-webkit-scrollbar-thumb {
+    background-color: #5d5d5f; /* Set the color of the scrollbar track (the non-draggable part) */
+    border-radius: 10px; 
+  }
+  
+  .table-design::-webkit-scrollbar-track {
+    border-radius: 10px; 
+    background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
   }

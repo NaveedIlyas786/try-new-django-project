@@ -30,11 +30,12 @@
     font-size: 25px !important;
 }
 .mark{
-    color: red;
+    color: rgb(224, 56, 34);
+    background-color: rgb(255, 255, 255);
     font-size: 25px !important;
 }
 .working{
-    color: rgb(160, 204, 243);
+    color: rgb(118, 183, 240);
     font-size: 25px !important;
 }
 .pend{

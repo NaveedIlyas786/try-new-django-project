@@ -137,7 +137,7 @@ class EstimatorSummaryView(views.APIView):
         response_data.append(unassigned_data)
 
         # Adding the totals row
-        total_data['estimator'] = 'Total'
+        total_data['estimator'] = 'Grand Totals'
         response_data.append(total_data)
 
         return Response(response_data, status=200)

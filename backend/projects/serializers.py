@@ -12,7 +12,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['estimating'] = instance.estimating.Prjct_Name if instance.estimating else None
+        representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None
         representation['prjct_engnr'] = instance.prjct_engnr.full_Name if instance.prjct_engnr else None
         representation['bim_oprtr'] = instance.bim_oprtr.full_Name if instance.bim_oprtr else None
         representation['Forman'] = instance.Forman.full_Name if instance.Forman else None

@@ -50,29 +50,36 @@ class EstimatorSummaryView(views.APIView):
         for estimator in estimators:
             estimates = Estimating.objects.filter(
                 estimator=estimator,
-                start_date__year=2023  # Changed from due_date to start_date
+                start_date__year=2023  
             )
             
             estimator_data = calculate_summary(estimates)
-            estimator_data['estimator'] = estimator.full_Name  # Changed to full_name
+            estimator_data['estimator'] = estimator.full_Name  
             
             response_data.append(estimator_data)
 
             # Accumulate the totals
-            for status in total_data.keys():
-                if status in estimator_data['summary']:
-                    total_data[status]['total'] += estimator_data['summary'][status]['total']
-                    total_data[status]['bid_amount'] += estimator_data['summary'][status]['bid_amount']
+            for status in ['Working', 'Pending', 'Won', 'Lost']:
+                total_data[status]['total'] += estimator_data['summary'][status]['total']
+                total_data[status]['bid_amount'] += estimator_data['summary'][status]['bid_amount']
+                total_data['Grand Total']['total'] += estimator_data['summary'][status]['total']
+                total_data['Grand Total']['bid_amount'] += estimator_data['summary'][status]['bid_amount']
 
         # Handling the unassigned estimations
         unassigned_estimations = Estimating.objects.filter(
             estimator__isnull=True,
             status='Working',
-            start_date__year=2023  # Changed from due_date to start_date
+            start_date__year=2023  
         )
 
         unassigned_data = calculate_summary(unassigned_estimations, only_working=True)
         unassigned_data['estimator'] = 'Unassigned'
+
+        # Add unassigned totals to total_data
+        total_data['Working']['total'] += unassigned_data['summary']['Working']['total']
+        total_data['Working']['bid_amount'] += unassigned_data['summary']['Working']['bid_amount']
+        total_data['Grand Total']['total'] += unassigned_data['summary']['Working']['total']
+        total_data['Grand Total']['bid_amount'] += unassigned_data['summary']['Working']['bid_amount']
 
         response_data.append(unassigned_data)
 
@@ -105,8 +112,6 @@ def calculate_summary(estimates, only_working=False):
         'ytd_total': grand_total,
         'ytd_total_bid_amount': grand_total_bid_amount
     }
-
-
 
 
 class CompanyListView(APIView):

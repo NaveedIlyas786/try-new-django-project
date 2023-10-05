@@ -1,34 +1,4 @@
-.myaside {
-    border: 1px solid purple;
-    width: 200px;
-    height: 150vh;
-  }
-  .myaside ul {
-    margin: 0;
-    padding: 0;
-  }
-  .projects {
-    margin-top: 70px;
-    display: flex;
-  }
-  .aside_li {
-    height: 40px;
-    list-style-type: none;
-    text-decoration: none;
-    padding: 0 0 0 20px;
-    cursor: pointer;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    background-color: blueviolet;
-  }
-  .aside_li:hover {
-    background-color: aliceblue;
-  }
-  .main-content {
-    background-color: rgb(14, 223, 153);
-    width: 100%;
-  }
+
   /********************Project Summary Section***************/
   
   .parentDiv {
@@ -77,19 +47,6 @@
     outline: none !important;
   }
   
-  .dropbtns {
-    width: 100% !important;
-    padding: 0 !important;
-    font-size: 15px !important;
-    border-radius: 2px !important;
-    color: rgb(10, 10, 10);
-    margin: 1px 0;
-  }
-  .dropbtns:hover {
-    background-color: #1976d2;
-    color: rgb(255, 255, 255);
-    padding: 0.3px 0 !important;
-  }
   
   .mytd {
     position: relative;
@@ -105,7 +62,6 @@
   .projectTable::-webkit-scrollbar {
     width: 10px; /* Set the width of the scrollbar */
   }
-  
   .projectTable::-webkit-scrollbar-thumb {
     background-color: #5d5d5f; /* Set the color of the scrollbar track (the non-draggable part) */
     border-radius: 10px 50px 50px 10px; /*Round the corners of the thumb*/

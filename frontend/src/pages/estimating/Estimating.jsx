@@ -4,14 +4,14 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "font-awesome/css/font-awesome.min.css";
 import "react-datepicker/dist/react-datepicker.css";
-import { useSelector, useDispatch } from "react-redux";
 import { addEstimating } from "../../store/EstimatingSlice";
-import { fetchEstimatingData } from "../../store/EstimatingSlice";
 import { addProject } from "../../store/ProjectFormSlice";
 import { Modal, Button, Stepper, Step, StepLabel } from "@mui/material";
 import AOS from "aos";
 // import "aos/dist/aos.css";
 import ParticlesAnimation from "../../components/particleAnimation/ParticlesAnimation";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchEstimatingData } from "../../store/EstimatingSlice";
 import { createSelector } from "reselect";
 
 const Estimator = () => {
@@ -781,6 +781,12 @@ const Estimator = () => {
   const viewpdf = () => {
     navigate("/homepage/purposal");
   };
+  const movetoWonProjectsPage=()=>{
+    navigate("/homepage/wonProjectspage/")
+  }
+  const movetoLostProjectsPage=()=>{
+    navigate("/homepage/lostProjectspage/")
+  }
 
   // ************************************************
 
@@ -941,6 +947,14 @@ const Estimator = () => {
         </div>
         <div className="estimatingTable px-5">
           <h3 className="text-black">Estimating Summary</h3>
+          <div class="btn-group">
+            <button type="button" class="btn btn-success" onClick={movetoWonProjectsPage}>
+              Won Projects
+            </button>
+            <button type="button" class="btn btn-danger" on onClick={movetoLostProjectsPage}>
+              Lost Projects
+            </button>
+          </div>
           {/* {ProjectformModal && ( */}
           {showProjectModal && (
             <div
@@ -1122,7 +1136,7 @@ const Estimator = () => {
             </button>
           </div>
           <ParticlesAnimation numberOfCircles={numberOfCircles} />
-          <div className="table-responsive proposalTable mt-4">
+          <div className="table-responsive proposalTable mt-2">
             <table className="table table-striped  table-bordered table-hover">
               <thead className="proposalHeader">
                 <tr>
@@ -1150,9 +1164,7 @@ const Estimator = () => {
                       <select
                         className="form-select dropUpdation"
                         id="estimatorName"
-                        onChange={(event) =>
-                          handleAreaChange(event, item.id)
-                        }
+                        onChange={(event) => handleAreaChange(event, item.id)}
                         value={AreaChoice[item.id] || item.location}
                       >
                         <option value="">{item.location}</option>

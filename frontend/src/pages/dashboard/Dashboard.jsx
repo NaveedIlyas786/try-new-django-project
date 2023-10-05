@@ -63,7 +63,7 @@ const Dashboard = () => {
             <p>
               <i className=" mark fa-duotone fa fa-ban"></i>
             </p>
-            <h5>Rejected</h5>
+            <h5>Lost</h5>
           </div>
         </div>
       </div>
@@ -102,75 +102,75 @@ const Dashboard = () => {
                 <tbody>
                   {dashData.map((e, index) => (
                     <tr key={index}>
-                      <td>{e.estimator}</td>
-                      <td>{e.summary?.Working?.total || 0}</td>
-                      <td>{e.summary?.Pending?.total || 0}</td>
-                      <td>{e.summary?.Pending?.percentage || 0}%</td>
-                      <td>{e.summary?.Pending?.bid_amount || 0}</td>
-                      <td>{e.summary?.Won?.total || 0}</td>
-                      <td>{e.summary?.Won?.percentage || 0}%</td>
-                      <td>{e.summary?.Won?.bid_amount || 0}</td>
-                      <td>{e.summary?.Lost?.total || 0}</td>
-                      <td>{e.summary?.Lost?.percentage || 0}%</td>
-                      <td>{e.summary?.Lost?.bid_amount || 0}</td>
-                      <td>{e.ytd_total || 0}</td>
-                      <td>{e.ytd_total_bid_amount || 0}</td>
+                      <td className="dashtd">{e.estimator}</td>
+                      <td className="dashtd">{e.summary?.Working?.total || 0}</td>
+                      <td className="dashtd">{e.summary?.Pending?.total || 0}</td>
+                      <td className="dashtd">{e.summary?.Pending?.percentage || 0}%</td>
+                      <td className="dashtd">{e.summary?.Pending?.bid_amount || 0}</td>
+                      <td className="dashtd">{e.summary?.Won?.total || 0}</td>
+                      <td className="dashtd">{e.summary?.Won?.percentage || 0}%</td>
+                      <td className="dashtd">{e.summary?.Won?.bid_amount || 0}</td>
+                      <td className="dashtd">{e.summary?.Lost?.total || 0}</td>
+                      <td className="dashtd">{e.summary?.Lost?.percentage || 0}%</td>
+                      <td className="dashtd">{e.summary?.Lost?.bid_amount || 0}</td>
+                      <td className="dashtd">{e.ytd_total || 0}</td>
+                      <td className="dashtd">{e.ytd_total_bid_amount || 0}</td>
                     </tr>
                   ))}
                   <tr>
-                    <td className="totalsection">Grand Total</td>
-                    <td className="totalsection">
+                    <td className="totalsection dashtd">Grand Total</td>
+                    <td className="totalsection dashtd">
                       {dashData.reduce(
                         (acc, e) => acc + (e?.Working?.total || 0),
                         0
                       )}
                     </td>
-                    <td className="totalsection">
+                    <td className="totalsection dashtd">
                       {dashData.reduce(
                         (acc, e) => acc + (e?.Pending?.total || 0),
                         0
                       )}
                     </td>
-                    <td className="totalsection"></td>
-                    <td className="totalsection">
+                    <td className="totalsection dashtd"></td>
+                    <td className="totalsection dashtd">
                       {dashData.reduce(
                         (acc, e) => acc + (e?.Pending?.bid_amount || 0),
                         0
                       )}
                     </td>
-                    <td className="totalsection">
+                    <td className="totalsection dashtd">
                       {dashData.reduce(
                         (acc, e) => acc + (e?.Won?.total || 0),
                         0
                       )}
                     </td>
-                    <td className="totalsection"></td>
-                    <td className="totalsection">
+                    <td className="totalsection dashtd"></td>
+                    <td className="totalsection dashtd">
                       {dashData.reduce(
                         (acc, e) => acc + (e?.Won?.bid_amount || 0),
                         0
                       )}
                     </td>
-                    <td className="totalsection">
+                    <td className="totalsection dashtd">
                       {dashData.reduce(
                         (acc, e) => acc + (e?.Lost?.total || 0),
                         0
                       )}
                     </td>
-                    <td className="totalsection"></td>
-                    <td className="totalsection">
+                    <td className="totalsection dashtd"></td>
+                    <td className="totalsection dashtd">
                       {dashData.reduce(
                         (acc, e) => acc + (e?.Lost?.bid_amount || 0),
                         0
                       )}
                     </td>
-                    <td className="totalsection">
+                    <td className="totalsection dashtd">
                       {dashData.reduce(
                         (acc, e) => acc + (e?.["Grand Total"]?.total || 0),
                         0
                       )}
                     </td>
-                    <td className="totalsection">
+                    <td className="totalsection dashtd">
                       {dashData.reduce(
                         (acc, e) => acc + (e?.["Grand Total"]?.bid_amount || 0),
                         0
@@ -199,22 +199,22 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
+                  <tr className="dashtd">
                     <td>DMS - Drywall</td>
                     <td>5</td>
                     <td>$8,637,659</td>
                   </tr>
-                  <tr>
+                  <tr className="dashtd">
                     <td>David M. Schmitt</td>
                     <td>5</td>
                     <td>$0</td>
                   </tr>
-                  <tr>
+                  <tr className="dashtd">
                     <td>DMS - BKL</td>
                     <td>8</td>
                     <td>$30,561,703</td>
                   </tr>
-                  <tr>
+                  <tr className="dashtd">
                     <td>DMS - STL</td>
                     <td>0</td>
                     <td>$0</td>

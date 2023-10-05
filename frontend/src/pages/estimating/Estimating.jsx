@@ -795,18 +795,18 @@ const Estimator = () => {
   // const [estimatorchoice, setEstimatorchoice] = useState({});
   const [statusMap, setStatusMap] = useState({});
 
-// Function to update the status of an item
-const updateItemStatus = (itemId, newStatus) => {
-  // Dispatch the action to update the status in the Redux store
-  dispatch(updateStatus({ id: itemId, newStatus }));
-};
+  // Function to update the status of an item
+  const updateItemStatus = (itemId, newStatus) => {
+    // Dispatch the action to update the status in the Redux store
+    dispatch(updateStatus({ id: itemId, newStatus }));
+  };
   const handleUpdationChange = async (event, itemId) => {
     const updatedStatus = event.target.value;
     console.log("Updated Status:", updatedStatus);
-  
+
     const itemToUpdate = filteredData.find((item) => item.id === itemId);
     console.log("Item to Update:", itemToUpdate);
-  
+
     try {
       const response = await fetch(
         `http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`,
@@ -821,13 +821,13 @@ const updateItemStatus = (itemId, newStatus) => {
           }),
         }
       );
-  
+
       console.log("API Response:", response);
-  
+
       if (response.ok) {
         // Dispatch the updateStatus action to update the status in the Redux store
         updateItemStatus(itemId, updatedStatus);
-  
+
         // Log a success message to the console
         console.log(`Data updated successfully for item with ID ${itemId}`);
         // You may need to refresh the UI or update the specific row accordingly
@@ -845,7 +845,7 @@ const updateItemStatus = (itemId, newStatus) => {
       console.error("Error updating status:", error);
     }
   };
-  
+
   const [estimatorchoice, setEstimatorchoice] = useState({});
   const handleEstimatorChange = async (event, itemId) => {
     const updatedEstimatorId = parseInt(event.target.value, 10);
@@ -1171,8 +1171,8 @@ const updateItemStatus = (itemId, newStatus) => {
               <tbody className="cursor-pointer jktable bg-info jloop">
                 {filteredData.map((item) => (
                   <tr key={item.id}>
-                    <td className="mytd centered-td">{item.due_date}</td>
-                    <td className="mytd centered-td">
+                    <td className="mytd centered-td" >{item.due_date}</td>
+                    <td className="mytd centered-td" style={{minWidth:"60px"}}>
                       {item.time} <strong>{item.timezone}</strong>
                     </td>
                     <td className="mytd myproject centered-td">
@@ -1199,7 +1199,7 @@ const updateItemStatus = (itemId, newStatus) => {
                         )}
                       </select>
                     </td>
-                    <td className="mytd centered-td">
+                    <td className="mytd centered-td" style={{minWidth:"210px"}}>
                       <select
                         className="form-select dropUpdation"
                         id="estimatorName"
@@ -1207,8 +1207,11 @@ const updateItemStatus = (itemId, newStatus) => {
                           handleEstimatorChange(event, item.id)
                         }
                         value={estimatorchoice[item.id] || item.estimator}
+                        style={{ minWidth: "190px" }} // Set the width to 100%
                       >
-                        <option value="">{item.estimator}</option>
+                        <option value="">
+                          {item.estimator ? item.estimator : "No Estimator"}
+                        </option>
                         {EstimatorName && EstimatorName.length > 0 ? (
                           EstimatorName.map((user) => (
                             <option value={user.id} key={user.id}>
@@ -1233,8 +1236,9 @@ const updateItemStatus = (itemId, newStatus) => {
                         value={statusMap[item.id] || item.status}
                       >
                         <option value={item.status}>{item.status}</option>
-                        <option value="Pending">Pending</option>
                         <option value="Won">Won</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Working">Working</option>
                         <option value="Lost">Lost</option>
                       </select>
                     </td>

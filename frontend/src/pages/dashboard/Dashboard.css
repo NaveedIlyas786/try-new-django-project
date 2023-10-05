@@ -85,3 +85,7 @@ h5{
   .totalsection{
     font-weight: bold;
   }
+  .dashtd {
+    text-align: center; /* Center horizontally */
+    vertical-align: middle; /* Center vertically */
+  }

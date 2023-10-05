@@ -247,7 +247,6 @@ input:focus {
 }
 .mytd {
   position: relative;
-  max-width: 150px !important;
 }
 
 .proposalHeader {

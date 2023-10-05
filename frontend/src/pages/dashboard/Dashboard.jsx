@@ -19,6 +19,30 @@ const Dashboard = () => {
       });
   }, []);
 
+  const formatNumberWithCommas = (value) => {
+    if (value === null) return ""; // Return an empty string if the value is null
+    return value.toLocaleString("en-US");
+  };
+
+  function formatPercentage(value) {
+    // Parse the input value as a float
+    const floatValue = parseFloat(value);
+  
+    // Check if it's a valid number
+    if (!isNaN(floatValue)) {
+      // Round the value to two decimal places
+      const roundedValue = Math.round(floatValue * 100) / 100;
+  
+      // Convert the rounded value to a string with '%' symbol
+      const formattedValue = `${roundedValue.toFixed(0)}%`;
+  
+      return formattedValue;
+    } else {
+      // If the input is not a valid number, return an empty string or handle it accordingly
+      return '';
+    }
+  }
+
   return (
     <>
       <div className=" container dashboard ">
@@ -86,17 +110,17 @@ const Dashboard = () => {
                     <th colSpan={2}>Ytd Total</th>
                   </tr>
                   <tr>
-                    <th>#</th>
-                    <th>%</th>
-                    <th>Estimated$</th>
-                    <th>#</th>
-                    <th>%</th>
-                    <th>Estimated$</th>
-                    <th>#</th>
-                    <th>%</th>
-                    <th>Estimated$</th>
+                    <th className="thBackgroundpend">#</th>
+                    <th className="thBackgroundpend">%</th>
+                    <th className="thBackgroundpend">Estimated $</th>
+                    <th className="thBackgroundWon">#</th>
+                    <th className="thBackgroundWon">%</th>
+                    <th className="thBackgroundWon">Estimated $</th>
+                    <th className="thBackgroundLost">#</th>
+                    <th className="thBackgroundLost">%</th>
+                    <th className="thBackgroundLost">Estimated $</th>
                     <th># </th>
-                    <th>Estimated$</th>
+                    <th>Estimated $</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -105,16 +129,16 @@ const Dashboard = () => {
                       <td className="dashtd">{e.estimator}</td>
                       <td className="dashtd">{e.summary?.Working?.total || 0}</td>
                       <td className="dashtd">{e.summary?.Pending?.total || 0}</td>
-                      <td className="dashtd">{e.summary?.Pending?.percentage || 0}%</td>
-                      <td className="dashtd">{e.summary?.Pending?.bid_amount || 0}</td>
+                      <td className="dashtd">{ formatPercentage(e.summary?.Pending?.percentage || 0)}</td>
+                      <td className="dashtd">$ {formatNumberWithCommas(e.summary?.Pending?.bid_amount || 0)}</td>
                       <td className="dashtd">{e.summary?.Won?.total || 0}</td>
-                      <td className="dashtd">{e.summary?.Won?.percentage || 0}%</td>
-                      <td className="dashtd">{e.summary?.Won?.bid_amount || 0}</td>
+                      <td className="dashtd">{formatPercentage(e.summary?.Won?.percentage || 0)}</td>
+                      <td className="dashtd">$ {formatNumberWithCommas(e.summary?.Won?.bid_amount || 0)}</td>
                       <td className="dashtd">{e.summary?.Lost?.total || 0}</td>
-                      <td className="dashtd">{e.summary?.Lost?.percentage || 0}%</td>
-                      <td className="dashtd">{e.summary?.Lost?.bid_amount || 0}</td>
+                      <td className="dashtd">{formatPercentage(e.summary?.Lost?.percentage || 0)}</td>
+                      <td className="dashtd">$ {formatNumberWithCommas(e.summary?.Lost?.bid_amount || 0)}</td>
                       <td className="dashtd">{e.ytd_total || 0}</td>
-                      <td className="dashtd">{e.ytd_total_bid_amount || 0}</td>
+                      <td className="dashtd">$ {formatNumberWithCommas(e.ytd_total_bid_amount || 0)}</td>
                     </tr>
                   ))}
                   <tr>
@@ -133,10 +157,10 @@ const Dashboard = () => {
                     </td>
                     <td className="totalsection dashtd"></td>
                     <td className="totalsection dashtd">
-                      {dashData.reduce(
+                      { formatNumberWithCommas(dashData.reduce(
                         (acc, e) => acc + (e?.Pending?.bid_amount || 0),
                         0
-                      )}
+                      ))}
                     </td>
                     <td className="totalsection dashtd">
                       {dashData.reduce(
@@ -146,10 +170,10 @@ const Dashboard = () => {
                     </td>
                     <td className="totalsection dashtd"></td>
                     <td className="totalsection dashtd">
-                      {dashData.reduce(
+                      $ {formatNumberWithCommas(dashData.reduce(
                         (acc, e) => acc + (e?.Won?.bid_amount || 0),
                         0
-                      )}
+                      ))}
                     </td>
                     <td className="totalsection dashtd">
                       {dashData.reduce(
@@ -159,10 +183,10 @@ const Dashboard = () => {
                     </td>
                     <td className="totalsection dashtd"></td>
                     <td className="totalsection dashtd">
-                      {dashData.reduce(
+                      $ {formatNumberWithCommas(dashData.reduce(
                         (acc, e) => acc + (e?.Lost?.bid_amount || 0),
                         0
-                      )}
+                      ))}
                     </td>
                     <td className="totalsection dashtd">
                       {dashData.reduce(
@@ -171,10 +195,10 @@ const Dashboard = () => {
                       )}
                     </td>
                     <td className="totalsection dashtd">
-                      {dashData.reduce(
+                      $ {formatNumberWithCommas(dashData.reduce(
                         (acc, e) => acc + (e?.["Grand Total"]?.bid_amount || 0),
                         0
-                      )}
+                      ))}
                     </td>
                   </tr>
                 </tbody>
@@ -195,7 +219,7 @@ const Dashboard = () => {
                   </tr>
                   <tr>
                     <th>#</th>
-                    <th>Estimated$</th>
+                    <th>Estimated $</th>
                   </tr>
                 </thead>
                 <tbody>

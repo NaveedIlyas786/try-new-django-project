@@ -18,6 +18,15 @@
     border-radius: 5px;
     height: 120px;
 }
+.thBackgroundpend{
+  background-color: #e7af08 !important;
+}
+.thBackgroundWon{
+  background-color: #47c40d !important;
+}
+.thBackgroundLost{
+  background-color: rgb(224, 56, 34) !important;
+}
 
 .graph-1{
     box-shadow: 3px 3px 5px rgb(207, 206, 206);

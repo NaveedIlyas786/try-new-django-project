@@ -71,7 +71,12 @@
     border-radius: 10px; /*Round the corners of the thumb*/
     background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
   }
-
+.lostredColor{
+  background-color: #dc3545 !important;
+}
+.successgreenColor{
+  background-color: #28a745 !important;
+}
   .mydiv {
     position: absolute;
     z-index: 99;

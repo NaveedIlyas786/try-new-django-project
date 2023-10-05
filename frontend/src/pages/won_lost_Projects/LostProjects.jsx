@@ -70,18 +70,18 @@ const LostProjects = () => {
         <table className="table table-striped table-bordered table-hover" style={{ tableLayout: "auto" }}>
           <thead className="proposalHeader">
             <tr>
-              <th>Due Date</th>
-              <th>Due Time</th>
-              <th>Project Name</th>
-              <th>Area</th>
-              <th>Estimator</th>
-              <th>Status</th>
-              <th>Bidders</th>
+              <th className="lostredColor">Due Date</th>
+              <th className="lostredColor">Due Time</th>
+              <th className="lostredColor">Project Name</th>
+              <th className="lostredColor">Area</th>
+              <th className="lostredColor">Estimator</th>
+              <th className="lostredColor">Status</th>
+              <th className="lostredColor">Bidders</th>
             </tr>
           </thead>
           <tbody className="cursor-pointer jktable bg-info jloop">
             {filteredData.map((item) => (
-              <tr key={item.id}>
+              <tr  key={item.id}>
                 <td className="mytd centered-td">{item.due_date}</td>
                 <td className="mytd centered-td">
                   {item.time} <strong>{item.timezone}</strong>

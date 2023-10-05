@@ -41,7 +41,7 @@ const WonProjects = () => {
   return (
     <div className="parentDiv px-5">
       <div className="titleWithSearch">
-        <h3 className="text-black">Won Projects</h3>
+        <h3 className="text-success">Won Projects</h3>
         <div className="inputSearchDiv">
           <input
             type="text"
@@ -64,13 +64,13 @@ const WonProjects = () => {
         <table className="table table-striped table-bordered table-hover" style={{ tableLayout: "auto" }}>
           <thead className="proposalHeader">
             <tr>
-              <th>Due Date</th>
-              <th>Due Time</th>
-              <th>Project Name</th>
-              <th>Area</th>
-              <th>Estimator</th>
-              <th>Status</th>
-              <th>Bidders</th>
+              <th className="successgreenColor">Due Date</th>
+              <th className="successgreenColor">Due Time</th>
+              <th className="successgreenColor">Project Name</th>
+              <th className="successgreenColor">Area</th>
+              <th className="successgreenColor">Estimator</th>
+              <th className="successgreenColor">Status</th>
+              <th className="successgreenColor">Bidders</th>
             </tr>
           </thead>
           <tbody className="cursor-pointer jktable bg-info jloop">

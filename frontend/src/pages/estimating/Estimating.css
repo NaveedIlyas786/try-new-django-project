@@ -738,13 +738,21 @@ td:nth-child(8) {
   top: 100px;
   left:80px;
 }
-/* .backDiv1 {
-  background-color: #757eff;
-  width: 10px;
-  height: 170px;
-  position: absolute;
-  border-radius: 50%;
-  top: 20px;
-  left:80px;
-  rotate: -25deg;
-} */
+/* ******************* */
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.table {
+  /* table-layout: auto; */
+  width: 100%;
+}
+
+td {
+  height: 100px !important;
+  width: auto;
+  overflow: hidden;
+   text-overflow: ellipsis; 
+  text-align: left; 
+}

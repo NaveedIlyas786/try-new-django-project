@@ -5,13 +5,14 @@ import { useNavigate } from "react-router-dom";
 import "font-awesome/css/font-awesome.min.css";
 import "react-datepicker/dist/react-datepicker.css";
 import { addEstimating } from "../../store/EstimatingSlice";
+import { fetchEstimatingData } from "../../store/EstimatingSlice";
 import { addProject } from "../../store/ProjectFormSlice";
 import { Modal, Button, Stepper, Step, StepLabel } from "@mui/material";
 import AOS from "aos";
 // import "aos/dist/aos.css";
 import ParticlesAnimation from "../../components/particleAnimation/ParticlesAnimation";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchEstimatingData } from "../../store/EstimatingSlice";
+import { updateStatus } from "../../store/EstimatingSlice";
 import { createSelector } from "reselect";
 
 const Estimator = () => {
@@ -636,18 +637,19 @@ const Estimator = () => {
   const selectFilteredData = createSelector([selectEstimatingData], (data) => {
     return data.filter((customer) => {
       return (
-        (customer.prjct_name &&
+        ((customer.prjct_name &&
           customer.prjct_name.toUpperCase().includes(filter.toUpperCase())) ||
-        (customer.status &&
-          customer.status
-            .trim()
-            .toUpperCase()
-            .includes(filter.trim().toUpperCase())) ||
-        (customer.estimator &&
-          customer.estimator.toUpperCase().includes(filter.toUpperCase())) ||
-        (customer.bidder &&
-          customer.bidder.toUpperCase().includes(filter.toUpperCase()))
-      );
+          (customer.status &&
+            customer.status
+              .trim()
+              .toUpperCase()
+              .includes(filter.trim().toUpperCase())) ||
+          (customer.estimator &&
+            customer.estimator.toUpperCase().includes(filter.toUpperCase())) ||
+          (customer.bidder &&
+            customer.bidder.toUpperCase().includes(filter.toUpperCase()))) &&
+        (customer.status === "Working" || customer.status === "Pending")
+      ); // Filter by 'Working' and 'Pending' status
     });
   });
 
@@ -781,25 +783,30 @@ const Estimator = () => {
   const viewpdf = () => {
     navigate("/homepage/purposal");
   };
-  const movetoWonProjectsPage=()=>{
-    navigate("/homepage/wonProjectspage/")
-  }
-  const movetoLostProjectsPage=()=>{
-    navigate("/homepage/lostProjectspage/")
-  }
+  const movetoWonProjectsPage = () => {
+    navigate("/homepage/wonProjectspage/");
+  };
+  const movetoLostProjectsPage = () => {
+    navigate("/homepage/lostProjectspage/");
+  };
 
   // ************************************************
 
   // const [estimatorchoice, setEstimatorchoice] = useState({});
   const [statusMap, setStatusMap] = useState({});
 
+// Function to update the status of an item
+const updateItemStatus = (itemId, newStatus) => {
+  // Dispatch the action to update the status in the Redux store
+  dispatch(updateStatus({ id: itemId, newStatus }));
+};
   const handleUpdationChange = async (event, itemId) => {
     const updatedStatus = event.target.value;
     console.log("Updated Status:", updatedStatus);
-
+  
     const itemToUpdate = filteredData.find((item) => item.id === itemId);
     console.log("Item to Update:", itemToUpdate);
-
+  
     try {
       const response = await fetch(
         `http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`,
@@ -814,15 +821,13 @@ const Estimator = () => {
           }),
         }
       );
-
+  
       console.log("API Response:", response);
-
+  
       if (response.ok) {
-        setStatusMap((prevStatusMap) => ({
-          ...prevStatusMap,
-          [itemId]: updatedStatus,
-        }));
-
+        // Dispatch the updateStatus action to update the status in the Redux store
+        updateItemStatus(itemId, updatedStatus);
+  
         // Log a success message to the console
         console.log(`Data updated successfully for item with ID ${itemId}`);
         // You may need to refresh the UI or update the specific row accordingly
@@ -833,13 +838,14 @@ const Estimator = () => {
         } else {
           // Handle other non-success responses
           const responseData = await response.text();
-          console.error("Failed to updations ! Server response:", responseData);
+          console.error("Failed to updations! Server response:", responseData);
         }
       }
     } catch (error) {
       console.error("Error updating status:", error);
     }
   };
+  
   const [estimatorchoice, setEstimatorchoice] = useState({});
   const handleEstimatorChange = async (event, itemId) => {
     const updatedEstimatorId = parseInt(event.target.value, 10);
@@ -947,11 +953,20 @@ const Estimator = () => {
         </div>
         <div className="estimatingTable px-5">
           <h3 className="text-black">Estimating Summary</h3>
-          <div class="btn-group">
-            <button type="button" class="btn btn-success" onClick={movetoWonProjectsPage}>
+          <div className="btn-group">
+            <button
+              type="button"
+              className="btn btn-success"
+              onClick={movetoWonProjectsPage}
+            >
               Won Projects
             </button>
-            <button type="button" class="btn btn-danger" on onClick={movetoLostProjectsPage}>
+            <button
+              type="button"
+              className="btn btn-danger"
+              on
+              onClick={movetoLostProjectsPage}
+            >
               Lost Projects
             </button>
           </div>
@@ -1137,7 +1152,10 @@ const Estimator = () => {
           </div>
           <ParticlesAnimation numberOfCircles={numberOfCircles} />
           <div className="table-responsive proposalTable mt-2">
-            <table className="table table-striped  table-bordered table-hover">
+            <table
+              className="table table-striped table-bordered table-hover"
+              style={{ tableLayout: "auto" }}
+            >
               <thead className="proposalHeader">
                 <tr>
                   <th>Due Date</th>
@@ -1204,7 +1222,6 @@ const Estimator = () => {
                         )}
                       </select>
                     </td>
-
                     <td className="mytd centered-td" style={{ width: "80px" }}>
                       <select
                         className="dropUpdation p-2 m-3"
@@ -1221,7 +1238,6 @@ const Estimator = () => {
                         <option value="Lost">Lost</option>
                       </select>
                     </td>
-
                     <td className="mytdbidder centered-td">
                       {item.bidder + " " + item.bidder_deatil}
                     </td>
@@ -1235,7 +1251,7 @@ const Estimator = () => {
                               ...step0FormData,
                               estimating: item.id,
                             });
-                            setSelectedEstimatingID(item.prjct_name); // Set the selected estimating ID
+                            setSelectedEstimatingID(item.prjct_name);
                             setPurposalModal(true);
                           }}
                         >
@@ -1247,7 +1263,7 @@ const Estimator = () => {
                           className="btn dropbtns btn-primary"
                           onClick={() => {
                             console.log(item.id);
-                            setSelectedProjectID(item.id); // Set the selected estimating ID
+                            setSelectedProjectID(item.id);
                             setshowProjectModal(true);
                           }}
                         >
@@ -1260,41 +1276,6 @@ const Estimator = () => {
                           View Proposal
                         </button>
                       </div>
-                      {/* <div class="btn-group-vertical p-0">
-                        <button
-                          type="button"
-                          class="btn btn-secondary"
-                          onClick={() => {
-                            console.log(item.prjct_name);
-                            setStep0FormData({
-                              ...step0FormData,
-                              estimating: item.id,
-                            });
-                            setSelectedEstimatingID(item.prjct_name); // Set the selected estimating ID
-                            setPurposalModal(true);
-                          }}
-                        >
-                          Create Proposal
-                        </button>
-                        <button
-                          type="button"
-                          class="btn btn-secondary"
-                          onClick={() => {
-                            console.log(item.id);
-                            setSelectedProjectID(item.id); // Set the selected estimating ID
-                            setshowProjectModal(true);
-                          }}
-                        >
-                          Projects
-                        </button>
-                        <button
-                          type="button"
-                          class="btn btn-secondary"
-                          onClick={viewpdf}
-                        >
-                          View Proposal
-                        </button>
-                      </div> */}
                     </td>
                   </tr>
                 ))}

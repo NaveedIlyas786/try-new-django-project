@@ -71,34 +71,40 @@ const Dashboard = () => {
       return "";
     }
   }
-  const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', 'red', 'pink'];
+  const colors = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "red", "pink"];
   const getPath = (x, y, width, height) => {
-    return `M${x},${y + height}C${x + width / 3},${y + height} ${x + width / 2},${y + height / 3}
+    return `M${x},${y + height}C${x + width / 3},${y + height} ${
+      x + width / 2
+    },${y + height / 3}
     ${x + width / 2}, ${y}
-    C${x + width / 2},${y + height / 3} ${x + (2 * width) / 3},${y + height} ${x + width}, ${y + height}
+    C${x + width / 2},${y + height / 3} ${x + (2 * width) / 3},${y + height} ${
+      x + width
+    }, ${y + height}
     Z`;
   };
   const TriangleBar = (props) => {
     const { fill, x, y, width, height } = props;
-  
+
     return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
   };
+
+  // const amount=formatNumberWithCommas(total_won_bid_amount);
+
   return (
     <>
       <div className=" container dashboard ">
         <div className=" row projectStatus justify-content-around">
-          <div className=" col-md-2 p-2 ProjectStatus  text-center">
-            <h4 className="pt-2 pb-2">
+          <div className=" col-md-2 p-2 ProjectStatus ">
+            <h4 className="pt-3 pb-2">
               {dashData.reduce((acc, e) => acc + (e?.Won?.total || 0), 0)}
             </h4>
             <p>
-              {/* <i className="fa-solid fa-circle-check"></i> */}
               <i className="fa-solid fa-circle-check check"></i>
             </p>
             <h5>Won</h5>
           </div>
-          <div className=" col-md-2 p-2 text-center ProjectStatus">
-            <h4 className="pt-2 pb-2">
+          <div className=" col-md-2 p-2  ProjectStatus">
+            <h4 className="pt-3 pb-2">
               {dashData.reduce((acc, e) => acc + (e?.Pending?.total || 0), 0)}
             </h4>
             <p>
@@ -106,7 +112,7 @@ const Dashboard = () => {
             </p>
             <h5>pending</h5>
           </div>
-          <div className=" col-md-2 p-2 text-center ProjectStatus">
+          <div className=" col-md-2 p-3  ProjectStatus">
             <h4 className="pt-2 pb-2">
               {dashData.reduce((acc, e) => acc + (e?.Working?.total || 0), 0)}
             </h4>
@@ -118,7 +124,7 @@ const Dashboard = () => {
               <i className="fa-solid fa-square-this-way-up "></i>
             </p>
           </div>
-          <div className=" col-md-2 p-2 text-center ProjectStatus">
+          <div className=" col-md-2 p-3  ProjectStatus">
             <h4 className="pt-2 pb-2">
               {dashData.reduce((acc, e) => acc + (e?.Lost?.total || 0), 0)}
             </h4>
@@ -130,13 +136,13 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-      <div className="mt-3 ">
-        <div className=" container text-center">
-          <div className=" row table-responsive m-0 table-design">
+      <div className="mt-3">
+        <div className=" container mytable text-center">
+          <div className=" row table-responsive table-design jk">
             <div className="col-md-12">
               <table className="table">
                 <thead className="thead-dark">
-                  <tr>
+                  <tr className="jk">
                     <th rowSpan={2} className="align-middle">
                       Estimator
                     </th>
@@ -162,7 +168,7 @@ const Dashboard = () => {
                     <th>Estimated $</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="jk">
                   {dashData.map((e, index) => (
                     <tr key={index}>
                       <td className="dashtd">{e.estimator}</td>
@@ -318,7 +324,7 @@ const Dashboard = () => {
                 </tbody>
               </table>
             </div>
-            <div className="ms-5 col-md-7 col-sm-7 graphimg">
+            {/* <div className="ms-5 col-md-7 col-sm-7 graphimg">
               <ResponsiveContainer width="100%" height={500}>
                 <BarChart
                   width={500}
@@ -340,7 +346,7 @@ const Dashboard = () => {
                   <Bar dataKey="total_won_bid_amount" fill="#82ca9d" />
                 </BarChart>
               </ResponsiveContainer>
-            </div>
+            </div> */}
             {/* <div className="ms-5 col-md-7 col-sm-7 graphimg">
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart
@@ -372,28 +378,43 @@ const Dashboard = () => {
                 </LineChart>
               </ResponsiveContainer>
             </div> */}
-            <div className="ms-5 col-md-7 col-sm-7 graphimg">
-            <BarChart
-      width={500}
-      height={500}
-      data={companyiesData}
-      margin={{
-        top: 20,
-        right: 30,
-        left: 20,
-        bottom: 5,
-      }}
-    >
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="company_name" />
-      <YAxis />
-      <Bar dataKey="total_won_bid_amount" fill="#8884d8" shape={<TriangleBar />} label={{ position: 'top' }}>
-        {companyiesData.map((entry, index) => (
-          <Cell key={`cell-${index}`} fill={colors[index % 20]} />
-        ))}
-      </Bar>
-    </BarChart>
+            <div className="ms-5 col-md-7 col-sm-7 text-center graphimg">
+              <BarChart
+                width={650}
+                height={350}
+                data={companyiesData}
+                margin={{
+                  top: 20,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="company_name" />
+                <YAxis />
+                <Tooltip formatter={(value) => formatNumberWithCommas(value)} />
+                <Bar
+                  dataKey="total_won_bid_amount"
+                  fill="#8884d8"
+                  shape={<TriangleBar />}
+                  label={{ position: "top" }}
+                >
+                  {companyiesData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={colors[index % 20]} />
+                  ))}
+                </Bar>
+              </BarChart>
+              <div className="mt-2 d-flex bg-danger">
+                <h1>Total Amount: </h1>
+              {companyiesData[2] && (
+                <h1>
+                  {formatNumberWithCommas(companyiesData[2].total_won_bid_amount)}
+                </h1>
+              )}
+              </div>
             </div>
+          
           </div>
         </div>
       </div>

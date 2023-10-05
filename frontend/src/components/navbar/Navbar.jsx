@@ -87,10 +87,10 @@ const Navbar = () => {
             </Link>
             <Link
               className={`nav-item  ${
-                activeLink === "Contacts" ? "active" : ""
-              } contacts`}
-              to="contacts"
-              onClick={() => handleLinkClick("Contacts")}
+                activeLink === "DMSDirectory" ? "active" : ""
+              } dmsDirectory`}
+              to="dmsDirectory"
+              onClick={() => handleLinkClick("DMSDirectory")}
             >
               <li>DMS Directory</li>
             </Link>

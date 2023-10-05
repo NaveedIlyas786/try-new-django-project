@@ -10,7 +10,7 @@ import {
 import Dashboard from "./pages/dashboard/Dashboard";
 import Projects from "./pages/projects-Screen/Projects";
 import Estimating from "./pages/estimating/Estimating";
-import Contacts from "./pages/contacts/Contacts";
+import Contacts from "./pages/dmsDirectory/DMSDirectory";
 import Reports from "./pages/reports/Reports";
 import Login from "./pages/login/Login";
 import SignUp from "./pages/signUp/SignUp";
@@ -25,6 +25,7 @@ import EstimatingDirectory from "./pages/estimating/EstimatingDirectory";
 import URLPage from "./pages/urlPage/URLPage";
 import WonProjects from "./pages/won_lost_Projects/WonProjects";
 import LostProjects from "./pages/won_lost_Projects/LostProjects";
+import DMSDirectory from "./pages/dmsDirectory/DMSDirectory";
 
 
 function App() {
@@ -47,7 +48,7 @@ function App() {
           <Route path="estimating" element={<Estimating />} />
           <Route path="estimating/:id" element={<EstimatingDirectory />} />
           <Route path="reports" element={<Reports />} />
-          <Route path="contacts" element={<Contacts />} />
+          <Route path="dmsDirectory" element={<DMSDirectory />} />
           <Route path="hrPayroll" element={<HrPayRoll />} />
           <Route path="postEstimating" element={<PostEstimating />} />
         </Route>

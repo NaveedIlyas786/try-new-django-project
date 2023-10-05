@@ -1,102 +1,115 @@
-.dashboard{
-    padding: 50px 0;
+.dashboard {
+  padding: 50px 0;
 }
 
-
-.projectStatus{
-    margin-top: 71px !important;
+.projectStatus {
+  margin-top: 71px !important;
 }
 
-.projectStatus h4,h5{
-    line-height: 7px;
-    line-height: 7px;
+.projectStatus h4,
+h5 {
+  line-height: 7px;
+  line-height: 7px;
 }
 
-.ProjectStatus{
-    border: 1px solid rgb(179, 175, 175);
-    box-shadow: 3px 3px 5px rgb(207, 206, 206);
-    border-radius: 5px;
-    height: 120px;
+.ProjectStatus {
+  border-radius: 50%;
+  background: #f6f6fd;
+  box-shadow: 29px 29px 58px #d1d1d7, -29px -29px 58px #ffffff;
+  vertical-align: center !important;
+  text-align: center;
+  height: 150px;
+  width: 150px;
 }
-.thBackgroundpend{
+.thBackgroundpend {
   background-color: #e7af08 !important;
 }
-.thBackgroundWon{
+.thBackgroundWon {
   background-color: #47c40d !important;
 }
-.thBackgroundLost{
+.thBackgroundLost {
   background-color: rgb(224, 56, 34) !important;
 }
 
-.graph-1{
-    box-shadow: 3px 3px 5px rgb(207, 206, 206);
+.graph-1 {
+  box-shadow: 3px 3px 5px rgb(207, 206, 206);
 }
-.hh{
-    background-color: aqua;
+.hh {
+  background-color: aqua;
 }
 
-.check{
-    color: #4fd311;
-    font-size: 30px !important;
+.check {
+  color: #4fd311;
+  font-size: 35px !important;
 }
-.mark{
-    color: rgb(224, 56, 34);
-    background-color: rgb(255, 255, 255);
-    font-size: 30px !important;
-    
-    line-height: 10px !important;
+.mark {
+  color: rgb(224, 56, 34);
+  background-color: transparent;
+  font-size: 35px !important;
+
+  line-height: 10px !important;
 }
-.working{
-    color: rgb(81, 161, 231);
-    font-size: 30px !important;
+.jk{
+  background-color: transparent;
+  border-radius: 50px 50px 0 0 !important;
 }
-h5{
-    line-height: 5px !important;
-    /* background-color: #f7bb07; */
+.mytable{
+  /* box-shadow: 29px 29px 58px #7a7ace, -29px -29px 58px #f7dede !important; */
+  border-radius: 50px 50px 0 0 !important;
+  /* padding: 0 !important; */
+  background-color: rgb(255, 255, 255)a(255, 0, 0, 0);
 }
-.pend{
-    color: #f7bb07;
-    font-size: 30px !important;
+.working {
+  color: rgb(81, 161, 231);
+  font-size: 35px !important;
 }
-.graphimg img{
-    height: 300px;
-    width: 700px;
+h5 {
+  line-height: 5px !important;
+  /* background-color: #f7bb07; */
+}
+.pend {
+  color: #f7bb07;
+  font-size: 35px !important;
+}
+.graphimg img {
+  height: 300px;
+  width: 700px;
 }
 @media (max-width: 768px) {
-    .table-responsive-custom {
-      overflow-x: auto;
-    }
+  .table-responsive-custom {
+    overflow-x: auto;
   }
-  .grandtotal{
-    height: 70px;
-    font-weight: bolder;
-  }
-  .table-design{
-    max-height: 500px !important;
-    overflow-y: scroll;
-    border-radius: 10px;
-    /* background-color: red; */
-  }
-  .table-design::-webkit-scrollbar {
-    width: 10px; /* Set the width of the scrollbar */
-  }
-  
-  .table-design::-webkit-scrollbar-thumb {
-    background-color: #5d5d5f; /* Set the color of the scrollbar track (the non-draggable part) */
-    border-radius: 10px; 
-  }
-  
-  .table-design::-webkit-scrollbar-track {
-    border-radius: 10px; 
-    background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
-  }
-  .graphCompany:last-child{
-font-weight: bold;
-  }
-  .totalsection{
-    font-weight: bold;
-  }
-  .dashtd {
-    text-align: center; /* Center horizontally */
-    vertical-align: middle; /* Center vertically */
-  }
+}
+.grandtotal {
+  height: 70px;
+  font-weight: bolder;
+}
+.table-design {
+  max-height: 500px !important;
+  overflow-y: scroll;
+  /* border-radius: 10px; */
+  /* background-color: red; */
+}
+.table-design::-webkit-scrollbar {
+  width: 10px; /* Set the width of the scrollbar */
+}
+
+.table-design::-webkit-scrollbar-thumb {
+  background-color: #5d5d5f; /* Set the color of the scrollbar track (the non-draggable part) */
+  border-radius: 0 20px 20px 0;
+}
+
+.table-design::-webkit-scrollbar-track {
+  border-radius: 0 20px 20px 0;
+  background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
+}
+.graphCompany:last-child {
+  font-weight: bold;
+}
+.totalsection {
+  font-weight: bold;
+}
+.dashtd {
+  text-align: center; /* Center horizontally */
+  vertical-align: middle; /* Center vertically */
+}

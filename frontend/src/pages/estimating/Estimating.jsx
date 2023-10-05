@@ -4,17 +4,17 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "font-awesome/css/font-awesome.min.css";
 import "react-datepicker/dist/react-datepicker.css";
-import { addEstimating } from "../../store/EstimatingSlice";
 import { fetchEstimatingData } from "../../store/EstimatingSlice";
 import { addProject } from "../../store/ProjectFormSlice";
 import { Modal, Button, Stepper, Step, StepLabel } from "@mui/material";
 import AOS from "aos";
+import { addEstimating } from "../../store/EstimatingSlice";
 // import "aos/dist/aos.css";
 import ParticlesAnimation from "../../components/particleAnimation/ParticlesAnimation";
 import { useSelector, useDispatch } from "react-redux";
 import { updateStatus } from "../../store/EstimatingSlice";
 import { createSelector } from "reselect";
-import { storeProposalData } from "../../store/EstimatingProposalSlice";
+// import { storeProposalData } from "../../store/EstimatingProposalSlice";
 
 const Estimator = () => {
   const [data, setData] = useState([]);
@@ -252,7 +252,7 @@ const Estimator = () => {
       })
       .catch((error) => {
         console.error("Error:", error);
-        // Handle errors here
+        // Handle errors here are 
       });
   };
 
@@ -413,7 +413,9 @@ const Estimator = () => {
       .then((response) => {
         // Handle the response if needed
         console.log("Data successfully submitted:", response.data);
-        dispatch(addEstimating(response.data));
+        
+        // dispatch(addEstimating(response.data));
+
         // You can also reset the form fields here if needed
         setDueDate("");
         setSelectedTime("");
@@ -973,7 +975,7 @@ const Estimator = () => {
               on
               onClick={movetoLostProjectsPage}
             >
-              Lost Projects
+              Archived Projects
             </button>
           </div>
           {/* {ProjectformModal && ( */}

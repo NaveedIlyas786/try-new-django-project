@@ -11,8 +11,6 @@ const estimatingSlice = createSlice({
     error: null,
   },
   reducers: {
-    // ... other reducers
-
     // Define the updateStatus action to update the status of an item by ID
     updateStatus: (state, action) => {
       const { id, newStatus } = action.payload;
@@ -63,5 +61,6 @@ export const {
   updateEstimating,
   updateStatus, // Export the updateStatus action
 } = estimatingSlice.actions;
+
 
 export default estimatingSlice.reducer;

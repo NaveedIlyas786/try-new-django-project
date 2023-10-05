@@ -14,6 +14,7 @@ import ParticlesAnimation from "../../components/particleAnimation/ParticlesAnim
 import { useSelector, useDispatch } from "react-redux";
 import { updateStatus } from "../../store/EstimatingSlice";
 import { createSelector } from "reselect";
+import { storeProposalData } from "../../store/EstimatingProposalSlice";
 
 const Estimator = () => {
   const [data, setData] = useState([]);
@@ -546,22 +547,22 @@ const Estimator = () => {
     // Remove the 'modal-active' class when the modal is closed
     document.body.classList.remove("modal-active");
   };
-  const handleProposalSubmitPosting = async (e) => {
+  const handleProposalSubmitPosting = async (e, dispatch) => {
     e.preventDefault();
-
+  
     try {
       console.log("Services data to be sent:", services);
-
-      // Check if all elements in the services array have the 'service' key
+  
+      // Check if all elements in the services array have the 'proposal' key
       const hasMissingService = services.some(
         (service) => typeof service.proposal === "undefined"
       );
-
+  
       if (hasMissingService) {
-        console.error("Missing 'perposal' key in services array");
+        console.error("Missing 'proposal' key in services array");
         return;
       }
-
+  
       const response = await fetch(
         "http://127.0.0.1:8000/api/estimating/proposals/",
         {
@@ -597,10 +598,14 @@ const Estimator = () => {
           }),
         }
       );
-
       if (response.ok) {
         const responseData = await response.json();
         console.log("Response data:", responseData);
+        console.log("Data Successfully Submitted !", responseData);
+  
+        // Dispatch the proposal data to the Redux store
+        // dispatch(storeProposalData(responseData)); // Make sure `storeProposalData` is imported
+  
         // Clear form fields after successful submission
         setStep0FormData({
           date: getCurrentDate(),
@@ -608,29 +613,30 @@ const Estimator = () => {
           architect_name: "",
           architect_firm: "",
         });
-
+  
         setStep1FormData({
           Addendums: [],
         });
-
+  
         setStep2FormData({
           specific_name: "",
           budget: "",
           sefic: [],
         });
-
+  
         setTimeout(() => {
           closeModal();
-        }, 1000);
+        }, 500);
       } else {
         console.error("Error submitting proposal data");
-        const errorResponse = await response.text(); // Read the response as text
+        const errorResponse = await response.text();
         console.error("Error response:", errorResponse);
       }
     } catch (error) {
       console.error("An error occurred:", error.message);
     }
   };
+  
   // ****************Get Estimating data From Store
   const selectEstimatingData = (state) => state.estimating.data;
 
@@ -1275,7 +1281,9 @@ const Estimator = () => {
                         </button>
                         <button
                           className="btn dropbtns btn-secondary"
-                          onClick={viewpdf}
+                          onClick={()=>{
+                            navigate("/homepage/purposal");
+                          }}
                         >
                           View Proposal
                         </button>
@@ -1796,7 +1804,7 @@ const Estimator = () => {
                                   type="text"
                                   className="form-control"
                                   placeholder=" Scope Of Work Number"
-                                  value={formatNumber(entry.number)}
+                                  value={entry.number}
                                   onChange={(e) =>
                                     handleSpecificationInputChange(
                                       index,

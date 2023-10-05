@@ -62,7 +62,7 @@ class EstimatorSummaryView(views.APIView):
             for status in total_data.keys():
                 if status in estimator_data['summary']:
                     total_data[status]['total'] += estimator_data['summary'][status]['total']
-                    total_data[status]['bid_amount'] += estimator_data['summary'][status]['bid_amount']
+                    # total_data[status]['bid_amount'] += estimator_data['summary'][status]['bid_amount']
 
         # Handling the unassigned estimations
         unassigned_estimations = Estimating.objects.filter(

@@ -37,5 +37,8 @@ urlpatterns = [
 
     path('api/estimators/summary/', views.EstimatorSummaryView.as_view(), name='estimators-summary'),
 
+    path('company_won_bashboard/', views.CompanyWonEstimates.as_view(), name='company-won-bashboard'),
+
+
 
 ]

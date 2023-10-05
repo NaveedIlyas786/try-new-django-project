@@ -12,7 +12,7 @@ from accounts.models import User
 
 from .forms import EstimatingDetailAdminForm
 
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count,Case, When, IntegerField
 from django.utils import timezone
 
 
@@ -32,6 +32,59 @@ class UrlsListViews(APIView):
         
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
         
+
+
+class CompanyWonEstimates(APIView):
+
+    # def get(self, request):
+    #     # Filtering Estimating objects with 'Won' status and grouping by company
+    #     estimates = Estimating.objects.filter(
+    #         status='Won', 
+    #         company__isnull=False  # Exclude estimates with no associated company
+    #     ).values('company__Cmpny_Name').annotate(
+    #         total_won_estimates=Count('id'),
+    #         total_bid_amount=Sum('bid_amount')
+    #     )
+
+    #     # Convert queryset to list of dictionaries
+    #     data = [
+    #         {
+    #             "Company Name": item['company__Cmpny_Name'],
+    #             "total number of Estimating of Won status": item['total_won_estimates'],
+    #             "total bid amount of Won status Estimating": item['total_bid_amount'] or 0
+    #         }
+    #         for item in estimates
+    #     ]
+
+
+    def get(self, request):
+        # Getting all active companies
+        companies = Company.objects.filter(is_active=True)
+
+        data = []
+
+        for company in companies:
+            # Counting 'Won' estimating records for each active company
+            total_won_estimates = Estimating.objects.filter(
+                company=company, 
+                status='Won'
+            ).count()
+
+            # Summing bid amounts of 'Won' estimating records for each active company
+            total_bid_amount = Estimating.objects.filter(
+                company=company, 
+                status='Won'
+            ).aggregate(sum=Sum('bid_amount'))['sum'] or 0
+
+            # Adding data to the response list
+            data.append({
+                "company_name": company.Cmpny_Name,
+                "total_won_estimating": total_won_estimates,
+                "total_won_bid_amount": total_bid_amount
+            })
+
+        return Response(data)
+
 
 class EstimatorSummaryView(views.APIView):
 
@@ -84,7 +137,7 @@ class EstimatorSummaryView(views.APIView):
         response_data.append(unassigned_data)
 
         # Adding the totals row
-        total_data['estimator'] = 'Total'
+        total_data['estimator'] = 'Grand Totals'
         response_data.append(total_data)
 
         return Response(response_data, status=200)

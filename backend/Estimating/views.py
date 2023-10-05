@@ -63,6 +63,10 @@ class CompanyWonEstimates(APIView):
 
         data = []
 
+        # Variables to store total counts and sums
+        grand_total_won_estimates = 0
+        grand_total_bid_amount = 0
+
         for company in companies:
             # Counting 'Won' estimating records for each active company
             total_won_estimates = Estimating.objects.filter(
@@ -76,12 +80,23 @@ class CompanyWonEstimates(APIView):
                 status='Won'
             ).aggregate(sum=Sum('bid_amount'))['sum'] or 0
 
+            # Adding the individual company's counts and sums to the grand totals
+            grand_total_won_estimates += total_won_estimates
+            grand_total_bid_amount += total_bid_amount
+
             # Adding data to the response list
             data.append({
                 "company_name": company.Cmpny_Name,
-                "total_won_estimating": total_won_estimates,
+                "total_won": total_won_estimates,
                 "total_won_bid_amount": total_bid_amount
             })
+
+        # Adding the grand totals to the response data
+        data.append({
+            "company_name": "Grand Total",
+            "total_won": grand_total_won_estimates,
+            "total_won_bid_amount": grand_total_bid_amount
+        })
 
         return Response(data)
 

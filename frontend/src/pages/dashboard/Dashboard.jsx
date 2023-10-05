@@ -1,4 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, PureComponent } from "react";
+import { LineChart, Line } from 'recharts';
+import {
+  BarChart,
+  Bar,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 import "./Dashboard.css";
 import axios from "axios";
 // import ApexCharts from 'apexcharts'
@@ -19,6 +31,21 @@ const Dashboard = () => {
         console.error("Error fetching data:", error);
       });
   }, []);
+  const [companyiesData, setcompanyiesData] = useState([]);
+
+  useEffect(() => {
+    // Fetch data from the API
+    axios
+      .get("http://127.0.0.1:8000/api/estimating/company_won_bashboard/")
+      .then((response) => response.data)
+      .then((data) => {
+        console.log(data);
+        setcompanyiesData(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
 
   const formatNumberWithCommas = (value) => {
     if (value === null) return ""; // Return an empty string if the value is null
@@ -28,19 +55,19 @@ const Dashboard = () => {
   function formatPercentage(value) {
     // Parse the input value as a float
     const floatValue = parseFloat(value);
-  
+
     // Check if it's a valid number
     if (!isNaN(floatValue)) {
       // Round the value to two decimal places
       const roundedValue = Math.round(floatValue * 100) / 100;
-  
+
       // Convert the rounded value to a string with '%' symbol
       const formattedValue = `${roundedValue.toFixed(0)}%`;
-  
+
       return formattedValue;
     } else {
       // If the input is not a valid number, return an empty string or handle it accordingly
-      return '';
+      return "";
     }
   }
 
@@ -49,7 +76,9 @@ const Dashboard = () => {
       <div className=" container dashboard ">
         <div className=" row projectStatus justify-content-around">
           <div className=" col-md-2 p-2 ProjectStatus  text-center">
-            <h4 className="pt-2 pb-2">{dashData.reduce((acc, e) => acc + (e?.Won?.total || 0), 0)}</h4>
+            <h4 className="pt-2 pb-2">
+              {dashData.reduce((acc, e) => acc + (e?.Won?.total || 0), 0)}
+            </h4>
             <p>
               {/* <i className="fa-solid fa-circle-check"></i> */}
               <i className="fa-solid fa-circle-check check"></i>
@@ -57,20 +86,18 @@ const Dashboard = () => {
             <h5>Won</h5>
           </div>
           <div className=" col-md-2 p-2 text-center ProjectStatus">
-            <h4 className="pt-2 pb-2">{dashData.reduce(
-                        (acc, e) => acc + (e?.Pending?.total || 0),
-                        0
-                      )}</h4>
+            <h4 className="pt-2 pb-2">
+              {dashData.reduce((acc, e) => acc + (e?.Pending?.total || 0), 0)}
+            </h4>
             <p>
               <i className="fa-solid  fa-question fs-5 pend"></i>
             </p>
             <h5>pending</h5>
           </div>
           <div className=" col-md-2 p-2 text-center ProjectStatus">
-            <h4 className="pt-2 pb-2">{dashData.reduce(
-                        (acc, e) => acc + (e?.Working?.total || 0),
-                        0
-                      )}</h4>
+            <h4 className="pt-2 pb-2">
+              {dashData.reduce((acc, e) => acc + (e?.Working?.total || 0), 0)}
+            </h4>
             <p>
               <i className="fa-solid fa-spinner fs-5 working"></i>
             </p>
@@ -80,10 +107,9 @@ const Dashboard = () => {
             </p>
           </div>
           <div className=" col-md-2 p-2 text-center ProjectStatus">
-            <h4 className="pt-2 pb-2">{dashData.reduce(
-                        (acc, e) => acc + (e?.Lost?.total || 0),
-                        0
-                      )}</h4>
+            <h4 className="pt-2 pb-2">
+              {dashData.reduce((acc, e) => acc + (e?.Lost?.total || 0), 0)}
+            </h4>
 
             <p>
               <i className=" mark fa-duotone fa fa-ban"></i>
@@ -128,18 +154,50 @@ const Dashboard = () => {
                   {dashData.map((e, index) => (
                     <tr key={index}>
                       <td className="dashtd">{e.estimator}</td>
-                      <td className="dashtd">{e.summary?.Working?.total || 0}</td>
-                      <td className="dashtd">{e.summary?.Pending?.total || 0}</td>
-                      <td className="dashtd">{ formatPercentage(e.summary?.Pending?.percentage || 0)}</td>
-                      <td className="dashtd">$ {formatNumberWithCommas(e.summary?.Pending?.bid_amount || 0)}</td>
+                      <td className="dashtd">
+                        {e.summary?.Working?.total || 0}
+                      </td>
+                      {/* <td className="dashtd">{e?.["Grand Total"]?.bid_amount || 0}</td> */}
+
+                      <td className="dashtd">
+                        {e.summary?.Pending?.total || 0}
+                      </td>
+                      <td className="dashtd">
+                        {formatPercentage(e.summary?.Pending?.percentage || 0)}
+                      </td>
+                      <td className="dashtd">
+                        ${" "}
+                        {formatNumberWithCommas(
+                          e.summary?.Pending?.bid_amount || 0
+                        )}
+                      </td>
                       <td className="dashtd">{e.summary?.Won?.total || 0}</td>
-                      <td className="dashtd">{formatPercentage(e.summary?.Won?.percentage || 0)}</td>
-                      <td className="dashtd">$ {formatNumberWithCommas(e.summary?.Won?.bid_amount || 0)}</td>
+                      <td className="dashtd">
+                        {formatPercentage(e.summary?.Won?.percentage || 0)}
+                      </td>
+                      <td className="dashtd">
+                        ${" "}
+                        {formatNumberWithCommas(
+                          e.summary?.Won?.bid_amount || 0
+                        )}
+                      </td>
                       <td className="dashtd">{e.summary?.Lost?.total || 0}</td>
-                      <td className="dashtd">{formatPercentage(e.summary?.Lost?.percentage || 0)}</td>
-                      <td className="dashtd">$ {formatNumberWithCommas(e.summary?.Lost?.bid_amount || 0)}</td>
+                      <td className="dashtd">
+                        {formatPercentage(e.summary?.Lost?.percentage || 0)}
+                      </td>
+                      <td className="dashtd">
+                        ${" "}
+                        {formatNumberWithCommas(
+                          e.summary?.Lost?.bid_amount || 0
+                        )}
+                      </td>
                       <td className="dashtd">{e.ytd_total || 0}</td>
-                      <td className="dashtd">$ {formatNumberWithCommas(e.ytd_total_bid_amount || 0)}</td>
+                      {/* <td className="dashtd">{e?.["Grand Total"]?.bid_amount || 0}</td>
+                      <td className="dashtd">{e?.["Grand Total"]?.total || 0}</td> */}
+
+                      <td className="dashtd">
+                        $ {formatNumberWithCommas(e.ytd_total_bid_amount || 0)}
+                      </td>
                     </tr>
                   ))}
                   <tr>
@@ -158,10 +216,12 @@ const Dashboard = () => {
                     </td>
                     <td className="totalsection dashtd"></td>
                     <td className="totalsection dashtd">
-                      { formatNumberWithCommas(dashData.reduce(
-                        (acc, e) => acc + (e?.Pending?.bid_amount || 0),
-                        0
-                      ))}
+                      {formatNumberWithCommas(
+                        dashData.reduce(
+                          (acc, e) => acc + (e?.Pending?.bid_amount || 0),
+                          0
+                        )
+                      )}
                     </td>
                     <td className="totalsection dashtd">
                       {dashData.reduce(
@@ -171,10 +231,13 @@ const Dashboard = () => {
                     </td>
                     <td className="totalsection dashtd"></td>
                     <td className="totalsection dashtd">
-                      $ {formatNumberWithCommas(dashData.reduce(
-                        (acc, e) => acc + (e?.Won?.bid_amount || 0),
-                        0
-                      ))}
+                      ${" "}
+                      {formatNumberWithCommas(
+                        dashData.reduce(
+                          (acc, e) => acc + (e?.Won?.bid_amount || 0),
+                          0
+                        )
+                      )}
                     </td>
                     <td className="totalsection dashtd">
                       {dashData.reduce(
@@ -184,10 +247,13 @@ const Dashboard = () => {
                     </td>
                     <td className="totalsection dashtd"></td>
                     <td className="totalsection dashtd">
-                      $ {formatNumberWithCommas(dashData.reduce(
-                        (acc, e) => acc + (e?.Lost?.bid_amount || 0),
-                        0
-                      ))}
+                      ${" "}
+                      {formatNumberWithCommas(
+                        dashData.reduce(
+                          (acc, e) => acc + (e?.Lost?.bid_amount || 0),
+                          0
+                        )
+                      )}
                     </td>
                     <td className="totalsection dashtd">
                       {dashData.reduce(
@@ -196,10 +262,14 @@ const Dashboard = () => {
                       )}
                     </td>
                     <td className="totalsection dashtd">
-                      $ {formatNumberWithCommas(dashData.reduce(
-                        (acc, e) => acc + (e?.["Grand Total"]?.bid_amount || 0),
-                        0
-                      ))}
+                      ${" "}
+                      {formatNumberWithCommas(
+                        dashData.reduce(
+                          (acc, e) =>
+                            acc + (e?.["Grand Total"]?.bid_amount || 0),
+                          0
+                        )
+                      )}
                     </td>
                   </tr>
                 </tbody>
@@ -224,35 +294,61 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="dashtd">
-                    <td>DMS - Drywall</td>
-                    <td>5</td>
-                    <td>$8,637,659</td>
-                  </tr>
-                  <tr className="dashtd">
-                    <td>David M. Schmitt</td>
-                    <td>5</td>
-                    <td>$0</td>
-                  </tr>
-                  <tr className="dashtd">
-                    <td>DMS - BKL</td>
-                    <td>8</td>
-                    <td>$30,561,703</td>
-                  </tr>
-                  <tr className="dashtd">
-                    <td>DMS - STL</td>
-                    <td>0</td>
-                    <td>$0</td>
-                  </tr>
+                  {companyiesData.map((e, index) => (
+                    <tr key={index}>
+                      <td className="dashtd">{e.company_name}</td>
+                      <td className="dashtd">{e.total_won_estimating}</td>
+                      <td className="dashtd">{e.total_won_bid_amount}</td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
-            <div className=" ms-5 col-md-7 col-sm-7 graphimg">
-              <img
-                src="../../../src/assets/graph.jpeg"
-                className="img-responsive"
-                alt="My Graph"
-              />
+            <div className="ms-5 col-md-7 col-sm-7 graphimg">
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart
+                  width={500}
+                  height={300}
+                  data={companyiesData}
+                  margin={{
+                    top: 5,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="company_name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="total_won_estimating" fill="#8884d8" />
+                  <Bar dataKey="total_won_bid_amount" fill="#82ca9d" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="ms-5 col-md-7 col-sm-7 graphimg">
+            <ResponsiveContainer width="100%" height={300}>
+          <LineChart
+            width={500}
+            height={300}
+            data={companyiesData}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="company_name" />
+            <YAxis />
+            <Tooltip />
+            {/* <Legend onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave} /> */}
+            <Line type="monotone" dataKey="total_won_estimating"  stroke="#8884d8" activeDot={{ r: 8 }} />
+            <Line type="monotone" dataKey="total_won_bid_amount"  stroke="#82ca9d" />
+          </LineChart>
+        </ResponsiveContainer>
             </div>
           </div>
         </div>

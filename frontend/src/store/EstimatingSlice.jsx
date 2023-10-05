@@ -11,32 +11,31 @@ const estimatingSlice = createSlice({
     error: null,
   },
   reducers: {
-    addEstimating: (state, action) => {
-      state.data.push(action.payload);
-    },
-    updateEstimating: (state, action) => {
-      const { id, newData } = action.payload;
+    // Define the updateStatus action to update the status of an item by ID
+    updateStatus: (state, action) => {
+      const { id, newStatus } = action.payload;
       const index = state.data.findIndex((item) => item.id === id);
       if (index !== -1) {
-        state.data[index] = { ...state.data[index], ...newData };
+        state.data[index].status = newStatus;
       }
     },
-   
+
     // Define the setData action to update the data in your state
     setData: (state, action) => {
       state.data = action.payload;
     },
+
     // Define the setStatus action to update the status in your state
     setStatus: (state, action) => {
       state.status = action.payload;
     },
+
     // Define the setError action to update the error in your state
     setError: (state, action) => {
       state.error = action.payload;
     },
   },
 });
-
 
 // Async action to fetch estimating data from the API
 export const fetchEstimatingData = () => async (dispatch) => {
@@ -57,6 +56,11 @@ export const fetchEstimatingData = () => async (dispatch) => {
   }
 };
 
-export const { addEstimating, updateEstimating } = estimatingSlice.actions;
+export const {
+  addEstimating,
+  updateEstimating,
+  updateStatus, // Export the updateStatus action
+} = estimatingSlice.actions;
+
 
 export default estimatingSlice.reducer;

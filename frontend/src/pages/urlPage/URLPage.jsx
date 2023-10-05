@@ -101,10 +101,15 @@ const URLPage = () => {
     // Remove the 'modal-active' class when the modal is closed
     document.body.classList.remove("modal-active");
   };
+
+  const movetoEstimatingPage=()=>{
+    navigate("/homepage/estimating/")
+  }
   return (
     <div className="parentDiv px-5">
       <div className="titleWithSearch">
         <h3 className="text-black">URLPage Summary</h3>
+          
         <div className="inputSearchDiv">
           <input
             type="text"
@@ -121,6 +126,9 @@ const URLPage = () => {
           </button>
         </div>
       </div>
+        <button type="button" onClick={movetoEstimatingPage} class="btn btn-primary backbtn">
+            Back
+          </button>
 
       {showModal && (
         <div
@@ -147,7 +155,7 @@ const URLPage = () => {
                 </div>
                 <div className="Oneline">
                   <label htmlFor="Territory" className="form-label">
-                   Enter Territory/Invo:
+                    Enter Territory/Invo:
                   </label>
                   <input
                     type="text"
@@ -191,7 +199,7 @@ const URLPage = () => {
         </div>
       )}
 
-      <div className="table-responsive UrlTable mt-4">
+      <div className="table-responsive UrlTable mt-1">
         <table className="table table-striped   table-bordered table-hover text-center">
           <thead className="projectHeader">
             <tr>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Dashboard.css";
 import axios from "axios";
+// import ApexCharts from 'apexcharts'
 
 const Dashboard = () => {
   const [dashData, setDashData] = useState([]);
@@ -19,12 +20,36 @@ const Dashboard = () => {
       });
   }, []);
 
+  const formatNumberWithCommas = (value) => {
+    if (value === null) return ""; // Return an empty string if the value is null
+    return value.toLocaleString("en-US");
+  };
+
+  function formatPercentage(value) {
+    // Parse the input value as a float
+    const floatValue = parseFloat(value);
+  
+    // Check if it's a valid number
+    if (!isNaN(floatValue)) {
+      // Round the value to two decimal places
+      const roundedValue = Math.round(floatValue * 100) / 100;
+  
+      // Convert the rounded value to a string with '%' symbol
+      const formattedValue = `${roundedValue.toFixed(0)}%`;
+  
+      return formattedValue;
+    } else {
+      // If the input is not a valid number, return an empty string or handle it accordingly
+      return '';
+    }
+  }
+
   return (
     <>
       <div className=" container dashboard ">
         <div className=" row projectStatus justify-content-around">
           <div className=" col-md-2 p-2 ProjectStatus  text-center">
-            <h4 className="pt-2 pb-2">9</h4>
+            <h4 className="pt-2 pb-2">{dashData.reduce((acc, e) => acc + (e?.Won?.total || 0), 0)}</h4>
             <p>
               {/* <i className="fa-solid fa-circle-check"></i> */}
               <i className="fa-solid fa-circle-check check"></i>
@@ -32,14 +57,20 @@ const Dashboard = () => {
             <h5>Won</h5>
           </div>
           <div className=" col-md-2 p-2 text-center ProjectStatus">
-            <h4 className="pt-2 pb-2">5</h4>
+            <h4 className="pt-2 pb-2">{dashData.reduce(
+                        (acc, e) => acc + (e?.Pending?.total || 0),
+                        0
+                      )}</h4>
             <p>
               <i className="fa-solid  fa-question fs-5 pend"></i>
             </p>
             <h5>pending</h5>
           </div>
           <div className=" col-md-2 p-2 text-center ProjectStatus">
-            <h4 className="pt-2 pb-2">10</h4>
+            <h4 className="pt-2 pb-2">{dashData.reduce(
+                        (acc, e) => acc + (e?.Working?.total || 0),
+                        0
+                      )}</h4>
             <p>
               <i className="fa-solid fa-spinner fs-5 working"></i>
             </p>
@@ -49,12 +80,15 @@ const Dashboard = () => {
             </p>
           </div>
           <div className=" col-md-2 p-2 text-center ProjectStatus">
-            <h4 className="pt-2 pb-2">15</h4>
+            <h4 className="pt-2 pb-2">{dashData.reduce(
+                        (acc, e) => acc + (e?.Lost?.total || 0),
+                        0
+                      )}</h4>
 
             <p>
               <i className=" mark fa-duotone fa fa-ban"></i>
             </p>
-            <h5>Rejected</h5>
+            <h5>Lost</h5>
           </div>
         </div>
       </div>
@@ -77,53 +111,96 @@ const Dashboard = () => {
                     <th colSpan={2}>Ytd Total</th>
                   </tr>
                   <tr>
-                    <th>#</th>
-                    <th>%</th>
-                    <th>Estimated$</th>
-                    <th>#</th>
-                    <th>%</th>
-                    <th>Estimated$</th>
-                    <th>#</th>
-                    <th>%</th>
-                    <th>Estimated$</th>
+                    <th className="thBackgroundpend">#</th>
+                    <th className="thBackgroundpend">%</th>
+                    <th className="thBackgroundpend">Estimated $</th>
+                    <th className="thBackgroundWon">#</th>
+                    <th className="thBackgroundWon">%</th>
+                    <th className="thBackgroundWon">Estimated $</th>
+                    <th className="thBackgroundLost">#</th>
+                    <th className="thBackgroundLost">%</th>
+                    <th className="thBackgroundLost">Estimated $</th>
                     <th># </th>
-                    <th>Estimated$</th>
+                    <th>Estimated $</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {dashData.map((e)=>(
-                  <tr>
-                    <td>{e.estimator}</td> {/* Display the name of the first estimator */}
-                    <td>1</td>
-                    <td>2</td>
-                    <td>15</td>
-                    <td>$8,079,653</td>
-                    <td>1</td>
-                    <td>8%</td>
-                    <td>$7,350,900</td>
-                    <td>10</td>
-                    <td>77%</td>
-                    <td>$70,578,235</td>
-                    <td>13</td>
-                    <td>$86,008,788</td>
-                  </tr>
-
+                  {dashData.map((e, index) => (
+                    <tr key={index}>
+                      <td className="dashtd">{e.estimator}</td>
+                      <td className="dashtd">{e.summary?.Working?.total || 0}</td>
+                      <td className="dashtd">{e.summary?.Pending?.total || 0}</td>
+                      <td className="dashtd">{ formatPercentage(e.summary?.Pending?.percentage || 0)}</td>
+                      <td className="dashtd">$ {formatNumberWithCommas(e.summary?.Pending?.bid_amount || 0)}</td>
+                      <td className="dashtd">{e.summary?.Won?.total || 0}</td>
+                      <td className="dashtd">{formatPercentage(e.summary?.Won?.percentage || 0)}</td>
+                      <td className="dashtd">$ {formatNumberWithCommas(e.summary?.Won?.bid_amount || 0)}</td>
+                      <td className="dashtd">{e.summary?.Lost?.total || 0}</td>
+                      <td className="dashtd">{formatPercentage(e.summary?.Lost?.percentage || 0)}</td>
+                      <td className="dashtd">$ {formatNumberWithCommas(e.summary?.Lost?.bid_amount || 0)}</td>
+                      <td className="dashtd">{e.ytd_total || 0}</td>
+                      <td className="dashtd">$ {formatNumberWithCommas(e.ytd_total_bid_amount || 0)}</td>
+                    </tr>
                   ))}
-
-                  <tr className="grandtotal align-middle">
-                    <td rowSpan={2}>Grand Total 2022</td>
-                    <td rowSpan={2}>1</td>
-                    <td rowSpan={2}>50</td>
-                    <td rowSpan={2}></td>
-                    <td rowSpan={2}>39,031,806</td>
-                    <td rowSpan={2}>13</td>
-                    <td rowSpan={2}>16%</td>
-                    <td rowSpan={2}>$39,199,362</td>
-                    <td rowSpan={2}>52</td>
-                    <td rowSpan={2}>65%</td>
-                    <td rowSpan={2}>$177,784,100</td>
-                    <td rowSpan={2}>80</td>
-                    <td rowSpan={2}>$255,762,645</td>
+                  <tr>
+                    <td className="totalsection dashtd">Grand Total</td>
+                    <td className="totalsection dashtd">
+                      {dashData.reduce(
+                        (acc, e) => acc + (e?.Working?.total || 0),
+                        0
+                      )}
+                    </td>
+                    <td className="totalsection dashtd">
+                      {dashData.reduce(
+                        (acc, e) => acc + (e?.Pending?.total || 0),
+                        0
+                      )}
+                    </td>
+                    <td className="totalsection dashtd"></td>
+                    <td className="totalsection dashtd">
+                      { formatNumberWithCommas(dashData.reduce(
+                        (acc, e) => acc + (e?.Pending?.bid_amount || 0),
+                        0
+                      ))}
+                    </td>
+                    <td className="totalsection dashtd">
+                      {dashData.reduce(
+                        (acc, e) => acc + (e?.Won?.total || 0),
+                        0
+                      )}
+                    </td>
+                    <td className="totalsection dashtd"></td>
+                    <td className="totalsection dashtd">
+                      $ {formatNumberWithCommas(dashData.reduce(
+                        (acc, e) => acc + (e?.Won?.bid_amount || 0),
+                        0
+                      ))}
+                    </td>
+                    <td className="totalsection dashtd">
+                      {dashData.reduce(
+                        (acc, e) => acc + (e?.Lost?.total || 0),
+                        0
+                      )}
+                    </td>
+                    <td className="totalsection dashtd"></td>
+                    <td className="totalsection dashtd">
+                      $ {formatNumberWithCommas(dashData.reduce(
+                        (acc, e) => acc + (e?.Lost?.bid_amount || 0),
+                        0
+                      ))}
+                    </td>
+                    <td className="totalsection dashtd">
+                      {dashData.reduce(
+                        (acc, e) => acc + (e?.["Grand Total"]?.total || 0),
+                        0
+                      )}
+                    </td>
+                    <td className="totalsection dashtd">
+                      $ {formatNumberWithCommas(dashData.reduce(
+                        (acc, e) => acc + (e?.["Grand Total"]?.bid_amount || 0),
+                        0
+                      ))}
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -143,26 +220,26 @@ const Dashboard = () => {
                   </tr>
                   <tr>
                     <th>#</th>
-                    <th>Estimated$</th>
+                    <th>Estimated $</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
+                  <tr className="dashtd">
                     <td>DMS - Drywall</td>
                     <td>5</td>
                     <td>$8,637,659</td>
                   </tr>
-                  <tr>
+                  <tr className="dashtd">
                     <td>David M. Schmitt</td>
                     <td>5</td>
                     <td>$0</td>
                   </tr>
-                  <tr>
+                  <tr className="dashtd">
                     <td>DMS - BKL</td>
                     <td>8</td>
                     <td>$30,561,703</td>
                   </tr>
-                  <tr>
+                  <tr className="dashtd">
                     <td>DMS - STL</td>
                     <td>0</td>
                     <td>$0</td>

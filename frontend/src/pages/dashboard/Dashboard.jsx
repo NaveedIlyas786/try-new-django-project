@@ -1,5 +1,6 @@
 import React, { useEffect, useState, PureComponent } from "react";
-import { LineChart, Line } from 'recharts';
+import { LineChart, Line } from "recharts";
+// import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import {
   BarChart,
   Bar,
@@ -70,7 +71,18 @@ const Dashboard = () => {
       return "";
     }
   }
-
+  const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', 'red', 'pink'];
+  const getPath = (x, y, width, height) => {
+    return `M${x},${y + height}C${x + width / 3},${y + height} ${x + width / 2},${y + height / 3}
+    ${x + width / 2}, ${y}
+    C${x + width / 2},${y + height / 3} ${x + (2 * width) / 3},${y + height} ${x + width}, ${y + height}
+    Z`;
+  };
+  const TriangleBar = (props) => {
+    const { fill, x, y, width, height } = props;
+  
+    return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
+  };
   return (
     <>
       <div className=" container dashboard ">
@@ -295,20 +307,22 @@ const Dashboard = () => {
                 </thead>
                 <tbody>
                   {companyiesData.map((e, index) => (
-                    <tr key={index}>
+                    <tr className="graphCompany" key={index}>
                       <td className="dashtd">{e.company_name}</td>
-                      <td className="dashtd">{e.total_won_estimating}</td>
-                      <td className="dashtd">{e.total_won_bid_amount}</td>
+                      <td className="dashtd">{e.total_won}</td>
+                      <td className="dashtd">
+                        {formatNumberWithCommas(e.total_won_bid_amount)}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
             <div className="ms-5 col-md-7 col-sm-7 graphimg">
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={500}>
                 <BarChart
                   width={500}
-                  height={300}
+                  height={500}
                   data={companyiesData}
                   margin={{
                     top: 5,
@@ -322,33 +336,63 @@ const Dashboard = () => {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="total_won_estimating" fill="#8884d8" />
+                  <Bar dataKey="total_won" fill="#8884d8" />
                   <Bar dataKey="total_won_bid_amount" fill="#82ca9d" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
+            {/* <div className="ms-5 col-md-7 col-sm-7 graphimg">
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart
+                  width={500}
+                  height={500}
+                  data={companyiesData}
+                  margin={{
+                    top: 5,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="company_name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line
+                    type="monotone"
+                    dataKey="total_won_estimating"
+                    stroke="#8884d8"
+                    activeDot={{ r: 8 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="total_won_bid_amount"
+                    stroke="#82ca9d"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div> */}
             <div className="ms-5 col-md-7 col-sm-7 graphimg">
-            <ResponsiveContainer width="100%" height={300}>
-          <LineChart
-            width={500}
-            height={300}
-            data={companyiesData}
-            margin={{
-              top: 5,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="company_name" />
-            <YAxis />
-            <Tooltip />
-            {/* <Legend onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave} /> */}
-            <Line type="monotone" dataKey="total_won_estimating"  stroke="#8884d8" activeDot={{ r: 8 }} />
-            <Line type="monotone" dataKey="total_won_bid_amount"  stroke="#82ca9d" />
-          </LineChart>
-        </ResponsiveContainer>
+            <BarChart
+      width={500}
+      height={500}
+      data={companyiesData}
+      margin={{
+        top: 20,
+        right: 30,
+        left: 20,
+        bottom: 5,
+      }}
+    >
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="company_name" />
+      <YAxis />
+      <Bar dataKey="total_won_bid_amount" fill="#8884d8" shape={<TriangleBar />} label={{ position: 'top' }}>
+        {companyiesData.map((entry, index) => (
+          <Cell key={`cell-${index}`} fill={colors[index % 20]} />
+        ))}
+      </Bar>
+    </BarChart>
             </div>
           </div>
         </div>

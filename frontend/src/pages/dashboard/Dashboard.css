@@ -90,7 +90,9 @@ h5{
     border-radius: 10px; 
     background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
   }
-  
+  .graphCompany:last-child{
+font-weight: bold;
+  }
   .totalsection{
     font-weight: bold;
   }

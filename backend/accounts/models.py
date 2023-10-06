@@ -1,21 +1,25 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from .validation import validate_file_extension
-
+from Estimating.models import Company
 # Create your models here.
 
 
 
 
 class UserRole(models.Model):
-    name=models.CharField(verbose_name="Role", max_length=50)
+    name=models.CharField(verbose_name="Role", max_length=50,unique=True)
     description = models.TextField(verbose_name="Add Description", blank=True,null=True)
     
     def __str__(self):
         return self.name
 
 
+class Department(models.Model):
+    dprtmnt_name=models.CharField(verbose_name="Add the department name ", max_length=250)
 
+    def __str__(self):
+        return self.dprtmnt_name
 
 
 
@@ -69,12 +73,16 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser):
 
-    full_Name=models.CharField(verbose_name="Full Name", max_length=255)
-    email = models.EmailField(verbose_name="Email",max_length=255,unique=True,)
+    full_Name=models.CharField(verbose_name="Full Name", max_length=255,null=True,blank=True)
+    email = models.EmailField(verbose_name="Email",max_length=255,unique=True,null=True,blank=True)
     roles = models.ManyToManyField(UserRole,verbose_name="Role",blank=True,related_name='users')
+    company = models.ForeignKey(Company, verbose_name="company", blank=True, related_name='company', on_delete=models.CASCADE,null=True)
+    department=models.ForeignKey(Department, verbose_name="Department ", on_delete=models.CASCADE,null=True,blank=True)
+    direct_number=models.IntegerField(verbose_name="Direct",null=True,blank=True)
+    locaton=models.CharField(verbose_name="Location", max_length=250,null=True,blank=True)
     create_at=models.DateTimeField(auto_now_add=True)
     signtr = models.FileField(upload_to='user_Sgntr/', validators=[validate_file_extension], null=True, blank=True)
-    phone_number=models.CharField(max_length=10,null=True,blank=True)
+    phone_number=models.CharField(max_length=250,null=True,blank=True)
     updated_at=models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)

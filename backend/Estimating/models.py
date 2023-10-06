@@ -5,19 +5,16 @@ from django.core.exceptions import ValidationError
 import os
 from django.utils import timezone
 # from pytz import timezone as pytz_timezone
-
-from accounts.models import User
-
 # Create your models here.
 
 
 class Company(models.Model):
-    Cmpny_Name = models.CharField(verbose_name="Company Name",max_length=50, null=False, blank=False)
-    adress=models.CharField(verbose_name="Adress",max_length=70, null=False, blank=False)
-    office_phone_number = models.CharField(max_length=10, null=False, blank=False)
-    fax_number = models.CharField(max_length=10, null=False, blank=False)
-    license_number = models.CharField(max_length=50, null=False, blank=False)
-    logo = models.ImageField(upload_to='logos/', validators=[validate_file_extension], null=False, blank=False)
+    Cmpny_Name = models.CharField(verbose_name="Company Name",max_length=50, null=True, blank=True,unique=True)
+    adress=models.CharField(verbose_name="Adress",max_length=70, null=True, blank=True)
+    office_phone_number = models.CharField(max_length=10, null=True, blank=True)
+    fax_number = models.CharField(max_length=10, null=True, blank=True)
+    license_number = models.CharField(max_length=50, null=True, blank=True)
+    logo = models.ImageField(upload_to='logos/', validators=[validate_file_extension], null=True, blank=True)
     email = models.EmailField(default="estimating@dmsmgt.com", editable=False)
 
     is_active=models.BooleanField(default=False)
@@ -75,12 +72,15 @@ class Estimating(models.Model):
     company = models.ForeignKey(Company, verbose_name="Company",related_name='company_in_estimator',limit_choices_to=models.Q(is_active=True), on_delete=models.CASCADE,blank=True,null=True)
     bid_amount=models.IntegerField(verbose_name="Bid Amount ",blank=True,null=True)
     location=models.ForeignKey(Location,verbose_name="Add Area", related_name='estimating_as_Area',limit_choices_to=models.Q(is_active=True), on_delete=models.CASCADE,blank=True,null=True)
-    estimator = models.ForeignKey(User,verbose_name="Estimator", related_name='estimations_as_estimator', limit_choices_to=models.Q(roles__name='Estimator',is_active=True), on_delete=models.SET_NULL, null=True , blank=True)
+    estimator = models.ForeignKey(
+        'accounts.User',
+        verbose_name="Estimator", related_name='estimations_as_estimator', limit_choices_to=models.Q(roles__name='Estimator',is_active=True), on_delete=models.SET_NULL, null=True , blank=True)
     bidder = models.CharField(verbose_name="Bidder Name",max_length=1500, null=True,blank=True)
     bidder_deatil=models.CharField(verbose_name="Bidder Detail",max_length=5000,null=True)
     
 
     def save(self, *args, **kwargs):
+        from accounts.models import User 
         # Check if this is a new instance (i.e., being created and not updated)
         is_new = not self.pk
     

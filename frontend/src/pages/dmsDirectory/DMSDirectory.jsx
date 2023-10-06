@@ -48,7 +48,7 @@ const DMSDirectory = () => {
         <div className="inputSearchDiv">
           <input
             type="text"
-            placeholder="Filter your data here..........."
+            placeholder="Filter your data here"
             value={filter}
             className="myinput"
             onChange={(e) => setFilter(e.target.value)}
@@ -58,7 +58,7 @@ const DMSDirectory = () => {
       <button
         type="button"
         onClick={movetoEstimatingPage}
-        className="btn btn-primary backbtn"
+        className="btn btn-outline-success backbtn"
       >
         Back
       </button>
@@ -83,22 +83,14 @@ const DMSDirectory = () => {
           <tbody className="cursor-pointer jktable bg-info jloop">
             {filteredData.map((item) => (
               <tr key={item.id}>
-                <td className="mytd centered-td">{item.full_Name}</td>
-                <td className="mytd centered-td">
-                  {item.time} <strong>{item.timezone}</strong>
-                </td>
-                <td className="mytd myproject centered-td">
-                  {item.prjct_name}
-                </td>
-                <td className="mytd centered-td">{item.location}</td>
-                <td className="mytdbidder centered-td">department</td>
-                <td className="mytdbidder centered-td">{item.phone_number}</td>
-                <td className="mytd centered-td">
-                  Direct
-                </td>
-                <td className="mytd centered-td">
-                  {item.email}
-                </td>
+                <td className=" dmsTD centered-td">{item.full_Name}</td>
+                <td className=" dmsTD centered-td">{item.roles}</td>
+                <td className=" dmsTD  centered-td">{item.company}</td>
+                <td className=" dmsTD centered-td">{item.locaton}</td>
+                <td className=" dmsTD centered-td">{item.department}</td>
+                <td className=" dmsTD centered-td">{item.phone_number}</td>
+                <td className=" dmsTD centered-td">{item.direct_number}</td>
+                <td className=" dmsTD centered-td">{item.email}</td>
               </tr>
             ))}
           </tbody>

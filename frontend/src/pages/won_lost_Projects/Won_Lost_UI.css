@@ -39,7 +39,11 @@
     cursor: pointer; /* Invert the colors (black icon on white background) */
   }
   .backbtn{
-    border-radius: 50%;
+    border-radius: 20px;
+    padding: 5px 20px;
+  }
+  .backicon{
+    font-size: 20px;
   }
   
   input:focus {
@@ -75,7 +79,7 @@
   background-color: #dc3545 !important;
 }
 .successgreenColor{
-  background-color: #28a745 !important;
+  background-color: #198754 !important;
 }
   .mydiv {
     position: absolute;

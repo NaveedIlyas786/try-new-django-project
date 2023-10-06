@@ -7,7 +7,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { fetchEstimatingData } from "../../store/EstimatingSlice";
 import { addProject } from "../../store/ProjectFormSlice";
 import { Modal, Button, Stepper, Step, StepLabel } from "@mui/material";
-import AOS from "aos";
+import AOS from 'aos';
+import "aos/dist/aos.css";
 import { addEstimating } from "../../store/EstimatingSlice";
 // import "aos/dist/aos.css";
 import ParticlesAnimation from "../../components/particleAnimation/ParticlesAnimation";
@@ -952,23 +953,6 @@ const Estimator = () => {
   const MovetoURLpage = () => {
     navigate("/homepage/urlpage");
   };
-
-  const [workScopeDivs, setWorkScopeDivs] = useState([]);
-
-  function handleAddEntry(e) {
-    e.preventDefault();
-
-    const newEntry = {
-      specific_name: "",
-      budget: "", // You can set it to null initially
-      sefic: [{ number: "", name: "" }],
-    };
-    setWorkScopeDivs((prevEntries) => [...prevEntries, newEntry]);
-  }
-
-
-
-
   return (
     <div className="ParentAllDiv">
       <div className={`estimator ${showModal ? "modal-active" : ""}`}>
@@ -978,7 +962,7 @@ const Estimator = () => {
         </div>
         <div className="estimatingTable px-5">
           <h3 className="text-black">Estimating Summary</h3>
-          <div className="btn-group">
+          <div className="btn-group" data-aos="fade-left">
             <button
               type="button"
               className="btn btn-success"
@@ -1157,7 +1141,7 @@ const Estimator = () => {
             </div>
           )}
 
-          <div className="inputbtn d-flex gap-2 px-5">
+          <div className="inputbtn d-flex gap-2 px-5" data-aos="fade-up">
             <input
               type="text"
               placeholder="Filter by Project Name, Estimator Name, Bidders, Bid Amount, Status"
@@ -1203,7 +1187,7 @@ const Estimator = () => {
                     <td className="mytd myproject centered-td">
                       {item.prjct_name}
                     </td>
-                    <td className="mytd centered-td">
+                    <td className="mytd centered-td" style={{minWidth:"120px"}}>
                       <select
                         className="form-select dropUpdation"
                         id="estimatorName"
@@ -1232,7 +1216,7 @@ const Estimator = () => {
                           handleEstimatorChange(event, item.id)
                         }
                         value={estimatorchoice[item.id] || item.estimator}
-                        style={{ minWidth: "190px" }} // Set the width to 100%
+                         // Set the width to 100%
                       >
                         <option value="">
                           {item.estimator ? item.estimator : "No Estimator"}
@@ -1284,7 +1268,7 @@ const Estimator = () => {
                             setPurposalModal(true);
                           }}
                         >
-                          Create Proposal
+                        Proposal
                         </button>
 
                         <button
@@ -1296,7 +1280,7 @@ const Estimator = () => {
                             setshowProjectModal(true);
                           }}
                         >
-                          Create Project
+                          Project
                         </button>
                         <button
                           className="btn dropbtns btn-secondary"
@@ -1304,7 +1288,7 @@ const Estimator = () => {
                             navigate("/homepage/purposal");
                           }}
                         >
-                          View Proposal
+                        Proposal
                         </button>
                       </div>
                     </td>
@@ -1460,13 +1444,11 @@ const Estimator = () => {
                     <select
                       value={timezone}
                       onChange={handleTimeZoneChange}
-                      name="#"
-                      id="#"
                       className="selectpicker"
                     >
                       <option value="">Select TimeZone</option>
                       <option value="PDT">PDT</option>
-                      <option value="PDT">CT</option>
+                      <option value="CT">CT</option>
                     </select>
                   </div>
                 </div>
@@ -1738,8 +1720,7 @@ const Estimator = () => {
                         >
                           <strong> Scope of work</strong>
                         </label>
-                        {workScopeDivs.map((entry, entryIndex) => (
-                        <div className="specificationEntry" key={entryIndex}>
+                        <div className="specificationEntry">
                           <div className="mb-2 mt-3">
                             <label
                               htmlFor="specificName"
@@ -1747,7 +1728,19 @@ const Estimator = () => {
                             >
                               Scope of work name
                             </label>
-                            
+                            {/* <input
+                              type="text"
+                              className="form-control"
+                              id="specificName"
+                              value={step2FormData.specific_name || ""}
+                              onChange={(e) =>
+                                setStep2FormData({
+                                  ...step2FormData,
+                                  specific_name: e.target.value,
+                                })
+                              }
+                            /> */}
+                            {/* ************************ */}
                             <select
                               className="form-select"
                               aria-label="Select Specification"
@@ -1852,8 +1845,7 @@ const Estimator = () => {
                             </button>
                           </div>
                         </div>
-                        ))}
-                        <button className="btn btn-success" onClick={handleAddEntry}>
+                        <button className="btn btn-success" onClick={() => {}}>
                           Add alternate scope of work
                         </button>
                       </div>

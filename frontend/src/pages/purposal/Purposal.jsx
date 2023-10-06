@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import "./Purposal.css";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { useNavigate } from "react-router-dom";
 const Purposal = () => {
   console.log("Purposal component rendered");
   const pdfRef = useRef();
@@ -16,19 +17,29 @@ const Purposal = () => {
       const imgHeight = (imgWidth * canvas.height) / canvas.width;
       const imgX = 10; // Set the left padding
       const imgY = 10; // Set the top padding
-  
+
       pdf.addImage(imgData, "PNG", imgX, imgY, imgWidth, imgHeight);
       pdf.save("Proposal.pdf");
     });
   };
-  
-  
+  const navigate = useNavigate();
+  const movetoEstimatingPage = () => {
+    navigate("/homepage/estimating/");
+  };
+
   return (
     <div className="purposal ">
-      <div className="exportdiv">
-        <div onClick={Exportpdf}  className="exportSection">
-         <img className="pdfimg" src="../../../src/assets/pdfimg.png" alt="" />
-        </div> 
+      <div className="exportdiv ">
+        <button
+          type="button"
+          onClick={movetoEstimatingPage}
+          className="btn btn-outline-primary urlbackbtn"
+        >
+          <i class="fa-duotone me-2 fa fa-angles-left icons backicon"></i> Back
+        </button>
+        <div onClick={Exportpdf} className="exportSection">
+          <img className="pdfimg" src="../../../src/assets/pdfimg.png" alt="" />
+        </div>
       </div>
       <div ref={pdfRef} className="pdf_form">
         <header className="header ">

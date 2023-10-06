@@ -14,6 +14,8 @@ import {
 } from "recharts";
 import "./Dashboard.css";
 import axios from "axios";
+import AOS from 'aos';
+import "aos/dist/aos.css";
 // import ApexCharts from 'apexcharts'
 
 const Dashboard = () => {
@@ -94,7 +96,7 @@ const Dashboard = () => {
     <>
       <div className=" container dashboard ">
         <div className=" row projectStatus justify-content-around">
-          <div className=" col-md-2 p-2 ProjectStatus ">
+          <div className=" col-md-2 p-2 ProjectStatus " data-aos="fade-down">
             <h4 className="pt-3 pb-2">
               {dashData.reduce((acc, e) => acc + (e?.Won?.total || 0), 0)}
             </h4>
@@ -103,7 +105,7 @@ const Dashboard = () => {
             </p>
             <h5>Won</h5>
           </div>
-          <div className=" col-md-2 p-2  ProjectStatus">
+          <div className=" col-md-2 p-2  ProjectStatus" data-aos="fade-down">
             <h4 className="pt-3 pb-2">
               {dashData.reduce((acc, e) => acc + (e?.Pending?.total || 0), 0)}
             </h4>
@@ -112,7 +114,7 @@ const Dashboard = () => {
             </p>
             <h5>pending</h5>
           </div>
-          <div className=" col-md-2 p-3  ProjectStatus">
+          <div className=" col-md-2 p-3  ProjectStatus" data-aos="fade-up">
             <h4 className="pt-2 pb-2">
               {dashData.reduce((acc, e) => acc + (e?.Working?.total || 0), 0)}
             </h4>
@@ -124,7 +126,7 @@ const Dashboard = () => {
               <i className="fa-solid fa-square-this-way-up "></i>
             </p>
           </div>
-          <div className=" col-md-2 p-3  ProjectStatus">
+          <div className=" col-md-2 p-3  ProjectStatus" data-aos="fade-up">
             <h4 className="pt-2 pb-2">
               {dashData.reduce((acc, e) => acc + (e?.Lost?.total || 0), 0)}
             </h4>
@@ -138,11 +140,11 @@ const Dashboard = () => {
       </div>
       <div className="mt-3">
         <div className=" container mytable text-center">
-          <div className=" row table-responsive table-design jk">
+          <div className=" row table-responsive table-design jk" data-aos="fade-left">
             <div className="col-md-12">
               <table className="table">
                 <thead className="thead-dark">
-                  <tr className="jk">
+                  <tr className="jk" >
                     <th rowSpan={2} className="align-middle">
                       Estimator
                     </th>
@@ -297,7 +299,7 @@ const Dashboard = () => {
         </div>
         <div className="container mt-5 ">
           <div className="row">
-            <div className="col-md-4 mt-3 table-responsive-custom">
+            <div className="col-md-4 mt-3 table-responsive-custom" data-aos="fade-down">
               <table className="table table-striped text-center ">
                 <thead className="thead-dark">
                   <tr>
@@ -378,7 +380,7 @@ const Dashboard = () => {
                 </LineChart>
               </ResponsiveContainer>
             </div> */}
-            <div className="ms-5 col-md-7 col-sm-7 text-center graphimg">
+            <div className="ms-5 col-md-7 col-sm-7 text-center graphimg" data-aos="fade-up">
               <BarChart
                 width={650}
                 height={350}

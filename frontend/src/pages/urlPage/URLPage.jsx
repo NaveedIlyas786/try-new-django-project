@@ -126,9 +126,13 @@ const URLPage = () => {
           </button>
         </div>
       </div>
-        <button type="button" onClick={movetoEstimatingPage} class="btn btn-primary backbtn">
-            Back
-          </button>
+      <button
+        type="button"
+        onClick={movetoEstimatingPage}
+        className="btn btn-outline-primary backbtn"
+      >
+       <i class="fa-duotone me-2 fa fa-angles-left icons backicon"></i> Back
+      </button>
 
       {showModal && (
         <div
@@ -203,16 +207,16 @@ const URLPage = () => {
         <table className="table table-striped   table-bordered table-hover text-center">
           <thead className="projectHeader">
             <tr>
-              <th>Website name</th>
-              <th>Territory/Invo</th>
-              <th>URL</th>
-              <th>ID/PS</th>
+              <th className="urlTH">Website name</th>
+              <th className="urlTH">Territory/Invo</th>
+              <th className="urlTH">URL</th>
+              <th className="urlTH">ID/PS</th>
             </tr>
           </thead>
           <tbody className="cursor-pointer  bg-info jloop">
             {filteredData.map((item) => (
               <tr key={item.id} className="mytr">
-                <td className="mytd">{item.web_name}</td>
+                <td className="mytd webName">{item.web_name}</td>
                 <td className="mytd">{item.territory}</td>
                 <td className="mytd">
                   <a href={item.url} target="_blank" rel="noopener noreferrer">

@@ -61,9 +61,9 @@ const LostProjects = () => {
       <button
         type="button"
         onClick={movetoEstimatingPage}
-        className="btn btn-primary backbtn"
+        className="btn btn-outline-danger backbtn"
       >
-        Back
+       <i class="fa-duotone me-2 fa fa-angles-left icons backicon"></i> Back
       </button>
 
       <div className="table-responsive proposalTable mt-2">

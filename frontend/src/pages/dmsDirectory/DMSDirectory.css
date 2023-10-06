@@ -1,5 +1,10 @@
-.mydmsDirectory{
-    margin-top: 70px;
-    color: black;
-    background-color: aqua;
+
+.dmsTD{
+    height: 50px !important;
+  vertical-align: center;
+  text-align: center;
+}
+
+.successgreenColor{
+    background-color: #007BFF !important;
 }

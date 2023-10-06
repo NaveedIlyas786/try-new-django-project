@@ -952,6 +952,23 @@ const Estimator = () => {
   const MovetoURLpage = () => {
     navigate("/homepage/urlpage");
   };
+
+  const [workScopeDivs, setWorkScopeDivs] = useState([]);
+
+  function handleAddEntry(e) {
+    e.preventDefault();
+
+    const newEntry = {
+      specific_name: "",
+      budget: "", // You can set it to null initially
+      sefic: [{ number: "", name: "" }],
+    };
+    setWorkScopeDivs((prevEntries) => [...prevEntries, newEntry]);
+  }
+
+
+
+
   return (
     <div className="ParentAllDiv">
       <div className={`estimator ${showModal ? "modal-active" : ""}`}>
@@ -1721,7 +1738,8 @@ const Estimator = () => {
                         >
                           <strong> Scope of work</strong>
                         </label>
-                        <div className="specificationEntry">
+                        {workScopeDivs.map((entry, entryIndex) => (
+                        <div className="specificationEntry" key={entryIndex}>
                           <div className="mb-2 mt-3">
                             <label
                               htmlFor="specificName"
@@ -1729,19 +1747,7 @@ const Estimator = () => {
                             >
                               Scope of work name
                             </label>
-                            {/* <input
-                              type="text"
-                              className="form-control"
-                              id="specificName"
-                              value={step2FormData.specific_name || ""}
-                              onChange={(e) =>
-                                setStep2FormData({
-                                  ...step2FormData,
-                                  specific_name: e.target.value,
-                                })
-                              }
-                            /> */}
-                            {/* ************************ */}
+                            
                             <select
                               className="form-select"
                               aria-label="Select Specification"
@@ -1846,7 +1852,8 @@ const Estimator = () => {
                             </button>
                           </div>
                         </div>
-                        <button className="btn btn-success" onClick={() => {}}>
+                        ))}
+                        <button className="btn btn-success" onClick={handleAddEntry}>
                           Add alternate scope of work
                         </button>
                       </div>

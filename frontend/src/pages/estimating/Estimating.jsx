@@ -1194,7 +1194,7 @@ const Estimator = () => {
                         onChange={(event) => handleAreaChange(event, item.id)}
                         value={AreaChoice[item.id] || item.location}
                       >
-                        <option value="">{item.location}</option>
+                        {/* <option value="">{item.location}</option> */}
                         {userLocation && userLocation.length > 0 ? (
                           userLocation.map((place) => (
                             <option value={place.id} key={place.id}>
@@ -1218,9 +1218,9 @@ const Estimator = () => {
                         value={estimatorchoice[item.id] || item.estimator}
                          // Set the width to 100%
                       >
-                        <option value="">
+                        {/* <option value="">
                           {item.estimator ? item.estimator : "No Estimator"}
-                        </option>
+                        </option> */}
                         {EstimatorName && EstimatorName.length > 0 ? (
                           EstimatorName.map((user) => (
                             <option value={user.id} key={user.id}>
@@ -1244,7 +1244,7 @@ const Estimator = () => {
                         }
                         value={statusMap[item.id] || item.status}
                       >
-                        <option value={item.status}>{item.status}</option>
+                        {/* <option value={item.status}>{item.status}</option> */}
                         <option value="Won">Won</option>
                         <option value="Pending">Pending</option>
                         <option value="Working">Working</option>

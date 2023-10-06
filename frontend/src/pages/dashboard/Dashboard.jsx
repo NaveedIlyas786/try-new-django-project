@@ -252,7 +252,8 @@ const Dashboard = () => {
                       </td>
                     </tr>
                   ))}
-                  <tr>
+                </tbody >
+                  <tfoot className="mytfoot">
                     <td className="totalsection dashtd">Grand Total</td>
                     <td className="totalsection dashtd">
                       {dashData.reduce(
@@ -323,19 +324,18 @@ const Dashboard = () => {
                         )
                       )}
                     </td>
-                  </tr>
-                </tbody>
+                  </tfoot>
               </table>
             </div>
           </div>
         </div>
-        <div className="container mt-5 ">
-          <div className="row">
+        <div className="container mt-5">
+          <div className="row ">
             <div
-              className="col-md-4 mt-3 table-responsive-custom"
+              className="col-md-4 twoTable  mt-3 table-responsive-custom"
               data-aos="fade-down"
             >
-              <table className="table table-striped text-center ">
+              <table className="table twoTable table-striped text-center bg-primary">
                 <thead className="thead-dark twoTable">
                   <tr>
                     <th rowSpan={2} className="align-middle bg-danger">
@@ -347,7 +347,7 @@ const Dashboard = () => {
                   </tr>
                   <tr>
                     <th className="align-middle bg-warning">#</th>
-                    <th>Estimated $</th>
+                    <th className="align-middle bg-primary">Estimated $</th>
                   </tr>
                 </thead>
                 <tbody>

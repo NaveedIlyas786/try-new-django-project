@@ -71,8 +71,11 @@ h5 {
   color: #f7bb07;
   font-size: 35px !important;
 }
+.twoTable{
+  height: 160px !important;
+}
 .graphimg img {
-  height: 300px;
+  height: 250px;
   width: 600px;
 }
 .dropdown-menu li a.active{
@@ -97,6 +100,17 @@ h5 {
   top: 0;
   z-index: 2;
 }
+.mytfoot{
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  background-color: #9e9ea1 !important;
+
+}
+.table-design {
+  min-height: 600px !important;
+  overflow-y: scroll;
+}
 @media (max-width: 768px) {
   .table-responsive-custom {
     overflow-x: auto;
@@ -109,8 +123,6 @@ h5 {
 .table-design {
   max-height: 500px !important;
   overflow-y: scroll;
-  /* border-radius: 10px; */
-  /* background-color: red; */
 }
 .table-design::-webkit-scrollbar {
   width: 10px; /* Set the width of the scrollbar */
@@ -131,11 +143,12 @@ h5 {
 }
 .totalsection {
   font-weight: bold;
+  background-color: rgb(216, 215, 214) !important;
 }
 .dashtd {
   text-align: center; /* Center horizontally */
   vertical-align: middle; /* Center vertically */
-  max-height: 50px !important;
+  height: 50px !important;
 }
 .totalamount{
   display: flex;

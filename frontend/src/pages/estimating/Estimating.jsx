@@ -965,14 +965,14 @@ const Estimator = () => {
           <div className="btn-group" data-aos="fade-left">
             <button
               type="button"
-              className="btn btn-success"
+              className="btn btn-outline-success lp"
               onClick={movetoWonProjectsPage}
             >
               Won Projects
             </button>
             <button
               type="button"
-              className="btn btn-danger"
+              className="btn btn-outline-danger lp"
               on
               onClick={movetoLostProjectsPage}
             >
@@ -1141,7 +1141,7 @@ const Estimator = () => {
             </div>
           )}
 
-          <div className="inputbtn d-flex gap-2 px-5" data-aos="fade-up">
+          <div className="inputbtn d-flex gap-2 px-5" data-aos="fade-down">
             <input
               type="text"
               placeholder="Filter by Project Name, Estimator Name, Bidders, Bid Amount, Status"
@@ -1160,7 +1160,7 @@ const Estimator = () => {
             </button>
           </div>
           <ParticlesAnimation numberOfCircles={numberOfCircles} />
-          <div className="table-responsive proposalTable mt-2">
+          <div className="table-responsive proposalTable mt-2" data-aos="fade-up">
             <table
               className="table table-striped table-bordered table-hover"
               style={{ tableLayout: "auto" }}
@@ -1180,14 +1180,14 @@ const Estimator = () => {
               <tbody className="cursor-pointer jktable bg-info jloop">
                 {filteredData.map((item) => (
                   <tr key={item.id}>
-                    <td className="mytd centered-td" >{item.due_date}</td>
-                    <td className="mytd centered-td" style={{minWidth:"60px"}}>
+                    <td className="mytd centered-td" style={{minWidth:"100px"}} >{item.due_date}</td>
+                    <td className="mytd centered-td" style={{minWidth:"120px"}}>
                       {item.time} <strong>{item.timezone}</strong>
                     </td>
                     <td className="mytd myproject centered-td">
                       {item.prjct_name}
                     </td>
-                    <td className="mytd centered-td" style={{minWidth:"120px"}}>
+                    <td className="mytd centered-td" style={{minWidth:"110px"}}>
                       <select
                         className="form-select dropUpdation"
                         id="estimatorName"
@@ -1234,7 +1234,7 @@ const Estimator = () => {
                         )}
                       </select>
                     </td>
-                    <td className="mytd centered-td" style={{ width: "80px" }}>
+                    <td className="mytd centered-td" >
                       <select
                         className="dropUpdation p-2 m-3"
                         name="#"

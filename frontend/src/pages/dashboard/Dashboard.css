@@ -73,7 +73,15 @@ h5 {
 }
 .graphimg img {
   height: 300px;
-  width: 700px;
+  width: 600px;
+}
+.dropdown-menu li a.active{
+  color: white;
+  background-color:#28a745 !important ;
+}
+.dropdown-menu li a:hover{
+  color: rgb(24, 23, 23);
+  background-color:#d5d6d6 !important ;
 }
 @media (max-width: 768px) {
   .table-responsive-custom {
@@ -94,6 +102,7 @@ h5 {
   width: 10px; /* Set the width of the scrollbar */
 }
 
+
 .table-design::-webkit-scrollbar-thumb {
   background-color: #5d5d5f; /* Set the color of the scrollbar track (the non-draggable part) */
   border-radius: 0 20px 20px 0;
@@ -112,4 +121,13 @@ h5 {
 .dashtd {
   text-align: center; /* Center horizontally */
   vertical-align: middle; /* Center vertically */
+  max-height: 50px !important;
+}
+.totalamount{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.totalamount h1{
+  color: rgb(8, 221, 97) !important;
 }

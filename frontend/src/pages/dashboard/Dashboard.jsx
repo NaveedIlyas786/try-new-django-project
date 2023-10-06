@@ -14,7 +14,7 @@ import {
 } from "recharts";
 import "./Dashboard.css";
 import axios from "axios";
-import AOS from 'aos';
+import AOS from "aos";
 import "aos/dist/aos.css";
 // import ApexCharts from 'apexcharts'
 
@@ -139,12 +139,43 @@ const Dashboard = () => {
         </div>
       </div>
       <div className="mt-3">
-        <div className=" container mytable text-center">
-          <div className=" row table-responsive table-design jk" data-aos="fade-left">
+        <div className=" container mytable ">
+      <div className=" ms-4 mb-2  btn-group dropright">
+        <button
+          type="button"
+          className="btn btn-success dropdown-toggle"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Filter based on year
+        </button>
+        <ul className="dropdown-menu text-center">
+          <li>
+            <a className="dropdown-item active" href="#">
+              2023
+            </a>
+          </li>
+          <li>
+            <a className="dropdown-item" href="#">
+             2022
+            </a>
+          </li>
+          <li>
+            <a className="dropdown-item" href="#">
+             2020
+            </a>
+          </li>
+         
+        </ul>
+      </div>
+          <div
+            className=" row table-responsive table-design jk"
+            data-aos="fade-left"
+          >
             <div className="col-md-12">
               <table className="table">
                 <thead className="thead-dark">
-                  <tr className="jk" >
+                  <tr className="jk">
                     <th rowSpan={2} className="align-middle">
                       Estimator
                     </th>
@@ -299,17 +330,22 @@ const Dashboard = () => {
         </div>
         <div className="container mt-5 ">
           <div className="row">
-            <div className="col-md-4 mt-3 table-responsive-custom" data-aos="fade-down">
+            <div
+              className="col-md-4 mt-3 table-responsive-custom"
+              data-aos="fade-down"
+            >
               <table className="table table-striped text-center ">
-                <thead className="thead-dark">
+                <thead className="thead-dark twoTable">
                   <tr>
-                    <th rowSpan={2} className="align-middle">
+                    <th rowSpan={2} className="align-middle bg-danger">
                       Company
                     </th>
-                    <th colSpan={2}>Won</th>
+                    <th colSpan={2} className="align-middle bg-success">
+                      Won
+                    </th>
                   </tr>
                   <tr>
-                    <th>#</th>
+                    <th className="align-middle bg-warning">#</th>
                     <th>Estimated $</th>
                   </tr>
                 </thead>
@@ -380,7 +416,10 @@ const Dashboard = () => {
                 </LineChart>
               </ResponsiveContainer>
             </div> */}
-            <div className="ms-5 col-md-7 col-sm-7 text-center graphimg" data-aos="fade-up">
+            <div
+              className="ms-5 col-md-7 col-sm-7 text-center graphimg"
+              data-aos="fade-up"
+            >
               <BarChart
                 width={650}
                 height={350}
@@ -407,16 +446,17 @@ const Dashboard = () => {
                   ))}
                 </Bar>
               </BarChart>
-              <div className="mt-2 d-flex bg-danger">
+              <div className="mt-2 d-flex totalamount">
                 <h1>Total Amount: </h1>
-              {companyiesData[2] && (
-                <h1>
-                  {formatNumberWithCommas(companyiesData[2].total_won_bid_amount)}
-                </h1>
-              )}
+                {companyiesData[2] && (
+                  <h1>
+                    {formatNumberWithCommas(
+                      companyiesData[2].total_won_bid_amount
+                    )}
+                  </h1>
+                )}
               </div>
             </div>
-          
           </div>
         </div>
       </div>

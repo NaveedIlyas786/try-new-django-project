@@ -757,5 +757,8 @@ td {
 }
 
 .myproject{
-  min-width: 250px !important;
+  min-width: 210px !important;
+}
+.lp{
+  background-color: white;
 }

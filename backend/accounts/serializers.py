@@ -31,6 +31,8 @@ class UserRegisterationSerializers(serializers.ModelSerializer):
     
     # Get a list of role names
         representation['roles'] = [role.name for role in instance.roles.all()] if instance.roles.all() else 'No roles assigned'
+        representation['company'] = instance.company.Cmpny_Name if instance.company else None
+        representation['department']=instance.department.dprtmnt_name if instance.department else None
     
         return representation
 # Validating Password and Config Password while registration

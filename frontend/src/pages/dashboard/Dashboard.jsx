@@ -175,7 +175,7 @@ const Dashboard = () => {
           >
             <div className="col-md-12">
               <table className="table">
-                <thead className="thead-dark">
+                <thead className="thead-dark myhead text-center">
                   <tr className="jk">
                     <th rowSpan={2} className="align-middle">
                       Estimator

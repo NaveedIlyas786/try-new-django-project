@@ -91,6 +91,12 @@ h5 {
   color: rgb(24, 23, 23);
   background-color:#d5d6d6 !important ;
 }
+
+.myhead{
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
 @media (max-width: 768px) {
   .table-responsive-custom {
     overflow-x: auto;

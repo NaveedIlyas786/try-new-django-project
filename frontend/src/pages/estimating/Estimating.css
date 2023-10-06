@@ -762,3 +762,8 @@ td {
 .lp{
   background-color: white;
 }
+.proposalHeader th{
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}

@@ -5,8 +5,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from django.db.models import Q
 
-# For Authentication
 from django.contrib.auth import authenticate    
 # For Token 
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -44,7 +44,7 @@ class UserRegistrationView(APIView):
         
         return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
     def get(self,request,format=None):
-        user=User.objects.all()
+        user=User.objects.filter(Q(is_active=True) & ~Q(is_admin=True))
         serializer=UserRegisterationSerializers(user,many=True)
         return Response(serializer.data)
     

@@ -82,7 +82,7 @@ class User(AbstractBaseUser):
     locaton=models.CharField(verbose_name="Location", max_length=250,null=True,blank=True)
     create_at=models.DateTimeField(auto_now_add=True)
     signtr = models.FileField(upload_to='user_Sgntr/', validators=[validate_file_extension], null=True, blank=True)
-    phone_number=models.CharField(max_length=250,null=True,blank=True)
+    phone_number=models.IntegerField(null=True,blank=True,unique=True)
     updated_at=models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)

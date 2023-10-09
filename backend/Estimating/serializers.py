@@ -87,18 +87,6 @@ class EstimatingSerializer(serializers.ModelSerializer):
             'bidder_deatil',
             'link',
         ]
-        # extra_kwargs = {
-        #     'prjct_name': {'required': True},
-        #     'company': {'required': True},
-        #     'bid_amount': {'required': True},
-        #     'location': {'required': True},
-        #     'estimator': {'required': True},
-        #     'bidder': {'required': True},
-        #     'due_date': {'required': True},
-        #     'time': {'required': True},
-        #     'timezone': {'required': True},
-
-        # }
 
 
 
@@ -110,8 +98,7 @@ class EstimatingSerializer(serializers.ModelSerializer):
         representation['location'] = instance.location.name if instance.location else None
         representation['estimator'] = instance.estimator.full_Name if instance.estimator else None
 
-        # representation['due_date'] = self.format_date(instance.due_date)
-        # representation['start_date'] = self.format_date(instance.start_date)
+
 
         return representation
 
@@ -221,3 +208,14 @@ class ProposalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Proposal
         fields = ['id','estimating', 'date', 'architect_name', 'architect_firm','Addendums', 'services','spcifc'] 
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+
+        representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None
+
+        # representation['due_date'] = self.format_date(instance.due_date)
+        # representation['start_date'] = self.format_date(instance.start_date)
+
+        return representation

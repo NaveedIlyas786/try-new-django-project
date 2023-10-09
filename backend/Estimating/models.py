@@ -65,7 +65,7 @@ class Estimating(models.Model):
             ('Won','Won'),
             ('Lost','Lost'),],default='Working') 
     
-
+   
     start_date = models.DateField(verbose_name="start Date",null=True,blank=True)
 
     company = models.ForeignKey(Company, verbose_name="Company",related_name='company_in_estimator',limit_choices_to=models.Q(is_active=True), on_delete=models.CASCADE,blank=True,null=True)

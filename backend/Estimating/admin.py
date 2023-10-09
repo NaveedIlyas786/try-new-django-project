@@ -38,10 +38,10 @@ class LocationAdmin(admin.ModelAdmin):
 
 class EstimatingAdmin(admin.ModelAdmin):
     form=EstimatingAdminForm
-    list_display = ['id', 'start_date', 'prjct_name','link','time','timezone',
+    list_display = ['id', 'start_date', 'prjct_name','time','timezone',
                     'due_date', 'status','company',
                     'bid_amount', 'location', 'estimator',
-                    'bidder','bidder_deatil']
+                    'bidder','link','bidder_mail','bidder_deatil']
     list_filter = ['estimator']  # Use 'username' or another field that exists in the 'User' model
 
     def get_queryset(self, request):

@@ -41,7 +41,6 @@ class UrlsTable(models.Model):
         return self.web_name
 class Estimating(models.Model):
 
-    link=models.URLField(verbose_name="Add link", max_length=200,null=True,blank=True)
     time = models.TimeField(verbose_name="Time", null=True, blank=True)
 
     timezone = models.CharField(
@@ -74,10 +73,14 @@ class Estimating(models.Model):
     location=models.ForeignKey(Location,verbose_name="Add Area", related_name='estimating_as_Area',limit_choices_to=models.Q(is_active=True), on_delete=models.CASCADE,blank=True,null=True)
     estimator = models.ForeignKey(
         'accounts.User',
-        verbose_name="Estimator", related_name='estimations_as_estimator', limit_choices_to=models.Q(roles__name='Estimator',is_active=True), on_delete=models.SET_NULL, null=True , blank=True)
+        verbose_name="Estimator", related_name='estimations_as_estimator', 
+        limit_choices_to=models.Q(roles__name='Estimator',is_active=True), 
+        on_delete=models.SET_NULL, null=True , blank=True)
     bidder = models.CharField(verbose_name="Bidder Name",max_length=1500, null=True,blank=True)
     bidder_deatil=models.CharField(verbose_name="Bidder Detail",max_length=5000,null=True)
-    
+    link=models.URLField(verbose_name="Add link", max_length=200,null=True,blank=True)
+
+    bidder_mail=models.EmailField(verbose_name="add the bidder Mail", max_length=254,null=True,blank=True)
 
     def save(self, *args, **kwargs):
         from accounts.models import User 

@@ -84,6 +84,7 @@ class EstimatingSerializer(serializers.ModelSerializer):
             'location',
             'estimator',
             'bidder',
+            'bidder_mail',
             'bidder_deatil',
             'link',
         ]
@@ -215,7 +216,5 @@ class ProposalSerializer(serializers.ModelSerializer):
 
         representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None
 
-        # representation['due_date'] = self.format_date(instance.due_date)
-        # representation['start_date'] = self.format_date(instance.start_date)
 
         return representation

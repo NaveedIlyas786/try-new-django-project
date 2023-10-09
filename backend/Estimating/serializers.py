@@ -85,7 +85,7 @@ class EstimatingSerializer(serializers.ModelSerializer):
             'estimator',
             'bidder',
             'bidder_mail',
-            'bidder_deatil',
+            'bidder_address',
             'link',
         ]
 

@@ -6,7 +6,7 @@ import os
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status,views
-from .models import Company, Estimating,Estimating_detail, Proposal, Qualification,Service,Location,UrlsTable
+from .models import Company, Estimating,Estimating_detail, Proposal, Qualification,Service,Location,UrlsTable,Addendum
 from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer,SpecificationSerializer,ServiceSerializer,LocationSerializer,EstimatingDetailSerializer,ProposalServiceSerializer,CompanySerializer,UrlsSerializers
 from accounts.models import User
 
@@ -14,6 +14,8 @@ from .forms import EstimatingDetailAdminForm
 
 from django.db.models import Sum, Count,Case, When, IntegerField
 from django.utils import timezone
+from datetime import datetime
+
 
 
 
@@ -35,26 +37,6 @@ class UrlsListViews(APIView):
 
 
 class CompanyWonEstimates(APIView):
-
-    # def get(self, request):
-    #     # Filtering Estimating objects with 'Won' status and grouping by company
-    #     estimates = Estimating.objects.filter(
-    #         status='Won', 
-    #         company__isnull=False  # Exclude estimates with no associated company
-    #     ).values('company__Cmpny_Name').annotate(
-    #         total_won_estimates=Count('id'),
-    #         total_bid_amount=Sum('bid_amount')
-    #     )
-
-    #     # Convert queryset to list of dictionaries
-    #     data = [
-    #         {
-    #             "Company Name": item['company__Cmpny_Name'],
-    #             "total number of Estimating of Won status": item['total_won_estimates'],
-    #             "total bid amount of Won status Estimating": item['total_bid_amount'] or 0
-    #         }
-    #         for item in estimates
-    #     ]
 
 
     def get(self, request):
@@ -113,16 +95,23 @@ class EstimatorSummaryView(views.APIView):
             'Grand Total': {'total': 0, 'bid_amount': 0}
         }
 
+        # Retrieve year from request's query parameters, and set a default year if not provided
+        year = int(request.query_params.get('year', datetime.now().year))
+
         # Handling the estimators
         estimators = User.objects.filter(roles__name='Estimator')
         for estimator in estimators:
             estimates = Estimating.objects.filter(
                 estimator=estimator,
-                start_date__year=2023  
+                start_date__year=year  
             )
+
+            # If no estimates are assigned to the estimator, skip this iteration
+            if estimates.count() == 0:
+                continue
             
             estimator_data = calculate_summary(estimates)
-            estimator_data['estimator'] = estimator.full_Name  
+            estimator_data['estimator'] = estimator.full_Name  # Changed from 'full_Name' to 'full_name' assuming it was a typo
             
             response_data.append(estimator_data)
 
@@ -137,7 +126,7 @@ class EstimatorSummaryView(views.APIView):
         unassigned_estimations = Estimating.objects.filter(
             estimator__isnull=True,
             status='Working',
-            start_date__year=2023  
+            start_date__year=year  
         )
 
         unassigned_data = calculate_summary(unassigned_estimations, only_working=True)
@@ -603,39 +592,39 @@ class ServiceViews(APIView):
 
 # This is the Views of Addendum
 
-# class AddendumView(APIView):
-#     def get(self, request, format=None):
-#         Addendums = Addendum.objects.all()
-#         serializer = AddendumSerializer(Addendums, many=True)
-#         return Response(serializer.data)
+class AddendumView(APIView):
+    def get(self, request, format=None):
+        Addendums = Addendum.objects.all()
+        serializer = AddendumSerializer(Addendums, many=True)
+        return Response(serializer.data)
 
-#     def post(self, request, format=None):
-#         serializer = AddendumSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request, format=None):
+        serializer = AddendumSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#     def put(self, request, id, format=None):
-#         try:
-#             Addendums = Addendum.objects.get(id=id)
-#         except Addendum.DoesNotExist:
-#             return Response(status=status.HTTP_404_NOT_FOUND)
+    def put(self, request, id, format=None):
+        try:
+            Addendums = Addendum.objects.get(id=id)
+        except Addendum.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-#         serializer = AddendumSerializer(Addendums, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer = AddendumSerializer(Addendums, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#     def delete(self, request, id, format=None):
-#         try:
-#             Addendums = Addendum.objects.get(id=id)
-#         except Addendum.DoesNotExist:
-#             return Response(status=status.HTTP_404_NOT_FOUND)
+    def delete(self, request, id, format=None):
+        try:
+            Addendums = Addendum.objects.get(id=id)
+        except Addendum.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-#         Addendums.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
+        Addendums.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
     
 
 

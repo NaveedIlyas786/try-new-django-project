@@ -76,10 +76,12 @@ class Estimating(models.Model):
         verbose_name="Estimator", related_name='estimations_as_estimator', 
         limit_choices_to=models.Q(roles__name='Estimator',is_active=True), 
         on_delete=models.SET_NULL, null=True , blank=True)
-    bidder = models.CharField(verbose_name="Bidder Name",max_length=1500, null=True,blank=True)
-    bidder_deatil=models.CharField(verbose_name="Bidder Detail",max_length=5000,null=True)
+    
     link=models.URLField(verbose_name="Add link", max_length=200,null=True,blank=True)
 
+    bidder = models.CharField(verbose_name="Bidder Name",max_length=1500, null=True,blank=True)
+    bidder_address=models.CharField(verbose_name="Bidder Address",max_length=5000,null=True)
+    bidder_phone=models.IntegerField(verbose_name="Bidder Phone Number",null=True,blank=True)
     bidder_mail=models.EmailField(verbose_name="add the bidder Mail", max_length=254,null=True,blank=True)
 
     def save(self, *args, **kwargs):

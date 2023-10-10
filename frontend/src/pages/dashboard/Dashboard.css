@@ -49,9 +49,12 @@ h5 {
 
   line-height: 10px !important;
 }
-.jk{
+.pk{
   background-color: transparent;
   border-radius: 50px 50px 0 0 !important;
+}
+.jk{
+  height: 700px !important;
 }
 .mytable{
   /* box-shadow: 29px 29px 58px #7a7ace, -29px -29px 58px #f7dede !important; */
@@ -107,21 +110,14 @@ h5 {
   background-color: #9e9ea1 !important;
 
 }
-.table-design {
-  min-height: 600px !important;
-  overflow-y: scroll;
-}
-@media (max-width: 768px) {
-  .table-responsive-custom {
-    overflow-x: auto;
-  }
-}
+
+
 .grandtotal {
   height: 70px;
   font-weight: bolder;
 }
 .table-design {
-  max-height: 500px !important;
+  max-height: 800px !important;  
   overflow-y: scroll;
 }
 .table-design::-webkit-scrollbar {
@@ -157,4 +153,9 @@ h5 {
 }
 .totalamount h1{
   color: rgb(8, 221, 97) !important;
+}
+@media (max-width: 768px) {
+  .table-responsive-custom {
+    overflow-x: auto;
+  }
 }

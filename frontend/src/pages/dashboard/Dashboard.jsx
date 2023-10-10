@@ -52,49 +52,48 @@ const Dashboard = () => {
 
   const data = [
     {
-      name: 'Page A',
+      name: "Page A",
       uv: 4000,
       pv: 2400,
       amt: 2400,
     },
     {
-      name: 'Page B',
+      name: "Page B",
       uv: 3000,
       pv: 1398,
       amt: 2210,
     },
     {
-      name: 'Page C',
+      name: "Page C",
       uv: 2000,
       pv: 9800,
       amt: 2290,
     },
     {
-      name: 'Page D',
+      name: "Page D",
       uv: 2780,
       pv: 3908,
       amt: 2000,
     },
     {
-      name: 'Page E',
+      name: "Page E",
       uv: 1890,
       pv: 4800,
       amt: 2181,
     },
     {
-      name: 'Page F',
+      name: "Page F",
       uv: 2390,
       pv: 3800,
       amt: 2500,
     },
     {
-      name: 'Page G',
+      name: "Page G",
       uv: 3490,
       pv: 4300,
       amt: 2100,
     },
   ];
-  
 
   const formatNumberWithCommas = (value) => {
     if (value === null) return ""; // Return an empty string if the value is null
@@ -136,14 +135,14 @@ const Dashboard = () => {
     return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
   };
 
-// Assuming your data is stored in a variable called 'dashData'
-const chartData = dashData.map(e => ({
-  name: e.estimator,
-  Working: e.summary?.Working?.total || 0 ,
-  Pending: e.summary?.Pending?.total || 0,
-  Won: e.summary?.Won?.total || 0,
-  Lost: e.summary?.Lost?.total || 0,
-}));
+  // Assuming your data is stored in a variable called 'dashData'
+  const chartData = dashData.map((e) => ({
+    name: e.estimator,
+    Working: e.summary?.Working?.total || 0,
+    Pending: e.summary?.Pending?.total || 0,
+    Won: e.summary?.Won?.total || 0,
+    Lost: e.summary?.Lost?.total || 0,
+  }));
 
   return (
     <>
@@ -222,13 +221,13 @@ const chartData = dashData.map(e => ({
             <h4 className="myh4">2022</h4>
           </div>
           <div
-            className=" row table-responsive table-design jk"
+            className=" row table-responsive table-design pk"
             data-aos="fade-left"
           >
             <div className="col-md-12">
-              <table className="table">
+              <table className="table jk">
                 <thead className="thead-dark myhead text-center">
-                  <tr className="jk">
+                  <tr className="pk">
                     <th rowSpan={2} className="align-middle">
                       Estimator
                     </th>
@@ -306,73 +305,76 @@ const chartData = dashData.map(e => ({
                   ))}
                 </tbody>
                 <tfoot className="mytfoot">
-                  <td className="totalsection dashtd">Grand Total</td>
-                  <td className="totalsection dashtd">
-                    {dashData.reduce(
-                      (acc, e) => acc + (e?.Working?.total || 0),
-                      0
-                    )}
-                  </td>
-                  <td className="totalsection dashtd">
-                    {dashData.reduce(
-                      (acc, e) => acc + (e?.Pending?.total || 0),
-                      0
-                    )}
-                  </td>
-                  <td className="totalsection dashtd"></td>
-                  <td className="totalsection dashtd">
-                    {formatNumberWithCommas(
-                      dashData.reduce(
-                        (acc, e) => acc + (e?.Pending?.bid_amount || 0),
-                        0
-                      )
-                    )}
-                  </td>
-                  <td className="totalsection dashtd">
-                    {dashData.reduce((acc, e) => acc + (e?.Won?.total || 0), 0)}
-                  </td>
-                  <td className="totalsection dashtd"></td>
-                  <td className="totalsection dashtd">
-                    ${" "}
-                    {formatNumberWithCommas(
-                      dashData.reduce(
-                        (acc, e) => acc + (e?.Won?.bid_amount || 0),
-                        0
-                      )
-                    )}
-                  </td>
-                  <td className="totalsection dashtd">
-                    {dashData.reduce(
-                      (acc, e) => acc + (e?.Lost?.total || 0),
-                      0
-                    )}
-                  </td>
-                  <td className="totalsection dashtd"></td>
-                  <td className="totalsection dashtd">
-                    ${" "}
-                    {formatNumberWithCommas(
-                      dashData.reduce(
-                        (acc, e) => acc + (e?.Lost?.bid_amount || 0),
-                        0
-                      )
-                    )}
-                  </td>
-                  <td className="totalsection dashtd">
-                    {dashData.reduce(
-                      (acc, e) => acc + (e?.["Grand Total"]?.total || 0),
-                      0
-                    )}
-                  </td>
-                  <td className="totalsection dashtd">
-                    ${" "}
-                    {formatNumberWithCommas(
-                      dashData.reduce(
-                        (acc, e) => acc + (e?.["Grand Total"]?.bid_amount || 0),
-                        0
-                      )
-                    )}
-                  </td>
-                </tfoot>
+  <tr>
+    <td className="totalsection dashtd">Grand Total</td>
+    <td className="totalsection dashtd">
+      {dashData.reduce(
+        (acc, e) => acc + (e?.Working?.total || 0),
+        0
+      )}
+    </td>
+    <td className="totalsection dashtd">
+      {dashData.reduce(
+        (acc, e) => acc + (e?.Pending?.total || 0),
+        0
+      )}
+    </td>
+    <td className="totalsection dashtd"></td>
+    <td className="totalsection dashtd">
+      {formatNumberWithCommas(
+        dashData.reduce(
+          (acc, e) => acc + (e?.Pending?.bid_amount || 0),
+          0
+        )
+      )}
+    </td>
+    <td className="totalsection dashtd">
+      {dashData.reduce((acc, e) => acc + (e?.Won?.total || 0), 0)}
+    </td>
+    <td className="totalsection dashtd"></td>
+    <td className="totalsection dashtd">
+      ${" "}
+      {formatNumberWithCommas(
+        dashData.reduce(
+          (acc, e) => acc + (e?.Won?.bid_amount || 0),
+          0
+        )
+      )}
+    </td>
+    <td className="totalsection dashtd">
+      {dashData.reduce(
+        (acc, e) => acc + (e?.Lost?.total || 0),
+        0
+      )}
+    </td>
+    <td className="totalsection dashtd"></td>
+    <td className="totalsection dashtd">
+      ${" "}
+      {formatNumberWithCommas(
+        dashData.reduce(
+          (acc, e) => acc + (e?.Lost?.bid_amount || 0),
+          0
+        )
+      )}
+    </td>
+    <td className="totalsection dashtd">
+      {dashData.reduce(
+        (acc, e) => acc + (e?.["Grand Total"]?.total || 0),
+        0
+      )}
+    </td>
+    <td className="totalsection dashtd">
+      ${" "}
+      {formatNumberWithCommas(
+        dashData.reduce(
+          (acc, e) => acc + (e?.["Grand Total"]?.bid_amount || 0),
+          0
+        )
+      )}
+    </td>
+  </tr>
+</tfoot>
+
               </table>
             </div>
           </div>
@@ -526,6 +528,7 @@ const chartData = dashData.map(e => ({
                 <YAxis />
                 <Tooltip />
                 <Legend />
+
                 <Bar dataKey="Working" stackId="a" fill="#8884d8" />
                 <Bar dataKey="Pending" stackId="a" fill="#82ca9d" />
                 <Bar dataKey="Won" stackId="a" fill="#ffc658" />

@@ -19,6 +19,14 @@ td {
   color: black;
   top: 2.5rem;
 }
+.loop{
+  /* background-color: #3e8e41 !important; */
+  max-width: 60px !important;
+}
+.actionTD{
+  width: 60px !important;
+  /* background-color: brown !important; */
+}
 .myinput {
   min-width: 318px;
   background-color: white;

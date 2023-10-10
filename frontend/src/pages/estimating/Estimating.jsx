@@ -1208,7 +1208,7 @@ const Estimator = () => {
                         onChange={(event) => handleAreaChange(event, item.id)}
                         value={AreaChoice[item.id] || item.location}
                       >
-                        {/* <option value="">{item.location}</option> */}
+                        <option value="">{item.location}</option>
                         {userLocation && userLocation.length > 0 ? (
                           userLocation.map((place) => (
                             <option value={place.id} key={place.id}>
@@ -1235,9 +1235,9 @@ const Estimator = () => {
                         value={estimatorchoice[item.id] || item.estimator}
                         // Set the width to 100%
                       >
-                        {/* <option value="">
+                        <option value="">
                           {item.estimator ? item.estimator : "No Estimator"}
-                        </option> */}
+                        </option>
                         {EstimatorName && EstimatorName.length > 0 ? (
                           EstimatorName.map((user) => (
                             <option value={user.id} key={user.id}>
@@ -1251,7 +1251,7 @@ const Estimator = () => {
                         )}
                       </select>
                     </td>
-                    <td className="mytd centered-td">
+                    <td className="mytd centered-td ">
                       <select
                         className="dropUpdation p-2 m-3"
                         name="#"
@@ -1271,8 +1271,8 @@ const Estimator = () => {
                     <td className="mytdbidder centered-td">
                       {item.bidder + " " + item.bidder_deatil}
                     </td>
-                    <td className="mytd centered-td">
-                      <div className="relative-container">
+                    <td className="mytd centered-td actionTD">
+                      <div className="relative-container loop">
                         <button
                           type="button"
                           className="btn dropbtns btn-primary"
@@ -1743,20 +1743,10 @@ const Estimator = () => {
                         >
                           <strong> Scope of work</strong>
                         </label>
-                        <button
-                          className="btn btn-success"
-                          onClick={() =>
-                            setSpecificationCount(specificationCount + 1)
-                          }
-                        >
-                          Add alternate scope of work
-                        </button>
 
                         {/* Render specifications based on the specificationCount */}
                         {[...Array(specificationCount)].map((_, index) => (
                           <div className="specificationEntry" key={index}>
-                            {/* ... your specification code ... */}
-                            <div className="specificationEntry">
                               <div className="mb-2 mt-3">
                                 <label
                                   htmlFor="specificName"
@@ -1878,9 +1868,18 @@ const Estimator = () => {
                                   <i className="fa-regular icon fa-plus"></i>
                                 </button>
                               </div>
-                            </div>
+                            {/* </div> */}
                           </div>
                         ))}
+                        <button
+                          className="btn btn-success"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setSpecificationCount(specificationCount + 1);
+                          }}
+                        >
+                          Add alternate scope of work
+                        </button>
                       </div>
                     )}
 
@@ -1993,5 +1992,3 @@ const Estimator = () => {
 };
 
 export default Estimator;
-
-//********************* Mera Project nai chal raha */

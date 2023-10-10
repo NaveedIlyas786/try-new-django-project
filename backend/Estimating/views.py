@@ -15,7 +15,33 @@ from .forms import EstimatingDetailAdminForm
 from django.db.models import Sum, Count,Case, When, IntegerField
 from django.utils import timezone
 from datetime import datetime
+from rest_framework.permissions import IsAuthenticated
+from django.core.mail import send_mail
 
+
+class SendEmailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, estimating_id, format=None):
+        estimating = Estimating.objects.get(id=estimating_id)
+        user = request.user  # Get the user from the request
+
+        subject = 'Proposal'
+        message = f"""
+        Hello,
+
+        Thank you for allowing {estimating.company.Cmpny_Name} the opportunity to bid on the {estimating.prjct_name}.
+
+        The plans used to formulate the bid proposal are dated {estimating.due_date}, drafted by HPA, inc, and approved by Yong Nam.
+
+        Thank you,
+        """
+
+        email_from = user.email  # Use user's email as the sender
+        recipient_list = [estimating.bidder_mail]
+        send_mail(subject, message, email_from, recipient_list)
+        
+        return Response({'message': 'Email sent successfully!'})
 
 
 

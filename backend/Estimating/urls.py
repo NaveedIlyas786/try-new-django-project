@@ -17,7 +17,7 @@ urlpatterns = [
     path('proposals/', views.create_proposal, name='proposal-list'),
     path('proposals/<int:proposal_id>/', views.create_proposal, name='update-delete-proposal'),
 
-
+    path('sendEmail/<int:estimating_id>/',views.SendEmailView.as_view(),name='send-Email'),
 
     path('Qualification/',views.QualificationView.as_view(),name='Qualification list'),
     path('Qualification/<int:id>/',views.QualificationView.as_view(),name='Qualification detail'),
@@ -34,6 +34,9 @@ urlpatterns = [
 
     path('Estimating_detail/',views.Estimating_detailView.as_view(),name='Estimating_detail list'),
     path('Estimating_detail/<int:id>/',views.Estimating_detailView.as_view(),name='Estimating_deatail'),
+
+
+    #Dashboard urls 
 
     path('api/estimators/summary/', views.EstimatorSummaryView.as_view(), name='estimators-summary'),
 

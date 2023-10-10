@@ -37,8 +37,9 @@ const Purposal = () => {
         >
           <i class="fa-duotone me-2 fa fa-angles-left icons backicon"></i> Back
         </button>
-        <div onClick={Exportpdf} className="exportSection">
-          <img className="pdfimg" src="../../../src/assets/pdfimg.png" alt="" />
+        <div className="d-flex gap-2 align-items-center">
+          <button className="btn btn-danger">EMail</button>
+          <img onClick={Exportpdf} className="exportSection pdfimg" src="../../../src/assets/pdfimg.png" alt="" />
         </div>
       </div>
       <div ref={pdfRef} className="pdf_form">

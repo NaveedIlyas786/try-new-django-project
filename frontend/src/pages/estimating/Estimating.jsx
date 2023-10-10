@@ -454,18 +454,21 @@ const Estimator = () => {
   const [step1FormData, setStep1FormData] = useState({
     Addendums: [], // Make sure it's an array
   });
-  const [step2FormData, setStep2FormData] = useState({
-    specific_name: "Base Bid Drywall/Framing",
-    budget: null,
-    sefic: [],
-  });
-  const [entryData, setEntryData] = useState([
+  const [step2FormData, setStep2FormData] = useState([
     {
       specific_name: "Base Bid Drywall/Framing",
       budget: null,
       sefic: [],
     },
   ]);
+  
+  // const [entryData, setEntryData] = useState([
+  //   {
+  //     specific_name: "Base Bid Drywall/Framing",
+  //     budget: null,
+  //     sefic: [],
+  //   },
+  // ]);
   const [entryCount, setEntryCount] = useState(1); // Initialize with 1
 
   // ****************new entry of scope of work with unique id
@@ -562,7 +565,7 @@ const Estimator = () => {
   };
 
   const handleEntryChange = (index, field, value) => {
-    setEntryData((prevData) => {
+    setStep2FormData((prevData) => {
       const updatedData = [...prevData];
       updatedData[index][field] = value;
       return updatedData;
@@ -570,7 +573,7 @@ const Estimator = () => {
   };
 
   const handleAddEntry = () => {
-    setEntryData((prevData) => [
+    setStep2FormData((prevData) => [
       ...prevData,
       {
         specific_name: "",
@@ -612,7 +615,7 @@ const Estimator = () => {
               addendum_Number: addendum.addendum_Number,
               date: addendum.date,
             })),
-            spcifc: entryData.map((entry) => ({
+            spcifc: step2FormData.map((entry) => ({
               specific_name: entry.specific_name,
               budget: entry.budget,
               sefic: entry.sefic.map((detail) => ({
@@ -673,25 +676,47 @@ const Estimator = () => {
   const selectEstimatingData = (state) => state.estimating.data;
 
   const selectFilteredData = createSelector([selectEstimatingData], (data) => {
-    return data.filter((customer) => {
-      return (
-        ((customer.prjct_name &&
-          customer.prjct_name.toUpperCase().includes(filter.toUpperCase())) ||
-          (customer.status &&
-            customer.status
-              .trim()
-              .toUpperCase()
-              .includes(filter.trim().toUpperCase())) ||
-          (customer.estimator &&
-            customer.estimator.toUpperCase().includes(filter.toUpperCase())) ||
-          (customer.bidder &&
-            customer.bidder.toUpperCase().includes(filter.toUpperCase()))) &&
-        (customer.status === "Working" || customer.status === "Pending")
-      ); // Filter by 'Working' and 'Pending' status
-    });
+    const now = new Date(); // Get the current date and time
+    return data
+      .filter((customer) => {
+        return (
+          ((customer.prjct_name &&
+            customer.prjct_name.toUpperCase().includes(filter.toUpperCase())) ||
+            (customer.status &&
+              customer.status
+                .trim()
+                .toUpperCase()
+                .includes(filter.trim().toUpperCase())) ||
+            (customer.estimator &&
+              customer.estimator.toUpperCase().includes(filter.toUpperCase())) ||
+            (customer.bidder &&
+              customer.bidder.toUpperCase().includes(filter.toUpperCase()))) &&
+          (customer.status === "Working" || customer.status === "Pending")
+        ); // Filter by 'Working' and 'Pending' status
+      })
+      .sort((a, b) => {
+        // Parse the due dates as Date objects
+        const dueDateA = new Date(a.due_date);
+        const dueDateB = new Date(b.due_date);
+  
+        // Calculate the time difference in milliseconds
+        const timeDiffA = dueDateA - now;
+        const timeDiffB = dueDateB - now;
+  
+        // Sort by the time difference, with the smallest (coming soon) first
+        return timeDiffA - timeDiffB;
+      });
   });
+  
 
   const filteredData = useSelector(selectFilteredData);
+
+  const sortedData = filteredData.slice().sort((a, b) => {
+  const dueDateA = new Date(a.due_date);
+  const dueDateB = new Date(b.due_date);
+  return dueDateA - dueDateB; // Sort by due date, ascending order
+});
+
 
   const handlestartDateChange = (e) => {
     setStartDate(e.target.value);
@@ -778,41 +803,39 @@ const Estimator = () => {
       sefic: updatedSefic,
     });
   };
-  const [specificationCount, setSpecificationCount] = useState(1);
-  const handleAddSpecificationEntry = (e) => {
-    e.preventDefault();
-    // Clone the current sefic array to avoid mutating the state directly
-    const updatedSefic = [...step2FormData.sefic];
+  // const handleAddSpecificationEntry = () => {
+  //   // Clone the current sefic array to avoid mutating the state directly
+  //   const updatedSefic = [...step2FormData.sefic];
 
-    // Add a new entry with default values
-    updatedSefic.push({
-      specific_name: "",
-      budget: "",
-      sefic: "",
-      number: "",
-      name: "",
-    });
+  //   // Add a new entry with default values
+  //   updatedSefic.push({
+  //     specific_name: "",
+  //     budget: "",
+  //     sefic: "",
+  //     number: "",
+  //     name: "",
+  //   });
 
-    // Update the state
-    setStep2FormData({
-      ...step2FormData,
-      sefic: updatedSefic,
-    });
-  };
+  //   // Update the state
+  //   setStep2FormData({
+  //     ...step2FormData,
+  //     sefic: updatedSefic,
+  //   });
+  // };
 
-  const handleRemoveSpecificationEntry = (index) => {
-    // Clone the current sefic array to avoid mutating the state directly
-    const updatedSefic = [...step2FormData.sefic];
+  // const handleRemoveSpecificationEntry = (index) => {
+  //   // Clone the current sefic array to avoid mutating the state directly
+  //   const updatedSefic = [...step2FormData.sefic];
 
-    // Remove the entry at the specified index
-    updatedSefic.splice(index, 1);
+  //   // Remove the entry at the specified index
+  //   updatedSefic.splice(index, 1);
 
-    // Update the state
-    setStep2FormData({
-      ...step2FormData,
-      sefic: updatedSefic,
-    });
-  };
+  //   // Update the state
+  //   setStep2FormData({
+  //     ...step2FormData,
+  //     sefic: updatedSefic,
+  //   });
+  // };
 
   const formatBidAmount = (amount) => {
     if (amount === null) return ""; // Return an empty string if the amount is null
@@ -1217,6 +1240,7 @@ const Estimator = () => {
                       style={{ minWidth: "100px" }}
                     >
                       {item.due_date}
+                      {/* hjfhn */}
                     </td>
                     <td
                       className="mytd centered-td"
@@ -1305,6 +1329,7 @@ const Estimator = () => {
                         <button
                           type="button"
                           className="btn dropbtns btn-primary"
+                          onClick={() => setShowModal(true)}
                         >
                           Edit
                         </button>
@@ -1358,7 +1383,7 @@ const Estimator = () => {
             showModal ? "show" : ""
           }`}
         >
-          <h4 className="text-center addnewtxt">Add New Estimating Entry</h4>
+          <h4 className="text-center addnewtxt">Estimating</h4>
           <button className="close-btn" onClick={closeModal}></button>
           <div className="modal-content px-5">
             <form onSubmit={handleSubmit} className="MyForm">
@@ -1772,126 +1797,139 @@ const Estimator = () => {
                         >
                           <strong> Scope of work</strong>
                         </label>
-                        {entryData.map((entry, index) => (
-  <div className="wholespecificationEntry" key={index}>
-    <div className="mb-2 mt-3">
-      <label
-        htmlFor={`specificName-${index}`}
-        className="form-label"
-      >
-        Scope of work name
-      </label>
+                        {step2FormData.map((entry, index) => (
+                          <div className="wholespecificationEntry" key={index}>
+                            <div className="mb-2 mt-3">
+                              <label
+                                htmlFor={`specificName-${index}`}
+                                className="form-label"
+                              >
+                                Scope of work name
+                              </label>
 
-      <select
-        className="form-select"
-        aria-label="Select Specification"
-        value={entry.specific_name || ""}
-        onChange={(e) =>
-          handleEntryChange(
-            index,
-            "specific_name",
-            e.target.value
-          )
-        }
-      >
-        <option value="Base Bid Drywall/Framing">
-          Base Bid Drywall/Framing
-        </option>
-        <option value="Add/Alt Building Insulation">
-          Add/Alt Building Insulation
-        </option>
-        <option value="Add/Alt Interior Wall Insulation">
-          Add/Alt Interior Wall Insulation
-        </option>
-        <option value="Add/Alt Weather Barriers">
-          Add/Alt Weather Barriers
-        </option>
-        <option value=" Add/Alt Integrated Ceiling Assemblies">
-          Add/Alt Integrated Ceiling Assemblies
-        </option>
-      </select>
-    </div>
-    <div className="mb-2 mt-3">
-      <label
-        htmlFor={`specificBudget-${index}`}
-        className="form-label"
-      >
-        Scope of work amount
-      </label>
-      <input
-        type="text" // Use type "text" to allow non-numeric characters (e.g., commas)
-        className="form-control"
-        id={`specificBudget-${index}`}
-        value={formatNumberWithCommas(
-          entry.budget
-        )} // Format with commas when displaying
-        onChange={(e) =>
-          handleEntryChange(index, "budget", e.target.value)
-        }
-        onBlur={(e) =>
-          handleEntryChange(index, "budget", e.target.value)
-        }
-      />
-    </div>
-    <div className="mb-2 mt-3">
-      <label
-        htmlFor={`specificDetails-${index}`}
-        className="form-label"
-      >
-        Scope of work divisions
-      </label>
-      {entry.sefic.map((detail, detailIndex) => (
-        <div
-          key={detailIndex}
-          className="input-group myrowInputgrouup"
-        >
-          <input
-            type="text"
-            className="form-control"
-            placeholder=" Scope Of Work Number"
-            value={detail.number}
-            onChange={(e) =>
-              handleSpecificationInputChange(
-                index,
-                detailIndex,
-                "number",
-                e.target.value
-              )
-            }
-          />
-          <input
-            type="text"
-            className="form-control"
-            placeholder=" Scope Of Work Description"
-            value={detail.name}
-            onChange={(e) =>
-              handleSpecificationInputChange(
-                index,
-                detailIndex,
-                "name",
-                e.target.value
-              )
-            }
-          />
-          <button
-            className="btn btn-danger"
-            onClick={() =>
-              handleRemoveSpecificationEntry(index, detailIndex)
-            }
-          >
-            <i className="far">X</i>
-          </button>
-        </div>
-      ))}
-      <button
-        className="btn btn-success bk"
-        onClick={() => handleAddSpecificationEntry(index)}
-      >
-        <i className="fa-regular icon fa-plus"></i>
-      </button>
-    </div>
-  </div>
-))}
+                              <select
+                                className="form-select"
+                                aria-label="Select Specification"
+                                value={entry.specific_name || ""}
+                                onChange={(e) =>
+                                  handleEntryChange(
+                                    index,
+                                    "specific_name",
+                                    e.target.value
+                                  )
+                                }
+                              >
+                                <option value="Base Bid Drywall/Framing">
+                                  Base Bid Drywall/Framing
+                                </option>
+                                <option value="Add/Alt Building Insulation">
+                                  Add/Alt Building Insulation
+                                </option>
+                                <option value="Add/Alt Interior Wall Insulation">
+                                  Add/Alt Interior Wall Insulation
+                                </option>
+                                <option value="Add/Alt Weather Barriers">
+                                  Add/Alt Weather Barriers
+                                </option>
+                                <option value=" Add/Alt Integrated Ceiling Assemblies">
+                                  Add/Alt Integrated Ceiling Assemblies
+                                </option>
+                              </select>
+                            </div>
+                            <div className="mb-2 mt-3">
+                              <label
+                                htmlFor={`specificBudget-${index}`}
+                                className="form-label"
+                              >
+                                Scope of work amount
+                              </label>
+                              <input
+                                type="text" // Use type "text" to allow non-numeric characters (e.g., commas)
+                                className="form-control"
+                                id={`specificBudget-${index}`}
+                                value={formatNumberWithCommas(entry.budget)} // Format with commas when displaying
+                                onChange={(e) =>
+                                  handleEntryChange(
+                                    index,
+                                    "budget",
+                                    e.target.value
+                                  )
+                                }
+                                onBlur={(e) =>
+                                  handleEntryChange(
+                                    index,
+                                    "budget",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </div>
+                            <div className="mb-2 mt-3">
+                              <label
+                                htmlFor={`specificDetails-${index}`}
+                                className="form-label"
+                              >
+                                Scope of work divisions
+                              </label>
+                              {entry.sefic.map((detail, detailIndex) => (
+                                <div
+                                  key={detailIndex}
+                                  className="input-group myrowInputgrouup"
+                                >
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder=" Scope Of Work Number"
+                                    value={detail.number}
+                                    onChange={(e) =>
+                                      handleSpecificationInputChange(
+                                        index,
+                                        detailIndex,
+                                        "number",
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder=" Scope Of Work Description"
+                                    value={detail.name}
+                                    onChange={(e) =>
+                                      handleSpecificationInputChange(
+                                        index,
+                                        detailIndex,
+                                        "name",
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                  <button
+                                  type="button"
+                                    className="btn btn-danger"
+                                    onClick={() =>
+                                      handleRemoveSpecificationEntry(
+                                        index,
+                                        detailIndex
+                                      )
+                                    }
+                                  >
+                                    <i className="far">X</i>
+                                  </button>
+                                </div>
+                              ))}
+                              <button
+                              type="button"
+                                className="btn btn-success bk"
+                                onClick={() =>
+                                  handleAddSpecificationEntry(index)
+                                }
+                              >
+                                <i className="fa-regular icon fa-plus"></i>
+                              </button>
+                            </div>
+                          </div>
+                        ))}
 
                         <button
                           type="button"

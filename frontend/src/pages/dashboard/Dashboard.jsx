@@ -144,6 +144,37 @@ const Dashboard = () => {
     Lost: e.summary?.Lost?.total || 0,
   }));
 
+
+    const [selectedYear, setSelectedYear] = useState(2023);
+  // const [dashData, setDashData] = useState([]); // Initialize with an empty array
+
+  // Fetch data based on the selected year
+  useEffect(() => {
+    // Create a function to fetch data based on the selected year
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/api/estimating/api/estimators/summary/?year=${selectedYear}`);
+        if (response.ok) {
+          const data = await response.json();
+          setDashData(data); // Update the state with fetched data
+        } else {
+          console.error('Error fetching data');
+        }
+      } catch (error) {
+        console.error('An error occurred:', error.message);
+      }
+    };
+
+    // Call the fetchData function when selectedYear changes
+    fetchData();
+  }, [selectedYear]);
+
+  // Event handler for changing the selected year
+  const handleYearChange = (year) => {
+    setSelectedYear(year);
+  };
+
+
   return (
     <>
       <div className=" container dashboard ">
@@ -192,34 +223,52 @@ const Dashboard = () => {
       </div>
       <div className="mt-3">
         <div className=" container mytable ">
-          <div className=" ms-4 mb-2  btn-group dropright">
-            <button
-              type="button"
-              className="btn btn-success dropdown-toggle"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
+         
+        <div>
+      {/* Dropdown for selecting the year */}
+      <div className="ms-4 mb-2 btn-group dropright">
+        <button
+          type="button"
+          className="btn btn-success dropdown-toggle"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Filter based on year
+        </button>
+        <ul className="dropdown-menu text-center">
+          <li>
+            <a
+              className={`dropdown-item ${selectedYear === 2023 ? 'active' : ''}`}
+              href="#"
+              onClick={() => handleYearChange(2023)}
             >
-              Filter based on year
-            </button>
-            <ul className="dropdown-menu text-center">
-              <li>
-                <a className="dropdown-item active" href="#">
-                  2023
-                </a>
-              </li>
-              <li>
-                <a className="dropdown-item" href="#">
-                  2022
-                </a>
-              </li>
-              <li>
-                <a className="dropdown-item" href="#">
-                  2020
-                </a>
-              </li>
-            </ul>
-            <h4 className="myh4">2022</h4>
-          </div>
+              2023
+            </a>
+          </li>
+          <li>
+            <a
+              className={`dropdown-item ${selectedYear === 2022 ? 'active' : ''}`}
+              href="#"
+              onClick={() => handleYearChange(2022)}
+            >
+              2022
+            </a>
+          </li>
+          <li>
+            <a
+              className={`dropdown-item ${selectedYear === 2020 ? 'active' : ''}`}
+              href="#"
+              onClick={() => handleYearChange(2020)}
+            >
+              2020
+            </a>
+          </li>
+        </ul>
+        <h4 className="myh4">{selectedYear}</h4>
+      </div>
+      </div>
+
+
           <div
             className=" row table-responsive table-design pk"
             data-aos="fade-left"
@@ -305,76 +354,79 @@ const Dashboard = () => {
                   ))}
                 </tbody>
                 <tfoot className="mytfoot">
-  <tr>
-    <td className="totalsection dashtd">Grand Total</td>
-    <td className="totalsection dashtd">
-      {dashData.reduce(
-        (acc, e) => acc + (e?.Working?.total || 0),
-        0
-      )}
-    </td>
-    <td className="totalsection dashtd">
-      {dashData.reduce(
-        (acc, e) => acc + (e?.Pending?.total || 0),
-        0
-      )}
-    </td>
-    <td className="totalsection dashtd"></td>
-    <td className="totalsection dashtd">
-      {formatNumberWithCommas(
-        dashData.reduce(
-          (acc, e) => acc + (e?.Pending?.bid_amount || 0),
-          0
-        )
-      )}
-    </td>
-    <td className="totalsection dashtd">
-      {dashData.reduce((acc, e) => acc + (e?.Won?.total || 0), 0)}
-    </td>
-    <td className="totalsection dashtd"></td>
-    <td className="totalsection dashtd">
-      ${" "}
-      {formatNumberWithCommas(
-        dashData.reduce(
-          (acc, e) => acc + (e?.Won?.bid_amount || 0),
-          0
-        )
-      )}
-    </td>
-    <td className="totalsection dashtd">
-      {dashData.reduce(
-        (acc, e) => acc + (e?.Lost?.total || 0),
-        0
-      )}
-    </td>
-    <td className="totalsection dashtd"></td>
-    <td className="totalsection dashtd">
-      ${" "}
-      {formatNumberWithCommas(
-        dashData.reduce(
-          (acc, e) => acc + (e?.Lost?.bid_amount || 0),
-          0
-        )
-      )}
-    </td>
-    <td className="totalsection dashtd">
-      {dashData.reduce(
-        (acc, e) => acc + (e?.["Grand Total"]?.total || 0),
-        0
-      )}
-    </td>
-    <td className="totalsection dashtd">
-      ${" "}
-      {formatNumberWithCommas(
-        dashData.reduce(
-          (acc, e) => acc + (e?.["Grand Total"]?.bid_amount || 0),
-          0
-        )
-      )}
-    </td>
-  </tr>
-</tfoot>
-
+                  <tr>
+                    <td className="totalsection dashtd">Grand Total</td>
+                    <td className="totalsection dashtd">
+                      {dashData.reduce(
+                        (acc, e) => acc + (e?.Working?.total || 0),
+                        0
+                      )}
+                    </td>
+                    <td className="totalsection dashtd">
+                      {dashData.reduce(
+                        (acc, e) => acc + (e?.Pending?.total || 0),
+                        0
+                      )}
+                    </td>
+                    <td className="totalsection dashtd"></td>
+                    <td className="totalsection dashtd">
+                      {formatNumberWithCommas(
+                        dashData.reduce(
+                          (acc, e) => acc + (e?.Pending?.bid_amount || 0),
+                          0
+                        )
+                      )}
+                    </td>
+                    <td className="totalsection dashtd">
+                      {dashData.reduce(
+                        (acc, e) => acc + (e?.Won?.total || 0),
+                        0
+                      )}
+                    </td>
+                    <td className="totalsection dashtd"></td>
+                    <td className="totalsection dashtd">
+                      ${" "}
+                      {formatNumberWithCommas(
+                        dashData.reduce(
+                          (acc, e) => acc + (e?.Won?.bid_amount || 0),
+                          0
+                        )
+                      )}
+                    </td>
+                    <td className="totalsection dashtd">
+                      {dashData.reduce(
+                        (acc, e) => acc + (e?.Lost?.total || 0),
+                        0
+                      )}
+                    </td>
+                    <td className="totalsection dashtd"></td>
+                    <td className="totalsection dashtd">
+                      ${" "}
+                      {formatNumberWithCommas(
+                        dashData.reduce(
+                          (acc, e) => acc + (e?.Lost?.bid_amount || 0),
+                          0
+                        )
+                      )}
+                    </td>
+                    <td className="totalsection dashtd">
+                      {dashData.reduce(
+                        (acc, e) => acc + (e?.["Grand Total"]?.total || 0),
+                        0
+                      )}
+                    </td>
+                    <td className="totalsection dashtd">
+                      ${" "}
+                      {formatNumberWithCommas(
+                        dashData.reduce(
+                          (acc, e) =>
+                            acc + (e?.["Grand Total"]?.bid_amount || 0),
+                          0
+                        )
+                      )}
+                    </td>
+                  </tr>
+                </tfoot>
               </table>
             </div>
           </div>
@@ -385,19 +437,19 @@ const Dashboard = () => {
               className="col-md-4 twoTable  mt-3 table-responsive-custom"
               data-aos="fade-down"
             >
-              <table className="table twoTable table-striped text-center bg-primary">
-                <thead className="thead-dark twoTable">
+              <table className="table twoTable table-striped text-center ">
+                <thead className="thead-dark ">
                   <tr>
-                    <th rowSpan={2} className="align-middle bg-danger">
+                    <th rowSpan={2} className="align-middle ">
                       Company
                     </th>
-                    <th colSpan={2} className="align-middle bg-success">
+                    <th colSpan={2} className="align-middle ">
                       Won
                     </th>
                   </tr>
                   <tr>
-                    <th className="align-middle bg-warning">#</th>
-                    <th className="align-middle bg-primary">Estimated $</th>
+                    <th className="align-middle">#</th>
+                    <th className="align-middle">Estimated $</th>
                   </tr>
                 </thead>
                 <tbody>

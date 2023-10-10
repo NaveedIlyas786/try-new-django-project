@@ -459,6 +459,16 @@ const Estimator = () => {
     budget: null,
     sefic: [],
   });
+  const [entryData, setEntryData] = useState([
+    {
+      specific_name: "Base Bid Drywall/Framing",
+      budget: null,
+      sefic: [],
+    },
+  ]);
+  const [entryCount, setEntryCount] = useState(1); // Initialize with 1
+
+  // ****************new entry of scope of work with unique id
 
   const formatNumber = (value) => {
     // Remove any existing commas and non-numeric characters
@@ -550,6 +560,26 @@ const Estimator = () => {
     // Remove the 'modal-active' class when the modal is closed
     document.body.classList.remove("modal-active");
   };
+
+  const handleEntryChange = (index, field, value) => {
+    setEntryData((prevData) => {
+      const updatedData = [...prevData];
+      updatedData[index][field] = value;
+      return updatedData;
+    });
+  };
+
+  const handleAddEntry = () => {
+    setEntryData((prevData) => [
+      ...prevData,
+      {
+        specific_name: "",
+        budget: null,
+        sefic: [],
+      },
+    ]);
+  };
+
   const handleProposalSubmitPosting = async (e, dispatch) => {
     e.preventDefault();
 
@@ -582,17 +612,16 @@ const Estimator = () => {
               addendum_Number: addendum.addendum_Number,
               date: addendum.date,
             })),
-            spcifc: [
-              {
-                specific_name: step2FormData.specific_name,
-                budget: step2FormData.budget,
-                sefic: step2FormData.sefic.map((detail) => ({
-                  sefic: detail.specific_name,
-                  number: detail.number,
-                  name: detail.name,
-                })),
-              },
-            ],
+            spcifc: entryData.map((entry) => ({
+              specific_name: entry.specific_name,
+              budget: entry.budget,
+              sefic: entry.sefic.map((detail) => ({
+                sefic: detail.specific_name,
+                number: detail.number,
+                name: detail.name,
+              })),
+            })),
+
             services: services.map((service) => ({
               proposal: service.proposal,
               service: service.service,
@@ -1743,140 +1772,131 @@ const Estimator = () => {
                         >
                           <strong> Scope of work</strong>
                         </label>
+                        {entryData.map((entry, index) => (
+  <div className="wholespecificationEntry" key={index}>
+    <div className="mb-2 mt-3">
+      <label
+        htmlFor={`specificName-${index}`}
+        className="form-label"
+      >
+        Scope of work name
+      </label>
 
-                        {/* Render specifications based on the specificationCount */}
-                        {[...Array(specificationCount)].map((_, index) => (
-                          <div className="specificationEntry" key={index}>
-                              <div className="mb-2 mt-3">
-                                <label
-                                  htmlFor="specificName"
-                                  className="form-label"
-                                >
-                                  Scope of work name
-                                </label>
-                                {/* <input
-                              type="text"
-                              className="form-control"
-                              id="specificName"
-                              value={step2FormData.specific_name || ""}
-                              onChange={(e) =>
-                                setStep2FormData({
-                                  ...step2FormData,
-                                  specific_name: e.target.value,
-                                })
-                              }
-                            /> */}
-                                {/* ************************ */}
-                                <select
-                                  className="form-select"
-                                  aria-label="Select Specification"
-                                  value={step2FormData.specific_name || ""}
-                                  onChange={(e) =>
-                                    setStep2FormData({
-                                      ...step2FormData,
-                                      specific_name: e.target.value,
-                                    })
-                                  }
-                                >
-                                  <option value="Base Bid Drywall/Framing">
-                                    Base Bid Drywall/Framing
-                                  </option>
-                                  <option value="Add/Alt Building Insulation">
-                                    Add/Alt Building Insulation
-                                  </option>
-                                  <option value="Add/Alt Interior Wall Insulation">
-                                    Add/Alt Interior Wall Insulation
-                                  </option>
-                                  <option value="Add/Alt Weather Barriers">
-                                    Add/Alt Weather Barriers
-                                  </option>
-                                  <option value=" Add/Alt Integrated Ceiling Assemblies">
-                                    Add/Alt Integrated Ceiling Assemblies
-                                  </option>
-                                </select>
-                              </div>
-                              <div className="mb-2 mt-3">
-                                <label
-                                  htmlFor="specificbudget"
-                                  className="form-label"
-                                >
-                                  Scope of work amount
-                                </label>
-                                <input
-                                  type="text" // Use type "text" to allow non-numeric characters (e.g., commas)
-                                  className="form-control"
-                                  id="specificbudget"
-                                  value={formatNumberWithCommas(
-                                    step2FormData.budget
-                                  )} // Format with commas when displaying
-                                  onChange={handlebudgetchange}
-                                  onBlur={handlebudgetchange}
-                                />
-                              </div>
-                              <div className="mb-2 mt-3">
-                                <label
-                                  htmlFor="specificdetails"
-                                  className="form-label"
-                                >
-                                  Scope of work divisions
-                                </label>
-                                {step2FormData.sefic.map((entry, index) => (
-                                  <div
-                                    key={index}
-                                    className="input-group myrowInputgrouup"
-                                  >
-                                    <input
-                                      type="text"
-                                      className="form-control"
-                                      placeholder=" Scope Of Work Number"
-                                      value={entry.number}
-                                      onChange={(e) =>
-                                        handleSpecificationInputChange(
-                                          index,
-                                          "number",
-                                          e.target.value
-                                        )
-                                      }
-                                    />
-                                    <input
-                                      type="text"
-                                      className="form-control"
-                                      placeholder=" Scope Of Work Description"
-                                      value={entry.name}
-                                      onChange={(e) =>
-                                        handleSpecificationInputChange(
-                                          index,
-                                          "name",
-                                          e.target.value
-                                        )
-                                      }
-                                    />
-                                    <button
-                                      className="btn btn-danger"
-                                      onClick={() =>
-                                        handleRemoveSpecificationEntry(index)
-                                      }
-                                    >
-                                      <i className="far">X</i>
-                                    </button>
-                                  </div>
-                                ))}
-                                <button
-                                  className="btn btn-success bk"
-                                  onClick={handleAddSpecificationEntry}
-                                >
-                                  <i className="fa-regular icon fa-plus"></i>
-                                </button>
-                              </div>
-                            {/* </div> */}
-                          </div>
-                        ))}
+      <select
+        className="form-select"
+        aria-label="Select Specification"
+        value={entry.specific_name || ""}
+        onChange={(e) =>
+          handleEntryChange(
+            index,
+            "specific_name",
+            e.target.value
+          )
+        }
+      >
+        <option value="Base Bid Drywall/Framing">
+          Base Bid Drywall/Framing
+        </option>
+        <option value="Add/Alt Building Insulation">
+          Add/Alt Building Insulation
+        </option>
+        <option value="Add/Alt Interior Wall Insulation">
+          Add/Alt Interior Wall Insulation
+        </option>
+        <option value="Add/Alt Weather Barriers">
+          Add/Alt Weather Barriers
+        </option>
+        <option value=" Add/Alt Integrated Ceiling Assemblies">
+          Add/Alt Integrated Ceiling Assemblies
+        </option>
+      </select>
+    </div>
+    <div className="mb-2 mt-3">
+      <label
+        htmlFor={`specificBudget-${index}`}
+        className="form-label"
+      >
+        Scope of work amount
+      </label>
+      <input
+        type="text" // Use type "text" to allow non-numeric characters (e.g., commas)
+        className="form-control"
+        id={`specificBudget-${index}`}
+        value={formatNumberWithCommas(
+          entry.budget
+        )} // Format with commas when displaying
+        onChange={(e) =>
+          handleEntryChange(index, "budget", e.target.value)
+        }
+        onBlur={(e) =>
+          handleEntryChange(index, "budget", e.target.value)
+        }
+      />
+    </div>
+    <div className="mb-2 mt-3">
+      <label
+        htmlFor={`specificDetails-${index}`}
+        className="form-label"
+      >
+        Scope of work divisions
+      </label>
+      {entry.sefic.map((detail, detailIndex) => (
+        <div
+          key={detailIndex}
+          className="input-group myrowInputgrouup"
+        >
+          <input
+            type="text"
+            className="form-control"
+            placeholder=" Scope Of Work Number"
+            value={detail.number}
+            onChange={(e) =>
+              handleSpecificationInputChange(
+                index,
+                detailIndex,
+                "number",
+                e.target.value
+              )
+            }
+          />
+          <input
+            type="text"
+            className="form-control"
+            placeholder=" Scope Of Work Description"
+            value={detail.name}
+            onChange={(e) =>
+              handleSpecificationInputChange(
+                index,
+                detailIndex,
+                "name",
+                e.target.value
+              )
+            }
+          />
+          <button
+            className="btn btn-danger"
+            onClick={() =>
+              handleRemoveSpecificationEntry(index, detailIndex)
+            }
+          >
+            <i className="far">X</i>
+          </button>
+        </div>
+      ))}
+      <button
+        className="btn btn-success bk"
+        onClick={() => handleAddSpecificationEntry(index)}
+      >
+        <i className="fa-regular icon fa-plus"></i>
+      </button>
+    </div>
+  </div>
+))}
+
                         <button
+                          type="button"
                           className="btn btn-success"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setSpecificationCount(specificationCount + 1);
-                          }}
+                          onClick={handleAddEntry}
                         >
                           Add alternate scope of work
                         </button>

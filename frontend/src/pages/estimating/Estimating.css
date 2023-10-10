@@ -416,7 +416,7 @@ input[type="text"].serviceInput.focused {
   margin-top: 5px !important;
   /* margin-bottom: 55px !important; */
 }
-.specificationEntry {
+.wholespecificationEntry {
   border-radius: 5px !important;
   background-color: #e9e6e6;
   margin-bottom: 30px !important;

@@ -50,6 +50,52 @@ const Dashboard = () => {
       });
   }, []);
 
+  const data = [
+    {
+      name: 'Page A',
+      uv: 4000,
+      pv: 2400,
+      amt: 2400,
+    },
+    {
+      name: 'Page B',
+      uv: 3000,
+      pv: 1398,
+      amt: 2210,
+    },
+    {
+      name: 'Page C',
+      uv: 2000,
+      pv: 9800,
+      amt: 2290,
+    },
+    {
+      name: 'Page D',
+      uv: 2780,
+      pv: 3908,
+      amt: 2000,
+    },
+    {
+      name: 'Page E',
+      uv: 1890,
+      pv: 4800,
+      amt: 2181,
+    },
+    {
+      name: 'Page F',
+      uv: 2390,
+      pv: 3800,
+      amt: 2500,
+    },
+    {
+      name: 'Page G',
+      uv: 3490,
+      pv: 4300,
+      amt: 2100,
+    },
+  ];
+  
+
   const formatNumberWithCommas = (value) => {
     if (value === null) return ""; // Return an empty string if the value is null
     return value.toLocaleString("en-US");
@@ -90,7 +136,14 @@ const Dashboard = () => {
     return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
   };
 
-  // const amount=formatNumberWithCommas(total_won_bid_amount);
+// Assuming your data is stored in a variable called 'dashData'
+const chartData = dashData.map(e => ({
+  name: e.estimator,
+  Working: e.summary?.Working?.total || 0 ,
+  Pending: e.summary?.Pending?.total || 0,
+  Won: e.summary?.Won?.total || 0,
+  Lost: e.summary?.Lost?.total || 0,
+}));
 
   return (
     <>
@@ -140,35 +193,34 @@ const Dashboard = () => {
       </div>
       <div className="mt-3">
         <div className=" container mytable ">
-      <div className=" ms-4 mb-2  btn-group dropright">
-        <button
-          type="button"
-          className="btn btn-success dropdown-toggle"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          Filter based on year
-        </button>
-        <ul className="dropdown-menu text-center">
-          <li>
-            <a className="dropdown-item active" href="#">
-              2023
-            </a>
-          </li>
-          <li>
-            <a className="dropdown-item" href="#">
-             2022
-            </a>
-          </li>
-          <li>
-            <a className="dropdown-item" href="#">
-             2020
-            </a>
-          </li>
-         
-        </ul>
-      <h4 className="myh4">2022</h4>
-      </div>
+          <div className=" ms-4 mb-2  btn-group dropright">
+            <button
+              type="button"
+              className="btn btn-success dropdown-toggle"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Filter based on year
+            </button>
+            <ul className="dropdown-menu text-center">
+              <li>
+                <a className="dropdown-item active" href="#">
+                  2023
+                </a>
+              </li>
+              <li>
+                <a className="dropdown-item" href="#">
+                  2022
+                </a>
+              </li>
+              <li>
+                <a className="dropdown-item" href="#">
+                  2020
+                </a>
+              </li>
+            </ul>
+            <h4 className="myh4">2022</h4>
+          </div>
           <div
             className=" row table-responsive table-design jk"
             data-aos="fade-left"
@@ -252,79 +304,75 @@ const Dashboard = () => {
                       </td>
                     </tr>
                   ))}
-                </tbody >
-                  <tfoot className="mytfoot">
-                    <td className="totalsection dashtd">Grand Total</td>
-                    <td className="totalsection dashtd">
-                      {dashData.reduce(
-                        (acc, e) => acc + (e?.Working?.total || 0),
+                </tbody>
+                <tfoot className="mytfoot">
+                  <td className="totalsection dashtd">Grand Total</td>
+                  <td className="totalsection dashtd">
+                    {dashData.reduce(
+                      (acc, e) => acc + (e?.Working?.total || 0),
+                      0
+                    )}
+                  </td>
+                  <td className="totalsection dashtd">
+                    {dashData.reduce(
+                      (acc, e) => acc + (e?.Pending?.total || 0),
+                      0
+                    )}
+                  </td>
+                  <td className="totalsection dashtd"></td>
+                  <td className="totalsection dashtd">
+                    {formatNumberWithCommas(
+                      dashData.reduce(
+                        (acc, e) => acc + (e?.Pending?.bid_amount || 0),
                         0
-                      )}
-                    </td>
-                    <td className="totalsection dashtd">
-                      {dashData.reduce(
-                        (acc, e) => acc + (e?.Pending?.total || 0),
+                      )
+                    )}
+                  </td>
+                  <td className="totalsection dashtd">
+                    {dashData.reduce((acc, e) => acc + (e?.Won?.total || 0), 0)}
+                  </td>
+                  <td className="totalsection dashtd"></td>
+                  <td className="totalsection dashtd">
+                    ${" "}
+                    {formatNumberWithCommas(
+                      dashData.reduce(
+                        (acc, e) => acc + (e?.Won?.bid_amount || 0),
                         0
-                      )}
-                    </td>
-                    <td className="totalsection dashtd"></td>
-                    <td className="totalsection dashtd">
-                      {formatNumberWithCommas(
-                        dashData.reduce(
-                          (acc, e) => acc + (e?.Pending?.bid_amount || 0),
-                          0
-                        )
-                      )}
-                    </td>
-                    <td className="totalsection dashtd">
-                      {dashData.reduce(
-                        (acc, e) => acc + (e?.Won?.total || 0),
+                      )
+                    )}
+                  </td>
+                  <td className="totalsection dashtd">
+                    {dashData.reduce(
+                      (acc, e) => acc + (e?.Lost?.total || 0),
+                      0
+                    )}
+                  </td>
+                  <td className="totalsection dashtd"></td>
+                  <td className="totalsection dashtd">
+                    ${" "}
+                    {formatNumberWithCommas(
+                      dashData.reduce(
+                        (acc, e) => acc + (e?.Lost?.bid_amount || 0),
                         0
-                      )}
-                    </td>
-                    <td className="totalsection dashtd"></td>
-                    <td className="totalsection dashtd">
-                      ${" "}
-                      {formatNumberWithCommas(
-                        dashData.reduce(
-                          (acc, e) => acc + (e?.Won?.bid_amount || 0),
-                          0
-                        )
-                      )}
-                    </td>
-                    <td className="totalsection dashtd">
-                      {dashData.reduce(
-                        (acc, e) => acc + (e?.Lost?.total || 0),
+                      )
+                    )}
+                  </td>
+                  <td className="totalsection dashtd">
+                    {dashData.reduce(
+                      (acc, e) => acc + (e?.["Grand Total"]?.total || 0),
+                      0
+                    )}
+                  </td>
+                  <td className="totalsection dashtd">
+                    ${" "}
+                    {formatNumberWithCommas(
+                      dashData.reduce(
+                        (acc, e) => acc + (e?.["Grand Total"]?.bid_amount || 0),
                         0
-                      )}
-                    </td>
-                    <td className="totalsection dashtd"></td>
-                    <td className="totalsection dashtd">
-                      ${" "}
-                      {formatNumberWithCommas(
-                        dashData.reduce(
-                          (acc, e) => acc + (e?.Lost?.bid_amount || 0),
-                          0
-                        )
-                      )}
-                    </td>
-                    <td className="totalsection dashtd">
-                      {dashData.reduce(
-                        (acc, e) => acc + (e?.["Grand Total"]?.total || 0),
-                        0
-                      )}
-                    </td>
-                    <td className="totalsection dashtd">
-                      ${" "}
-                      {formatNumberWithCommas(
-                        dashData.reduce(
-                          (acc, e) =>
-                            acc + (e?.["Grand Total"]?.bid_amount || 0),
-                          0
-                        )
-                      )}
-                    </td>
-                  </tfoot>
+                      )
+                    )}
+                  </td>
+                </tfoot>
               </table>
             </div>
           </div>
@@ -417,7 +465,7 @@ const Dashboard = () => {
                 </LineChart>
               </ResponsiveContainer>
             </div> */}
-            <div
+            {/* <div
               className="ms-5 col-md-7 col-sm-7 text-center graphimg"
               data-aos="fade-up"
             >
@@ -446,6 +494,42 @@ const Dashboard = () => {
                     <Cell key={`cell-${index}`} fill={colors[index % 20]} />
                   ))}
                 </Bar>
+              </BarChart>
+              <div className="mt-2 d-flex totalamount">
+                <h1>Total Amount: </h1>
+                {companyiesData[2] && (
+                  <h1>
+                    {formatNumberWithCommas(
+                      companyiesData[2].total_won_bid_amount
+                    )}
+                  </h1>
+                )}
+              </div>
+            </div> */}
+            <div
+              className="ms-5 col-md-7 col-sm-7 text-center graphimg"
+              data-aos="fade-up"
+            >
+              <BarChart
+                width={800}
+                height={400}
+                data={chartData}
+                margin={{
+                  top: 20,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="Working" stackId="a" fill="#8884d8" />
+                <Bar dataKey="Pending" stackId="a" fill="#82ca9d" />
+                <Bar dataKey="Won" stackId="a" fill="#ffc658" />
+                <Bar dataKey="Lost" stackId="a" fill="#ff7f7f" />
               </BarChart>
               <div className="mt-2 d-flex totalamount">
                 <h1>Total Amount: </h1>

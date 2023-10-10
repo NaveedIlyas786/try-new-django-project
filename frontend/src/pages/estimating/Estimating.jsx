@@ -7,7 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { fetchEstimatingData } from "../../store/EstimatingSlice";
 import { addProject } from "../../store/ProjectFormSlice";
 import { Modal, Button, Stepper, Step, StepLabel } from "@mui/material";
-import AOS from 'aos';
+import AOS from "aos";
 import "aos/dist/aos.css";
 import { addEstimating } from "../../store/EstimatingSlice";
 // import "aos/dist/aos.css";
@@ -253,7 +253,7 @@ const Estimator = () => {
       })
       .catch((error) => {
         console.error("Error:", error);
-        // Handle errors here are 
+        // Handle errors here are
       });
   };
 
@@ -414,7 +414,7 @@ const Estimator = () => {
       .then((response) => {
         // Handle the response if needed
         console.log("Data successfully submitted:", response.data);
-        
+
         // dispatch(addEstimating(response.data));
 
         // You can also reset the form fields here if needed
@@ -552,20 +552,20 @@ const Estimator = () => {
   };
   const handleProposalSubmitPosting = async (e, dispatch) => {
     e.preventDefault();
-  
+
     try {
       console.log("Services data to be sent:", services);
-  
+
       // Check if all elements in the services array have the 'proposal' key
       const hasMissingService = services.some(
         (service) => typeof service.proposal === "undefined"
       );
-  
+
       if (hasMissingService) {
         console.error("Missing 'proposal' key in services array");
         return;
       }
-  
+
       const response = await fetch(
         "http://127.0.0.1:8000/api/estimating/proposals/",
         {
@@ -605,10 +605,10 @@ const Estimator = () => {
         const responseData = await response.json();
         console.log("Response data:", responseData);
         console.log("Data Successfully Submitted !", responseData);
-  
+
         // Dispatch the proposal data to the Redux store
         // dispatch(storeProposalData(responseData)); // Make sure `storeProposalData` is imported
-  
+
         // Clear form fields after successful submission
         setStep0FormData({
           date: getCurrentDate(),
@@ -616,17 +616,17 @@ const Estimator = () => {
           architect_name: "",
           architect_firm: "",
         });
-  
+
         setStep1FormData({
           Addendums: [],
         });
-  
+
         setStep2FormData({
           specific_name: "",
           budget: "",
           sefic: [],
         });
-  
+
         setTimeout(() => {
           closeModal();
         }, 500);
@@ -639,7 +639,7 @@ const Estimator = () => {
       console.error("An error occurred:", error.message);
     }
   };
-  
+
   // ****************Get Estimating data From Store
   const selectEstimatingData = (state) => state.estimating.data;
 
@@ -749,7 +749,7 @@ const Estimator = () => {
       sefic: updatedSefic,
     });
   };
-
+  const [specificationCount, setSpecificationCount] = useState(1);
   const handleAddSpecificationEntry = (e) => {
     e.preventDefault();
     // Clone the current sefic array to avoid mutating the state directly
@@ -1160,7 +1160,10 @@ const Estimator = () => {
             </button>
           </div>
           <ParticlesAnimation numberOfCircles={numberOfCircles} />
-          <div className="table-responsive proposalTable mt-2" data-aos="fade-up">
+          <div
+            className="table-responsive proposalTable mt-2"
+            data-aos="fade-up"
+          >
             <table
               className="table table-striped table-bordered table-hover"
               style={{ tableLayout: "auto" }}
@@ -1180,14 +1183,25 @@ const Estimator = () => {
               <tbody className="cursor-pointer jktable bg-info jloop">
                 {filteredData.map((item) => (
                   <tr key={item.id}>
-                    <td className="mytd centered-td" style={{minWidth:"100px"}} >{item.due_date}</td>
-                    <td className="mytd centered-td" style={{minWidth:"120px"}}>
+                    <td
+                      className="mytd centered-td"
+                      style={{ minWidth: "100px" }}
+                    >
+                      {item.due_date}
+                    </td>
+                    <td
+                      className="mytd centered-td"
+                      style={{ minWidth: "120px" }}
+                    >
                       {item.time} <strong>{item.timezone}</strong>
                     </td>
                     <td className="mytd myproject centered-td">
                       {item.prjct_name}
                     </td>
-                    <td className="mytd centered-td" style={{minWidth:"110px"}}>
+                    <td
+                      className="mytd centered-td"
+                      style={{ minWidth: "110px" }}
+                    >
                       <select
                         className="form-select dropUpdation"
                         id="estimatorName"
@@ -1208,7 +1222,10 @@ const Estimator = () => {
                         )}
                       </select>
                     </td>
-                    <td className="mytd centered-td" style={{minWidth:"210px"}}>
+                    <td
+                      className="mytd centered-td"
+                      style={{ minWidth: "210px" }}
+                    >
                       <select
                         className="form-select dropUpdation"
                         id="estimatorName"
@@ -1216,7 +1233,7 @@ const Estimator = () => {
                           handleEstimatorChange(event, item.id)
                         }
                         value={estimatorchoice[item.id] || item.estimator}
-                         // Set the width to 100%
+                        // Set the width to 100%
                       >
                         {/* <option value="">
                           {item.estimator ? item.estimator : "No Estimator"}
@@ -1234,7 +1251,7 @@ const Estimator = () => {
                         )}
                       </select>
                     </td>
-                    <td className="mytd centered-td" >
+                    <td className="mytd centered-td">
                       <select
                         className="dropUpdation p-2 m-3"
                         name="#"
@@ -1257,6 +1274,12 @@ const Estimator = () => {
                     <td className="mytd centered-td">
                       <div className="relative-container">
                         <button
+                          type="button"
+                          className="btn dropbtns btn-primary"
+                        >
+                          Edit
+                        </button>
+                        <button
                           className="btn dropbtns btn-success"
                           onClick={() => {
                             console.log(item.prjct_name);
@@ -1268,10 +1291,10 @@ const Estimator = () => {
                             setPurposalModal(true);
                           }}
                         >
-                        Proposal
+                          Create
                         </button>
 
-                        <button
+                        {/* <button
                           type="button"
                           className="btn dropbtns btn-primary"
                           onClick={() => {
@@ -1281,14 +1304,14 @@ const Estimator = () => {
                           }}
                         >
                           Project
-                        </button>
+                        </button> */}
                         <button
                           className="btn dropbtns btn-secondary"
-                          onClick={()=>{
+                          onClick={() => {
                             navigate("/homepage/purposal");
                           }}
                         >
-                        Proposal
+                          View
                         </button>
                       </div>
                     </td>
@@ -1720,15 +1743,20 @@ const Estimator = () => {
                         >
                           <strong> Scope of work</strong>
                         </label>
-                        <div className="specificationEntry">
-                          <div className="mb-2 mt-3">
-                            <label
-                              htmlFor="specificName"
-                              className="form-label"
-                            >
-                              Scope of work name
-                            </label>
-                            {/* <input
+
+                        {/* Render specifications based on the specificationCount */}
+                        {[...Array(specificationCount)].map((_, index) => (
+                          <div className="specificationEntry" key={index}>
+                            {/* ... your specification code ... */}
+                            <div className="specificationEntry">
+                              <div className="mb-2 mt-3">
+                                <label
+                                  htmlFor="specificName"
+                                  className="form-label"
+                                >
+                                  Scope of work name
+                                </label>
+                                {/* <input
                               type="text"
                               className="form-control"
                               id="specificName"
@@ -1740,112 +1768,118 @@ const Estimator = () => {
                                 })
                               }
                             /> */}
-                            {/* ************************ */}
-                            <select
-                              className="form-select"
-                              aria-label="Select Specification"
-                              value={step2FormData.specific_name || ""}
-                              onChange={(e) =>
-                                setStep2FormData({
-                                  ...step2FormData,
-                                  specific_name: e.target.value,
-                                })
-                              }
-                            >
-                              <option value="Base Bid Drywall/Framing">
-                                Base Bid Drywall/Framing
-                              </option>
-                              <option value="Add/Alt Building Insulation">
-                                Add/Alt Building Insulation
-                              </option>
-                              <option value="Add/Alt Interior Wall Insulation">
-                                Add/Alt Interior Wall Insulation
-                              </option>
-                              <option value="Add/Alt Weather Barriers">
-                                Add/Alt Weather Barriers
-                              </option>
-                              <option value=" Add/Alt Integrated Ceiling Assemblies">
-                                Add/Alt Integrated Ceiling Assemblies
-                              </option>
-                            </select>
-
-                            {/* ************************ */}
-                          </div>
-                          <div className="mb-2 mt-3">
-                            <label
-                              htmlFor="specificbudget"
-                              className="form-label"
-                            >
-                              Scope of work amount
-                            </label>
-                            <input
-                              type="text" // Use type "text" to allow non-numeric characters (e.g., commas)
-                              className="form-control"
-                              id="specificbudget"
-                              value={formatNumberWithCommas(
-                                step2FormData.budget
-                              )} // Format with commas when displaying
-                              onChange={handlebudgetchange}
-                              onBlur={handlebudgetchange}
-                            />
-                          </div>
-                          <div className="mb-2 mt-3">
-                            <label
-                              htmlFor="specificdetails"
-                              className="form-label"
-                            >
-                              Scope of work divisions
-                            </label>
-                            {step2FormData.sefic.map((entry, index) => (
-                              <div
-                                key={index}
-                                className="input-group myrowInputgrouup"
-                              >
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  placeholder=" Scope Of Work Number"
-                                  value={entry.number}
+                                {/* ************************ */}
+                                <select
+                                  className="form-select"
+                                  aria-label="Select Specification"
+                                  value={step2FormData.specific_name || ""}
                                   onChange={(e) =>
-                                    handleSpecificationInputChange(
-                                      index,
-                                      "number",
-                                      e.target.value
-                                    )
-                                  }
-                                />
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  placeholder=" Scope Of Work Description"
-                                  value={entry.name}
-                                  onChange={(e) =>
-                                    handleSpecificationInputChange(
-                                      index,
-                                      "name",
-                                      e.target.value
-                                    )
-                                  }
-                                />
-                                <button
-                                  className="btn btn-danger"
-                                  onClick={() =>
-                                    handleRemoveSpecificationEntry(index)
+                                    setStep2FormData({
+                                      ...step2FormData,
+                                      specific_name: e.target.value,
+                                    })
                                   }
                                 >
-                                  <i className="far">X</i>
+                                  <option value="Base Bid Drywall/Framing">
+                                    Base Bid Drywall/Framing
+                                  </option>
+                                  <option value="Add/Alt Building Insulation">
+                                    Add/Alt Building Insulation
+                                  </option>
+                                  <option value="Add/Alt Interior Wall Insulation">
+                                    Add/Alt Interior Wall Insulation
+                                  </option>
+                                  <option value="Add/Alt Weather Barriers">
+                                    Add/Alt Weather Barriers
+                                  </option>
+                                  <option value=" Add/Alt Integrated Ceiling Assemblies">
+                                    Add/Alt Integrated Ceiling Assemblies
+                                  </option>
+                                </select>
+                              </div>
+                              <div className="mb-2 mt-3">
+                                <label
+                                  htmlFor="specificbudget"
+                                  className="form-label"
+                                >
+                                  Scope of work amount
+                                </label>
+                                <input
+                                  type="text" // Use type "text" to allow non-numeric characters (e.g., commas)
+                                  className="form-control"
+                                  id="specificbudget"
+                                  value={formatNumberWithCommas(
+                                    step2FormData.budget
+                                  )} // Format with commas when displaying
+                                  onChange={handlebudgetchange}
+                                  onBlur={handlebudgetchange}
+                                />
+                              </div>
+                              <div className="mb-2 mt-3">
+                                <label
+                                  htmlFor="specificdetails"
+                                  className="form-label"
+                                >
+                                  Scope of work divisions
+                                </label>
+                                {step2FormData.sefic.map((entry, index) => (
+                                  <div
+                                    key={index}
+                                    className="input-group myrowInputgrouup"
+                                  >
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      placeholder=" Scope Of Work Number"
+                                      value={entry.number}
+                                      onChange={(e) =>
+                                        handleSpecificationInputChange(
+                                          index,
+                                          "number",
+                                          e.target.value
+                                        )
+                                      }
+                                    />
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      placeholder=" Scope Of Work Description"
+                                      value={entry.name}
+                                      onChange={(e) =>
+                                        handleSpecificationInputChange(
+                                          index,
+                                          "name",
+                                          e.target.value
+                                        )
+                                      }
+                                    />
+                                    <button
+                                      className="btn btn-danger"
+                                      onClick={() =>
+                                        handleRemoveSpecificationEntry(index)
+                                      }
+                                    >
+                                      <i className="far">X</i>
+                                    </button>
+                                  </div>
+                                ))}
+                                <button
+                                  className="btn btn-success bk"
+                                  onClick={handleAddSpecificationEntry}
+                                >
+                                  <i className="fa-regular icon fa-plus"></i>
                                 </button>
                               </div>
-                            ))}
-                            <button
-                              className="btn btn-success bk"
-                              onClick={handleAddSpecificationEntry}
-                            >
-                              <i className="fa-regular icon fa-plus"></i>
-                            </button>
+                            </div>
                           </div>
-                        </div>
-                        <button className="btn btn-success" onClick={() => {}}>
+                        ))}
+                        <button
+                          className="btn btn-success"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setSpecificationCount(specificationCount + 1);
+                          }}
+                        >
                           Add alternate scope of work
                         </button>
                       </div>

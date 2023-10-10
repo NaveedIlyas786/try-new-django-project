@@ -1743,6 +1743,14 @@ const Estimator = () => {
                         >
                           <strong> Scope of work</strong>
                         </label>
+                        <button
+                          className="btn btn-success"
+                          onClick={() =>
+                            setSpecificationCount(specificationCount + 1)
+                          }
+                        >
+                          Add alternate scope of work
+                        </button>
 
                         {/* Render specifications based on the specificationCount */}
                         {[...Array(specificationCount)].map((_, index) => (
@@ -1858,7 +1866,7 @@ const Estimator = () => {
                                       onClick={() =>
                                         handleRemoveSpecificationEntry(index)
                                       }
-                                    > 
+                                    >
                                       <i className="far">X</i>
                                     </button>
                                   </div>
@@ -1873,15 +1881,6 @@ const Estimator = () => {
                             </div>
                           </div>
                         ))}
-                        <button
-                          className="btn btn-success"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setSpecificationCount(specificationCount + 1);
-                          }}
-                        >
-                          Add alternate scope of work
-                        </button>
                       </div>
                     )}
 

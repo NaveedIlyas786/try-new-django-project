@@ -1858,7 +1858,7 @@ const Estimator = () => {
                                       onClick={() =>
                                         handleRemoveSpecificationEntry(index)
                                       }
-                                    >
+                                    > 
                                       <i className="far">X</i>
                                     </button>
                                   </div>

@@ -215,7 +215,7 @@ def calculate_summary(estimates, only_working=False):
         'ytd_total_bid_amount': grand_total_bid_amount
     }
 
-
+#dfhdjhfjdhf
 class CompanyListView(APIView):
 
 

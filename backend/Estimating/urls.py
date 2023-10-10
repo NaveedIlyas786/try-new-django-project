@@ -8,7 +8,7 @@ urlpatterns = [
     path('company/',views.CompanyListView.as_view(),name='Company Detail'),
     path('company/<int:id>/',views.CompanyListView.as_view(),name='Company Detail'),
 
-
+    path('Addendum/',views.AddendumView.as_view(),name='addendum'),
     path('estimating/',views.EstimatingListView.as_view(),name='estimating list'),
     path('estimating/<int:id>/', views.EstimatingListView.as_view(), name='estimating-detail'),
 

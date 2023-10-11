@@ -326,28 +326,7 @@ input:focus {
   display: inline-block;
 }
 
-.dropdown-content {
-  display: none;
-  position: absolute;
-  left: 0;
-  background-color: #f9f9f9;
-  min-width: 120px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  z-index: 2;
-}
-
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-.dropdown-content a:hover {
-  background-color: #f1f1f1;
-}
-
-.dropdown:hover .dropdown-content {
+.dropdown:hover{
   display: block;
 }
 
@@ -653,57 +632,6 @@ td:nth-child(8) {
   flex-direction: column !important;
   /* padding: 5px; */
 }
-/* Customize the time picker dropdown */
-/* Customize the time picker dropdown container */
-.react-datepicker__time-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 150px; /* Set the width */
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-}
-
-/* Customize the individual time options */
-.react-datepicker__time-list {
-  list-style: none;
-  overflow-y: auto; /* Add vertical scrolling */
-  overflow-x: hidden;
-  max-height: 150px; /* Set a maximum height for the dropdown */
-}
-
-/* Style the scrollbar */
-.react-datepicker__time-list::-webkit-scrollbar {
-  width: 5px;
-}
-
-.react-datepicker__time-list::-webkit-scrollbar-thumb {
-  background-color: #5d5d5f;
-  border-radius: 10px;
-}
-
-.react-datepicker__time-list::-webkit-scrollbar-track {
-  background-color: white;
-}
-
-/* Style individual time options */
-.react-datepicker__time-list-item {
-  cursor: pointer;
-  text-align: center;
-  /* width: 150px !important; */
-  margin: -2px !important;
-}
-
-/* Style the selected time option */
-.react-datepicker__time-list-item--selected {
-  background-color: #82bfff;
-  color: white;
-  margin: -5px !important;
-  font-weight: bold;
-}
 .mypicker {
   outline: none;
   /* border: 2px solid red; */
@@ -717,10 +645,7 @@ td:nth-child(8) {
   color: black;
 }
 
-/* Style time options on hover */
-.react-datepicker__time-list-item:hover {
-  background-color: #ddd;
-}
+
 .ParentAllDiv {
   position: relative;
   /* z-index: -99; */
@@ -770,10 +695,9 @@ td {
 .lp{
   background-color: white;
 }
-/* .wonloseDiv{
-  position: absolute;
-  right: 0;
-} */
+.wonloseDiv{
+  width: 458px !important;
+}
 .proposalHeader th{
   position: sticky;
   top: 0;

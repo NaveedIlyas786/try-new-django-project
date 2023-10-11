@@ -461,7 +461,7 @@ const Estimator = () => {
       sefic: [],
     },
   ]);
-  
+
   // const [entryData, setEntryData] = useState([
   //   {
   //     specific_name: "Base Bid Drywall/Framing",
@@ -688,7 +688,9 @@ const Estimator = () => {
                 .toUpperCase()
                 .includes(filter.trim().toUpperCase())) ||
             (customer.estimator &&
-              customer.estimator.toUpperCase().includes(filter.toUpperCase())) ||
+              customer.estimator
+                .toUpperCase()
+                .includes(filter.toUpperCase())) ||
             (customer.bidder &&
               customer.bidder.toUpperCase().includes(filter.toUpperCase()))) &&
           (customer.status === "Working" || customer.status === "Pending")
@@ -698,25 +700,23 @@ const Estimator = () => {
         // Parse the due dates as Date objects
         const dueDateA = new Date(a.due_date);
         const dueDateB = new Date(b.due_date);
-  
+
         // Calculate the time difference in milliseconds
         const timeDiffA = dueDateA - now;
         const timeDiffB = dueDateB - now;
-  
+
         // Sort by the time difference, with the smallest (coming soon) first
         return timeDiffA - timeDiffB;
       });
   });
-  
 
   const filteredData = useSelector(selectFilteredData);
 
   const sortedData = filteredData.slice().sort((a, b) => {
-  const dueDateA = new Date(a.due_date);
-  const dueDateB = new Date(b.due_date);
-  return dueDateA - dueDateB; // Sort by due date, ascending order
-});
-
+    const dueDateA = new Date(a.due_date);
+    const dueDateB = new Date(b.due_date);
+    return dueDateA - dueDateB; // Sort by due date, ascending order
+  });
 
   const handlestartDateChange = (e) => {
     setStartDate(e.target.value);
@@ -790,7 +790,7 @@ const Estimator = () => {
 
   // **********************
 
-  const handleSpecificationInputChange = (index, key, value) => {
+  const handleScopeDivisionInputChange = (index, key, value) => {
     // Clone the current sefic array to avoid mutating the state directly
     const updatedSefic = [...step2FormData.sefic];
 
@@ -803,39 +803,39 @@ const Estimator = () => {
       sefic: updatedSefic,
     });
   };
-  // const handleAddSpecificationEntry = () => {
-  //   // Clone the current sefic array to avoid mutating the state directly
-  //   const updatedSefic = [...step2FormData.sefic];
+  const handleAddScopeDivisionEntry = () => {
+    // Clone the current sefic array to avoid mutating the state directly
+    const updatedSefic = [...step2FormData.sefic];
 
-  //   // Add a new entry with default values
-  //   updatedSefic.push({
-  //     specific_name: "",
-  //     budget: "",
-  //     sefic: "",
-  //     number: "",
-  //     name: "",
-  //   });
+    // Add a new entry with default values
+    updatedSefic.push({
+      specific_name: "",
+      budget: "",
+      sefic: "",
+      number: "",
+      name: "",
+    });
 
-  //   // Update the state
-  //   setStep2FormData({
-  //     ...step2FormData,
-  //     sefic: updatedSefic,
-  //   });
-  // };
+    // Update the state
+    setStep2FormData({
+      ...step2FormData,
+      sefic: updatedSefic,
+    });
+  };
 
-  // const handleRemoveSpecificationEntry = (index) => {
-  //   // Clone the current sefic array to avoid mutating the state directly
-  //   const updatedSefic = [...step2FormData.sefic];
+  const handleRemoveScopeDivisionEntry = (index) => {
+    // Clone the current sefic array to avoid mutating the state directly
+    const updatedSefic = [...step2FormData.sefic];
 
-  //   // Remove the entry at the specified index
-  //   updatedSefic.splice(index, 1);
+    // Remove the entry at the specified index
+    updatedSefic.splice(index, 1);
 
-  //   // Update the state
-  //   setStep2FormData({
-  //     ...step2FormData,
-  //     sefic: updatedSefic,
-  //   });
-  // };
+    // Update the state
+    setStep2FormData({
+      ...step2FormData,
+      sefic: updatedSefic,
+    });
+  };
 
   const formatBidAmount = (amount) => {
     if (amount === null) return ""; // Return an empty string if the amount is null
@@ -1005,6 +1005,11 @@ const Estimator = () => {
   const MovetoURLpage = () => {
     navigate("/homepage/urlpage");
   };
+
+ 
+  
+  
+  
   return (
     <div className="ParentAllDiv">
       <div className={`estimator ${showModal ? "modal-active" : ""}`}>
@@ -1012,24 +1017,52 @@ const Estimator = () => {
           <div className="backDiv1"></div>
           <div className="backDiv1"></div>
         </div>
+
         <div className="estimatingTable px-5">
-          <h3 className="text-black">Estimating Summary</h3>
-          <div className="btn-group" data-aos="fade-left">
-            <button
-              type="button"
-              className="btn btn-outline-success lp"
-              onClick={movetoWonProjectsPage}
-            >
-              Won Projects
-            </button>
-            <button
-              type="button"
-              className="btn btn-outline-danger lp"
-              on
-              onClick={movetoLostProjectsPage}
-            >
-              Archived Projects
-            </button>
+          {/* <div> <h3 className=""></h3></div> */}
+          <div className="both d-flex flex-column">
+            <div className="inputbtn d-flex gap-2 px-5 " data-aos="fade-down">
+              <input
+                type="text"
+                placeholder="Filter by Project Name, Estimator Name, Bidders, Bid Amount, Status"
+                value={filter}
+                className="myinput p-2"
+                onChange={(e) => setFilter(e.target.value)}
+              />
+              <button className="btn btn-primary" onClick={MovetoURLpage}>
+                URL
+              </button>
+              <button
+                className="btn btn-success"
+                onClick={() => setShowModal(true)}
+              >
+                New
+              </button>
+            </div>
+            <div className="d-flex mt-5  justify-content-between ">
+              <div>
+                <h3 className="text-black" data-aos="fade-left">
+                  Estimating Summary
+                </h3>
+              </div>
+              <div className="btn-group wonloseDiv" data-aos="fade-left">
+                <button
+                  type="button"
+                  className="btn btn-outline-success lp"
+                  onClick={movetoWonProjectsPage}
+                >
+                  Won Projects
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-outline-danger lp"
+                  on
+                  onClick={movetoLostProjectsPage}
+                >
+                  Archived Projects
+                </button>
+              </div>
+            </div>
           </div>
           {/* {ProjectformModal && ( */}
           {showProjectModal && (
@@ -1192,25 +1225,10 @@ const Estimator = () => {
               </div>
             </div>
           )}
+          {/* <div className="rightSearchandFiltering d-flex"> */}
 
-          <div className="inputbtn d-flex gap-2 px-5" data-aos="fade-down">
-            <input
-              type="text"
-              placeholder="Filter by Project Name, Estimator Name, Bidders, Bid Amount, Status"
-              value={filter}
-              className="myinput p-2"
-              onChange={(e) => setFilter(e.target.value)}
-            />
-            <button className="btn btn-primary" onClick={MovetoURLpage}>
-              URL
-            </button>
-            <button
-              className="btn btn-success"
-              onClick={() => setShowModal(true)}
-            >
-              New
-            </button>
-          </div>
+          {/* </div> */}
+
           <ParticlesAnimation numberOfCircles={numberOfCircles} />
           <div
             className="table-responsive proposalTable mt-2"
@@ -1882,7 +1900,7 @@ const Estimator = () => {
                                     placeholder=" Scope Of Work Number"
                                     value={detail.number}
                                     onChange={(e) =>
-                                      handleSpecificationInputChange(
+                                      handleScopeDivisionInputChange(
                                         index,
                                         detailIndex,
                                         "number",
@@ -1896,7 +1914,7 @@ const Estimator = () => {
                                     placeholder=" Scope Of Work Description"
                                     value={detail.name}
                                     onChange={(e) =>
-                                      handleSpecificationInputChange(
+                                      handleScopeDivisionInputChange(
                                         index,
                                         detailIndex,
                                         "name",
@@ -1908,7 +1926,7 @@ const Estimator = () => {
                                   type="button"
                                     className="btn btn-danger"
                                     onClick={() =>
-                                      handleRemoveSpecificationEntry(
+                                      handleRemoveScopeDivisionEntry(
                                         index,
                                         detailIndex
                                       )
@@ -1922,7 +1940,7 @@ const Estimator = () => {
                               type="button"
                                 className="btn btn-success bk"
                                 onClick={() =>
-                                  handleAddSpecificationEntry(index)
+                                  handleAddScopeDivisionEntry(index)
                                 }
                               >
                                 <i className="fa-regular icon fa-plus"></i>

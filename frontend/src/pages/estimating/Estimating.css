@@ -770,6 +770,10 @@ td {
 .lp{
   background-color: white;
 }
+/* .wonloseDiv{
+  position: absolute;
+  right: 0;
+} */
 .proposalHeader th{
   position: sticky;
   top: 0;

@@ -35,7 +35,7 @@ const Purposal = () => {
           onClick={movetoEstimatingPage}
           className="btn btn-outline-primary urlbackbtn"
         >
-          <i class="fa-duotone me-2 fa fa-angles-left icons backicon"></i> Back
+          <i className="fa-duotone me-2 fa fa-angles-left icons backicon"></i> Back
         </button>
         <div className="d-flex gap-2 align-items-center">
           <button className="btn btn-danger">EMail</button>

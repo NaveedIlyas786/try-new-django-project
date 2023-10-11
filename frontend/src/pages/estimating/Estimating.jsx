@@ -447,59 +447,6 @@ const Estimator = () => {
 
   // const [estimatingData, setEstimatingData] = useState(null);
 
-  const handleEstimatingEditing = async (event, itemId) => {
-    event.preventDefault();
-
-    const updatedData = {
-      prjct_name: selectedEstimatingID,
-      due_date: selecteddueDate,
-      time: SelectedTimeforUpdate,
-      timezone: SelectedTimeZone,
-      status: selectedStatus,
-      start_date: selectedstart_date,
-      bid_amount: estimatingFormData.bid_amount,
-      company: selectedCompany,
-      location: selectedLocation,
-      estimator: selectedEstimator,
-      bidder: selectedBidder,
-      bidder_mail: estimatingFormData.bidder_mail,
-      bidder_address: selectedbidder_address,
-      link: estimatingFormData.link,
-    };
-
-    try {
-      const response = await fetch(
-        `http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedData), // Send the updatedData object as JSON
-        }
-      );
-
-      console.log("API Response:", response);
-
-      if (response.ok) {
-        // Log a success message to the console
-        console.log(`Data updated successfully for item with ID ${itemId}`);
-        // You may need to refresh the UI or update the specific row accordingly
-      } else {
-        if (response.status === 404) {
-          // Handle the case where the resource was not found (404 error)
-          console.error("Resource not found.");
-        } else {
-          // Handle other non-success responses
-          const responseData = await response.text();
-          console.error("Failed to update! Server response:", responseData);
-        }
-      }
-    } catch (error) {
-      console.error("Error updating data:", error);
-    }
-  };
-
   //************* Define the handleProposalSubmitPosting function
 
   const [selectedEstimatingID, setSelectedEstimatingID] = useState("");
@@ -513,22 +460,107 @@ const Estimator = () => {
   const [SelectedTimeZone, setSelectedTimeZone] = useState("");
   const [selectedstart_date, setSelectedstart_date] = useState("");
   const [selectedbidder_address, setSelectedbidder_address] = useState("");
-  const [estimatingFormData, setEstimatingFormData] = useState({
-    prjct_name: "",
-    due_date: "",
-    time: "",
-    timezone: "",
-    status: "",
-    start_date: "",
-    bid_amount: "",
-    company: "",
-    location: "",
-    estimator: "",
-    bidder: "",
-    bidder_mail: "",
-    bidder_address: "",
-    link: "",
-  });
+  // const [estimatingFormData, setEstimatingFormData] = useState({
+  //   prjct_name: "",
+  //   due_date: "",
+  //   time: "",
+  //   timezone: "",
+  //   status: "",
+  //   start_date: "",
+  //   bid_amount: "",
+  //   company: "",
+  //   location: "",
+  //   estimator: "",
+  //   bidder: "",
+  //   bidder_mail: "",
+  //   bidder_address: "",
+  //   link: "",
+  // });
+  const selectedStartDate = new Date(selectedstart_date);
+  const selectedmydueDate = new Date(selecteddueDate);
+  const formattedStartDate = `${selectedStartDate.getFullYear()}-${(
+    selectedStartDate.getMonth() + 1
+  )
+    .toString()
+    .padStart(2, "0")}-${selectedStartDate
+    .getDate()
+    .toString()
+    .padStart(2, "0")}`;
+  const formattedDueDate = `${selectedmydueDate.getFullYear()}-${(
+    selectedmydueDate.getMonth() + 1
+  )
+    .toString()
+    .padStart(2, "0")}-${selectedmydueDate
+    .getDate()
+    .toString()
+    .padStart(2, "0")}`;
+
+  // Assuming your input time is in the "HH:mm" format, e.g., "18:00"
+  function convertTo12HourFormat(inputTime) {
+    const [hours, minutes] = inputTime.split(":");
+    const parsedHours = parseInt(hours, 10);
+
+    if (parsedHours >= 12 && parsedHours > 0) {
+      if (parsedHours > 12) {
+        // Convert hours to 12-hour format if greater than 12
+        parsedHours -= 12;
+      }
+    } else if (parsedHours === 0) {
+      parsedHours = 12; // Midnight is 12:00 AM
+    }
+
+    // Format the time as "hh:mm"
+    return `${parsedHours.toString().padStart(2, "0")}:${minutes}`;
+  }
+
+  const editformattedTime = convertTo12HourFormat(SelectedTimeforUpdate);
+  console.log(editformattedTime);
+
+  const handleEstimatingEditing = async (event, itemId) => {
+    event.preventDefault();
+
+    const updatedData = {
+      prjct_name: selectedEstimatingID,
+      due_date: formattedDueDate,
+      time: editformattedTime,
+      timezone: SelectedTimeZone,
+      status: selectedStatus,
+      start_date: formattedStartDate,
+      company: selectedCompany,
+      location: selectedLocation,
+      estimator: selectedEstimator,
+      bidder: selectedBidder,
+      bidder_address: selectedbidder_address,
+    };
+
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedData),
+        }
+      );
+
+      if (response.ok) {
+        // Log a success message to the console
+        console.log(`Data updated successfully for item with ID ${itemId}`);
+        // You may need to refresh the UI or update the specific row accordingly
+      } else if (response.status === 404) {
+        // Handle the case where the resource was not found (404 error)
+        console.error("Resource not found.");
+      } else {
+        // Handle other non-success responses
+        const responseData = await response.text();
+        console.error("Failed to update! Server response:", responseData);
+      }
+    } catch (error) {
+      console.error("Error updating data:", error);
+    }
+  };
 
   const [step0FormData, setStep0FormData] = useState({
     date: getCurrentDate(),
@@ -1891,7 +1923,7 @@ const Estimator = () => {
           <h4 className="text-center addnewtxt">Edit Estimating</h4>
           <button className="close-btn" onClick={closeModal}></button>
           <div className="modal-content px-5">
-            <form onSubmit={handleEstimatingEditing} className="MyForm">
+            <form className="MyForm">
               <div className="bothDiv gap-2 mt-5">
                 <div className="Oneline">
                   <label htmlFor="dueDate" className="form-label">
@@ -1901,7 +1933,7 @@ const Estimator = () => {
                     type="date"
                     className="form-control"
                     id="dueDate"
-                    value={selectedstart_date} // Update selectedstart_date
+                    value={formattedStartDate} // Update selectedstart_date
                     onChange={(e) => setSelectedstart_date(e.target.value)}
                   />
                 </div>
@@ -1916,9 +1948,7 @@ const Estimator = () => {
                     value={selectedCompany} // Update location or define it in your state
                     onChange={(e) => setSelectedCompany(e.target.value)}
                   >
-                    <option  value={selectedCompany}>
-                      {selectedCompany}
-                    </option>
+                    <option value={selectedCompany}>{selectedCompany}</option>
                     {companyName && companyName.length > 0 ? (
                       companyName.map((companyItem) => (
                         <option value={companyItem.id} key={companyItem.id}>
@@ -1958,7 +1988,7 @@ const Estimator = () => {
                     value={selectedEstimator} // Update selectedEstimator
                     onChange={(e) => setSelectedEstimator(e.target.value)}
                   >
-                    <option  value={selectedEstimator}>
+                    <option value={selectedEstimator}>
                       {selectedEstimator}
                     </option>
 
@@ -1986,9 +2016,7 @@ const Estimator = () => {
                     value={selectedLocation} // Update location or define it in your state
                     onChange={(e) => setSelectedLocation(e.target.value)}
                   >
-                    <option  value={selectedLocation}>
-                      {selectedLocation}
-                    </option>
+                    <option value={selectedLocation}>{selectedLocation}</option>
                     {userLocation && userLocation.length > 0 ? (
                       userLocation.map((place) => (
                         <option value={place.id} key={place.id}>
@@ -2013,7 +2041,7 @@ const Estimator = () => {
                     type="date"
                     className="form-control"
                     id="dueDate"
-                    value={selecteddueDate} // Update selecteddueDate
+                    value={formattedDueDate} // Update selecteddueDate
                     onChange={(e) => setSelecteddueDate(e.target.value)}
                   />
                 </div>
@@ -2024,15 +2052,18 @@ const Estimator = () => {
                   <div className="d-flex bg-white">
                     <input
                       type="time"
-                      placeholder="Select Time"
-                      value={SelectedTimeforUpdate} // Update selectedTime or define it in your state
+                      value={editformattedTime}
                       onChange={(e) => setSelectedTimeforUpdate(e.target.value)}
                     />
+
                     <select
                       value={SelectedTimeZone} // Update timezone or define it in your state
-                      onChange={(e)=>setSelectedTimeZone(e.target.value)}
+                      onChange={(e) => setSelectedTimeZone(e.target.value)}
                       className="selectpicker"
-                    > <option value={SelectedTimeZone}>{SelectedTimeZone}</option>
+                    >
+                      <option value={SelectedTimeZone}>
+                        {SelectedTimeZone}
+                      </option>
                       <option value="PDT">PDT</option>
                       <option value="CT">CT</option>
                     </select>
@@ -2068,7 +2099,11 @@ const Estimator = () => {
                 ></textarea>
               </div>
 
-              <button type="submit" className="btn btn-submit mt-3 mb-4">
+              <button
+                type="button"
+                onClick={()=>{}}
+                className="btn btn-submit mt-3 mb-4"
+              >
                 Update
               </button>
             </form>

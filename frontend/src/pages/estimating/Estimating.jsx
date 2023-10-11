@@ -445,28 +445,27 @@ const Estimator = () => {
 
   // ***********Edit Estimating-Summary Info******
 
-  const [estimatingData, setEstimatingData] = useState(null);
+  // const [estimatingData, setEstimatingData] = useState(null);
 
   const handleEstimatingEditing = async (event, itemId) => {
-    const updatedStatus = event.target.value;
-    const updatedprjct_name = event.target.value;
-    const updateddue_date = event.target.value;
-    const updatedtime = event.target.value;
-    const updatedtimezone = event.target.value;
-    const updatedstart_date = event.target.value;
-    const updatedbid_amount = event.target.value;
-    const updatedcompany = event.target.value;
-    const updatedlocation = event.target.value;
-    const updatedestimator = event.target.value;
-    const updatedbidder = event.target.value;
-    const updatedbidder_mail = event.target.value;
-    const updatedbidder_address = event.target.value;
-    const updatedlink = event.target.value;
-    console.log("Updated Status:", updatedStatus);
-    console.log("Updated Project-Name:", updatedprjct_name);
+    event.preventDefault();
 
-    const itemToUpdate = filteredData.find((item) => item.id === itemId);
-    console.log("Item to Update:", itemToUpdate);
+    const updatedData = {
+      prjct_name: selectedEstimatingID,
+      due_date: selecteddueDate,
+      time: estimatingFormData.time,
+      timezone: estimatingFormData.timezone,
+      status: estimatingFormData.status,
+      start_date: selectedstart_date,
+      bid_amount: estimatingFormData.bid_amount,
+      company: selectedCompany,
+      location: selectedLocation,
+      estimator: selectedEstimator,
+      bidder: selectedBidder,
+      bidder_mail: estimatingFormData.bidder_mail,
+      bidder_address: selectedbidder_address,
+      link: estimatingFormData.link,
+    };
 
     try {
       const response = await fetch(
@@ -476,31 +475,13 @@ const Estimator = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            prjct_name: updatedprjct_name,
-            due_date: updateddue_date,
-            time: updatedtime,
-            timezone: updatedtimezone,
-            status: updatedStatus,
-            start_date: updatedstart_date,
-            bid_amount: updatedbid_amount,
-            company: updatedcompany,
-            location: updatedlocation,
-            estimator: updatedestimator,
-            bidder: updatedbidder,
-            bidder_mail: updatedbidder_mail,
-            bidder_address: updatedbidder_address,
-            link: updatedlink,
-          }),
+          body: JSON.stringify(updatedData), // Send the updatedData object as JSON
         }
       );
 
       console.log("API Response:", response);
 
       if (response.ok) {
-        // Dispatch the updateStatus action to update the status in the Redux store
-        updateItemStatus(itemId, updatedStatus);
-
         // Log a success message to the console
         console.log(`Data updated successfully for item with ID ${itemId}`);
         // You may need to refresh the UI or update the specific row accordingly
@@ -511,33 +492,36 @@ const Estimator = () => {
         } else {
           // Handle other non-success responses
           const responseData = await response.text();
-          console.error("Failed to updations! Server response:", responseData);
+          console.error("Failed to update! Server response:", responseData);
         }
       }
     } catch (error) {
-      console.error("Error updating status:", error);
+      console.error("Error updating data:", error);
     }
   };
 
   //************* Define the handleProposalSubmitPosting function
 
-  const [selectedEstimatingID, setSelectedEstimatingID] = useState();
-  const [selectedEstimator, setSelectedEstimator] = useState();
-  const [selectedBidder, setSelectedBidder] = useState();
-  const [selectedCompany, setSelectedCompany] = useState();
-// console.log(selectedCompany);
+  const [selectedEstimatingID, setSelectedEstimatingID] = useState("");
+  const [selectedEstimator, setSelectedEstimator] = useState("");
+  const [selectedBidder, setSelectedBidder] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [selectedCompany, setSelectedCompany] = useState("");
+  const [selecteddueDate, setSelecteddueDate] = useState("");
+  const [selectedstart_date, setSelectedstart_date] = useState("");
+  const [selectedbidder_address, setSelectedbidder_address] = useState("");
   const [estimatingFormData, setEstimatingFormData] = useState({
-    prjct_name: selectedEstimatingID,
+    prjct_name: "",
     due_date: "",
     time: "",
     timezone: "",
     status: "",
     start_date: "",
     bid_amount: "",
-    company: selectedCompany,
+    company: "",
     location: "",
-    estimator: selectedEstimator,
-    bidder: selectedBidder,
+    estimator: "",
+    bidder: "",
     bidder_mail: "",
     bidder_address: "",
     link: "",
@@ -1428,8 +1412,9 @@ const Estimator = () => {
                         className="dropUpdation "
                         id="estimatorName"
                         onChange={(event) => handleAreaChange(event, item.id)}
-                        value={AreaChoice[item.id] || item.location}
+                        value={statusMap[item.id] || item.status}
                       >
+                        <option value={item.status}>{item.status}</option>
                         <option value="Won">Won</option>
                         <option value="Pending">Pending</option>
                         <option value="Working">Working</option>
@@ -1449,11 +1434,16 @@ const Estimator = () => {
                             setSelectedEstimator(item.estimator);
                             setSelectedBidder(item.bidder);
                             setSelectedCompany(item.company);
+                            setSelecteddueDate(item.due_date);
+                            setSelectedstart_date(item.start_date);
+                            setSelectedbidder_address(item.bidder_address);
+                            setSelectedLocation(item.location);
                             setshowEstimatingEditModal(true);
                           }}
                         >
                           Edit
                         </button>
+
                         <button
                           className="btn dropbtns btn-success"
                           onClick={() => {
@@ -1701,7 +1691,7 @@ const Estimator = () => {
       )}
       {/* *********************Edit Estimating Entry information************** */}
 
-      {showEstimatingEditModal && (
+      {/* {showEstimatingEditModal && (
         <div
           className={`modal-container bg-white pt-5 ps-2 ${
             showEstimatingEditModal ? "show" : ""
@@ -1720,8 +1710,8 @@ const Estimator = () => {
                     type="date"
                     className="form-control"
                     id="dueDate"
-                    value={startDate}
-                    onChange={handlestartDateChange}
+                    value={selectedstart_date}
+                    onChange={(e) => setSelectedstart_date(e.target.value)}
                   />
                 </div>
 
@@ -1733,12 +1723,7 @@ const Estimator = () => {
                     className="form-select"
                     id="companyName"
                     value={selectedCompany}
-                    onChange={(e) =>
-                      setSelectedCompany({
-                        ...estimatingFormData,
-                        company: e.target.value,
-                      })
-                    }
+                    onChange={(e) => setSelectedCompany(e.target.value)}
                   >
                     <option value="">Select Company</option>
                     {companyName && companyName.length > 0 ? (
@@ -1764,12 +1749,7 @@ const Estimator = () => {
                   className="form-control"
                   id="projectName"
                   value={selectedEstimatingID}
-                  onChange={(e) =>
-                    setEstimatingFormData({
-                      ...estimatingFormData,
-                      prjct_name: e.target.value,
-                    })
-                  }
+                  onChange={(e) => setSelectedEstimatingID(e.target.value)}
                 />
               </div>
 
@@ -1782,15 +1762,9 @@ const Estimator = () => {
                     className="form-select"
                     id="estimatorName"
                     value={selectedEstimator}
-                    onChange={(e) =>
-                      setEstimatingFormData({
-                        ...estimatingFormData,
-                        estimator: e.target.value,
-                      })
-                    }
+                    onChange={(e) => setSelectedEstimator(e.target.value)}
                   >
-                    {/* <option value="">Select Estimator Name</option> */}
-
+                    <option value="">Select Estimator Name</option>
                     {EstimatorName && EstimatorName.length > 0 ? (
                       EstimatorName.map((user) => (
                         <option value={user.id} key={user.id}>
@@ -1816,7 +1790,6 @@ const Estimator = () => {
                     onChange={handleLocationChange}
                   >
                     <option value="">Select Location</option>
-
                     {userLocation && userLocation.length > 0 ? (
                       userLocation.map((place) => (
                         <option value={place.id} key={place.id}>
@@ -1841,8 +1814,8 @@ const Estimator = () => {
                     type="date"
                     className="form-control"
                     id="dueDate"
-                    value={dueDate}
-                    onChange={handleDueDateChange}
+                    value={selecteddueDate}
+                    onChange={(e) => setSelecteddueDate(e.target.value)}
                   />
                 </div>
                 <div className="Oneline timefield">
@@ -1856,7 +1829,6 @@ const Estimator = () => {
                       value={selectedTime}
                       onChange={(e) => setSelectedTime(e.target.value)}
                     />
-                    {/* <p>Selected Time: {selectedTime}</p> */}
                     <select
                       value={timezone}
                       onChange={handleTimeZoneChange}
@@ -1869,19 +1841,7 @@ const Estimator = () => {
                   </div>
                 </div>
               </div>
-              {/* <div className="bothDiv"> */}
-              {/* <div className="Oneline">
-                  <label htmlFor="bidAmount" className="form-label">
-                    Bid Amount:
-                  </label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    id="bidAmount"
-                    value={bidAmount}
-                    onChange={handleBidAmountChange}
-                  />
-                </div> */}
+
               <div>
                 <label htmlFor="bidderName" className="form-label">
                   Bidder Name:
@@ -1891,15 +1851,9 @@ const Estimator = () => {
                   className="form-control"
                   id="bidderName"
                   value={selectedBidder}
-                  onChange={(e) =>
-                    setEstimatingFormData({
-                      ...estimatingFormData,
-                      bidder: e.target.value,
-                    })
-                  }
+                  onChange={(e) => setSelectedBidder(e.target.value)}
                 />
               </div>
-              {/* </div> */}
               <div>
                 <label htmlFor="bidderDetails" className="form-label">
                   Bidder Details:
@@ -1911,10 +1865,203 @@ const Estimator = () => {
                   placeholder="Write your details!"
                   cols="10"
                   rows="10"
-                  value={bidder_detail}
-                  onChange={handleBidderDetailChange}
+                  value={selectedbidder_address}
+                  onChange={(e) => setSelectedbidder_address(e.target.value)}
                 ></textarea>
               </div>
+              <button type="submit" className="btn btn-submit mt-3 mb-4">
+                Update
+              </button>
+            </form>
+          </div>
+        </div>
+      )} */}
+      {showEstimatingEditModal && (
+        <div
+          className={`modal-container bg-white pt-5 ps-2 ${
+            showEstimatingEditModal ? "show" : ""
+          }`}
+        >
+          <h4 className="text-center addnewtxt">Edit Estimating</h4>
+          <button className="close-btn" onClick={closeModal}></button>
+          <div className="modal-content px-5">
+            <form onSubmit={handleEstimatingEditing} className="MyForm">
+              <div className="bothDiv gap-2 mt-5">
+                <div className="Oneline">
+                  <label htmlFor="dueDate" className="form-label">
+                    Start Date:
+                  </label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    id="dueDate"
+                    value={selectedstart_date} // Update selectedstart_date
+                    onChange={(e) => setSelectedstart_date(e.target.value)}
+                  />
+                </div>
+
+                <div className="Oneline">
+                  <label htmlFor="companyName" className="form-label">
+                    Company
+                  </label>
+                  <select
+                    className="form-select"
+                    id="location"
+                    value={selectedCompany} // Update location or define it in your state
+                    onChange={(e) => setSelectedCompany(e.target.value)}
+                  >
+                    <option className="bg-danger" value={selectedCompany}>
+                      {selectedCompany}
+                    </option>
+                    {companyName && companyName.length > 0 ? (
+                      companyName.map((companyItem) => (
+                        <option value={companyItem.id} key={companyItem.id}>
+                          {companyItem.Cmpny_Name}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="" disabled>
+                        {companyName ? "No companies available" : "Loading..."}
+                      </option>
+                    )}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="projectName" className="form-label">
+                  Project Name:
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="projectName"
+                  value={selectedEstimatingID} // Update selectedEstimatingID
+                  onChange={(e) => setSelectedEstimatingID(e.target.value)}
+                />
+              </div>
+
+              <div className="bothDiv">
+                <div className="Oneline">
+                  <label htmlFor="estimatorName" className="form-label">
+                    Estimator Name:
+                  </label>
+                  <select
+                    className="form-select"
+                    id="estimatorName"
+                    value={selectedEstimator} // Update selectedEstimator
+                    onChange={(e) => setSelectedEstimator(e.target.value)}
+                  >
+                    <option className="bg-danger" value={selectedEstimator}>
+                      {selectedEstimator}
+                    </option>
+
+                    {EstimatorName && EstimatorName.length > 0 ? (
+                      EstimatorName.map((user) => (
+                        <option value={user.id} key={user.id}>
+                          {user.full_Name}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="" disabled>
+                        Loading...
+                      </option>
+                    )}
+                  </select>
+                </div>
+
+                <div className="Oneline">
+                  <label htmlFor="location" className="form-label">
+                    Location:
+                  </label>
+                  <select
+                    className="form-select"
+                    id="location"
+                    value={selectedLocation} // Update location or define it in your state
+                    onChange={(e) => setSelectedLocation(e.target.value)}
+                  >
+                    <option className="bg-danger" value={selectedLocation}>
+                      {selectedLocation}
+                    </option>
+                    {userLocation && userLocation.length > 0 ? (
+                      userLocation.map((place) => (
+                        <option value={place.id} key={place.id}>
+                          {place.name}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="" disabled>
+                        Loading...
+                      </option>
+                    )}
+                  </select>
+                </div>
+              </div>
+
+              <div className="bothDiv">
+                <div className="Oneline">
+                  <label htmlFor="dueDate" className="form-label">
+                    Due Date:
+                  </label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    id="dueDate"
+                    value={selecteddueDate} // Update selecteddueDate
+                    onChange={(e) => setSelecteddueDate(e.target.value)}
+                  />
+                </div>
+                <div className="Oneline timefield">
+                  <label htmlFor="time" className="form-label">
+                    Time:
+                  </label>
+                  <div className="d-flex bg-white">
+                    <input
+                      type="time"
+                      placeholder="Select Time"
+                      value={selectedTime} // Update selectedTime or define it in your state
+                      onChange={(e) => setSelectedTime(e.target.value)}
+                    />
+                    <select
+                      value={timezone} // Update timezone or define it in your state
+                      onChange={handleTimeZoneChange}
+                      className="selectpicker"
+                    >
+                      <option value="PDT">PDT</option>
+                      <option value="CT">CT</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="bidderName" className="form-label">
+                  Bidder Name:
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="bidderName"
+                  value={selectedBidder} // Update selectedBidder
+                  onChange={(e) => setSelectedBidder(e.target.value)}
+                />
+              </div>
+              <div>
+                <label htmlFor="bidderDetails" className="form-label">
+                  Bidder Details:
+                </label>
+                <textarea
+                  name="#"
+                  className="form-control"
+                  id="bidderDetails"
+                  placeholder="Write your details!"
+                  cols="10"
+                  rows="10"
+                  value={selectedbidder_address} // Update selectedbidder_address
+                  onChange={(e) => setSelectedbidder_address(e.target.value)}
+                ></textarea>
+              </div>
+
               <button type="submit" className="btn btn-submit mt-3 mb-4">
                 Update
               </button>

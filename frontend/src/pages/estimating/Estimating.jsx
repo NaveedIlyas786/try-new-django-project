@@ -453,9 +453,9 @@ const Estimator = () => {
     const updatedData = {
       prjct_name: selectedEstimatingID,
       due_date: selecteddueDate,
-      time: estimatingFormData.time,
-      timezone: estimatingFormData.timezone,
-      status: estimatingFormData.status,
+      time: SelectedTimeforUpdate,
+      timezone: SelectedTimeZone,
+      status: selectedStatus,
       start_date: selectedstart_date,
       bid_amount: estimatingFormData.bid_amount,
       company: selectedCompany,
@@ -507,7 +507,10 @@ const Estimator = () => {
   const [selectedBidder, setSelectedBidder] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
   const [selectedCompany, setSelectedCompany] = useState("");
+  const [selectedStatus, setselectedStatus] = useState("");
   const [selecteddueDate, setSelecteddueDate] = useState("");
+  const [SelectedTimeforUpdate, setSelectedTimeforUpdate] = useState("");
+  const [SelectedTimeZone, setSelectedTimeZone] = useState("");
   const [selectedstart_date, setSelectedstart_date] = useState("");
   const [selectedbidder_address, setSelectedbidder_address] = useState("");
   const [estimatingFormData, setEstimatingFormData] = useState({
@@ -1434,9 +1437,12 @@ const Estimator = () => {
                             setSelectedEstimator(item.estimator);
                             setSelectedBidder(item.bidder);
                             setSelectedCompany(item.company);
+                            setselectedStatus(item.status);
                             setSelecteddueDate(item.due_date);
                             setSelectedstart_date(item.start_date);
                             setSelectedbidder_address(item.bidder_address);
+                            setSelectedTimeforUpdate(item.time);
+                            setSelectedTimeZone(item.timezone);
                             setSelectedLocation(item.location);
                             setshowEstimatingEditModal(true);
                           }}
@@ -1910,7 +1916,7 @@ const Estimator = () => {
                     value={selectedCompany} // Update location or define it in your state
                     onChange={(e) => setSelectedCompany(e.target.value)}
                   >
-                    <option className="bg-danger" value={selectedCompany}>
+                    <option  value={selectedCompany}>
                       {selectedCompany}
                     </option>
                     {companyName && companyName.length > 0 ? (
@@ -1952,7 +1958,7 @@ const Estimator = () => {
                     value={selectedEstimator} // Update selectedEstimator
                     onChange={(e) => setSelectedEstimator(e.target.value)}
                   >
-                    <option className="bg-danger" value={selectedEstimator}>
+                    <option  value={selectedEstimator}>
                       {selectedEstimator}
                     </option>
 
@@ -1980,7 +1986,7 @@ const Estimator = () => {
                     value={selectedLocation} // Update location or define it in your state
                     onChange={(e) => setSelectedLocation(e.target.value)}
                   >
-                    <option className="bg-danger" value={selectedLocation}>
+                    <option  value={selectedLocation}>
                       {selectedLocation}
                     </option>
                     {userLocation && userLocation.length > 0 ? (
@@ -2019,14 +2025,14 @@ const Estimator = () => {
                     <input
                       type="time"
                       placeholder="Select Time"
-                      value={selectedTime} // Update selectedTime or define it in your state
-                      onChange={(e) => setSelectedTime(e.target.value)}
+                      value={SelectedTimeforUpdate} // Update selectedTime or define it in your state
+                      onChange={(e) => setSelectedTimeforUpdate(e.target.value)}
                     />
                     <select
-                      value={timezone} // Update timezone or define it in your state
-                      onChange={handleTimeZoneChange}
+                      value={SelectedTimeZone} // Update timezone or define it in your state
+                      onChange={(e)=>setSelectedTimeZone(e.target.value)}
                       className="selectpicker"
-                    >
+                    > <option value={SelectedTimeZone}>{SelectedTimeZone}</option>
                       <option value="PDT">PDT</option>
                       <option value="CT">CT</option>
                     </select>

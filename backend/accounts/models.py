@@ -84,7 +84,7 @@ class User(AbstractBaseUser):
     signtr = models.FileField(upload_to='user_Sgntr/', validators=[validate_file_extension], null=True, blank=True)
     phone_number=models.IntegerField(null=True,blank=True,unique=True)
     updated_at=models.DateTimeField(auto_now=True)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
 
     objects = UserManager()

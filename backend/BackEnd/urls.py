@@ -19,7 +19,8 @@ from django.urls import path,include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/user/',include('accounts.urls')),
     path('api/estimating/',include('Estimating.urls')),
     path('api/project/',include('projects.urls')),
+    path('api/user/', include('accounts.urls')),  # replace 'app_name' with the actual name of your app
+
 ]

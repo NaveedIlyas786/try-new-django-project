@@ -8,7 +8,6 @@ const store = configureStore({
     estimating: estimatingReducer,
     ProjectCreateSlice: In_estimatingPage_ProjectSlice,
     estimatingProposal: EstimatingProposalSliceReducer, // Add the new slice reducer
-    // Add other reducers here if needed
   },
 });
 

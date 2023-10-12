@@ -19,6 +19,10 @@ const estimatingSlice = createSlice({
         state.data[index].status = newStatus;
       }
     },
+    addEstimating: (state, action) => {
+      // Assuming your API returns the added data, you can add it to the state
+      state.data.push(action.payload);
+    },
 
     // Define the setData action to update the data in your state
     setData: (state, action) => {

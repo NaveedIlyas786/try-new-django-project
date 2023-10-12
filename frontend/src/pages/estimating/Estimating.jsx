@@ -15,7 +15,7 @@ import ParticlesAnimation from "../../components/particleAnimation/ParticlesAnim
 import { useSelector, useDispatch } from "react-redux";
 import { updateStatus } from "../../store/EstimatingSlice";
 import { createSelector } from "reselect";
-// import { storeProposalData } from "../../store/EstimatingProposalSlice";
+import { storeProposalData } from "../../store/EstimatingProposalSlice";
 
 const Estimator = () => {
   const [data, setData] = useState([]);
@@ -348,42 +348,43 @@ const Estimator = () => {
     settimezone(e.target.value);
   };
 
+  // console.log("Selected Time before validation:", selectedTime);
+  const validateAndFormatTime = (time) => {
+    // Split the time into hours and minutes
+    const [hours, minutes] = time.split(":").map(Number);
+
+    // Check if hours and minutes are valid
+    if (
+      Number.isNaN(hours) ||
+      Number.isNaN(minutes) ||
+      hours < 0 ||
+      hours > 23 ||
+      minutes < 0 ||
+      minutes > 59
+    ) {
+      // Invalid hours or minutes
+      console.log("Invalid hours or minutes");
+      return "";
+    }
+
+    // Format the time as "hh:mm AM" or "hh:mm PM"
+    let formattedTime = `${String(hours % 12).padStart(2, "0")}:${String(
+      minutes
+    ).padStart(2, "0")} ${hours >= 12 ? "PM" : "AM"}`;
+
+    return formattedTime;
+  };
+
+  // validateAndFormatTime()
+
+  // console.log("Selected Time:", selectedTime);
+
+
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
 
     // Function to validate and format the time input
-
-    console.log("Selected Time before validation:", selectedTime);
-    const validateAndFormatTime = (time) => {
-      // Split the time into hours and minutes
-      const [hours, minutes] = time.split(":").map(Number);
-
-      // Check if hours and minutes are valid
-      if (
-        Number.isNaN(hours) ||
-        Number.isNaN(minutes) ||
-        hours < 0 ||
-        hours > 23 ||
-        minutes < 0 ||
-        minutes > 59
-      ) {
-        // Invalid hours or minutes
-        console.log("Invalid hours or minutes");
-        return "";
-      }
-
-      // Format the time as "hh:mm AM" or "hh:mm PM"
-      let formattedTime = `${String(hours % 12).padStart(2, "0")}:${String(
-        minutes
-      ).padStart(2, "0")} ${hours >= 12 ? "PM" : "AM"}`;
-
-      return formattedTime;
-    };
-
-    // validateAndFormatTime()
-
-    console.log("Selected Time:", selectedTime);
-
+   
     // Validate and format the selectedTime
     const formattedTime = validateAndFormatTime(selectedTime);
     console.log("Formatted Time: ", formattedTime);
@@ -416,7 +417,7 @@ const Estimator = () => {
         // Handle the response if needed
         console.log("Data successfully submitted:", response.data);
 
-        // dispatch(addEstimating(response.data));
+        dispatch(addEstimating(response.data));
 
         // You can also reset the form fields here if needed
         setDueDate("");
@@ -433,7 +434,7 @@ const Estimator = () => {
         // Close the modal
         setTimeout(() => {
           setShowModal(false);
-        }, 1000);
+        }, 500);
       })
       .catch((error) => {
         // Handle any errors that occurred during the POST request
@@ -701,7 +702,7 @@ const Estimator = () => {
     ]);
   };
 
-  const handleProposalSubmitPosting = async (e, dispatch) => {
+  const handleProposalSubmitPosting = async (e) => {
     e.preventDefault();
 
     try {
@@ -754,11 +755,21 @@ const Estimator = () => {
       );
       if (response.ok) {
         const responseData = await response.json();
-        console.log("Response data:", responseData);
-        console.log("Data Successfully Submitted !", responseData);
+        // console.log("Response data:", responseData);
+        console.log("Data Successfully Submitted !");
 
-        // Dispatch the proposal data to the Redux store
-        // dispatch(storeProposalData(responseData)); // Make sure `storeProposalData` is imported
+        const submittedData = {
+          date: step0FormData.date,
+          estimating: step0FormData.estimating,
+          architect_name: step0FormData.architect_name,
+          architect_firm: step0FormData.architect_firm,
+          Addendums: step1FormData.Addendums,
+          spcifc: step2FormData,
+          services: services,
+        };
+  
+        // Dispatch the extracted data to the Redux store
+        dispatch(storeProposalData(submittedData)); // Make sure `storeProposalData` is imported
 
         // Clear form fields after successful submission
         setStep0FormData({

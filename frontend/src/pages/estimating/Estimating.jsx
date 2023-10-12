@@ -908,38 +908,21 @@ const Estimator = () => {
 
   // **********************
 
-  const handleScopeDivisionInputChange = (index, key, value) => {
-    // Clone the current sefic array to avoid mutating the state directly
-    const updatedSefic = [...step2FormData.sefic];
-
-    // Update the specific property for the specified index
-    updatedSefic[index][key] = value;
-
-    // Update the state
-    setStep2FormData({
-      ...step2FormData,
-      sefic: updatedSefic,
-    });
+  const handleScopeDivisionInputChange = (index, detailIndex, key, value) => {
+    // Clone the current step2FormData array to avoid mutating the state directly
+    const updatedFormData = [...step2FormData];
+    // Clone the current sefic array for the specific entry
+    const updatedSefic = [...updatedFormData[index].sefic];
+    
+    // Update the specific property for the specified detailIndex and key
+    updatedSefic[detailIndex][key] = value;
+  
+    // Update the state by updating the specific entry's sefic array
+    updatedFormData[index].sefic = updatedSefic;
+  
+    setStep2FormData(updatedFormData);
   };
-  const handleAddScopeDivisionEntry = () => {
-    // Clone the current sefic array to avoid mutating the state directly
-    const updatedSefic = [...step2FormData.sefic];
-
-    // Add a new entry with default values
-    updatedSefic.push({
-      specific_name: "",
-      budget: "",
-      sefic: "",
-      number: "",
-      name: "",
-    });
-
-    // Update the state
-    setStep2FormData({
-      ...step2FormData,
-      sefic: updatedSefic,
-    });
-  };
+  
 
   const handleRemoveScopeDivisionEntry = (index) => {
     // Clone the current sefic array to avoid mutating the state directly
@@ -952,6 +935,16 @@ const Estimator = () => {
     setStep2FormData({
       ...step2FormData,
       sefic: updatedSefic,
+    });
+  };
+  const handleAddScopeDivisionEntry = (index) => {
+    setStep2FormData((prevData) => {
+      const updatedData = [...prevData];
+      updatedData[index].sefic.push({
+        number: "",
+        name: "",
+      });
+      return updatedData;
     });
   };
 
@@ -1374,7 +1367,6 @@ const Estimator = () => {
                       style={{ minWidth: "60px" }}
                     >
                       {item.due_date}
-                      {/* hjfhn */}
                     </td>
                     <td
                       className="mytd centered-td"
@@ -1506,6 +1498,7 @@ const Estimator = () => {
                             setshowProjectModal(true);
                           }}
                         >
+                        
                           Project
                         </button> */}
                         <button
@@ -2101,7 +2094,7 @@ const Estimator = () => {
 
               <button
                 type="button"
-                onClick={()=>{}}
+                onClick={() => {}}
                 className="btn btn-submit mt-3 mb-4"
               >
                 Update
@@ -2320,159 +2313,160 @@ const Estimator = () => {
                         )}
                       </div>
                     )}
-
-                    {activeStep === 2 && (
-                      <div>
-                        <label
-                          htmlFor="projectName"
-                          className="form-label mt-2"
-                        >
-                          <strong> Scope of work</strong>
-                        </label>
-                        {step2FormData.map((entry, index) => (
-                          <div className="wholespecificationEntry" key={index}>
-                            <div className="mb-2 mt-3">
-                              <label
-                                htmlFor={`specificName-${index}`}
-                                className="form-label"
+                        {activeStep === 2 && (
+                          <div>
+                            <label
+                              htmlFor="projectName"
+                              className="form-label mt-2"
+                            >
+                              <strong>Scope of work</strong>
+                            </label>
+                            {step2FormData.map((entry, index) => (
+                              <div
+                                className="wholespecificationEntry"
+                                key={index}
                               >
-                                Scope of work name
-                              </label>
-
-                              <select
-                                className="form-select"
-                                aria-label="Select Specification"
-                                value={entry.specific_name || ""}
-                                onChange={(e) =>
-                                  handleEntryChange(
-                                    index,
-                                    "specific_name",
-                                    e.target.value
-                                  )
-                                }
-                              >
-                                <option value="Base Bid Drywall/Framing">
-                                  Base Bid Drywall/Framing
-                                </option>
-                                <option value="Add/Alt Building Insulation">
-                                  Add/Alt Building Insulation
-                                </option>
-                                <option value="Add/Alt Interior Wall Insulation">
-                                  Add/Alt Interior Wall Insulation
-                                </option>
-                                <option value="Add/Alt Weather Barriers">
-                                  Add/Alt Weather Barriers
-                                </option>
-                                <option value=" Add/Alt Integrated Ceiling Assemblies">
-                                  Add/Alt Integrated Ceiling Assemblies
-                                </option>
-                              </select>
-                            </div>
-                            <div className="mb-2 mt-3">
-                              <label
-                                htmlFor={`specificBudget-${index}`}
-                                className="form-label"
-                              >
-                                Scope of work amount
-                              </label>
-                              <input
-                                type="text" // Use type "text" to allow non-numeric characters (e.g., commas)
-                                className="form-control"
-                                id={`specificBudget-${index}`}
-                                value={formatNumberWithCommas(entry.budget)} // Format with commas when displaying
-                                onChange={(e) =>
-                                  handleEntryChange(
-                                    index,
-                                    "budget",
-                                    e.target.value
-                                  )
-                                }
-                                onBlur={(e) =>
-                                  handleEntryChange(
-                                    index,
-                                    "budget",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                            </div>
-                            <div className="mb-2 mt-3">
-                              <label
-                                htmlFor={`specificDetails-${index}`}
-                                className="form-label"
-                              >
-                                Scope of work divisions
-                              </label>
-                              {entry.sefic.map((detail, detailIndex) => (
-                                <div
-                                  key={detailIndex}
-                                  className="input-group myrowInputgrouup"
-                                >
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    placeholder=" Scope Of Work Number"
-                                    value={detail.number}
+                                <div className="mb-2 mt-3">
+                                  <label
+                                    htmlFor={`specificName-${index}`}
+                                    className="form-label"
+                                  >
+                                    Scope of work name
+                                  </label>
+                                  <select
+                                    className="form-select"
+                                    aria-label="Select Specification"
+                                    value={entry.specific_name || ""}
                                     onChange={(e) =>
-                                      handleScopeDivisionInputChange(
+                                      handleEntryChange(
                                         index,
-                                        detailIndex,
-                                        "number",
+                                        "specific_name",
                                         e.target.value
-                                      )
-                                    }
-                                  />
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    placeholder=" Scope Of Work Description"
-                                    value={detail.name}
-                                    onChange={(e) =>
-                                      handleScopeDivisionInputChange(
-                                        index,
-                                        detailIndex,
-                                        "name",
-                                        e.target.value
-                                      )
-                                    }
-                                  />
-                                  <button
-                                    type="button"
-                                    className="btn btn-danger"
-                                    onClick={() =>
-                                      handleRemoveScopeDivisionEntry(
-                                        index,
-                                        detailIndex
                                       )
                                     }
                                   >
-                                    <i className="far">X</i>
+                                    <option value="Base Bid Drywall/Framing">
+                                      Base Bid Drywall/Framing
+                                    </option>
+                                    <option value="Add/Alt Building Insulation">
+                                      Add/Alt Building Insulation
+                                    </option>
+                                    <option value="Add/Alt Interior Wall Insulation">
+                                      Add/Alt Interior Wall Insulation
+                                    </option>
+                                    <option value="Add/Alt Weather Barriers">
+                                      Add/Alt Weather Barriers
+                                    </option>
+                                    <option value=" Add/Alt Integrated Ceiling Assemblies">
+                                      Add/Alt Integrated Ceiling Assemblies
+                                    </option>
+                                  </select>
+                                </div>
+                                <div className="mb-2 mt-3">
+                                  <label
+                                    htmlFor={`specificBudget-${index}`}
+                                    className="form-label"
+                                  >
+                                    Scope of work amount
+                                  </label>
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    id={`specificBudget-${index}`}
+                                    value={formatNumberWithCommas(entry.budget)}
+                                    onChange={(e) =>
+                                      handleEntryChange(
+                                        index,
+                                        "budget",
+                                        e.target.value
+                                      )
+                                    }
+                                    onBlur={(e) =>
+                                      handleEntryChange(
+                                        index,
+                                        "budget",
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                </div>
+                                <div className="mb-2 mt-3">
+                                  <label
+                                    htmlFor={`specificDetails-${index}`}
+                                    className="form-label"
+                                  >
+                                    Scope of work divisions
+                                  </label>
+                                  {Array.isArray(entry.sefic) &&
+                                    entry.sefic.map((detail, detailIndex) => (
+                                      <div
+                                        key={detailIndex}
+                                        className="input-group myrowInputgrouup"
+                                      >
+                                        <input
+                                          type="text"
+                                          className="form-control"
+                                          placeholder="Scope Of Work Number"
+                                          value={detail.number}
+                                          onChange={(e) =>
+                                            handleScopeDivisionInputChange(
+                                              index,
+                                              detailIndex,
+                                              "number",
+                                              e.target.value
+                                            )
+                                          }
+                                        />
+                                        <input
+                                          type="text"
+                                          className="form-control"
+                                          placeholder="Scope Of Work Description"
+                                          value={detail.name}
+                                          onChange={(e) =>
+                                            handleScopeDivisionInputChange(
+                                              index,
+                                              detailIndex,
+                                              "name",
+                                              e.target.value
+                                            )
+                                          }
+                                        />
+                                        <button
+                                          type="button"
+                                          className="btn btn-danger"
+                                          onClick={() =>
+                                            handleRemoveScopeDivisionEntry(
+                                              index,
+                                              detailIndex
+                                            )
+                                          }
+                                        >
+                                          <i className="far">X</i>
+                                        </button>
+                                      </div>
+                                    ))}
+                                  <button
+                                    type="button"
+                                    className="btn btn-success bk"
+                                    onClick={() =>
+                                      handleAddScopeDivisionEntry(index)
+                                    }
+                                  >
+                                    <i className="fa-regular icon fa-plus"></i>
                                   </button>
                                 </div>
-                              ))}
-                              <button
-                                type="button"
-                                className="btn btn-success bk"
-                                onClick={() =>
-                                  handleAddScopeDivisionEntry(index)
-                                }
-                              >
-                                <i className="fa-regular icon fa-plus"></i>
-                              </button>
-                            </div>
+                              </div>
+                            ))}
+
+                            <button
+                              type="button"
+                              className="btn btn-success"
+                              onClick={handleAddEntry}
+                            >
+                              Add alternate scope of work
+                            </button>
                           </div>
-                        ))}
-
-                        <button
-                          type="button"
-                          className="btn btn-success"
-                          onClick={handleAddEntry}
-                        >
-                          Add alternate scope of work
-                        </button>
-                      </div>
-                    )}
-
+                        )}
                     {activeStep === 3 && (
                       <div className="mb-2 mt-3">
                         <label htmlFor="projectName" className="form-label">

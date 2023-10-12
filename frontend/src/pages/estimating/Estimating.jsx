@@ -514,7 +514,7 @@ const Estimator = () => {
   }
 
   const editformattedTime = convertTo12HourFormat(SelectedTimeforUpdate);
-  console.log(editformattedTime);
+  // console.log(editformattedTime);
 
   const handleEstimatingEditing = async (event, itemId) => {
     event.preventDefault();
@@ -716,6 +716,7 @@ const Estimator = () => {
         console.error("Missing 'proposal' key in services array");
         return;
       }
+      console.log("step2FormData to be send:", step2FormData);
 
       const response = await fetch(
         "http://127.0.0.1:8000/api/estimating/proposals/",
@@ -924,19 +925,33 @@ const Estimator = () => {
   };
   
 
-  const handleRemoveScopeDivisionEntry = (index) => {
-    // Clone the current sefic array to avoid mutating the state directly
-    const updatedSefic = [...step2FormData.sefic];
-
-    // Remove the entry at the specified index
-    updatedSefic.splice(index, 1);
-
-    // Update the state
-    setStep2FormData({
-      ...step2FormData,
-      sefic: updatedSefic,
-    });
+  const handleRemoveScopeDivisionEntry = (index, detailIndex) => {
+    // Clone the current step2FormData array to avoid mutating the state directly
+    const updatedFormData = [...step2FormData];
+    // Clone the current sefic array for the specific entry
+    const updatedSefic = [...updatedFormData[index].sefic];
+  
+    // Remove the entry at the specified detailIndex
+    updatedSefic.splice(detailIndex, 1);
+  
+    // Update the state by updating the specific entry's sefic array
+    updatedFormData[index].sefic = updatedSefic;
+  
+    setStep2FormData(updatedFormData);
   };
+
+  const handleRemoveWholeWorkSectionEntry = (index) => {
+    // Clone the current step2FormData array to avoid mutating the state directly
+    const updatedFormData = [...step2FormData];
+  
+    // Remove the entry at the specified index
+    updatedFormData.splice(index, 1);
+  
+    // Update the state
+    setStep2FormData(updatedFormData);
+  };
+  
+  
   const handleAddScopeDivisionEntry = (index) => {
     setStep2FormData((prevData) => {
       const updatedData = [...prevData];
@@ -2326,7 +2341,20 @@ const Estimator = () => {
                                 className="wholespecificationEntry"
                                 key={index}
                               >
-                                <div className="mb-2 mt-3">
+                                <div className="ScopofWorkSectionRemove">
+                                <button
+                                          type="button"
+                                          className="btn btn-danger"
+                                          onClick={() =>
+                                            handleRemoveWholeWorkSectionEntry(
+                                              index
+                                            )
+                                          }
+                                        >
+                                          <i className="far">X</i>
+                                        </button>
+                                </div>
+                                <div className="mb-2 mt-5">
                                   <label
                                     htmlFor={`specificName-${index}`}
                                     className="form-label"

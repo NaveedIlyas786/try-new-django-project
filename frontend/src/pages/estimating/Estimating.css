@@ -400,6 +400,11 @@ input[type="text"].serviceInput.focused {
   background-color: #e9e6e6;
   margin-bottom: 30px !important;
   padding: 10px !important;
+  position: relative;
+}
+.ScopofWorkSectionRemove{
+  position: absolute;
+  right: 20px;
 }
 .myservices {
   max-height: 420px !important;

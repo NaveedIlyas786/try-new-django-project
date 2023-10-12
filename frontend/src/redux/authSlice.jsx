@@ -10,7 +10,8 @@ export const signUpUser = createAsyncThunk("auth/signUpUser", async (userData, {
   try {
     console.log("Sending user data for signup: ", userData);
 
-    const response = await fetch("http://127.0.0.1:8000/api/user/Userapi/", {
+    // const response = await fetch("http://127.0.0.1:8000/api/user/Userapi/", {
+    const response = await fetch("http://127.0.0.1:8000/api/user/register/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

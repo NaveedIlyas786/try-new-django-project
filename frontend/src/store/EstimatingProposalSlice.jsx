@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import estimatingProposalSlice from './EstimatingProposalSlice';
+import axios from "axios"
 
 const estimatingProposalSlice = createSlice({
     name: "estimatingProposal",
@@ -14,6 +14,10 @@ const estimatingProposalSlice = createSlice({
         state.proposalData = action.payload;
         // state.proposalData.push(action.payload);
       },
+      // Define the setData action to update the data in your state
+    setData: (state, action) => {
+      state.proposalData = action.payload;
+    },
       // Define actions for handling status and error (similar to your existing slice)
       setStatus: (state, action) => {
         state.status = action.payload;
@@ -24,18 +28,27 @@ const estimatingProposalSlice = createSlice({
     },
   });
   
-export const fetchProposalData=()=>async(dispatch)=>{
-try{
-  dispatch(estimatingProposalSlice.actions.setStatus("loading"));
-  const response=axios.get("http://127.0.0.1:8000/api/estimating/proposals/");
-  const ans=response.data;
-
-  dispatch(estimatingProposalSlice.actions)
-}
-catch(error){
-  console.log(error);
-}
-}
+  export const fetchProposalData = () => async (dispatch) => {
+    try {
+      dispatch(estimatingProposalSlice.actions.setStatus("loading"));
+  
+      const response = await axios.get("http://127.0.0.1:8000/api/estimating/proposals");
+      if (response.status === 200) {
+        const ans = response.data;
+        dispatch(estimatingProposalSlice.actions.setData(ans));
+        dispatch(estimatingProposalSlice.actions.setStatus("succeeded"));
+      } else {
+        // Handle non-200 response status codes
+        dispatch(estimatingProposalSlice.actions.setStatus("failed"));
+        dispatch(estimatingProposalSlice.actions.setError("Failed to fetch data."));
+      }
+    } catch (error) {
+      // Handle other errors (e.g., network errors)
+      dispatch(estimatingProposalSlice.actions.setStatus("failed"));
+      dispatch(estimatingProposalSlice.actions.setError(error.message));
+    }
+  };
+  
 
   export const {
     storeProposalData,

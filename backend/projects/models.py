@@ -4,7 +4,7 @@ from .validation import validate_file_extension
 import os
 
 from accounts.models import User
-from Estimating.models import Estimating, Estimating_detail, Proposal
+from Estimating.models import Estimating, Estimating_detail, Proposal,Spec_detail
 
 
 class Project(models.Model):
@@ -26,15 +26,15 @@ class Project(models.Model):
                                    related_name='projects_start_date', on_delete=models.CASCADE, null=True, blank=True)
     start_date = models.DateField(
         verbose_name="start Date(YYYY-MM-DD)", null=True, blank=True)
-    general_superintendent = models.ForeignKey(User, verbose_name="Genral_superintendent",
-                                               limit_choices_to=models.Q(roles__name='General Superintendent') |
-                                               models.Q(roles__name='So. Cal. General Manager') |
-                                               models.Q(roles__name='No. Cal. General Manager') |
-                                               models.Q(roles__name='President'), on_delete=models.SET_NULL, null=True, blank=True)
+    # general_superintendent = models.ForeignKey(User, verbose_name="Genral_superintendent",
+    #                                            limit_choices_to=models.Q(roles__name='General Superintendent') |
+    #                                            models.Q(roles__name='So. Cal. General Manager') |
+    #                                            models.Q(roles__name='No. Cal. General Manager') |
+    #                                            models.Q(roles__name='President'), on_delete=models.SET_NULL, null=True, blank=True)
 
-    proposal=models.ForeignKey(Proposal, verbose_name="Proposal", on_delete=models.CASCADE)
+    # scop=models.ForeignKey(Spec_detail, verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
 
-    # Contract
+    # # Contract
 
 
 
@@ -284,54 +284,93 @@ class Project(models.Model):
 
 
 
-class Contract(models.Model):
-    contract=models.CharField(verbose_name="Contract", max_length=50,choices=[
-        ('Fully Executed','Fully Executed'),('Not Fully Executed','Not Fully Executed')
-        ],default='Not fully Executed', null=True, blank=True)
-    contract_date=models.DateField(verbose_name="add date of the Contract if Fully Executed (YYYY-MM-DD)", null=True, blank=True)
+# class Contract(models.Model):
+#     contract=models.CharField(verbose_name="Contract", max_length=50,choices=[
+#         ('Fully Executed','Fully Executed'),('Pending','Pending')
+#         ],default='Pending', null=True, blank=True)
+#     contract_date=models.DateField(verbose_name="add date of the Contract if Fully Executed (YYYY-MM-DD)", null=True, blank=True)
 
 
-class Schedule(models.Model):
-    schedule=models.CharField(verbose_name="Contract", max_length=50,choices=[
-        ('Approved','Approved'),('Not Approved','Not Approved')
-        ],default='Not Approved', null=True, blank=True)
-    schedule_date=models.DateField(verbose_name="add date of the schedule if Approved (YYYY-MM-DD)", null=True, blank=True)
-
-
-
-
-    #INSURANCE
-
-    
-
-
-    #BOND
-
-    #ZLIEN
-
-class Insurance(models.Model):
-    insurance=models.CharField(verbose_name="Contract", max_length=50,choices=[
-        ('CCIP','CCIP'),('Sent','Sent'),('Received','Received'),('Complete','Complete'),
-        ],default='null', null=True, blank=True)
-    insurance_date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
-class Bond(models.Model):
-    bond=models.CharField(verbose_name="Contract", max_length=50,choices=[
-        ('Sent','Sent'),('Received','Received'),('Complete','Complete'),
-        ],default='null', null=True, blank=True)
-    bond_date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
-class  Zlien(models.Model):
-    zlien=models.CharField(verbose_name="Contract", max_length=50,choices=[
-        ('Submitted','Submitted'),('Not Submitted','Not Submitted'),
-        ],default='Not Submitted', null=True, blank=True)
-    zlien_date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
+# class Schedule_of_Value(models.Model):
+#     schedule=models.CharField(verbose_name="Schedule of Value", max_length=50,choices=[
+#         ('Approved','Approved'),('Pending','Pending')
+#         ],default='Pending', null=True, blank=True)
+#     schedule_date=models.DateField(verbose_name="add date of the schedule if Approved (YYYY-MM-DD)", null=True, blank=True)
 
 
 
+# class Insurance(models.Model):
+#     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
+#     insurance=models.CharField(verbose_name="Insurance", max_length=50,choices=[
+#         ('CCIP','CCIP'),('Sent','Sent'),('Received','Received'),('Complete','Complete'),
+#         ],default='null', null=True, blank=True)
+#     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
+# class Bond(models.Model):
+#     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
+#     bond=models.CharField(verbose_name="Bond", max_length=50,choices=[
+#         ('Sent','Sent'),('Received','Received'),('Complete','Complete'),
+#         ],default='null', null=True, blank=True)
+#     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
+# class  Zlien(models.Model):
+#     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
+#     zlien=models.CharField(verbose_name="Zlien", max_length=50,choices=[
+#         ('Submitted','Submitted'),('Pending','Pending'),
+#         ],default='Pending', null=True, blank=True)
+#     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
 
 
+# class Submittals(models.Model):
+#     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
+#     scop_work_number=models.ForeignKey(Spec_detail, verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
+#     status=models.CharField(verbose_name="Submittals", max_length=50,choices=[
+#         ('Approved','Approved'),('Pending','Pending'),
+#         ],default='Pending', null=True, blank=True)
+#     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
 
+# class ShopDrawing(models.Model):
+#     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
+#     scop_work_number=models.ForeignKey(Spec_detail, verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
+#     status=models.CharField(verbose_name="Shop Drawing", max_length=50,choices=[
+#         ('Approved','Approved'),('Pending','Pending'),
+#         ],default='Pending', null=True, blank=True)
+#     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
 
+# class Safity(models.Model):
+#     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
+#     scop_work_number=models.ForeignKey(Spec_detail, verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
+#     status=models.CharField(verbose_name="Safity", max_length=50,choices=[
+#         ('Approved','Approved'),('Pending','Pending'),
+#         ],default='Pending', null=True, blank=True)
+#     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
+#     comment_box=models.CharField(verbose_name="comment", max_length=5000)
 
+# class Schedule(models.Model):
+#     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
+#     status=models.CharField(verbose_name="Schedule", max_length=50,choices=[
+#         ('Available','Available'),('Not Available','Not Available'),
+#         ],default='Not Available', null=True, blank=True)
+#     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
+
+# class Sub_Contractors(models.Model):
+#     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
+#     status=models.CharField(verbose_name="Sub Contractors", max_length=50,choices=[
+#         ('Capable','Capable'),('Not Capable','Not Capable'),('Custom','Custom'),
+#         ],default='Not Capable', null=True, blank=True)
+#     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
+#     comment_box=models.CharField(verbose_name="comment", max_length=5000)
+
+# class LaborRate(models.Model):
+#     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
+#     status=models.CharField(verbose_name="Labor Rate", max_length=50,choices=[
+#         ('Aproved','Aproved'),('Pending','Pending'),('Custom','Custom'),
+#         ],default='Pending', null=True, blank=True)
+#     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
+#     comment_box=models.CharField(verbose_name="comment", max_length=5000)
+
+# class Billing(models.Model):
+#     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
+#     due_date=models.DateField(verbose_name="add due date(YYYY-MM-DD)", null=True, blank=True)
+#     reduction=models.CharField(verbose_name="Add Reduction", max_length=500,null=True, blank=True)
 
 
 

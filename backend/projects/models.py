@@ -4,7 +4,7 @@ from .validation import validate_file_extension
 import os
 
 from accounts.models import User
-from Estimating.models import Estimating,Estimating_detail
+from Estimating.models import Estimating,Estimating_detail,Proposal
 
 
 
@@ -15,7 +15,6 @@ from Estimating.models import Estimating,Estimating_detail
 class Project(models.Model):
     status=models.CharField(choices=[('C','C'),('P','P'),('Q','Q'),('V','V'),('X','X'),],default='C' , max_length=50,null=True,blank=True)
     job_num=models.PositiveIntegerField(verbose_name="Add Job #",unique=True,null=True,blank=True)
-    job_name=models.CharField(verbose_name="Add Job # Name", max_length=50000,null=True,blank=True)
     scope=models.CharField(verbose_name="Scope (Description) ",max_length=500000,null=True,blank=True)
     prjct_engnr = models.ForeignKey(User,verbose_name="Project Engineer", related_name='Project_Engineer', limit_choices_to=models.Q(roles__name='Project Engineer'), on_delete=models.SET_NULL, null=True,blank=True)
     bim_oprtr = models.ForeignKey(User,verbose_name="BIM Modeler", related_name='Bim_Operator', limit_choices_to=models.Q(roles__name='BIM') | models.Q(roles__name='BIM Modeler/Trimble Operator') | models.Q(roles__name='BIM/Manager PR'), on_delete=models.SET_NULL,null=True,blank=True)
@@ -23,7 +22,7 @@ class Project(models.Model):
     prjct_mngr = models.ForeignKey(User,verbose_name="Project Manager", related_name='Project_Manager', limit_choices_to=models.Q(roles__name='Project Manager'), on_delete=models.SET_NULL, null=True,blank=True)
     estimating=models.ForeignKey(Estimating, verbose_name="start date", related_name='projects_start_date', on_delete=models.CASCADE, null=True, blank=True)
     start_date = models.DateField(verbose_name="start Date(YYYY-MM-DD)",null=True,blank=True)
-
+    general_superintendent=models.ForeignKey(User,verbose_name="Genral_superintendent",limit_choices_to=models.Q(roles__name='Project Manager'), on_delete=models.SET_NULL, null=True,blank=True)
 
     # def save(self, *args, **kwargs):
     #     # Check if this is a new instance (i.e., being created and not updated)

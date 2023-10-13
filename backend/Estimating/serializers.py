@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework import status
 
-from Estimating.models import Company,Estimating, Estimating_detail, Proposal, Addendum, Qualification, Spec_detail, Specification, ProposalService, Service, Location,UrlsTable,DMS_Dertory
+from Estimating.models import Company,Estimating, Estimating_detail, Proposal, Addendum, Qualification, Spec_detail, Specification, ProposalService, Service, Location,UrlsTable,DMS_Dertory,Dprtmnt,Role
 
 
 from datetime import datetime
@@ -21,7 +21,14 @@ class DMS_DertorySezializers(serializers.ModelSerializer):
 
 
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['job_title'] = instance.job_title.name if instance.job_title else None
+        representation['company'] = instance.company.Cmpny_Name if instance.company else None
+        representation['department'] = instance.department.dprtmnt_name if instance.department else None
 
+
+        return representation
 
 
 

@@ -17,6 +17,7 @@ import { updateStatus } from "../../store/EstimatingSlice";
 import { createSelector } from "reselect";
 import { storeProposalData } from "../../store/EstimatingProposalSlice";
 import RawProposal from "../purposal/rawpurposal";
+import { margin } from "@mui/system";
 
 const Estimator = () => {
   const [data, setData] = useState([]);
@@ -154,6 +155,9 @@ const Estimator = () => {
       });
   }, []);
 
+  const main = () => {
+    <h1 className="bg-danger">NO here</h1>;
+  };
   // ****************************Getting Services Entries from Api End
   const [EstimatorName, setestimatorName] = useState([]);
 
@@ -501,7 +505,6 @@ const Estimator = () => {
 
   // const editformattedTime = convertTo12HourFormat(SelectedTimeforUpdate);
 
-
   // console.log(editformattedTime);
 
   // *******************************************************
@@ -533,14 +536,59 @@ const Estimator = () => {
   // *******************************************************
   const [itemId, setItemId] = useState();
 
+  const parseTime = (timeString) => {
+    if (!timeString) return ""; // Handle empty or invalid values
+    const date = new Date(timeString);
+    if (isNaN(date)) return ""; // Handle invalid date
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? "PM" : "AM";
+    const formattedHours = hours % 12 || 12; // Convert 0 to 12 for AM
+    return `${formattedHours}:${minutes} ${ampm}`;
+  };
+
+  const convertToIsoTime = (formattedTime) => {
+    // Convert "hh:mm AM/PM" to "hh:mm"
+    const timeParts = formattedTime.split(" ");
+    if (timeParts.length === 2) {
+      const [time, ampm] = timeParts;
+      const [hours, minutes] = time.split(":");
+      const isPM = ampm === "PM" || ampm === "pm";
+      let isoHours = parseInt(hours, 10);
+      if (isPM && isoHours !== 12) {
+        isoHours += 12;
+      } else if (!isPM && isoHours === 12) {
+        isoHours = 0;
+      }
+      return `${String(isoHours).padStart(2, "0")}:${minutes}`;
+    }
+    return formattedTime;
+  };
+
+  // const convertToIsoTime = (formattedTime) => {
+  //   const date = new Date(formattedTime);
+  //   if (!isNaN(date)) {
+  //     const hours = date.getHours();
+  //     const minutes = date.getMinutes();
+  //     const ampm = hours >= 12 ? 'PM' : 'AM';
+  //     const formattedHours = hours % 12 || 12;
+  //     return `${String(formattedHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${ampm}`;
+  //   }
+  //   return formattedTime;
+  // };
+
+  console.log("SelectedTimeforUpdate:", SelectedTimeforUpdate);
+  const formattedTimeEdit = convertToIsoTime(SelectedTimeforUpdate);
+  console.log("formattedTimeEdit:", formattedTimeEdit);
+
   const handleEstimatingEditing = async (event) => {
     event.preventDefault();
 
     const updatedData = {
       prjct_name: selectedEstimatingID,
       due_date: formattedDueDate,
-      // time: formattedTime,
-      // timezone: SelectedTimeZone,
+      time: SelectedTimeforUpdate,
+      timezone: SelectedTimeZone,
       status: selectedStatus,
       start_date: formattedStartDate,
       company: parseInt(selectedCompany, 10),
@@ -565,17 +613,17 @@ const Estimator = () => {
       if (response.ok) {
         console.log(`Data updated successfully for item with ID ${itemId}`);
 
-        setselectedStatus(""),
-        setSelectedBidder(""),
-        setSelectedCompany(""),
-        setSelectedEstimator(""),
-        setSelectedLocation(""),
-        setSelectedbidder_address(""),
-        setSelecteddueDate(""),
-        setSelectedstart_date(""),
-        setSelectedEstimatingID(""),
+        setselectedStatus("");
+        setSelectedBidder("");
+        setSelectedCompany("");
+        setSelectedEstimator("");
+        setSelectedLocation("");
+        setSelectedbidder_address("");
+        setSelecteddueDate("");
+        setSelectedstart_date("");
+        setSelectedEstimatingID("");
         setTimeout(() => {
-          setshowEstimatingEditModal(false)
+          setshowEstimatingEditModal(false);
         }, 300);
       } else if (response.status === 404) {
         console.error("Resource not found.");
@@ -1382,9 +1430,6 @@ const Estimator = () => {
               </div>
             </div>
           )}
-          {/* <div className="rightSearchandFiltering d-flex"> */}
-
-          {/* </div> */}
 
           <ParticlesAnimation numberOfCircles={numberOfCircles} />
           <div
@@ -1414,7 +1459,7 @@ const Estimator = () => {
                       className="mytd centered-td"
                       style={{ minWidth: "60px" }}
                     >
-                      {item.due_date}
+                      {item.due_date ? item.due_date : "No Date"}
                     </td>
                     <td
                       className="mytd centered-td"
@@ -1423,7 +1468,7 @@ const Estimator = () => {
                       {item.time} <strong>{item.timezone}</strong>
                     </td>
                     <td className="mytd myproject centered-td">
-                      {item.prjct_name}
+                      {item.prjct_name ? item.prjct_name : "No Project"}
                     </td>
                     <td
                       className="mytd centered-td"
@@ -1435,7 +1480,11 @@ const Estimator = () => {
                         onChange={(event) => handleAreaChange(event, item.id)}
                         value={AreaChoice[item.id] || item.location}
                       >
-                        <option value="">{item.location}</option>
+                        <option
+                          value={item.location ? item.location : "No Area"}
+                        >
+                          {item.location ? item.location : "No Area"}
+                        </option>
                         {userLocation && userLocation.length > 0 ? (
                           userLocation.map((place) => (
                             <option value={place.id} key={place.id}>
@@ -1555,9 +1604,9 @@ const Estimator = () => {
                         <button
                           className="btn dropbtns btn-secondary"
                           onClick={() => {
-                            // navigate("/homepage/purposal");
-                            setItemId(item.id);
-                            navigate("/homepage/rawproposal");
+                            navigate("/homepage/purposal");
+                            // setItemId(item.id);
+                            // navigate("/homepage/rawproposal");
                           }}
                         >
                           View
@@ -1979,7 +2028,7 @@ const Estimator = () => {
                     type="date"
                     className="form-control"
                     id="dueDate"
-                    value={formattedStartDate} // Update selectedstart_date
+                    value={formattedStartDate ? formattedStartDate : "No Date"} // Update selectedstart_date
                     onChange={(e) => setSelectedstart_date(e.target.value)}
                   />
                 </div>
@@ -1994,7 +2043,11 @@ const Estimator = () => {
                     value={selectedCompany} // Update location or define it in your state
                     onChange={(e) => setSelectedCompany(e.target.value)}
                   >
-                    <option value={selectedCompany ? selectedCompany : "No Company"}>{selectedCompany ? selectedCompany : "No Company"}</option>
+                    <option
+                      value={selectedCompany ? selectedCompany : "No Company"}
+                    >
+                      {selectedCompany ? selectedCompany : "No Company"}
+                    </option>
                     {companyName && companyName.length > 0 ? (
                       companyName.map((companyItem) => (
                         <option value={companyItem.id} key={companyItem.id}>
@@ -2018,7 +2071,11 @@ const Estimator = () => {
                   type="text"
                   className="form-control"
                   id="projectName"
-                  value={selectedEstimatingID} // Update selectedEstimatingID
+                  value={
+                    selectedEstimatingID
+                      ? selectedEstimatingID
+                      : "No Project Name"
+                  } // Update selectedEstimatingID
                   onChange={(e) => setSelectedEstimatingID(e.target.value)}
                 />
               </div>
@@ -2035,8 +2092,12 @@ const Estimator = () => {
                     onChange={(e) => setSelectedEstimator(e.target.value)}
                   >
                     {/* Provide an initial option with the selectedEstimator value */}
-                    <option value={selectedEstimator ? selectedEstimator :"No Estimator"}>
-                    {selectedEstimator ? selectedEstimator :"No Estimator"}
+                    <option
+                      value={
+                        selectedEstimator ? selectedEstimator : "No Estimator"
+                      }
+                    >
+                      {selectedEstimator ? selectedEstimator : "No Estimator"}
                     </option>
 
                     {EstimatorName && EstimatorName.length > 0 ? (
@@ -2063,7 +2124,13 @@ const Estimator = () => {
                     value={selectedLocation} // Update location or define it in your state
                     onChange={(e) => setSelectedLocation(e.target.value)}
                   >
-                    <option value={selectedLocation ? selectedLocation : "No Location"}>{selectedLocation ? selectedLocation : "No Location"}</option>
+                    <option
+                      value={
+                        selectedLocation ? selectedLocation : "No Location"
+                      }
+                    >
+                      {selectedLocation ? selectedLocation : "No Location"}
+                    </option>
                     {userLocation && userLocation.length > 0 ? (
                       userLocation.map((place) => (
                         <option value={place.id} key={place.id}>
@@ -2099,7 +2166,7 @@ const Estimator = () => {
                   <div className="d-flex bg-white">
                     <input
                       type="time"
-                      // value={editformattedTime}
+                      value={formattedTimeEdit}
                       onChange={(e) => setSelectedTimeforUpdate(e.target.value)}
                     />
 
@@ -2125,6 +2192,7 @@ const Estimator = () => {
                 <input
                   type="text"
                   className="form-control"
+                  placeholder="No Bidder Here !"
                   id="bidderName"
                   value={selectedBidder} // Update selectedBidder
                   onChange={(e) => setSelectedBidder(e.target.value)}
@@ -2138,10 +2206,10 @@ const Estimator = () => {
                   name="#"
                   className="form-control"
                   id="bidderDetails"
-                  placeholder="Write your details!"
+                  placeholder="No Address Here !"
                   cols="10"
                   rows="10"
-                  value={selectedbidder_address} // Update selectedbidder_address
+                  value={selectedbidder_address}
                   onChange={(e) => setSelectedbidder_address(e.target.value)}
                 ></textarea>
               </div>

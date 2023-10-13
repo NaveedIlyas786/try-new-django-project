@@ -9,9 +9,14 @@ function Rawpurposal() {
     // Make an API request to fetch data using the 'id' parameter
     // Example: http://127.0.0.1:8000/api/estimating/proposals/{id}
     fetch(`http://127.0.0.1:8000/api/estimating/proposals/${id}`)
-      .then((response) => response.json())
-      .then((data) => setProposalData(data))
-      .catch((error) => console.error('Error fetching proposal data:', error));
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`API request failed with status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => setProposalData(data))
+    .catch((error) => console.error('Error fetching proposal data:', error));
   }, [id]);
 
   return (

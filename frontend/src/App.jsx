@@ -27,6 +27,7 @@ import WonProjects from "./pages/won_lost_Projects/WonProjects";
 import LostProjects from "./pages/won_lost_Projects/LostProjects";
 import DMSDirectory from "./pages/dmsDirectory/DMSDirectory";
 import RawProposal from "./pages/purposal/Rawpurposal";
+import Waiting from "./pages/signUp/Waiting";
 
 
 function App() {
@@ -43,6 +44,9 @@ function App() {
           <Route path="purposal/:id" element={<Purposal />} />
           <Route path="urlpage" element={<URLPage />} />
           <Route path="rawproposal/:id" element={<RawProposal />} />
+          {/* <Route path="waitingPage/:id" element={<Waiting />} /> */}
+          <Route path="waitingPage" element={<Waiting />} />
+
           <Route path="wonProjectspage" element={<WonProjects />} />
           <Route path="lostProjectspage" element={<LostProjects />} />
           <Route path="projects/:id" element={<ProjectDirectory />} />

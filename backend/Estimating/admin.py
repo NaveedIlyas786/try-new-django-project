@@ -1,20 +1,41 @@
 from django.contrib import admin
 from .models import Location,Estimating,Estimating_detail,Company
-from django.core.files.storage import default_storage
 from import_export.admin import ImportExportModelAdmin
 
 
 import os
 from django.contrib import admin
-from .models import Estimating,Proposal,Service,Addendum,Specification,Spec_detail,Qualification,ProposalService,UrlsTable
+from .models import Estimating,Proposal,Service,Addendum,Specification,Spec_detail,Qualification,ProposalService,UrlsTable,Role,Dprtmnt,DMS_Dertory
 from nested_admin import NestedStackedInline, NestedModelAdmin
 from .forms import EstimatingDetailAdminForm,EstimatingAdminForm
 
 
+class RoleAdmin(admin.ModelAdmin):
+    list_display=('id','name')
+
+
+class DprtmntAdmin(admin.ModelAdmin):
+    list_display=('id','dprtmnt_name')
 
 
 
+class DMS_DertoryAdmin(admin.ModelAdmin):
+    def get_job_title(self, obj):
+        return ", ".join([str(role) for role in obj.job_title.all()])
+    get_job_title.short_description = 'job_title'
 
+
+    list_display=('id','full_Name','email','get_job_title','company','department','direct_number','locaton','mobile_number')
+    add_fieldsets = [
+        (
+            None,
+            {
+                "classes": ["wide"],
+                "fields": ["email", "full_Name", "job_title","mobile_number","company","department","direct_number","locaton"],
+            },
+        ),
+    ]
+    filter_horizontal = ['job_title',] 
 
 
 # Register your models here
@@ -132,3 +153,6 @@ admin.site.register(Service,ServiceAdmin)
 admin.site.register(Qualification,QualificationAdmin)
 admin.site.register(Estimating_detail,EstimatingDetailAdmin)
 admin.site.register(UrlsTable,UrlsAdmin)
+admin.site.register(Role,RoleAdmin)
+admin.site.register(Dprtmnt,DprtmntAdmin)
+admin.site.register(DMS_Dertory,DMS_DertoryAdmin)

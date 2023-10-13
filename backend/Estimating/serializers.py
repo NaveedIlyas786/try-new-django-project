@@ -4,11 +4,32 @@ from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework import status
 
-from Estimating.models import Company,Estimating, Estimating_detail, Proposal, Addendum, Qualification, Spec_detail, Specification, ProposalService, Service, Location,UrlsTable
+from Estimating.models import Company,Estimating, Estimating_detail, Proposal, Addendum, Qualification, Spec_detail, Specification, ProposalService, Service, Location,UrlsTable,DMS_Dertory,Dprtmnt,Role
 
 
 from datetime import datetime
 
+
+
+
+
+
+class DMS_DertorySezializers(serializers.ModelSerializer):
+    class Meta:
+        model = DMS_Dertory
+        fields = ['id', 'full_Name', 'email', 'job_title', 'company', 'department', 'direct_number', 'locaton', 'mobile_number']
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        # Handle job_title ManyToMany field
+        job_titles = instance.job_title.all()
+        representation['job_title'] = [job.name for job in job_titles] if job_titles else None
+        
+        representation['company'] = instance.company.Cmpny_Name if instance.company else None
+        representation['department'] = instance.department.dprtmnt_name if instance.department else None
+
+        return representation
 
 
 class UrlsSerializers(serializers.ModelSerializer):

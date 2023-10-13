@@ -6,8 +6,8 @@ import os
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status,views
-from .models import Company, Estimating,Estimating_detail, Proposal, Qualification,Service,Location,UrlsTable,Addendum
-from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer,SpecificationSerializer,ServiceSerializer,LocationSerializer,EstimatingDetailSerializer,ProposalServiceSerializer,CompanySerializer,UrlsSerializers
+from .models import Company, Estimating,Estimating_detail, Proposal, Qualification,Service,Location,UrlsTable,Addendum,DMS_Dertory
+from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer,SpecificationSerializer,ServiceSerializer,LocationSerializer,EstimatingDetailSerializer,ProposalServiceSerializer,CompanySerializer,UrlsSerializers,DMS_DertorySezializers
 from accounts.models import User
 
 from .forms import EstimatingDetailAdminForm
@@ -17,6 +17,44 @@ from django.utils import timezone
 from datetime import datetime
 from rest_framework.permissions import IsAuthenticated
 from django.core.mail import send_mail
+
+
+
+
+
+class DMS_DertoryView(APIView):
+    def get(self,request):
+        dms_dertory=DMS_Dertory.objects.all()
+        serializer=DMS_DertorySezializers(dms_dertory, many=True)
+        return Response(serializer.data)
+    def post(self,request):
+        serializer=DMS_DertorySezializers(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        
+    def put(self, request, id, format=None):
+        try:
+            dms_dertory = DMS_Dertory.objects.get(id=id)
+        except DMS_Dertory.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = CompanySerializer(dms_dertory, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id, format=None):
+        try:
+            DMS_Dertory = DMS_Dertory.objects.get(id=id)
+        except DMS_Dertory.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        DMS_Dertory.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class SendEmailView(APIView):

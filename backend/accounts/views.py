@@ -1,6 +1,8 @@
 from django.shortcuts import render
 #123456
 # from rest_framework
+from django.core.mail import send_mail
+from django.conf import settings
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -14,7 +16,12 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .serializers import UserRegisterationSerializers,UserLoginserializers,UserProfileSerializer,UserChangePasswordSerializer,SendEmailResetPasswordViewsSerializer,UserPasswordResetSerializer
 from .models import User 
-from .renderers import UserRenderer
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAdminUser
+
+
+
+
 
 # Create your views here.
 
@@ -35,14 +42,40 @@ def get_tokens_for_user(user):
 
 #veiw for Registor or Create User 
 class UserRegistrationView(APIView):
+
+
     def post(self, request, format=None):
         serializer = UserRegisterationSerializers(data=request.data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
-            token = get_tokens_for_user(user)
-            return Response({'token': token, 'msg': 'Registration Success'}, status=status.HTTP_201_CREATED)
+            
+            # Fetching admin user - adjust the query as needed
+            admin_user = User.objects.get(is_admin=True)
+            admin_token = get_tokens_for_user(admin_user)['access']
+
+            approval_link = request.build_absolute_uri(f'/api/user/approve_user/{user.id}/')
+            disapproval_link = request.build_absolute_uri(f'/api/user/disapprove_user/{user.id}/')
+
+            message = (
+                            f'A new account for {user.full_Name} and Email {user.email} needs your approval to access the DMS Contant Management System. '
+                            f'Click the link to approve: {approval_link}\n'
+                            f'Click this link to disapprove: {disapproval_link}\n'
+                            f'Use this token for authorization: Bearer {admin_token}'
+                        )
+
+            send_mail(
+                            'User Request',
+                            message,
+                            settings.EMAIL_HOST_USER,
+                            ['mubeenjutt9757@gmail.com'],
+                            fail_silently=False,
+                    )
+            
+            return Response({'msg': 'Registration Success, waiting for admin approval'}, status=status.HTTP_201_CREATED)
         
         return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    
+
     def get(self,request,format=None):
         user=User.objects.filter(Q(is_active=True) & ~Q(is_admin=True))
         serializer=UserRegisterationSerializers(user,many=True)
@@ -158,3 +191,57 @@ class UserPasswordResetViews(APIView):
             return Response({'msg':'Password Change Successfully'},status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
         
+
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def approve_user(request, user_id):
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    user.is_active = True
+    user.save()
+
+    message=(
+        f'You are a part of the DMS Cantact Management System.',
+        f'"Click on this link and login http://localhost:5173/',
+    )
+
+
+
+    # Send confirmation email to the user
+    send_mail(
+        'Congratulations',
+        message,
+        settings.EMAIL_HOST_USER,
+        [user.email],
+        fail_silently=False,
+    )
+
+    return Response({'msg': 'User approved and activated successfully'}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def disapprove_user(request, user_id):
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+ 
+
+    # Send disapproval email to the user
+    send_mail(
+        'Account Not Approved',
+        'Sorry, your account registration has not been approved.',
+        settings.EMAIL_HOST_USER,
+        [user.email],
+        fail_silently=False,
+    )
+    user.delete()
+
+    
+    return Response({'msg': 'User disapproved and deleted successfully'}, status=status.HTTP_200_OK)

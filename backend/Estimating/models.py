@@ -300,3 +300,32 @@ class Qualification(models.Model):
     def __str__(self):
         return self.detail
 
+
+
+
+class Role(models.Model):
+    name=models.CharField(verbose_name="Role", max_length=50,unique=True)
+    description = models.TextField(verbose_name="Add Description", blank=True,null=True)
+    
+    def __str__(self):
+        return self.name
+
+class Dprtmnt(models.Model):
+    dprtmnt_name=models.CharField(verbose_name="Add the department name ", max_length=250)
+
+    def __str__(self):
+        return self.dprtmnt_name
+
+
+class DMS_Dertory(models.Model):
+    full_Name=models.CharField(verbose_name="Full Name", max_length=255,null=True,blank=True)
+    email = models.EmailField(verbose_name="Email",max_length=255,unique=True,null=True,blank=True)
+    job_title = models.ManyToManyField(Role,verbose_name="Role",blank=True)
+    company = models.ForeignKey(Company, verbose_name="company", blank=True, on_delete=models.CASCADE,null=True)
+    department=models.ForeignKey(Dprtmnt, verbose_name="Department ", on_delete=models.CASCADE,null=True,blank=True)
+    direct_number=models.IntegerField(verbose_name="Direct",null=True,blank=True)
+    locaton=models.CharField(verbose_name="Location", max_length=250,null=True,blank=True)
+    mobile_number=models.IntegerField(null=True,blank=True,unique=True)
+
+    def __str__ (self):
+        return self.full_Name

@@ -1,14 +1,19 @@
 from django.urls import path
-from .views import UserRegistrationView,UserLoginViews,UserProfileViews,UserChangePasswordViews,SendEmailResetPasswordViews,UserPasswordResetViews
+from . import views
 urlpatterns = [
-    path('Userapi/',UserRegistrationView.as_view(),name="register"),
-    path('Userapi/<int:id>',UserRegistrationView.as_view(),name="register"),
+    path('register/', views.UserRegistrationView.as_view(), name="register"),
+    path('register/<int:id>/', views.UserRegistrationView.as_view(), name="register_detail"),
+
+    path('approve_user/<int:user_id>/', views.approve_user, name='approve_user'),
+
+    path('disapprove_user/<int:user_id>/', views.disapprove_user, name='disapprove_user'),
 
 
-    path('login/',UserLoginViews.as_view(),name="register"),
-    path('UserapiViews/',UserProfileViews.as_view(),name="User Registration List"),
-    path('User/ChangePassword/',UserChangePasswordViews.as_view(),name="Change Password"),
-    path('send-rest-password-email/',SendEmailResetPasswordViews.as_view(),name="Send email Reset password"),
-    path('reset-password/<user_ID>/<token>/',UserPasswordResetViews.as_view(),name="reset-Password"),
+
+    path('login/', views.UserLoginViews.as_view(), name="login"),
+    path('profile/', views.UserProfileViews.as_view(), name="profile"),
+    path('change_password/', views.UserChangePasswordViews.as_view(), name="change_password"),
+    path('send_reset_password_email/', views.SendEmailResetPasswordViews.as_view(), name="send_reset_password_email"),
+    path('reset_password/<user_ID>/<token>/', views.UserPasswordResetViews.as_view(), name="reset_password"),
 
 ]

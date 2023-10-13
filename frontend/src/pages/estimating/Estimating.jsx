@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./Estimating.css";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "font-awesome/css/font-awesome.min.css";
 import "react-datepicker/dist/react-datepicker.css";
 import { fetchEstimatingData } from "../../store/EstimatingSlice";
@@ -16,7 +16,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateStatus } from "../../store/EstimatingSlice";
 import { createSelector } from "reselect";
 import { storeProposalData } from "../../store/EstimatingProposalSlice";
-import RawProposal from "../purposal/rawpurposal";
+import RawProposal from "../purposal/Rawpurposal";
 import { margin } from "@mui/system";
 
 const Estimator = () => {
@@ -164,7 +164,7 @@ const Estimator = () => {
   useEffect(() => {
     // Fetch data from the API
     axios
-      .get("http://127.0.0.1:8000/api/user/Userapi/")
+      .get("http://127.0.0.1:8000/api/user/register/")
       .then((response) => response.data)
       .then((data) => {
         const bidUser = data.filter(
@@ -270,7 +270,7 @@ const Estimator = () => {
   useEffect(() => {
     // Fetch data from the API
     axios
-      .get("http://127.0.0.1:8000/api/user/Userapi/")
+      .get("http://127.0.0.1:8000/api/user/register/")
       .then((response) => response.data)
       .then((data) => {
         const managerUser = data.filter((user) =>
@@ -290,7 +290,7 @@ const Estimator = () => {
   useEffect(() => {
     // Fetch data from the API
     axios
-      .get("http://127.0.0.1:8000/api/user/Userapi/")
+      .get("http://127.0.0.1:8000/api/user/register/")
       .then((response) => response.data)
       .then((data) => {
         const formanUser = data.filter((user) => user.roles.includes("Forman"));
@@ -308,7 +308,7 @@ const Estimator = () => {
   useEffect(() => {
     // Fetch data from the API
     axios
-      .get("http://127.0.0.1:8000/api/user/Userapi/")
+      .get("http://127.0.0.1:8000/api/user/register/")
       .then((response) => response.data)
       .then((data) => {
         const bimOperatorUser = data.filter((user) =>
@@ -328,7 +328,7 @@ const Estimator = () => {
   useEffect(() => {
     // Fetch data from the API
     axios
-      .get("http://127.0.0.1:8000/api/user/Userapi/")
+      .get("http://127.0.0.1:8000/api/user/register/")
       .then((response) => response.data)
       .then((data) => {
         const ProjEngerUser = data.filter((user) =>
@@ -577,9 +577,9 @@ const Estimator = () => {
   //   return formattedTime;
   // };
 
-  console.log("SelectedTimeforUpdate:", SelectedTimeforUpdate);
+  // console.log("SelectedTimeforUpdate:", SelectedTimeforUpdate);
   const formattedTimeEdit = convertToIsoTime(SelectedTimeforUpdate);
-  console.log("formattedTimeEdit:", formattedTimeEdit);
+  // console.log("formattedTimeEdit:", formattedTimeEdit);
 
   const handleEstimatingEditing = async (event) => {
     event.preventDefault();
@@ -1589,24 +1589,13 @@ const Estimator = () => {
                           Create
                         </button>
 
-                        {/* <button
-                          type="button"
-                          className="btn dropbtns btn-primary"
-                          onClick={() => {
-                            console.log(item.id);
-                            setSelectedProjectID(item.id);
-                            setshowProjectModal(true);
-                          }}
-                        >
-                        
-                          Project
-                        </button> */}
                         <button
                           className="btn dropbtns btn-secondary"
                           onClick={() => {
-                            navigate("/homepage/purposal");
+                            // navigate("/homepage/purposal");
                             // setItemId(item.id);
-                            // navigate("/homepage/rawproposal");
+                            // <Link to={`/homepage/rawproposal/${item.id}`}>View</Link>
+                            navigate(`/homepage/rawproposal/${item.id}`);
                           }}
                         >
                           View

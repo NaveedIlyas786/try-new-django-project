@@ -481,24 +481,27 @@ const Estimator = () => {
     .padStart(2, "0")}`;
 
   // Assuming your input time is in the "HH:mm" format, e.g., "18:00"
-  function convertTo12HourFormat(inputTime) {
-    const [hours, minutes] = inputTime.split(":");
-    let parsedHours = parseInt(hours, 10); // Use let instead of const
 
-    if (parsedHours >= 12 && parsedHours > 0) {
-      if (parsedHours > 12) {
-        // Convert hours to 12-hour format if greater than 12
-        parsedHours -= 12;
-      }
-    } else if (parsedHours === 0) {
-      parsedHours = 12; // Midnight is 12:00 AM
-    }
+  // function convertTo12HourFormat(inputTime) {
+  //   const [hours, minutes] = inputTime.split(":");
+  //   let parsedHours = parseInt(hours, 10); // Use let instead of const
 
-    // Format the time as "hh:mm"
-    return `${parsedHours.toString().padStart(2, "0")}:${minutes}`;
-  }
+  //   if (parsedHours >= 12 && parsedHours > 0) {
+  //     if (parsedHours > 12) {
+  //       // Convert hours to 12-hour format if greater than 12
+  //       parsedHours -= 12;
+  //     }
+  //   } else if (parsedHours === 0) {
+  //     parsedHours = 12; // Midnight is 12:00 AM
+  //   }
 
-  const editformattedTime = convertTo12HourFormat(SelectedTimeforUpdate);
+  //   // Format the time as "hh:mm"
+  //   return `${parsedHours.toString().padStart(2, "0")}:${minutes}`;
+  // }
+
+  // const editformattedTime = convertTo12HourFormat(SelectedTimeforUpdate);
+
+
   // console.log(editformattedTime);
 
   // *******************************************************
@@ -533,14 +536,6 @@ const Estimator = () => {
   const handleEstimatingEditing = async (event) => {
     event.preventDefault();
 
-    // const formattedTime = validateAndFormatTime(SelectedTimeforUpdate);
-    // console.log("Formatted Time: ", formattedTime);
-
-    // if (!formattedTime) {
-    //   console.error("Invalid time format");
-    //   return;
-    // }
-
     const updatedData = {
       prjct_name: selectedEstimatingID,
       due_date: formattedDueDate,
@@ -569,7 +564,19 @@ const Estimator = () => {
 
       if (response.ok) {
         console.log(`Data updated successfully for item with ID ${itemId}`);
-        // You may need to refresh the UI or update the specific row accordingly
+
+        setselectedStatus(""),
+        setSelectedBidder(""),
+        setSelectedCompany(""),
+        setSelectedEstimator(""),
+        setSelectedLocation(""),
+        setSelectedbidder_address(""),
+        setSelecteddueDate(""),
+        setSelectedstart_date(""),
+        setSelectedEstimatingID(""),
+        setTimeout(() => {
+          setshowEstimatingEditModal(false)
+        }, 300);
       } else if (response.status === 404) {
         console.error("Resource not found.");
       } else {
@@ -1987,7 +1994,7 @@ const Estimator = () => {
                     value={selectedCompany} // Update location or define it in your state
                     onChange={(e) => setSelectedCompany(e.target.value)}
                   >
-                    <option value={selectedCompany}>{selectedCompany}</option>
+                    <option value={selectedCompany ? selectedCompany : "No Company"}>{selectedCompany ? selectedCompany : "No Company"}</option>
                     {companyName && companyName.length > 0 ? (
                       companyName.map((companyItem) => (
                         <option value={companyItem.id} key={companyItem.id}>
@@ -2028,8 +2035,8 @@ const Estimator = () => {
                     onChange={(e) => setSelectedEstimator(e.target.value)}
                   >
                     {/* Provide an initial option with the selectedEstimator value */}
-                    <option value={selectedEstimator}>
-                      {selectedEstimator}
+                    <option value={selectedEstimator ? selectedEstimator :"No Estimator"}>
+                    {selectedEstimator ? selectedEstimator :"No Estimator"}
                     </option>
 
                     {EstimatorName && EstimatorName.length > 0 ? (
@@ -2056,7 +2063,7 @@ const Estimator = () => {
                     value={selectedLocation} // Update location or define it in your state
                     onChange={(e) => setSelectedLocation(e.target.value)}
                   >
-                    <option value={selectedLocation}>{selectedLocation}</option>
+                    <option value={selectedLocation ? selectedLocation : "No Location"}>{selectedLocation ? selectedLocation : "No Location"}</option>
                     {userLocation && userLocation.length > 0 ? (
                       userLocation.map((place) => (
                         <option value={place.id} key={place.id}>
@@ -2092,7 +2099,7 @@ const Estimator = () => {
                   <div className="d-flex bg-white">
                     <input
                       type="time"
-                      value={editformattedTime}
+                      // value={editformattedTime}
                       onChange={(e) => setSelectedTimeforUpdate(e.target.value)}
                     />
 

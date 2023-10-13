@@ -4,25 +4,45 @@ from .validation import validate_file_extension
 import os
 
 from accounts.models import User
-from Estimating.models import Estimating,Estimating_detail,Proposal
-
-
-
-
-
+from Estimating.models import Estimating, Estimating_detail, Proposal
 
 
 class Project(models.Model):
-    status=models.CharField(choices=[('C','C'),('P','P'),('Q','Q'),('V','V'),('X','X'),],default='C' , max_length=50,null=True,blank=True)
-    job_num=models.PositiveIntegerField(verbose_name="Add Job #",unique=True,null=True,blank=True)
-    scope=models.CharField(verbose_name="Scope (Description) ",max_length=500000,null=True,blank=True)
-    prjct_engnr = models.ForeignKey(User,verbose_name="Project Engineer", related_name='Project_Engineer', limit_choices_to=models.Q(roles__name='Project Engineer'), on_delete=models.SET_NULL, null=True,blank=True)
-    bim_oprtr = models.ForeignKey(User,verbose_name="BIM Modeler", related_name='Bim_Operator', limit_choices_to=models.Q(roles__name='BIM') | models.Q(roles__name='BIM Modeler/Trimble Operator') | models.Q(roles__name='BIM/Manager PR'), on_delete=models.SET_NULL,null=True,blank=True)
-    Forman	 = models.ForeignKey(User,verbose_name="FOREMAN/Superintendent", related_name='Forman_as_Forman', limit_choices_to=models.Q(roles__name='Foreman') | models.Q(roles__name='General Superintendent'), on_delete=models.SET_NULL, null=True,blank=True)
-    prjct_mngr = models.ForeignKey(User,verbose_name="Project Manager", related_name='Project_Manager', limit_choices_to=models.Q(roles__name='Project Manager'), on_delete=models.SET_NULL, null=True,blank=True)
-    estimating=models.ForeignKey(Estimating, verbose_name="start date", related_name='projects_start_date', on_delete=models.CASCADE, null=True, blank=True)
-    start_date = models.DateField(verbose_name="start Date(YYYY-MM-DD)",null=True,blank=True)
-    general_superintendent=models.ForeignKey(User,verbose_name="Genral_superintendent",limit_choices_to=models.Q(roles__name='Project Manager'), on_delete=models.SET_NULL, null=True,blank=True)
+    status = models.CharField(choices=[('C', 'C'), ('P', 'P'), ('Q', 'Q'), (
+        'V', 'V'), ('X', 'X'),], default='C', max_length=50, null=True, blank=True)
+    job_num = models.PositiveIntegerField(
+        verbose_name="Add Job #", unique=True, null=True, blank=True)
+    scope = models.CharField(
+        verbose_name="Scope (Description) ", max_length=500000, null=True, blank=True)
+    prjct_engnr = models.ForeignKey(User, verbose_name="Project Engineer", related_name='Project_Engineer', limit_choices_to=models.Q(
+        roles__name='Project Engineer'), on_delete=models.SET_NULL, null=True, blank=True)
+    bim_oprtr = models.ForeignKey(User, verbose_name="BIM Modeler", related_name='Bim_Operator', limit_choices_to=models.Q(roles__name='BIM') | models.Q(
+        roles__name='BIM Modeler/Trimble Operator') | models.Q(roles__name='BIM/Manager PR'), on_delete=models.SET_NULL, null=True, blank=True)
+    Forman = models.ForeignKey(User, verbose_name="FOREMAN/Superintendent", related_name='Forman_as_Forman', limit_choices_to=models.Q(roles__name='Foreman') | models.Q(
+        roles__name='General Superintendent') | models.Q(roles__name='So. Cal. General Manager') | models.Q(roles__name='No. Cal. General Manager'), on_delete=models.SET_NULL, null=True, blank=True)
+    prjct_mngr = models.ForeignKey(User, verbose_name="Project Manager", related_name='Project_Manager', limit_choices_to=models.Q(
+        roles__name='Project Manager'), on_delete=models.SET_NULL, null=True, blank=True)
+    estimating = models.ForeignKey(Estimating, verbose_name="start date",
+                                   related_name='projects_start_date', on_delete=models.CASCADE, null=True, blank=True)
+    start_date = models.DateField(
+        verbose_name="start Date(YYYY-MM-DD)", null=True, blank=True)
+    general_superintendent = models.ForeignKey(User, verbose_name="Genral_superintendent",
+                                               limit_choices_to=models.Q(roles__name='General Superintendent') |
+                                               models.Q(roles__name='So. Cal. General Manager') |
+                                               models.Q(roles__name='No. Cal. General Manager') |
+                                               models.Q(roles__name='President'), on_delete=models.SET_NULL, null=True, blank=True)
+
+    proposal=models.ForeignKey(Proposal, verbose_name="Proposal", on_delete=models.CASCADE)
+
+    # Contract
+
+
+
+
+
+
+
+
 
     # def save(self, *args, **kwargs):
     #     # Check if this is a new instance (i.e., being created and not updated)
@@ -47,9 +67,7 @@ class Project(models.Model):
     #             if estimating_parent:
     #                 estimating_to_project[estimating_parent] = directory
 
-
     #         # Top Level Entries
-
 
     #         for estimating_detail in Estimating_detail.objects.all():
     #             estimating_parent = estimating_detail.prnt
@@ -64,10 +82,8 @@ class Project(models.Model):
     #             )
     #             estimating_to_project[estimating_detail] = directory
 
-
     #         for name in ['Accounting', 'Certified Payroll', 'Change Orders','Insurance', 'Contract', 'Estimating', 'PM', 'Safety', 'Subcontractors']:
     #             create_directory(name)
-
 
     #         # Second Level Entries
     #         for item  in [
@@ -116,12 +132,7 @@ class Project(models.Model):
     #             {'name': 'Subcontractor Name', 'parent': 'Subcontractors'},
     #         ]:
     #             create_directory(item['name'], item['parent'])
-        
 
-                
-
-
-                   
     #         # Third Level Entries
     #         for item  in [
     #             {'name': '2022', 'parent': 'Billing'},
@@ -163,17 +174,12 @@ class Project(models.Model):
     #             {'name': 'Contract', 'parent': 'Subcontractor Name'},
     #             {'name': 'PM', 'parent': 'Subcontractor Name'},
 
-
-
-
-
-
     #         ]:
     #             create_directory(item['name'], item['parent'])
 
     #         # Fourth Level Entries
     #         for item  in [
-    #             {'name': '2023 Wage Rates for Dist', 'parent': 'Extra Work Rates'},              
+    #             {'name': '2023 Wage Rates for Dist', 'parent': 'Extra Work Rates'},
     #             {'name': 'PCO 000 - DESCRIPTION', 'parent': 'PCOs'},
     #             {'name': 'PCO 001 - Exterior Mock Up - Need to Send', 'parent': 'PCOs'},
     #             {'name': 'PCO 002 - IFC Drawing Updates', 'parent': 'PCOs'},
@@ -200,18 +206,11 @@ class Project(models.Model):
     #             {'name': 'SEND', 'parent': 'Working File'},
     #             {'name': 'Welding Procedures', 'parent': 'Working File'},
 
-
-
-
-
-
-
     #         ]:
     #             create_directory(item['name'], item['parent'])
 
-
     #         for item  in [
-    #             {'name': 'old', 'parent': 'Exterior'},              
+    #             {'name': 'old', 'parent': 'Exterior'},
     #             {'name': '1. Dewalt', 'parent': '01. Product Data'},
     #             {'name': '3. Ramset', 'parent': '01. Product Data'},
     #             {'name': '4. Simpson', 'parent': '01. Product Data'},
@@ -233,15 +232,8 @@ class Project(models.Model):
     #             {'name': 'Mock Up', 'parent': 'SEND'},
     #             {'name': 'Welding Procedures', 'parent': 'SEND'},
 
-
-
-
     #         ]:
     #             create_directory(item['name'], item['parent'])
-
-    
-
-
 
     #         for item  in [
 
@@ -267,24 +259,16 @@ class Project(models.Model):
     #             {'name': 'Header Cripple Stud Clips', 'parent': '092216 - Non-Structural Metal Framing'},
     #             {'name': 'Submittal to be updated', 'parent': 'Welding Procedures'},
 
-
     #         ]:
     #             create_directory(item['name'], item['parent'])
-
 
     #         for name in [
 
     #             {'name': 'Amico', 'parent': 'Lath'},
     #             {'name': 'Structa Wire', 'parent': 'Lath'},
 
-
     #         ]:
     #             create_directory(item['name'], item['parent'])
-
-
-
-
-
 
     def __str__(self):
         return str(self.estimating)
@@ -293,15 +277,80 @@ class Project(models.Model):
 
 
 
+
+
+
+
+
+
+
+class Contract(models.Model):
+    contract=models.CharField(verbose_name="Contract", max_length=50,choices=[
+        ('Fully Executed','Fully Executed'),('Not Fully Executed','Not Fully Executed')
+        ],default='Not fully Executed', null=True, blank=True)
+    contract_date=models.DateField(verbose_name="add date of the Contract if Fully Executed (YYYY-MM-DD)", null=True, blank=True)
+
+
+class Schedule(models.Model):
+    schedule=models.CharField(verbose_name="Contract", max_length=50,choices=[
+        ('Approved','Approved'),('Not Approved','Not Approved')
+        ],default='Not Approved', null=True, blank=True)
+    schedule_date=models.DateField(verbose_name="add date of the schedule if Approved (YYYY-MM-DD)", null=True, blank=True)
+
+
+
+
+    #INSURANCE
+
+    
+
+
+    #BOND
+
+    #ZLIEN
+
+class Insurance(models.Model):
+    insurance=models.CharField(verbose_name="Contract", max_length=50,choices=[
+        ('CCIP','CCIP'),('Sent','Sent'),('Received','Received'),('Complete','Complete'),
+        ],default='null', null=True, blank=True)
+    insurance_date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
+class Bond(models.Model):
+    bond=models.CharField(verbose_name="Contract", max_length=50,choices=[
+        ('Sent','Sent'),('Received','Received'),('Complete','Complete'),
+        ],default='null', null=True, blank=True)
+    bond_date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
+class  Zlien(models.Model):
+    zlien=models.CharField(verbose_name="Contract", max_length=50,choices=[
+        ('Submitted','Submitted'),('Not Submitted','Not Submitted'),
+        ],default='Not Submitted', null=True, blank=True)
+    zlien_date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class Project_detail(models.Model):
-    drctry_Name = models.CharField(verbose_name="Folder Name",max_length=255)
+    drctry_Name = models.CharField(verbose_name="Folder Name", max_length=255)
 
-    prjct_id = models.ForeignKey(Project,verbose_name="Project", on_delete=models.CASCADE)
-    prnt_id = models.ForeignKey('self', verbose_name="Folder Parent ID", null=True, blank=True, on_delete=models.CASCADE, related_name="children")
-    file_type = models.CharField(verbose_name="Type Name",max_length=100, null=True, blank=False)  
-    file_name = models.CharField(verbose_name="file Name",max_length=100, null=True, blank=False) 
+    prjct_id = models.ForeignKey(
+        Project, verbose_name="Project", on_delete=models.CASCADE)
+    prnt_id = models.ForeignKey('self', verbose_name="Folder Parent ID",
+                                null=True, blank=True, on_delete=models.CASCADE, related_name="children")
+    file_type = models.CharField(
+        verbose_name="Type Name", max_length=100, null=True, blank=False)
+    file_name = models.CharField(
+        verbose_name="file Name", max_length=100, null=True, blank=False)
     file_binary_data = models.BinaryField(null=True, blank=True)
-
 
     def __str__(self):
         return self.drctry_Name

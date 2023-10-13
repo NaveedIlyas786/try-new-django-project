@@ -607,11 +607,17 @@ def create_proposal(request, proposal_id=None):
 
 
     elif request.method == 'GET':
-        # Add GET request handling logic here (if needed)
-        proposals = Proposal.objects.all()
-        serializer = ProposalSerializer(proposals, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
+        if proposal_id is not None:
+            try:
+                proposal = Proposal.objects.get(id=proposal_id)
+                serializer = ProposalSerializer(proposal)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except Proposal.DoesNotExist:
+                return Response({"error": "Proposal not found"}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            proposals = Proposal.objects.all()
+            serializer = ProposalSerializer(proposals, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
 
     

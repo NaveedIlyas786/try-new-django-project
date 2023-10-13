@@ -1,43 +1,32 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchProposalData, storeProposalData } from '../../store/EstimatingProposalSlice';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
-const RawProposal = () => {
-  const dispatch = useDispatch();
-  const proposalData = useSelector((state) => state.estimatingProposal.data);
+function Rawpurposal() {
+  const { id } = useParams();
+  const [proposalData, setProposalData] = useState(null);
 
-  // When the component initializes
   useEffect(() => {
-    // Check if there's data in local storage
-    const localStorageData = localStorage.getItem('proposalData');
-
-    if (localStorageData) {
-      // Parse the data from local storage
-      const parsedData = JSON.parse(localStorageData);
-
-      // Dispatch the parsed data to the Redux store
-      dispatch(storeProposalData(parsedData));
-    }},[dispatch])
+    // Make an API request to fetch data using the 'id' parameter
+    // Example: http://127.0.0.1:8000/api/estimating/proposals/{id}
+    fetch(`http://127.0.0.1:8000/api/estimating/proposals/${id}`)
+      .then((response) => response.json())
+      .then((data) => setProposalData(data))
+      .catch((error) => console.error('Error fetching proposal data:', error));
+  }, [id]);
 
   return (
     <div>
-      <h1>Raw Proposal Data</h1>
-      {proposalData ? (
-        <ul>
-          {proposalData.map((proposal) => (
-            <li key={proposal.id}>
-              {/* Display your proposal data here */}
-              Date: {proposal?.date}
-              Estimating: {proposal?.estimating}
-              {/* Add other fields as needed */}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className=' mt-5 text-danger'>Loading proposal data...</p>
+      {/* Display proposalData */}
+      {proposalData && (
+        <div>
+          <h2>Proposal Details</h2>
+          <p>{proposalData.name}</p>
+          <p>{proposalData.description}</p>
+          {/* Display other data fields */}
+        </div>
       )}
     </div>
   );
 }
 
-export default RawProposal;
+export default Rawpurposal;

@@ -1,11 +1,29 @@
-import React, { useRef } from "react";
+import React, { Component,useRef, useEffect, useState } from 'react';
 import "./Purposal.css";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 const Purposal = () => {
+
   console.log("Purposal component rendered");
   const pdfRef = useRef();
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    // Make a GET request to the API endpoint
+    axios.get('http://127.0.0.1:8000/api/estimating/proposals')
+      .then(response => {
+        // Handle the successful response here
+        setData(response.data);
+        console.log(response.data);
+      })
+      .catch(error => {
+        // Handle any errors here
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
   const Exportpdf = () => {
     const input = pdfRef.current;
     html2canvas(input).then((canvas) => {
@@ -22,6 +40,7 @@ const Purposal = () => {
       pdf.save("Proposal.pdf");
     });
   };
+
   const navigate = useNavigate();
   const movetoEstimatingPage = () => {
     navigate("/homepage/estimating/");
@@ -43,6 +62,12 @@ const Purposal = () => {
         </div>
       </div>
       <div ref={pdfRef} className="pdf_form">
+      <h1>Data from API:</h1>
+        <ul>
+          {data.map(item => (
+            <li key={item.id}>{item.architect_name}</li>
+          ))}
+        </ul>
         <header className="header ">
           <div className="topSection">
             <img
@@ -60,7 +85,7 @@ const Purposal = () => {
             </div>
           </div>
         </header>
-        <main>
+        {/* <main>
           <div>
             <p>January 24, 2023</p>
             <p className="">
@@ -197,7 +222,7 @@ const Purposal = () => {
         </main>
         <footer className="footer myspan text-center">
           CSLB 1035342 DIR 1000059791
-        </footer>
+        </footer> */}
       </div>
     </div>
   );

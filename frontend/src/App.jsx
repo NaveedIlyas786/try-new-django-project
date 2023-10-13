@@ -26,7 +26,7 @@ import URLPage from "./pages/urlPage/URLPage";
 import WonProjects from "./pages/won_lost_Projects/WonProjects";
 import LostProjects from "./pages/won_lost_Projects/LostProjects";
 import DMSDirectory from "./pages/dmsDirectory/DMSDirectory";
-import RawProposal from "./pages/purposal/rawpurposal";
+import RawProposal from "./pages/purposal/Rawpurposal";
 
 
 function App() {
@@ -40,9 +40,9 @@ function App() {
         <Route path="/homepage/" element={<HomePage />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="projects" element={<Projects />} />
-          <Route path="purposal" element={<Purposal />} />
+          <Route path="purposal/:id" element={<Purposal />} />
           <Route path="urlpage" element={<URLPage />} />
-          <Route path="rawproposal" element={<RawProposal />} />
+          <Route path="rawproposal/:id" element={<RawProposal />} />
           <Route path="wonProjectspage" element={<WonProjects />} />
           <Route path="lostProjectspage" element={<LostProjects />} />
           <Route path="projects/:id" element={<ProjectDirectory />} />

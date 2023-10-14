@@ -53,8 +53,16 @@ class ProjectDetailListCreateView(APIView):
 
 
 
-@api_view(['POST'])
+@api_view(['GET','POST'])
 def create_project(request):
+    if request.method == 'GET':
+        projects = Project.objects.all()
+        serializer = ProjectSerializer(projects, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+
+    
     if request.method == 'POST':
         data = request.data
 

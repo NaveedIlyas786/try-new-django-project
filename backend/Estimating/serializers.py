@@ -223,7 +223,7 @@ class ProposalServiceSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
 
 
-        representation['service'] = instance.service.name if instance.name else None
+        representation['service'] = instance.service.name if instance.service else None
 
 
         return representation

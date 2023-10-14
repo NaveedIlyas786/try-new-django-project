@@ -59,21 +59,7 @@ const Signup = () => {
       return;
     }
     try {
-      // **************
-      // // Send a POST request to check if the email exists
-      // const checkEmailResponse = await axios.post(
-      //   "http://127.0.0.1:8000/api/user/Userapi/",
-      //   { email: email } // Send email in the request body
-      // );
     
-      // // Check the response from the backend
-      // if (checkEmailResponse.email.length > 0) {
-      //   setError("User is already registered with this email");
-      // } 
-      // else {
-      //   // User is not registered, continue with the registration process
-      //   // Create an object with user registration data
-        // ***************
         const userData = {
           full_Name: full_Name,
           email: email,
@@ -87,10 +73,10 @@ const Signup = () => {
             // Handle success response from the backend (if needed)
             console.log("User registration successful:", response);
             setSuccessMessage("Registration Successful!");
-    
             setTimeout(() => {
-              navigate("/");
-            }, 1700);
+              navigate("/homepage/waitingPage")
+              // navigate("/");
+            }, 1400);
             // Redirect the user to a success page or do something else
           })
           .catch((error) => {
@@ -103,8 +89,6 @@ const Signup = () => {
       console.error("Error checking email:", error);
       setError("Error checking email. Please try again.");
     }
-  
-    
   };
 
   return (

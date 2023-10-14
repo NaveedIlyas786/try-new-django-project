@@ -6,7 +6,7 @@ import os
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status,views
-from .models import Company, Estimating,Estimating_detail, Proposal, Qualification,Service,Location,UrlsTable,Addendum,DMS_Dertory
+from .models import Company, Estimating,Estimating_detail, Proposal, Qualification,Service,Location,UrlsTable,Addendum,DMS_Dertory,Specification,Spec_detail
 from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer,SpecificationSerializer,ServiceSerializer,LocationSerializer,EstimatingDetailSerializer,ProposalServiceSerializer,CompanySerializer,UrlsSerializers,DMS_DertorySezializers
 from accounts.models import User
 
@@ -750,12 +750,12 @@ class AddendumView(APIView):
 
 
 # THIS IS Specification VIEW WITH ALL CRUD OPRATION
-# class SpecificationViews(APIView):
+class SpecificationViews(APIView):
 
-#     def get(self, request, format=None):
-#         specification = Specification.objects.all()
-#         serializer = SpecificationSerializer(specification, many=True)
-#         return Response(serializer.data)
+    def get(self, request, format=None):
+        specification = Specification.objects.all()
+        serializer = SpecificationSerializer(specification, many=True)
+        return Response(serializer.data)
 
 #     def post(self, request, format=None):
 #         serializer = SpecificationSerializer(data=request.data)
@@ -795,12 +795,12 @@ class AddendumView(APIView):
 
 
 # THIS IS sPECIFICATION DETAIL VIEW ALL CRUD OPRATION 
-# class SpecificationDetailViews(APIView):
+class SpecificationDetailViews(APIView):
 
-#     def get(self, request, format=None):
-#         specification = Spec_detail.objects.all()
-#         serializer = SpecificationDetailSerializer(specification, many=True)
-#         return Response(serializer.data)
+    def get(self, request, format=None):
+        specification = Spec_detail.objects.all()
+        serializer = SpecificationDetailSerializer(specification, many=True)
+        return Response(serializer.data)
 
 #     def post(self, request, format=None):
 #         serializer = SpecificationDetailSerializer(data=request.data)

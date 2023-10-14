@@ -44,4 +44,9 @@ urlpatterns = [
 
     path('dmsDrectory/',views.DMS_DertoryView.as_view(),name='DMS-Derctory'),
 
+    path('specificationDetail/',views.SpecificationDetailViews.as_view(),name='SpecificationDetail'),
+
+    path('specification/',views.SpecificationViews.as_view(),name='SpecificationDetail'),
+
+
 ]

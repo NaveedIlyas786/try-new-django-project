@@ -1,10 +1,10 @@
 from django.urls import path
-from .views import ProjectListCreateView,ProjectDetailListCreateView
+from . import views
 
 urlpatterns = [
-    path('ProjectList/',ProjectListCreateView.as_view(),name='Project'),
-    path('ProjectList/<int:id>/',ProjectListCreateView.as_view(),name='Project'),
+    path('Project/',views.create_project,name='Project'),
+    path('Project/<int:id>/',views.create_project,name='Project'),
 
-    path('projectDrctory/',ProjectDetailListCreateView.as_view(),name='Project Directory')
+    path('projectDrctory/',views.ProjectDetailListCreateView.as_view(),name='Project Directory')
 
 ]

@@ -3,26 +3,31 @@ import "./Purposal.css";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useParams } from 'react-router-dom';
+
 const Purposal = () => {
 
   console.log("Purposal component rendered");
   const pdfRef = useRef();
+  const { id } = useParams();
+  const [proposalData, setProposalData] = useState(null);
   const [data, setData] = useState([]);
-
+  
   useEffect(() => {
-    // Make a GET request to the API endpoint
-    axios.get('http://127.0.0.1:8000/api/estimating/proposals')
-      .then(response => {
-        // Handle the successful response here
-        setData(response.data);
-        console.log(response.data);
+    fetch(`http://127.0.0.1:8000/api/estimating/proposals/${id}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`API request failed with status: ${response.status}`);
+        }
+        console.log(response);
+        return response.json();
       })
-      .catch(error => {
-        // Handle any errors here
-        console.error('Error fetching data:', error);
-      });
-  }, []);
+      .then((data) => {
+        setProposalData(data);
+        console.log(data);
+      })
+      .catch((error) => console.error('Error fetching proposal data:', error));
+  }, [id]);
 
   const Exportpdf = () => {
     const input = pdfRef.current;
@@ -61,6 +66,15 @@ const Purposal = () => {
           <img onClick={Exportpdf} className="exportSection pdfimg" src="../../../src/assets/pdfimg.png" alt="" />
         </div>
       </div>
+
+      {/* {proposalData && (
+        <div className='mt-5 bg-info'>
+          <h2 className='mt-5'>Proposal Details</h2>
+          <p>{proposalData.estimating}</p>
+          <p>{proposalData.architect_name}</p>
+        </div>
+      )} */}
+
       <div ref={pdfRef} className="pdf_form">
       <h1>Data from API:</h1>
         <ul>
@@ -85,7 +99,7 @@ const Purposal = () => {
             </div>
           </div>
         </header>
-        {/* <main>
+        <main>
           <div>
             <p>January 24, 2023</p>
             <p className="">
@@ -222,7 +236,7 @@ const Purposal = () => {
         </main>
         <footer className="footer myspan text-center">
           CSLB 1035342 DIR 1000059791
-        </footer> */}
+        </footer>
       </div>
     </div>
   );

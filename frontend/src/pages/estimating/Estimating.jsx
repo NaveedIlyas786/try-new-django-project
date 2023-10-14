@@ -16,7 +16,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateStatus } from "../../store/EstimatingSlice";
 import { createSelector } from "reselect";
 import { storeProposalData } from "../../store/EstimatingProposalSlice";
-import RawProposal from "../purposal/Rawpurposal";
+import Rawpurposal from "../purposal/rawpurposal";
 import { margin } from "@mui/system";
 
 const Estimator = () => {

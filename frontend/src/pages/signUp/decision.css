@@ -1,0 +1,29 @@
+#waitingpage{
+    min-height: 100vh ;
+    background-color: rgb(238, 238, 241);
+    display: grid;
+    place-items: center;
+}
+.contentwaiting * {
+    padding:20px 50px;
+    color: black;
+
+}
+.pending{
+    color: rgb(255, 176, 4);
+}
+.rejectPage{
+    min-height: 100vh ;
+    background-color: rgb(238, 238, 241);
+    display: grid;
+    place-items: center;
+}
+.admindecisionPage {
+    min-height: 100vh ;
+    background-color: rgb(238, 238, 241);
+    display: grid;
+    place-items: center;
+    text-align: center;
+
+
+}

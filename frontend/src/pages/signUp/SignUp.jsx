@@ -74,7 +74,7 @@ const Signup = () => {
             console.log("User registration successful:", response);
             setSuccessMessage("Registration Successful!");
             setTimeout(() => {
-              navigate("/homepage/waitingPage")
+              navigate("/waitingPage")
               // navigate("/");
             }, 1400);
             // Redirect the user to a success page or do something else
@@ -167,12 +167,12 @@ const Signup = () => {
         <button className="submitbtn" onClick={handleRegister}>
           Send Request
         </button>
-        <p className="signuplink">
+        {/* <p className="signuplink">
           Already have an account:{" "}
           <Link className="Link" to="/">
             Login
           </Link>
-        </p>
+        </p> */}
       </div>
     </div>
   );

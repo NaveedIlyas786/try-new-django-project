@@ -26,8 +26,10 @@ import URLPage from "./pages/urlPage/URLPage";
 import WonProjects from "./pages/won_lost_Projects/WonProjects";
 import LostProjects from "./pages/won_lost_Projects/LostProjects";
 import DMSDirectory from "./pages/dmsDirectory/DMSDirectory";
-import RawProposal from "./pages/purposal/Rawpurposal";
+import Rawpurposal from "./pages/purposal/rawpurposal";
 import Waiting from "./pages/signUp/Waiting";
+import AdminDecisionpage from "./pages/signUp/AdminDecisionpage";
+import RejectionPage from "./pages/signUp/RejectionPage";
 
 
 function App() {
@@ -37,15 +39,17 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forgotScreen" element={<Forgot />} />
+          <Route path="/waitingPage" element={<Waiting />} />
+          <Route path="/rejectionPage" element={<RejectionPage />} />
+          <Route path="/adminDecisionPage" element={<AdminDecisionpage />} />
         {/* <Route path="/purposal" element={<Purposal />} /> */}
         <Route path="/homepage/" element={<HomePage />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="projects" element={<Projects />} />
           <Route path="purposal/:id" element={<Purposal />} />
           <Route path="urlpage" element={<URLPage />} />
-          <Route path="rawproposal/:id" element={<RawProposal />} />
+          <Route path="rawproposal/:id" element={<Rawpurposal />} />
           {/* <Route path="waitingPage/:id" element={<Waiting />} /> */}
-          <Route path="waitingPage" element={<Waiting />} />
 
           <Route path="wonProjectspage" element={<WonProjects />} />
           <Route path="lostProjectspage" element={<LostProjects />} />

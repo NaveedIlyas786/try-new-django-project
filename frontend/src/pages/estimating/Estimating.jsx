@@ -1576,14 +1576,15 @@ const Estimator = () => {
                           className="btn dropbtns btn-success"
                           onClick={() => {
                             console.log(item.prjct_name);
-                            setItemId(item.id);
+                          //   setItemId(item.id);
 
-                            setStep0FormData({
-                              ...step0FormData,
-                              estimating: item.id,
-                            });
-                            setSelectedEstimatingID(item.prjct_name);
-                            setPurposalModal(true);
+                          //   setStep0FormData({
+                          //     ...step0FormData,
+                          //     estimating: item.id,
+                          //   });
+                          //   setSelectedEstimatingID(item.prjct_name);
+                          //   setPurposalModal(true);
+                          navigate("/homepage/purposal/${item.id}");
                           }}
                         >
                           Create
@@ -1592,7 +1593,6 @@ const Estimator = () => {
                         <button
                           className="btn dropbtns btn-secondary"
                           onClick={() => {
-                            // navigate("/homepage/purposal");
                             // setItemId(item.id);
                             // <Link to={`/homepage/rawproposal/${item.id}`}>View</Link>
                             navigate(`/homepage/rawproposal/${item.id}`);

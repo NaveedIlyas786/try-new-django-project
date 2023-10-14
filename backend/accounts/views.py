@@ -53,13 +53,13 @@ class UserRegistrationView(APIView):
             admin_user = User.objects.get(is_admin=True)
             admin_token = get_tokens_for_user(admin_user)['access']
 
-            approval_link = request.build_absolute_uri(f'/api/user/approve_user/{user.id}/')
-            disapproval_link = request.build_absolute_uri(f'/api/user/disapprove_user/{user.id}/')
+            approval_link = request.build_absolute_uri(f'http://localhost:5173/adminDecisionPage/{user.id}/')
+            # disapproval_link = request.build_absolute_uri(f'/api/user/disapprove_user/{user.id}/')
 
             message = (
                             f'A new account for {user.full_Name} and Email {user.email} needs your approval to access the DMS Contant Management System. '
                             f'Click the link to approve: {approval_link}\n'
-                            f'Click this link to disapprove: {disapproval_link}\n'
+                            # f'Click this link to disapprove: {disapproval_link}\n'
                             # f'Use this token for authorization: Bearer {admin_token}'
                         )
 

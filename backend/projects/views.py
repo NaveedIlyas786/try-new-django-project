@@ -10,6 +10,13 @@ from rest_framework import status
 from rest_framework.views import APIView
 
 
+from rest_framework.decorators import api_view
+from .models import Project, Contract, Schedule_of_Value, Insurance, Bond, Zlien, Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, Billing, Sov, HDS_system, OnBuild, Buget
+from .serializers import (ProjectSerializer, ContractSerializer, ScheduleOfValueSerializer, InsuranceSerializer, BondSerializer, 
+ZlienSerializer, SubmittalsSerializer, ShopDrawingSerializer, SafitySerializer, ScheduleSerializer, 
+SubContractorsSerializer, LaborRateSerializer, BillingSerializer, SovSerializer, HDSSystemSerializer, 
+OnBuildSerializer, BugetSerializer) 
+
 
 class ProjectListCreateView(APIView):
     def get(self,request):
@@ -42,3 +49,50 @@ class ProjectDetailListCreateView(APIView):
 # class ProjectDetailListCreateView(viewsets.ReadOnlyModelViewSet):
 #     queryset = Project_detail.objects.filter(prnt_id__isnull=True)  # This fetches top-level directories
 #     serializer_class = ProjectDetailSerializer
+
+
+
+
+@api_view(['POST'])
+def create_project(request):
+    if request.method == 'POST':
+        data = request.data
+
+        project_serializer = ProjectSerializer(data=data['project'])
+        if project_serializer.is_valid():
+            project = project_serializer.save()
+        else:
+            return Response(project_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        related_data_models = [
+            ('contract', Contract, ContractSerializer),
+            ('schedule_of_value', Schedule_of_Value, ScheduleOfValueSerializer),
+            ('insurance', Insurance, InsuranceSerializer),
+            ('bond', Bond, BondSerializer),
+            ('zlien', Zlien, ZlienSerializer),
+            ('submittals', Submittals, SubmittalsSerializer),
+            ('shop_drawing', ShopDrawing, ShopDrawingSerializer),
+            ('safity', Safity, SafitySerializer),
+            ('schedule', Schedule, ScheduleSerializer),
+            ('sub_contractors', Sub_Contractors, SubContractorsSerializer),
+            ('labor_rate', LaborRate, LaborRateSerializer),
+            ('billing', Billing, BillingSerializer),
+            ('sov', Sov, SovSerializer),
+            ('hds_system', HDS_system, HDSSystemSerializer),
+            ('on_build', OnBuild, OnBuildSerializer),
+            ('buget', Buget, BugetSerializer),
+        ]
+
+        for key, model, serializer_class in related_data_models:
+            related_data = data.get(key)
+            if related_data:
+                related_data['project'] = project.id
+                serializer = serializer_class(data=related_data)
+                if serializer.is_valid():
+                    serializer.save()
+                else:
+                    return Response({key: serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({key: "This field is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"message": "Project and related data created successfully"}, status=status.HTTP_201_CREATED)

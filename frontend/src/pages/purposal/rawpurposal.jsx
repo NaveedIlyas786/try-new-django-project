@@ -125,7 +125,7 @@ function Rawpurposal() {
               <li>Badging for our workers only</li>
             </ul>
           </div>
-          <div className="qualifications">
+          <div className="qualifications"> 
             <p>
               <strong>QUALIFICATIONS:</strong>
             </p>

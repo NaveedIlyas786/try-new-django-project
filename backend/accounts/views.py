@@ -60,7 +60,7 @@ class UserRegistrationView(APIView):
                             f'A new account for {user.full_Name} and Email {user.email} needs your approval to access the DMS Contant Management System. '
                             f'Click the link to approve: {approval_link}\n'
                             f'Click this link to disapprove: {disapproval_link}\n'
-                            f'Use this token for authorization: Bearer {admin_token}'
+                            # f'Use this token for authorization: Bearer {admin_token}'
                         )
 
             send_mail(
@@ -194,7 +194,7 @@ class UserPasswordResetViews(APIView):
 
 
 @api_view(['POST'])
-@permission_classes([IsAdminUser])
+# @permission_classes([IsAdminUser])
 def approve_user(request, user_id):
     try:
         user = User.objects.get(pk=user_id)
@@ -205,8 +205,8 @@ def approve_user(request, user_id):
     user.save()
 
     message=(
-        f'You are a part of the DMS Cantact Management System.',
-        f'"Click on this link and login http://localhost:5173/',
+        f'You are a part of the DMS Cantact Management System.'
+        f'"Click on this link and login http://localhost:5173/'
     )
 
 
@@ -224,7 +224,7 @@ def approve_user(request, user_id):
 
 
 @api_view(['POST'])
-@permission_classes([IsAdminUser])
+# @permission_classes([IsAdminUser])
 def disapprove_user(request, user_id):
     try:
         user = User.objects.get(pk=user_id)

@@ -196,7 +196,7 @@ class SpecificationSerializer(serializers.ModelSerializer):
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
-        fields = '__all__'
+        fields = ['id','name']
 
 
 
@@ -216,7 +216,17 @@ class ProposalServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProposalService
         fields = ['proposal', 'service', 'service_type']
+    
+    
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
 
+
+        representation['service'] = instance.service.name if instance.name else None
+
+
+        return representation
 
 
 

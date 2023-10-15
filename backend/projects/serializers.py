@@ -4,10 +4,7 @@ from .models import Project, Contract, Schedule_of_Value, Insurance, Bond, Zlien
 
 
 
-class ProjectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Project
-        fields = '__all__'
+
 
 
 class ContractSerializer(serializers.ModelSerializer):
@@ -105,7 +102,29 @@ class BugetSerializer(serializers.ModelSerializer):
         model = Buget
         fields = '__all__'
 
-
+class ProjectSerializer(serializers.ModelSerializer):
+    contracts = ContractSerializer(source='contract_set', many=True, read_only=True)
+    schedule_of_values = ScheduleOfValueSerializer(source='schedule_of_value_set', many=True, read_only=True)
+    insurancs = InsuranceSerializer(source='insurance_set', many=True, read_only=True)
+    bond = BondSerializer(source='bond_set', many=True, read_only=True)
+    zliens = ZlienSerializer(source='zlien_set', many=True, read_only=True)
+    submittals = SubmittalsSerializer(source='submittals_set', many=True, read_only=True)
+    shopdrawing = ShopDrawingSerializer(source='shopdrawing_set', many=True, read_only=True)
+    safity = SafitySerializer(source='safity_set', many=True, read_only=True)
+    schedule = ScheduleSerializer(source='schedule_set', many=True, read_only=True)
+    sub_contractors = SubContractorsSerializer(source='sub_contractors_set', many=True, read_only=True)
+    laborrate = LaborRateSerializer(source='laborrate_set', many=True, read_only=True)
+    billing = BillingSerializer(source='billing_set', many=True, read_only=True)
+    sov = SovSerializer(source='sov_set', many=True, read_only=True)
+    hds_system= HDSSystemSerializer(source='hds_system_set', many=True, read_only=True)
+    onbuild = OnBuildSerializer(source='onbuild_set', many=True, read_only=True)
+    buget = BugetSerializer(source='buget_set', many=True, read_only=True)
+    class Meta:
+        model = Project
+        fields = ['id','status', 'job_num', 'start_date', 'scope','prjct_engnr','bim_oprtr','Forman','prjct_mngr','estimating','start_date','general_superintendent',
+                    'project_address','addendums','bid','Spec','contacts','drywell','finish','wall_type','progress','ro_door','ro_window','substitution',
+                    'contracts','schedule_of_values','insurancs','bond','zliens','submittals','shopdrawing','safity','schedule','sub_contractors','laborrate',
+                    'billing','sov','hds_system','onbuild','buget'] 
 
 class RecursiveProjectDetailSerializer(serializers.Serializer):
     """Serializer for recursive Estimating_detail children."""

@@ -7,9 +7,6 @@ from rest_framework import status
 from Estimating.models import Company,Estimating, Estimating_detail, Proposal, Addendum, Qualification, Spec_detail, Specification, ProposalService, Service, Location,UrlsTable,DMS_Dertory,Dprtmnt,Role
 
 
-from datetime import datetime
-
-
 
 
 
@@ -123,19 +120,6 @@ class EstimatingSerializer(serializers.ModelSerializer):
 
 
         return representation
-
-
-
-    # def format_date(self, value):
-    #     if isinstance(value, datetime):
-    #         return value.strftime('%m-%d-%y', 'iso-8601') 
-    #     return value
-
-
-
-
-
-# Estimating Folder Derectory
 
 
 

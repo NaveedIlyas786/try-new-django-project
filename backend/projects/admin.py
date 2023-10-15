@@ -5,6 +5,8 @@ from .models import (
     ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, Billing, Sov, 
     HDS_system, OnBuild, Buget,Project_detail
 )
+from Estimating.models import Spec_detail
+
 
 class ContractInline(admin.StackedInline):
     model = Contract
@@ -29,14 +31,38 @@ class ZlienInline(admin.StackedInline):
 class SubmittalsInline(admin.StackedInline):
     model = Submittals
     extra = 1
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'scop_work_number':
+            proposal_id = request.GET.get('proposal')
+            if proposal_id:
+                kwargs['queryset'] = Spec_detail.objects.filter(sefic__proposal_id=proposal_id)
+            else:
+                kwargs['queryset'] = Spec_detail.objects.none()
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 class ShopDrawingInline(admin.StackedInline):
     model = ShopDrawing
     extra = 1
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'scop_work_number':
+            proposal_id = request.GET.get('proposal')
+            if proposal_id:
+                kwargs['queryset'] = Spec_detail.objects.filter(sefic__proposal_id=proposal_id)
+            else:
+                kwargs['queryset'] = Spec_detail.objects.none()
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 class SafityInline(admin.StackedInline):
     model = Safity
     extra = 1
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'scop_work_number':
+            proposal_id = request.GET.get('proposal')
+            if proposal_id:
+                kwargs['queryset'] = Spec_detail.objects.filter(sefic__proposal_id=proposal_id)
+            else:
+                kwargs['queryset'] = Spec_detail.objects.none()
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 class ScheduleInline(admin.StackedInline):
     model = Schedule
@@ -78,7 +104,7 @@ class ProjectAdmin(admin.ModelAdmin):
         SovInline, HDSSystemInline, OnBuildInline, BugetInline
     ]
     
-    list_display = ('status', 'job_num', 'start_date', 'scope','prjct_engnr','bim_oprtr','Forman','prjct_mngr','estimating','start_date','general_superintendent',
+    list_display = ('id','status', 'job_num', 'start_date', 'scope','prjct_engnr','bim_oprtr','Forman','prjct_mngr','estimating','start_date','general_superintendent',
                     'project_address','addendums','bid','Spec','contacts','drywell','finish','wall_type','progress','ro_door','ro_window','substitution')  
     search_fields = ['status', 'job_num'] 
 

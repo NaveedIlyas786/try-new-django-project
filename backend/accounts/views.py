@@ -12,7 +12,7 @@ from django.db.models import Q
 from django.contrib.auth import authenticate    
 # For Token 
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from django.http import Http404
 
 from .serializers import UserRegisterationSerializers,UserLoginserializers,UserProfileSerializer,UserChangePasswordSerializer,SendEmailResetPasswordViewsSerializer,UserPasswordResetSerializer
 from .models import User 
@@ -76,10 +76,18 @@ class UserRegistrationView(APIView):
         return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
     
 
-    def get(self,request,format=None):
-        user=User.objects.filter(Q(is_active=True) & ~Q(is_admin=True))
-        serializer=UserRegisterationSerializers(user,many=True)
-        return Response(serializer.data)
+    def get(self, request, id=None, format=None):  # Add 'id' parameter to get the user by ID
+        if id is not None:
+            try:
+                user = User.objects.get(pk=id)
+                serializer = UserRegisterationSerializers(user)
+                return Response(serializer.data)
+            except User.DoesNotExist:
+                raise Http404("User not found")
+        else:
+            users = User.objects.all()
+            serializer = UserRegisterationSerializers(users, many=True)
+            return Response(serializer.data)
     
     def put(self, request, id, format=None):
         try:

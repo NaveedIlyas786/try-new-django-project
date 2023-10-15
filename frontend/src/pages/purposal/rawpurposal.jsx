@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import "./Purposaldata.css";
+import { useReactToPrint } from "react-to-print";
 
 function Rawpurposal() {
   const { id } = useParams();
@@ -40,145 +41,137 @@ function Rawpurposal() {
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
-  // Function to generate and download PDF
-  const [loader, setLoader] = useState(false);
-
-  const generatePDF = () => {
-    const capture = document.querySelector(".actual-certificate");
-    if (capture) {
-      console.log("Starting PDF generation...");
-      setLoader(true); // Set loading to true when generating the PDF
-      html2canvas(capture).then((canvas) => {
-        const imgData = canvas.toDataURL("image/png");
-        const doc = new jsPDF();
-        const componentWidth = doc.internal.pageSize.getWidth();
-        const componentHeight = doc.internal.pageSize.getHeight();
-        doc.addImage(imgData, "PNG", 0, 0, componentWidth, componentHeight);
-        setLoader(false); // Set loading back to false when PDF is generated
-        console.log("PDF generated successfully.");
-        doc.save("certificate.pdf");
-      });
-    }
-  };
+  const conponentPDF = useRef();
+  const generatePDF = useReactToPrint({
+    content: () => conponentPDF.current,
+    documentTitle: "Userdata",
+    onAfterPrint: () => alert("Data saved in PDF"),
+  });
 
   return (
     <div className="rawk">
       <div id="pdf-content">
-        <button onClick={generatePDF} disabled={!(loader === false)}>
-          {loader ? <span>Downloading</span> : <span>Download</span>}
+        <button className="btn btn-success" onClick={generatePDF}>
+          PDF
         </button>
-        <header className="header">
-          <div className="topSection">
-            <img
-              className="logoimg"
-              src="../../../src/assets/purposal_logo-top.png"
-              alt="myimg"
-            />
-            <div className="rightTop">
-              <p className="topinfo">2900 E. Belle Terrace,</p>
-              <p className="topinfo">Unit A</p>
-              <p className="topinfo">Bakersfield, CA 93307</p>
-              <p className="topinfo">Office (415) 508-4968</p>
-              <p className="topinfo">Fax (415) 508-4585</p>
-              <p className="topinfo">estimating@dmsmgt.com</p>
+        <div ref={conponentPDF} id="pdf-content">
+          <header className="header">
+            <div className="topSection">
+              <img
+                className="logoimg"
+                src="../../../src/assets/purposal_logo-top.png"
+                alt="myimg"
+              />
+              <div className="rightTop">
+                <p className="topinfo">2900 E. Belle Terrace,</p>
+                <p className="topinfo">Unit A</p>
+                <p className="topinfo">Bakersfield, CA 93307</p>
+                <p className="topinfo">Office (415) 508-4968</p>
+                <p className="topinfo">Fax (415) 508-4585</p>
+                <p className="topinfo">estimating@dmsmgt.com</p>
+              </div>
             </div>
-          </div>
-        </header>
-        {proposalData && (
-          <main>
-            <div>
-              <p>January 24, 2023</p>
-              <p className="">
-                <strong> DMS Drywall & Interior Systems Inc.</strong> is
-                submitting the following bid proposal for the{" "}
-                <strong> {proposalData.estimating}</strong> The plans used to
-                formulate the bid proposal are dated XX/XX/20XX, drafted by
-                <strong> {proposalData.architect_firm} </strong> FIRM, and
-                approved by <strong> {proposalData.architect_name}</strong>.
-              </p>
-            </div>
-            <div className="Addendum">
-              <p>
-                The following addendums were also included in the bid proposal:
-              </p>
-              <ul>
-                {proposalData.Addendums.map((e) => (
-                  <li key={`${e.id}-${e.addendum_Number}`}>
-                    Addendum #{e.addendum_Number} Dated{" "}
-                    <span className="addendumdate ms-1">{e.date}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="dmsdrywall">
-              <p>
-                <strong> DMS Drywall & Interior Systems Inc.</strong> submits
-                the below price for the following scope:
-              </p>
-            </div>
-            {proposalData.spcifc.map((e) => (
-              <div className="baseBiddrywall" key={e.id}>
-                <h4 className="baseh4">
-                  {e.specific_name} : $
-                  <span className="ms-1">{e.budget}.00</span>
-                </h4>
-                <ul className="mt-3">
-                  {e.sefic.map((a) => (
-                    <li className="li ms-4" key={a.id}>
-                      <h5 key={`${e.id}-${a.id}`}>
-                        {a.number} <span className="ms-2">{a.sefic}</span>
-                      </h5>
+          </header>
+          {proposalData && (
+            <main>
+              <div>
+                <p>January 24, 2023</p>
+                <p className="">
+                  <strong> DMS Drywall & Interior Systems Inc.</strong> is
+                  submitting the following bid proposal for the{" "}
+                  <strong> {proposalData.estimating}</strong> The plans used to
+                  formulate the bid proposal are dated XX/XX/20XX, drafted by
+                  <strong> {proposalData.architect_firm} </strong> FIRM, and
+                  approved by <strong> {proposalData.architect_name}</strong>.
+                </p>
+              </div>
+              <div className="Addendum">
+                <p>
+                  The following addendums were also included in the bid
+                  proposal:
+                </p>
+                <ul>
+                  {proposalData.Addendums.map((e) => (
+                    <li key={`${e.id}-${e.addendum_Number}`}>
+                      Addendum #{e.addendum_Number} Dated{" "}
+                      <span className="addendumdate ms-1">{e.date}</span>
                     </li>
                   ))}
                 </ul>
               </div>
-            ))}
-            <div className="drywall-interior">
-              <h4>
-                DMS Drywall & Interior Systems Inc. Signatory to the Carpenters
-                Union
-              </h4>
-            </div>
-            <div className="inclusions">
-              <p>
-                <strong>INCLUSIONS:</strong>
-              </p>
-              <ul>
-                {proposalData.services
-                  .filter((a) => a.service_type === "IN")
-                  .map((e) => (
-                    <li key={e.id}>{e.service}</li>
+              <div className="dmsdrywall">
+                <p>
+                  <strong> DMS Drywall & Interior Systems Inc.</strong> submits
+                  the below price for the following scope:
+                </p>
+              </div>
+              {proposalData.spcifc.map((e) => (
+                <div className="baseBiddrywall" key={e.id}>
+                  <h4 className="baseh4">
+                    {e.specific_name} : $
+                    <span className="ms-1">{e.budget}.00</span>
+                  </h4>
+                  <ul className="mt-3">
+                    {e.sefic.map((a) => (
+                      <li className="li ms-4" key={a.id}>
+                        <h5 key={`${e.id}-${a.id}`}>
+                          {a.number} <span className="ms-2">{a.sefic}</span>
+                        </h5>
+                        
+                      </li>
+                    ))}
+                    
+                  </ul>
+                </div>
+              ))}
+               
+              <div className="drywall-interior">
+                <h4>
+                  DMS Drywall & Interior Systems Inc. Signatory to the
+                  Carpenters Union
+                </h4>
+              </div>
+              <div className="inclusions">
+                <p>
+                  <strong>INCLUSIONS:</strong>
+                </p>
+                <ul>
+                  {proposalData.services
+                    .filter((a) => a.service_type === "IN")
+                    .map((e) => (
+                      <li key={e.id}>{e.service}</li>
+                    ))}
+                </ul>
+              </div>
+              <div className="exclusions">
+                <p>
+                  <strong>EXCLUSIONS:</strong>
+                </p>
+                <ul>
+                  {proposalData.services
+                    .filter((a) => a.service_type === "EX")
+                    .map((e) => (
+                      <li key={e.id}>{e.service}</li>
+                    ))}
+                </ul>
+              </div>
+              <div className="qualifications">
+                <p>
+                  <strong>QUALIFICATIONS:</strong>
+                </p>
+                <ul>
+                  {qualificationData.map((e) => (
+                    <li key={e.id}>{e.detail}</li>
                   ))}
-              </ul>
-            </div>
-            <div className="exclusions">
-              <p>
-                <strong>EXCLUSIONS:</strong>
-              </p>
-              <ul>
-                {proposalData.services
-                  .filter((a) => a.service_type === "EX")
-                  .map((e) => (
-                    <li key={e.id}>{e.service}</li>
-                  ))}
-              </ul>
-            </div>
-            <div className="qualifications">
-              <p>
-                <strong>QUALIFICATIONS:</strong>
-              </p>
-              <ul>
-                {qualificationData.map((e) => (
-                  <li key={e.id}>{e.detail}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="estimator">
-              <p className="myesti"> Louie Hoelscher </p>
-              <p className="myesti"> 636-383-2105 </p>
-            </div>
-          </main>
-        )}
+                </ul>
+              </div>
+              <div className="estimator">
+                <p className="myesti"> Louie Hoelscher </p>
+                <p className="myesti"> 636-383-2105 </p>
+              </div>
+            </main>
+          )}
+        </div>
       </div>
     </div>
   );

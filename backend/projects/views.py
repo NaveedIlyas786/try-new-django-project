@@ -42,7 +42,9 @@ def create_project(request):
 
     
     if request.method == 'POST':
-        data = request.data[0] 
+        data = request.data
+        if isinstance(data, list):
+            data = data[0]
         project_serializer = ProjectSerializer(data=data)  # And this line has been changed
         if not project_serializer.is_valid():
             return Response(project_serializer.errors, status=status.HTTP_400_BAD_REQUEST)

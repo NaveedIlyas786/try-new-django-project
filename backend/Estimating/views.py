@@ -16,7 +16,10 @@ from django.db.models import Sum, Count,Case, When, IntegerField
 from django.utils import timezone
 from datetime import datetime
 from rest_framework.permissions import IsAuthenticated
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
+from django.core.files.base import ContentFile
+import base64
+import logging
 
 
 
@@ -56,34 +59,57 @@ class DMS_DertoryView(APIView):
         DMS_Dertory.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
 class SendEmailView(APIView):
-    permission_classes = [IsAuthenticated]
 
     def post(self, request, estimating_id, format=None):
-        estimating = Estimating.objects.get(id=estimating_id)
-        user = request.user  # Get the user from the request
+        # Initialize logging
+        logger = logging.getLogger(__name__)
 
-        subject = 'Proposal'
-        message = f"""
-        Hello,
+        try:
+            estimating = Estimating.objects.get(id=estimating_id)
+            if estimating.company is None:
+                return Response({'error': 'Company not found'}, status=status.HTTP_400_BAD_REQUEST)
 
-        Thank you for allowing {estimating.company.Cmpny_Name} the opportunity to bid on the {estimating.prjct_name}.
+            email_from = 'mubeenjutt9757@gmail.com'  # Default sender email
 
-        The plans used to formulate the bid proposal are dated {estimating.due_date}, drafted by HPA, inc, and approved by Yong Nam.
+            pdf_base64 = request.data.get('pdf')
+            if not pdf_base64:
+                logger.error('PDF not provided')
+                return Response({'error': 'PDF is required'}, status=status.HTTP_400_BAD_REQUEST)
 
-        Thank you,
-        """
+            pdf_data = base64.b64decode(pdf_base64)
+            pdf_file = ContentFile(pdf_data, 'proposal.pdf')
 
-        email_from = user.email  # Use user's email as the sender
-        recipient_list = [estimating.bidder_mail]
-        send_mail(subject, message, email_from, recipient_list)
-        
-        return Response({'message': 'Email sent successfully!'})
+            subject = 'Proposal'
+            message = f"""
+            Hello,
 
+            Thank you for allowing {estimating.company.Cmpny_Name} the opportunity to bid on the {estimating.prjct_name}.
 
+            The plans used to formulate the bid proposal are dated {estimating.due_date}, drafted by HPA, inc, and approved by Yong Nam.
 
+            Thank you,
+            """
 
+            email = EmailMessage(
+                subject,
+                message,
+                email_from,
+                [estimating.bidder_mail],
+            )
+
+            email.attach(pdf_file.name, pdf_file.read(), 'application/pdf')
+            email.send()
+
+            return Response({'message': 'Email sent successfully!'})
+
+        except Estimating.DoesNotExist:
+            logger.error(f'Estimating ID {estimating_id} not found')
+            return Response({'error': 'Estimating not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as e:
+            logger.error(str(e))
+            return Response({'error': 'Failed to send email', 'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class UrlsListViews(APIView):
     def get(self,request):

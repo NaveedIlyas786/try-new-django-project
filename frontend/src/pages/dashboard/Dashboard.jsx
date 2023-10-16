@@ -464,7 +464,7 @@ const Dashboard = () => {
                 </tbody>
               </table>
             </div>
-            {/* <div className="ms-5 col-md-7 col-sm-7 graphimg">
+             {/* <div className="ms-5 col-md-7 col-sm-7 graphimg">
               <ResponsiveContainer width="100%" height={500}>
                 <BarChart
                   width={500}
@@ -486,7 +486,7 @@ const Dashboard = () => {
                   <Bar dataKey="total_won_bid_amount" fill="#82ca9d" />
                 </BarChart>
               </ResponsiveContainer>
-            </div> */}
+            </div>  */}
             {/* <div className="ms-5 col-md-7 col-sm-7 graphimg">
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart
@@ -518,7 +518,7 @@ const Dashboard = () => {
                 </LineChart>
               </ResponsiveContainer>
             </div> */}
-            {/* <div
+           <div
               className="ms-5 col-md-7 col-sm-7 text-center graphimg"
               
             >
@@ -558,8 +558,8 @@ const Dashboard = () => {
                   </h1>
                 )}
               </div>
-            </div> */}
-            <div
+            </div> 
+            {/* <div
               className="ms-5 col-md-7 col-sm-7 text-center graphimg"
               
             >
@@ -595,7 +595,7 @@ const Dashboard = () => {
                   </h1>
                 )}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

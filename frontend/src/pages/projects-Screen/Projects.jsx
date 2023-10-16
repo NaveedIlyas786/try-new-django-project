@@ -10,34 +10,34 @@ const Projects = () => {
   // Fetch data from the API
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/project/ProjectList/")
+      .get("http://127.0.0.1:8000/api/project/Project/")
       .then((response) => response.data)
       .then((data) => {
         setData(data);
-        console.log(data)
+        console.log(data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   }, []);
 
-  const filteredData = data.filter((customer) => {
-    return (
-      (customer.estimating &&
-        customer.estimating.toUpperCase().includes(filter.toUpperCase())) ||
-      (customer.job_num &&
-        customer.job_num
-          .toString()
-          .toUpperCase()
-          .includes(filter.toUpperCase())) ||
-      (customer.prjct_engnr &&
-        customer.prjct_engnr.toUpperCase().includes(filter.toUpperCase())) ||
-      (customer.bim_oprtr &&
-        customer.bim_oprtr.toUpperCase().includes(filter.toUpperCase())) ||
-      (customer.Forman &&
-        customer.Forman.toUpperCase().includes(filter.toUpperCase()))
-    );
-  });
+  // const filteredData = data.filter((customer) => {
+  //   return (
+  //     (customer.estimating &&
+  //       customer.estimating.toUpperCase().includes(filter.toUpperCase())) ||
+  //     (customer.job_num &&
+  //       customer.job_num
+  //         .toString()
+  //         .toUpperCase()
+  //         .includes(filter.toUpperCase())) ||
+  //     (customer.prjct_engnr &&
+  //       customer.prjct_engnr.toUpperCase().includes(filter.toUpperCase())) ||
+  //     (customer.bim_oprtr &&
+  //       customer.bim_oprtr.toUpperCase().includes(filter.toUpperCase())) ||
+  //     (customer.Forman &&
+  //       customer.Forman.toUpperCase().includes(filter.toUpperCase()))
+  //   );
+  // });
 
   const formatBidAmount = (amount) => {
     if (amount === null) return ""; // Return an empty string if the amount is null
@@ -80,7 +80,7 @@ const Projects = () => {
             </tr>
           </thead>
           <tbody className="cursor-pointer  bg-info jloop">
-            {filteredData.map((item) => (
+            {/* {filteredData.map((item) => ( */}
               <tr
                 key={item.id}
                 className="mytr"
@@ -90,14 +90,14 @@ const Projects = () => {
                 <td className="mytd">{item.start_date}</td>
                 <td className="mytd">{item.estimating}</td>
                 <td className="mytd">{item.job_num}</td>
-                
+
                 <td className="mytd">{item.prjct_mngr}</td>
-                
+
                 <td className="mytd">{item.prjct_engnr}</td>
                 <td className="mytd">{item.bim_oprtr}</td>
                 <td className="mytd">{item.Forman}</td>
               </tr>
-            ))}
+            {/* ))} */}
           </tbody>
         </table>
       </div>

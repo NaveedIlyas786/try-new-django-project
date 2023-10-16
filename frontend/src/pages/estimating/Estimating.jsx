@@ -231,8 +231,8 @@ const Estimator = () => {
   const handleProjectStatusChange = (e) => setProjectStatus(e.target.value);
   const handleContactsChange = (e) => setSelectedContacts(e.target.value);
   const handleSubstitutionChange = (e) => setSelectedSubstitution(e.target.value);
-  const handleContractChange = (e) => setSelectedContract(e.target.value);
-  const handleProjectDateChange = (e) => setSelectedProjectDate(e.target.value);
+  // const handleContractChange = (e) => setSelectedContract(e.target.value);
+  // const handleProjectDateChange = (e) => setSelectedProjectDate(e.target.value);
   const handleProjectEngineerChange = (e) =>
     setSelectedProjectEngineer(e.target.value);
   const handleProjectManagerChange = (e) =>
@@ -240,6 +240,50 @@ const Estimator = () => {
   const handleProjectIDChange = (e) => setSelectedProjectID(e.target.value);
 
   // Function to handle form submission
+  const handleContractChange = (e) => setSelectedContract(e.target.value);
+  const handleProjectDateChange = (e) => setSelectedProjectDate(e.target.value);
+
+  // ****************Get Estimating data From Store
+  const selectEstimatingData = (state) => state.estimating.data;
+
+  const selectFilteredData = createSelector([selectEstimatingData], (data) => {
+    const now = new Date(); // Get the current date and time
+    return data
+      .filter((customer) => {
+        return (
+          ((customer.prjct_name &&
+            customer.prjct_name.toUpperCase().includes(filter.toUpperCase())) ||
+            (customer.status &&
+              customer.status
+                .trim()
+                .toUpperCase()
+                .includes(filter.trim().toUpperCase())) ||
+            (customer.estimator &&
+              customer.estimator
+                .toUpperCase()
+                .includes(filter.toUpperCase())) ||
+            (customer.bidder &&
+              customer.bidder.toUpperCase().includes(filter.toUpperCase()))) &&
+          (customer.status === "Working" || customer.status === "Pending")
+        ); // Filter by 'Working' and 'Pending' status
+      })
+      .sort((a, b) => {
+        // Parse the due dates as Date objects
+        const dueDateA = new Date(a.due_date);
+        const dueDateB = new Date(b.due_date);
+
+        // Calculate the time difference in milliseconds
+        const timeDiffA = dueDateA - now;
+        const timeDiffB = dueDateB - now;
+
+        // Sort by the time difference, with the smallest (coming soon) first
+        return timeDiffA - timeDiffB;
+      });
+  });
+
+  const filteredData = useSelector(selectFilteredData);
+
+
 
   const handleProjectFormSubmit = (e) => {
     e.preventDefault();
@@ -247,7 +291,7 @@ const Estimator = () => {
     const formData = {
       start_date: startDate,
       job_num: jobNo,
-      // estimating:selectedEstimatingID,
+      estimating:selectedEstimatingID,
       prjct_mngr: selectedProjectManager,
       Forman: selectedForeman,
       bim_oprtr: selectedBimOperator,
@@ -272,6 +316,7 @@ const Estimator = () => {
           contract_date: selectedProjectDate, 
         },
       ],
+
     };
 
     console.log("formData to be sent", formData);
@@ -286,7 +331,14 @@ const Estimator = () => {
       .then((response) => {
         console.log("Data successfully submitted", response.data);
         // dispatch(addProject(response.data));
+        const addedProjectId = response.data.id;
 
+        // // Create a copy of the filteredData array without the added project
+        // const updatedFilteredData = filteredData.filter((item) => item.id !== addedProjectId);
+  
+        // // Update the filteredData variable with the updated data
+        // filteredData.length = 0; // Clear the existing data
+        // Array.prototype.push.apply(filteredData, updatedFilteredData);
         // Clear the form fields by resetting the state variables
         setStartDate(""); 
         setJobNo(""); 
@@ -834,45 +886,7 @@ const Estimator = () => {
     }
   };
 
-  // ****************Get Estimating data From Store
-  const selectEstimatingData = (state) => state.estimating.data;
 
-  const selectFilteredData = createSelector([selectEstimatingData], (data) => {
-    const now = new Date(); // Get the current date and time
-    return data
-      .filter((customer) => {
-        return (
-          ((customer.prjct_name &&
-            customer.prjct_name.toUpperCase().includes(filter.toUpperCase())) ||
-            (customer.status &&
-              customer.status
-                .trim()
-                .toUpperCase()
-                .includes(filter.trim().toUpperCase())) ||
-            (customer.estimator &&
-              customer.estimator
-                .toUpperCase()
-                .includes(filter.toUpperCase())) ||
-            (customer.bidder &&
-              customer.bidder.toUpperCase().includes(filter.toUpperCase()))) &&
-          (customer.status === "Working" || customer.status === "Pending")
-        ); // Filter by 'Working' and 'Pending' status
-      })
-      .sort((a, b) => {
-        // Parse the due dates as Date objects
-        const dueDateA = new Date(a.due_date);
-        const dueDateB = new Date(b.due_date);
-
-        // Calculate the time difference in milliseconds
-        const timeDiffA = dueDateA - now;
-        const timeDiffB = dueDateB - now;
-
-        // Sort by the time difference, with the smallest (coming soon) first
-        return timeDiffA - timeDiffB;
-      });
-  });
-
-  const filteredData = useSelector(selectFilteredData);
 
 
 
@@ -1151,6 +1165,57 @@ const Estimator = () => {
       console.error("Error updating estimator:", error);
     }
   };
+  const handleStatusChange = async (event, itemId) => {
+    const newStatus = event.target.value;
+    console.log("Updated Status:", newStatus);
+  
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`, // Adjust the URL accordingly
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            status: newStatus, // Update the status
+          }),
+        }
+      );
+  
+      console.log("API Response:", response);
+  
+      if (response.ok) {
+        // Handle success response here
+        const updatedStatus = newStatus;
+        // Update the statusMap or your status tracking mechanism
+        setStatusMap((prevStatusMap) => ({
+          ...prevStatusMap,
+          [itemId]: updatedStatus,
+        }));
+        console.log("Updated StatusMap:", statusMap);
+    
+        // Log a success message to the console
+        console.log(`Status updated successfully for item with ID ${itemId}`);
+        // You may need to refresh the UI or update the specific row accordingly
+        if (newStatus === "Won") {
+          setshowProjectModal(true);
+        }
+      } else {
+        if (response.status === 404) {
+          // Handle the case where the resource was not found (404 error)
+          console.error("Resource not found.");
+        } else {
+          // Handle other non-success responses
+          const responseData = await response.text();
+          console.error("Failed to update! Server response:", responseData);
+        }
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
+  };
+  
 
   const MovetoURLpage = () => {
     navigate("/homepage/urlpage");
@@ -1211,6 +1276,197 @@ const Estimator = () => {
               </div>
             </div>
           </div>
+          
+          <ParticlesAnimation numberOfCircles={numberOfCircles} />
+          <div
+            className="table-responsive proposalTable mt-2"
+            data-aos="fade-up"
+          >
+            <table
+              className="table table-striped table-bordered table-hover"
+              style={{ tableLayout: "auto" }}
+            >
+              <thead className="proposalHeader">
+                <tr>
+                  <th>Due Date</th>
+                  <th>Due Time</th>
+                  <th>Project Name</th>
+                  <th>Area</th>
+                  <th>Estimator</th>
+                  <th>Status</th>
+                  <th>Bidders</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody className="cursor-pointer jktable bg-info jloop">
+                {filteredData.map((item) => (
+                  <tr key={item.id}>
+                    <td
+                      className="mytd centered-td"
+                      style={{ minWidth: "60px" }}
+                    >
+                      {item.due_date ? item.due_date : "No Date"}
+                    </td>
+                    <td
+                      className="mytd centered-td"
+                      style={{ maxWidth: "50px" }}
+                    >
+                      {item.time} <strong>{item.timezone}</strong>
+                    </td>
+                    <td className="mytd myproject centered-td">
+                      {item.prjct_name ? item.prjct_name : "No Project"}
+                    </td>
+                    <td
+                      className="mytd centered-td"
+                      style={{ minWidth: "70px" }}
+                    >
+                      <select
+                        className="dropUpdation"
+                        id="estimatorName"
+                        onChange={(event) => handleAreaChange(event, item.id)}
+                        value={AreaChoice[item.id] || item.location}
+                      >
+                        <option
+                          value={item.location ? item.location : "No Area"}
+                        >
+                          {item.location ? item.location : "No Area"}
+                        </option>
+                        {userLocation && userLocation.length > 0 ? (
+                          userLocation.map((place) => (
+                            <option value={place.id} key={place.id}>
+                              {place.name}
+                            </option>
+                          ))
+                        ) : (
+                          <option value="" disabled>
+                            Loading...
+                          </option>
+                        )}
+                      </select>
+                    </td>
+                    <td
+                      className="mytd centered-td"
+                      style={{ minWidth: "175px" }}
+                    >
+                      <select
+                        className="dropUpdation"
+                        id="estimatorName"
+                        onChange={(event) =>
+                          handleEstimatorChange(event, item.id)
+                        }
+                        value={estimatorchoice[item.id] || item.estimator}
+                      >
+                        <option value="">
+                          {item.estimator ? item.estimator : "No Estimator"}
+                        </option>
+                        {EstimatorName && EstimatorName.length > 0 ? (
+                          EstimatorName.map((user) => (
+                            <option value={user.id} key={user.id}>
+                              {user.full_Name}
+                            </option>
+                          ))
+                        ) : (
+                          <option value="" disabled>
+                            Loading...
+                          </option>
+                        )}
+                      </select>
+                    </td>
+                    <td
+                      className="mytd centered-td "
+                      style={{ minWidth: "50px" }}
+                      onChange={(event) => handleUpdationChange(event, item.id)}
+                      value={statusMap[item.id] || item.status}
+                    >
+                     <select
+  className="dropUpdation"
+  id="estimatorName"
+  onChange={(event) => handleStatusChange(event, item.id)}
+  value={statusMap[item.id] || item.status}
+>
+  <option value={item.status}>{item.status}</option>
+  <option value="Won">Won</option>
+  <option value="Pending">Pending</option>
+  <option value="Working">Working</option>
+  <option value="Lost">Lost</option>
+</select>
+                    </td>
+                    <td className="mytdbidder centered-td">
+                      {item.bidder + " " + item.bidder_deatil}
+                    </td>
+                    <td className="mytd centered-td actionTD">
+                      <div className="relative-container loop">
+                        <button
+                          type="button"
+                          className="btn dropbtns btn-primary"
+                          onClick={() => {
+                            setItemId(item.id);
+                            setSelectedEstimatingID(item.prjct_name);
+                            setSelectedEstimator(item.estimator);
+                            setSelectedBidder(item.bidder);
+                            setSelectedCompany(item.company);
+                            setselectedStatus(item.status);
+                            setSelecteddueDate(item.due_date);
+                            setSelectedstart_date(item.start_date);
+                            setSelectedbidder_address(item.bidder_address);
+                            setSelectedTimeforUpdate(item.time);
+                            setSelectedTimeZone(item.timezone);
+                            setSelectedLocation(item.location);
+                            setshowEstimatingEditModal(true);
+                          }}
+                        >
+                          Edit
+                        </button>
+
+                        <button
+                          className="btn dropbtns btn-success"
+                          onClick={() => {
+                            console.log(item.prjct_name);
+                            setItemId(item.id);
+
+                            setStep0FormData({
+                              ...step0FormData,
+                              estimating: item.id,
+                            });
+                            setSelectedEstimatingID(item.prjct_name);
+                            setPurposalModal(true);
+                          }}
+                        >
+                          Create
+                        </button>
+                        <button
+  className="btn dropbtns btn-danger"
+  onClick={() => {
+    console.log(item.prjct_name);
+    setItemId(item.id);
+    setStep0FormData({
+      ...step0FormData,
+      estimating: parseInt(item.id, 10), // Parse the string to an integer
+    });
+    setSelectedEstimatingID(item.prjct_name);
+    setshowProjectModal(true);
+  }}
+>
+  project
+</button>
+
+
+                        <button
+                          className="btn dropbtns btn-secondary"
+                          onClick={() => {
+                            navigate(`/homepage/rawproposal/${item.id}`);
+                          }}
+                        >
+                          View
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
           {/* {ProjectformModal && ( */}
           {showProjectModal && (
             <div
@@ -1221,7 +1477,7 @@ const Estimator = () => {
               <h4 className="text-center addnewtxt">Add New Project Entry</h4>
               <button className="close-btn" onClick={closeModal}></button>
               <div className="d-flex justify-content-center  align-items-center flex-column gap-5 pb-5 px-5">
-                {/* <div className="projName">
+                <div className="projName">
                   <label htmlFor="projectName" className="form-label">
                     Estimating/Project Name:
                   </label>
@@ -1239,7 +1495,7 @@ const Estimator = () => {
                             }
                             readOnly
                   />
-                </div> */}
+                </div>
                 <div className="bothDiv gap-3 mt-3">
                   <div className="projName Oneline">
                     <label htmlFor="projectName" className="form-label">
@@ -1655,8 +1911,7 @@ const Estimator = () => {
         className="form-select"
         placeholder="Contract"
         id="ProjectEngineerID"
-        value={selectedContract}
-        onChange={handleContractChange}
+        
       >
         <option value="">Select Choice</option>
         <option value="Fully Executed">Fully Executed</option> {/* Set the desired contract value */}
@@ -1667,8 +1922,7 @@ const Estimator = () => {
         type="date"
         name="date" // Set the name attribute to differentiate
         className="form-control"
-        value={selectedProjectDate}
-        onChange={handleProjectDateChange}
+       
       />
                     </div>
                   </div>
@@ -2791,196 +3045,6 @@ const Estimator = () => {
               </div>
             </div>
           )}
-
-          <ParticlesAnimation numberOfCircles={numberOfCircles} />
-          <div
-            className="table-responsive proposalTable mt-2"
-            data-aos="fade-up"
-          >
-            <table
-              className="table table-striped table-bordered table-hover"
-              style={{ tableLayout: "auto" }}
-            >
-              <thead className="proposalHeader">
-                <tr>
-                  <th>Due Date</th>
-                  <th>Due Time</th>
-                  <th>Project Name</th>
-                  <th>Area</th>
-                  <th>Estimator</th>
-                  <th>Status</th>
-                  <th>Bidders</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody className="cursor-pointer jktable bg-info jloop">
-                {filteredData.map((item) => (
-                  <tr key={item.id}>
-                    <td
-                      className="mytd centered-td"
-                      style={{ minWidth: "60px" }}
-                    >
-                      {item.due_date ? item.due_date : "No Date"}
-                    </td>
-                    <td
-                      className="mytd centered-td"
-                      style={{ maxWidth: "50px" }}
-                    >
-                      {item.time} <strong>{item.timezone}</strong>
-                    </td>
-                    <td className="mytd myproject centered-td">
-                      {item.prjct_name ? item.prjct_name : "No Project"}
-                    </td>
-                    <td
-                      className="mytd centered-td"
-                      style={{ minWidth: "70px" }}
-                    >
-                      <select
-                        className="dropUpdation"
-                        id="estimatorName"
-                        onChange={(event) => handleAreaChange(event, item.id)}
-                        value={AreaChoice[item.id] || item.location}
-                      >
-                        <option
-                          value={item.location ? item.location : "No Area"}
-                        >
-                          {item.location ? item.location : "No Area"}
-                        </option>
-                        {userLocation && userLocation.length > 0 ? (
-                          userLocation.map((place) => (
-                            <option value={place.id} key={place.id}>
-                              {place.name}
-                            </option>
-                          ))
-                        ) : (
-                          <option value="" disabled>
-                            Loading...
-                          </option>
-                        )}
-                      </select>
-                    </td>
-                    <td
-                      className="mytd centered-td"
-                      style={{ minWidth: "175px" }}
-                    >
-                      <select
-                        className="dropUpdation"
-                        id="estimatorName"
-                        onChange={(event) =>
-                          handleEstimatorChange(event, item.id)
-                        }
-                        value={estimatorchoice[item.id] || item.estimator}
-                      >
-                        <option value="">
-                          {item.estimator ? item.estimator : "No Estimator"}
-                        </option>
-                        {EstimatorName && EstimatorName.length > 0 ? (
-                          EstimatorName.map((user) => (
-                            <option value={user.id} key={user.id}>
-                              {user.full_Name}
-                            </option>
-                          ))
-                        ) : (
-                          <option value="" disabled>
-                            Loading...
-                          </option>
-                        )}
-                      </select>
-                    </td>
-                    <td
-                      className="mytd centered-td "
-                      style={{ minWidth: "50px" }}
-                      onChange={(event) => handleUpdationChange(event, item.id)}
-                      value={statusMap[item.id] || item.status}
-                    >
-                      <select
-                        className="dropUpdation "
-                        id="estimatorName"
-                        onChange={(event) => handleAreaChange(event, item.id)}
-                        value={statusMap[item.id] || item.status}
-                      >
-                        <option value={item.status}>{item.status}</option>
-                        <option value="Won">Won</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Working">Working</option>
-                        <option value="Lost">Lost</option>
-                      </select>
-                    </td>
-                    <td className="mytdbidder centered-td">
-                      {item.bidder + " " + item.bidder_deatil}
-                    </td>
-                    <td className="mytd centered-td actionTD">
-                      <div className="relative-container loop">
-                        <button
-                          type="button"
-                          className="btn dropbtns btn-primary"
-                          onClick={() => {
-                            setItemId(item.id);
-                            setSelectedEstimatingID(item.prjct_name);
-                            setSelectedEstimator(item.estimator);
-                            setSelectedBidder(item.bidder);
-                            setSelectedCompany(item.company);
-                            setselectedStatus(item.status);
-                            setSelecteddueDate(item.due_date);
-                            setSelectedstart_date(item.start_date);
-                            setSelectedbidder_address(item.bidder_address);
-                            setSelectedTimeforUpdate(item.time);
-                            setSelectedTimeZone(item.timezone);
-                            setSelectedLocation(item.location);
-                            setshowEstimatingEditModal(true);
-                          }}
-                        >
-                          Edit
-                        </button>
-
-                        <button
-                          className="btn dropbtns btn-success"
-                          onClick={() => {
-                            console.log(item.prjct_name);
-                            setItemId(item.id);
-
-                            setStep0FormData({
-                              ...step0FormData,
-                              estimating: item.id,
-                            });
-                            setSelectedEstimatingID(item.prjct_name);
-                            setPurposalModal(true);
-                          }}
-                        >
-                          Create
-                        </button>
-                        <button
-  className="btn dropbtns btn-danger"
-  onClick={() => {
-    console.log(item.prjct_name);
-    setItemId(item.id);
-    setStep0FormData({
-      ...step0FormData,
-      estimating: parseInt(item.id, 10), // Parse the string to an integer
-    });
-    setSelectedEstimatingID(item.prjct_name);
-    setshowProjectModal(true);
-  }}
->
-  project
-</button>
-
-
-                        <button
-                          className="btn dropbtns btn-secondary"
-                          onClick={() => {
-                            navigate(`/homepage/rawproposal/${item.id}`);
-                          }}
-                        >
-                          View
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
         </div>
       </div>
       {/* New Estimating Entry Posting-Code */}

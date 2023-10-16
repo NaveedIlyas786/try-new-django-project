@@ -124,8 +124,19 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = ['id','status', 'job_num', 'start_date', 'scope','prjct_engnr','bim_oprtr','Forman','prjct_mngr','estimating','start_date','general_superintendent',
                     'project_address','addendums','bid','Spec','contacts','drywell','finish','wall_type','progress','ro_door','ro_window','substitution',
                     'contracts','schedule_of_values','insurancs','bond','zliens','submittals','shopdrawing','safity','schedule','sub_contractors','laborrate',
-                    'billing','sov','hds_system','onbuild','buget'] 
+                    'billing','sov','hds_system','onbuild','buget']
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        # Handle job_title ManyToMany field
+        
+        representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None
+        representation['scope'] = instance.scope.prjct_name if instance.scope else None
+        representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None
+        representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None
 
+
+        return representation
 class RecursiveProjectDetailSerializer(serializers.Serializer):
     """Serializer for recursive Estimating_detail children."""
     def to_representation(self, value):

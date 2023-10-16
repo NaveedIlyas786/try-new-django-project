@@ -423,7 +423,7 @@ class Billing(models.Model):
 class Sov(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     status=models.CharField(verbose_name="Labor Rate", max_length=50,choices=[
-        ('Aproved','Aproved'),('Pending','Pending'),('Custom','Custom'),
+        ('Aproved','Aproved'),('Pending','Pending'),
         ],default='Pending', null=True, blank=True)
     date=models.DateField(verbose_name="add date if Status Approved (YYYY-MM-DD)", null=True, blank=True)
 

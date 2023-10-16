@@ -179,7 +179,7 @@ const Dashboard = () => {
     <>
       <div className=" container dashboard ">
         <div className=" row projectStatus justify-content-around">
-          <div className=" col-md-2 p-2 ProjectStatus " data-aos="fade-down">
+          <div className=" col-md-2 p-2 ProjectStatus pendinggreen ">
             <h4 className="pt-3 pb-2">
               {dashData.reduce((acc, e) => acc + (e?.Won?.total || 0), 0)}
             </h4>
@@ -188,7 +188,7 @@ const Dashboard = () => {
             </p>
             <h5>Won</h5>
           </div>
-          <div className=" col-md-2 p-2  ProjectStatus" data-aos="fade-down">
+          <div className=" col-md-2 p-2  ProjectStatus pendingyellow">
             <h4 className="pt-3 pb-2">
               {dashData.reduce((acc, e) => acc + (e?.Pending?.total || 0), 0)}
             </h4>
@@ -197,7 +197,7 @@ const Dashboard = () => {
             </p>
             <h5>pending</h5>
           </div>
-          <div className=" col-md-2 p-3  ProjectStatus" data-aos="fade-up">
+          <div className=" col-md-2 p-3  ProjectStatus pendingWorking" >
             <h4 className="pt-2 pb-2">
               {dashData.reduce((acc, e) => acc + (e?.Working?.total || 0), 0)}
             </h4>
@@ -209,7 +209,7 @@ const Dashboard = () => {
               <i className="fa-solid fa-square-this-way-up "></i>
             </p>
           </div>
-          <div className=" col-md-2 p-3  ProjectStatus" data-aos="fade-up">
+          <div className=" col-md-2 p-3  ProjectStatus pendingLost" >
             <h4 className="pt-2 pb-2">
               {dashData.reduce((acc, e) => acc + (e?.Lost?.total || 0), 0)}
             </h4>
@@ -435,7 +435,6 @@ const Dashboard = () => {
           <div className="row ">
             <div
               className="col-md-4 twoTable  mt-3 table-responsive-custom"
-              data-aos="fade-down"
             >
               <table className="table twoTable table-striped text-center ">
                 <thead className="thead-dark ">
@@ -521,7 +520,7 @@ const Dashboard = () => {
             </div> */}
             {/* <div
               className="ms-5 col-md-7 col-sm-7 text-center graphimg"
-              data-aos="fade-up"
+              
             >
               <BarChart
                 width={650}
@@ -562,7 +561,7 @@ const Dashboard = () => {
             </div> */}
             <div
               className="ms-5 col-md-7 col-sm-7 text-center graphimg"
-              data-aos="fade-up"
+              
             >
               <BarChart
                 width={800}

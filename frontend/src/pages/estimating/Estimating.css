@@ -27,7 +27,7 @@ td {
   width: 60px !important;
   /* background-color: brown !important; */
 }
-.myinput {
+.mysearchinput {
   min-width: 318px;
   background-color: white;
   color: black;
@@ -35,8 +35,8 @@ td {
   transition: all 0.5s ease-in-out;
   border-radius: 10px;
 }
-.myinput:focus {
-  min-width: 550px;
+.mysearchinput:focus {
+  /* min-width: 550px; */
   border: 1px solid black !important;
   border-radius: 0 !important;
   transition: all 0.5s ease-in-out;
@@ -699,6 +699,9 @@ td {
 }
 .lp{
   background-color: white;
+}
+.lpk:hover{
+  background-color: #4bc712 !important;
 }
 .wonloseDiv{
   width: 458px !important;

@@ -208,6 +208,8 @@ const Estimator = () => {
   const [selectedProjectStatus, setProjectStatus] = useState("");
   const [selectedContacts, setSelectedContacts] = useState("");
   const [selectedSubstitution, setSelectedSubstitution] = useState("");
+  const [selectedContract, setSelectedContract] = useState("");
+  const [selectedProjectDate, setSelectedProjectDate] = useState("");
   const [selectedFINISHLEVELMARKUPS, setSelectedFINISHLEVELMARKUPS] = useState("");
 
   // Event handlers for form inputs
@@ -229,6 +231,8 @@ const Estimator = () => {
   const handleProjectStatusChange = (e) => setProjectStatus(e.target.value);
   const handleContactsChange = (e) => setSelectedContacts(e.target.value);
   const handleSubstitutionChange = (e) => setSelectedSubstitution(e.target.value);
+  const handleContractChange = (e) => setSelectedContract(e.target.value);
+  const handleProjectDateChange = (e) => setSelectedProjectDate(e.target.value);
   const handleProjectEngineerChange = (e) =>
     setSelectedProjectEngineer(e.target.value);
   const handleProjectManagerChange = (e) =>
@@ -262,6 +266,8 @@ const Estimator = () => {
       status:selectedProjectStatus,
       contacts:selectedContacts,
       substitution:selectedSubstitution,
+      contracts: selectedContract, //........
+      contract_date:selectedProjectDate, //........
     };
 
     console.log("formData to be sent", formData);
@@ -1645,8 +1651,8 @@ const Estimator = () => {
                         className="form-select"
                         placeholder="Contract"
                         id="ProjectEngineerID"
-                        value=""
-                        onChange={() => {}}
+                        value={selectedContract}
+                        onChange={handleContractChange}
                       >
                         <option value="">Select Choice</option>
                         <option value="On build">Fully Executed</option>
@@ -1657,7 +1663,9 @@ const Estimator = () => {
                         type="date"
                         name="date" // Set the name attribute to differentiate
                         className="form-control"
-                        value=""
+                        value={selectedProjectDate}
+                        onChange={handleProjectDateChange}
+
                       />
                     </div>
                   </div>

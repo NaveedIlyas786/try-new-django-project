@@ -262,7 +262,6 @@ const Estimator = () => {
       status:selectedProjectStatus,
       contacts:selectedContacts,
       substitution:selectedSubstitution,
-
     };
 
     console.log("formData to be sent", formData);

@@ -4,11 +4,11 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import "./Purposaldata.css";
 import { useReactToPrint } from "react-to-print";
+import axios from "axios";
 
 function Rawpurposal() {
   const { id } = useParams();
   const [proposalData, setProposalData] = useState(null);
-
   useEffect(() => {
     fetch(`http://127.0.0.1:8000/api/estimating/proposals/${id}`)
       .then((response) => {
@@ -25,7 +25,6 @@ function Rawpurposal() {
   }, [id]);
 
   const [qualificationData, setQualificationData] = useState(null);
-
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/estimating/Qualification/")
       .then((response) => {
@@ -41,6 +40,24 @@ function Rawpurposal() {
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
+  const [sendUserEMail, setsendUserEMail] = useState(null);
+
+  const sendMyEmail = () => {
+    // You can send the email by making a POST request to the server
+    axios
+      .post(`http://127.0.0.1:8000/api/estimating/sendEmail/${id}`)
+      .then((response) => {
+        console.log(response.data);
+        setsendUserEMail(response.data);
+        // You can also show a success message or perform any other necessary actions here
+      })
+      .catch((error) => {
+        console.error("Failed to send email:", error);
+        // You can show an error message or perform error handling here
+      });
+  };
+
+
   const conponentPDF = useRef();
   const generatePDF = useReactToPrint({
     content: () => conponentPDF.current,
@@ -54,6 +71,7 @@ function Rawpurposal() {
         <button className="btn btn-success" onClick={generatePDF}>
           PDF
         </button>
+          <img onClick={sendMyEmail} style={{width:"100px"}} src="../../../src/assets/emailImg.png" alt="EMail img" />
         <div ref={conponentPDF} id="pdf-content">
           <header className="header">
             <div className="topSection">

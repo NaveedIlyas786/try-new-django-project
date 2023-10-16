@@ -5,6 +5,7 @@ import html2canvas from "html2canvas";
 import "./Purposaldata.css";
 import { useReactToPrint } from "react-to-print";
 import axios from "axios";
+import html2pdf from "html2pdf.js";
 
 function Rawpurposal() {
   const { id } = useParams();
@@ -40,22 +41,11 @@ function Rawpurposal() {
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
-  const [sendUserEMail, setsendUserEMail] = useState(null);
 
-  const sendMyEmail = () => {
-    // You can send the email by making a POST request to the server
-    axios
-      .post(`http://127.0.0.1:8000/api/estimating/sendEmail/${id}`)
-      .then((response) => {
-        console.log(response.data);
-        setsendUserEMail(response.data);
-        // You can also show a success message or perform any other necessary actions here
-      })
-      .catch((error) => {
-        console.error("Failed to send email:", error);
-        // You can show an error message or perform error handling here
-      });
-  };
+
+
+
+
 
 
   const conponentPDF = useRef();
@@ -65,13 +55,47 @@ function Rawpurposal() {
     onAfterPrint: () => alert("Data saved in PDF"),
   });
 
+  const [sendUserEMail, setsendUserEMail] = useState(null);
+  const sendMyEmail = () => {
+    html2canvas(document.querySelector("#pdf-content")).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 0, 0);
+        const pdfBase64 = btoa(pdf.output());  // Convert the PDF to a Base64 string
+        
+        // Sending the email by making a POST request to the server with the PDF attached
+        axios
+            .post(`http://127.0.0.1:8000/api/estimating/sendEmail/${id}/`, {
+                pdf: pdfBase64  // Including the PDF in the POST request
+            })
+            .then((response) => {
+                console.log(response.data);
+                setsendUserEMail(response.data);
+                // You can also show a success message or perform any other necessary actions here
+            })
+            .catch((error) => {
+                console.error("Failed to send email:", error);
+                // You can show an error message or perform error handling here
+            });
+    });
+};
+
+
+
+
+
   return (
     <div className="rawk">
       <div id="pdf-content">
         <button className="btn btn-success" onClick={generatePDF}>
           PDF
         </button>
-          <img onClick={sendMyEmail} style={{width:"100px"}} src="../../../src/assets/emailImg.png" alt="EMail img" />
+        <img
+          onClick={sendMyEmail}
+          style={{ width: "100px" }}
+          src="../../../src/assets/emailImg.png"
+          alt="EMail img"
+        />
         <div ref={conponentPDF} id="pdf-content">
           <header className="header">
             <div className="topSection">
@@ -135,14 +159,12 @@ function Rawpurposal() {
                         <h5 key={`${e.id}-${a.id}`}>
                           {a.number} <span className="ms-2">{a.sefic}</span>
                         </h5>
-                        
                       </li>
                     ))}
-                    
                   </ul>
                 </div>
               ))}
-               
+
               <div className="drywall-interior">
                 <h4>
                   DMS Drywall & Interior Systems Inc. Signatory to the

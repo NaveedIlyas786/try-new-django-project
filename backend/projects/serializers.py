@@ -11,43 +11,92 @@ class ContractSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contract
         fields = '__all__'
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        
+        representation['project'] = instance.project.job_num if instance.project else None
 
+
+        return representation
 
 class ScheduleOfValueSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedule_of_Value
         fields = '__all__'
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        
+        representation['project'] = instance.project.job_num if instance.project else None
 
+
+        return representation
 
 class InsuranceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Insurance
         fields = '__all__'
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        
+        representation['project'] = instance.project.job_num if instance.project else None
 
+
+        return representation
 
 class BondSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bond
         fields = '__all__'
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        
+        representation['project'] = instance.project.job_num if instance.project else None
 
+
+        return representation
 
 class ZlienSerializer(serializers.ModelSerializer):
     class Meta:
         model = Zlien
         fields = '__all__'
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        
+        representation['project'] = instance.project.job_num if instance.project else None
 
+
+        return representation
 
 class SubmittalsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Submittals
         fields = '__all__'
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        
+        representation['project'] = instance.project.job_num if instance.project else None
 
+
+        return representation
 
 class ShopDrawingSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShopDrawing
         fields = '__all__'
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        
+        representation['project'] = instance.project.job_num if instance.project else None
 
+
+        return representation
 
 class SafitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -59,49 +108,107 @@ class ScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedule
         fields = '__all__'
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        
+        representation['project'] = instance.project.job_num if instance.project else None
 
+
+        return representation
 
 class SubContractorsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sub_Contractors
         fields = '__all__'
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        
+        representation['project'] = instance.project.job_num if instance.project else None
 
+
+        return representation
 class LaborRateSerializer(serializers.ModelSerializer):
     class Meta:
         model = LaborRate
         fields = '__all__'
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        
+        representation['project'] = instance.project.job_num if instance.project else None
 
+
+        return representation
 
 class BillingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Billing
         fields = '__all__'
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        
+        representation['project'] = instance.project.job_num if instance.project else None
 
+
+        return representation
 
 class SovSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sov
         fields = '__all__'
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        
+        representation['project'] = instance.project.job_num if instance.project else None
 
+
+        return representation
 
 class HDSSystemSerializer(serializers.ModelSerializer):
     class Meta:
         model = HDS_system
         fields = '__all__'
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        
+        representation['project'] = instance.project.job_num if instance.project else None
 
+
+        return representation
 
 class OnBuildSerializer(serializers.ModelSerializer):
     class Meta:
         model = OnBuild
         fields = '__all__'
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        
+        representation['project'] = instance.project.job_num if instance.project else None
 
+
+        return representation
 
 class BugetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Buget
         fields = '__all__'
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        
+        representation['project'] = instance.project.job_num if instance.project else None
 
+
+        return representation
+    
+    
 class ProjectSerializer(serializers.ModelSerializer):
     contracts = ContractSerializer(source='contract_set', many=True, read_only=True)
     schedule_of_values = ScheduleOfValueSerializer(source='schedule_of_value_set', many=True, read_only=True)
@@ -131,9 +238,14 @@ class ProjectSerializer(serializers.ModelSerializer):
         # Handle job_title ManyToMany field
         
         representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None
-        representation['scope'] = instance.scope.prjct_name if instance.scope else None
-        representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None
-        representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None
+        representation['prjct_engnr'] = instance.prjct_engnr.full_Name if instance.prjct_engnr else None
+        representation['bim_oprtr'] = instance.bim_oprtr.full_Name if instance.bim_oprtr else None
+        representation['Forman'] = instance.Forman.full_Name if instance.Forman else None
+        representation['prjct_mngr'] = instance.prjct_mngr.full_Name if instance.prjct_mngr else None
+        representation['general_superintendent'] = instance.general_superintendent.full_Name if instance.general_superintendent else None
+
+        # representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None
+        # representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None
 
 
         return representation

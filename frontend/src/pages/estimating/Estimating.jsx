@@ -195,12 +195,40 @@ const Estimator = () => {
   const [selectedProjectID, setSelectedProjectID] = useState("");
   const [selectedProjectManager, setSelectedProjectManager] = useState("");
   const [selectedBimOperator, setSelectedBimOperator] = useState("");
+  const [SelectedGeneralSuperintendent, setSelectedGeneralSuperintendent] = useState("");
+  const [selectedProjectAddress, setselectedProjectAddress] = useState("");
+  const [selectedAddendum, setselectedAddendum] = useState("");
+  const [selectedBid, setselectedBid] = useState("");
+  const [selectedspec, setselectedspec] = useState("");
+  const [selectedWallType, setSelectedWallType] = useState("");
+  const [selectedDrywell, setSelectedDrywell] = useState("");
+  const [selectedPROGRESSTRACKING, setSelectedPROGRESSTRACKING] = useState("");
+  const [selectedRO_Door, setSelectedRO_Door] = useState("");
+  const [selectedRO_Window, setSelectedRO_Window] = useState("");
+  const [selectedProjectStatus, setProjectStatus] = useState("");
+  const [selectedContacts, setSelectedContacts] = useState("");
+  const [selectedSubstitution, setSelectedSubstitution] = useState("");
+  const [selectedFINISHLEVELMARKUPS, setSelectedFINISHLEVELMARKUPS] = useState("");
 
   // Event handlers for form inputs
   const handleStartDateChange = (e) => setStartDate(e.target.value);
   const handleJobNoChange = (e) => setJobNo(e.target.value);
   const handleForemanChange = (e) => setSelectedForeman(e.target.value);
   const handleBimOperatorChange = (e) => setSelectedBimOperator(e.target.value);
+  const handleGenralSuperintendentChange = (e) => setSelectedGeneralSuperintendent(e.target.value);
+  const handleProjectAddressChange = (e) => setselectedProjectAddress(e.target.value);
+  const handleSelectedAddendumChange = (e) => setselectedAddendum(e.target.value);
+  const handleSelectedBidChange = (e) => setselectedBid(e.target.value);
+  const handleSelectedSpecChange = (e) => setselectedspec(e.target.value);
+  const handleWallTypeChange = (e) => setSelectedWallType(e.target.value);
+  const handlePROGRESSTRACKINGChange = (e) => setSelectedPROGRESSTRACKING(e.target.value);
+  const handleFINISHLEVELMARKUPSChange = (e) => setSelectedFINISHLEVELMARKUPS(e.target.value);
+  const handleDrywellChange = (e) => setSelectedDrywell(e.target.value);
+  const handleRO_DoorChange = (e) => setSelectedRO_Door(e.target.value);
+  const handleRO_WindowChange = (e) => setSelectedRO_Window(e.target.value);
+  const handleProjectStatusChange = (e) => setProjectStatus(e.target.value);
+  const handleContactsChange = (e) => setSelectedContacts(e.target.value);
+  const handleSubstitutionChange = (e) => setSelectedSubstitution(e.target.value);
   const handleProjectEngineerChange = (e) =>
     setSelectedProjectEngineer(e.target.value);
   const handleProjectManagerChange = (e) =>
@@ -208,15 +236,6 @@ const Estimator = () => {
   const handleProjectIDChange = (e) => setSelectedProjectID(e.target.value);
 
   // Function to handle form submission
-  const [isDivOpen, setIsDivOpen] = useState(false); // State variable to track div visibility
-
-  const openDiv = () => {
-    setIsDivOpen(true);
-  };
-
-  const closeDiv = () => {
-    setIsDivOpen(false);
-  };
 
   const handleProjectFormSubmit = (e) => {
     e.preventDefault();
@@ -224,33 +243,49 @@ const Estimator = () => {
     const formData = {
       start_date: startDate,
       job_num: jobNo,
-      estimating: selectedProjectID,
+      estimating: selectedEstimatingID,
       prjct_mngr: selectedProjectManager,
       Forman: selectedForeman,
       bim_oprtr: selectedBimOperator,
       prjct_engnr: selectedProjectEngineer,
+      general_superintendent:SelectedGeneralSuperintendent,
+      project_address:selectedProjectAddress,
+      addendums:selectedAddendum,
+      bid:selectedBid,
+      Spec:selectedspec,
+      wall_type:selectedWallType,
+      progress:selectedPROGRESSTRACKING,
+      finish:selectedFINISHLEVELMARKUPS,
+      drywell:selectedDrywell,
+      ro_door:selectedRO_Door,
+      ro_window:selectedRO_Window,
+      status:selectedProjectStatus,
+      contacts:selectedContacts,
+      substitution:selectedSubstitution,
+
     };
 
     console.log("formData to be sent", formData);
 
     // Send a POST request using Axios
     axios
-      .post("http://127.0.0.1:8000/api/project/ProjectList/", formData, {
+      .post("http://127.0.0.1:8000/api/project/Project/", formData, {
         headers: {
           "Content-Type": "application/json",
         },
       })
       .then((response) => {
         console.log("Data successfully submitted", response.data);
-        dispatch(addProject(response.data));
+        // dispatch(addProject(response.data));
+
         // Clear the form fields by resetting the state variables
-        setStartDate(""); // Clear the startDate
-        setJobNo(""); // Clear the jobNo
-        setSelectedProjectID(""); // Clear the selectedProjectID
-        setSelectedProjectManager(""); // Clear the selectedProjectManager
-        setSelectedForeman(""); // Clear the selectedForeman
-        setSelectedBimOperator(""); // Clear the selectedBimOperator
-        setSelectedProjectEngineer(""); // Clear the selectedProjectEngineer
+        setStartDate(""); 
+        setJobNo(""); 
+        setSelectedProjectID("");
+        setSelectedProjectManager(""); 
+        setSelectedForeman("");
+        setSelectedBimOperator(""); 
+        setSelectedProjectEngineer(""); 
         setTimeout(() => {
           setshowProjectModal(false);
         }, 200);
@@ -283,6 +318,26 @@ const Estimator = () => {
         console.error("Error fetching data:", error);
       });
   }, []);
+  // ************************General Superintendent Role Seleted **********
+
+  const [GeneralSuperintendent, setGeneralSuperintendent] = useState([]);
+
+  useEffect(() => {
+    // Fetch data from the API
+    axios
+      .get("http://127.0.0.1:8000/api/user/register/")
+      .then((response) => response.data)
+      .then((data) => {
+        const superintendent = data.filter((user) =>
+          user.roles.includes("General Superintendent")
+        );
+        // console.log(managerUser);
+        setGeneralSuperintendent(superintendent);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
 
   // ************************Forman Role Seleted **********
   const [formanName, setFormanName] = useState([]);
@@ -293,8 +348,8 @@ const Estimator = () => {
       .get("http://127.0.0.1:8000/api/user/register/")
       .then((response) => response.data)
       .then((data) => {
-        const formanUser = data.filter((user) => user.roles.includes("Forman"));
-        // console.log(formanUser);
+        const formanUser = data.filter((user) => user.roles.includes("Foreman"));
+        console.log(formanUser);
         setFormanName(formanUser);
       })
       .catch((error) => {
@@ -312,7 +367,7 @@ const Estimator = () => {
       .then((response) => response.data)
       .then((data) => {
         const bimOperatorUser = data.filter((user) =>
-          user.roles.includes("Bim Operator")
+          user.roles.includes("BIM/Manager PR")
         );
         setBimOperator(bimOperatorUser);
       })
@@ -380,9 +435,6 @@ const Estimator = () => {
     return formattedTime;
   };
 
-  // validateAndFormatTime()
-
-  // console.log("Selected Time:", selectedTime);
 
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
@@ -448,11 +500,8 @@ const Estimator = () => {
       });
   };
 
-  // ***********Edit Estimating-Summary Info******
 
-  // const [estimatingData, setEstimatingData] = useState(null);
-
-  //************* Define the handleProposalEditing function
+  //************* Define the handleEstimatingEditing function
 
   const [selectedEstimatingID, setSelectedEstimatingID] = useState("");
   const [selectedEstimator, setSelectedEstimator] = useState("");
@@ -484,68 +533,8 @@ const Estimator = () => {
     .toString()
     .padStart(2, "0")}`;
 
-  // Assuming your input time is in the "HH:mm" format, e.g., "18:00"
-
-  // function convertTo12HourFormat(inputTime) {
-  //   const [hours, minutes] = inputTime.split(":");
-  //   let parsedHours = parseInt(hours, 10); // Use let instead of const
-
-  //   if (parsedHours >= 12 && parsedHours > 0) {
-  //     if (parsedHours > 12) {
-  //       // Convert hours to 12-hour format if greater than 12
-  //       parsedHours -= 12;
-  //     }
-  //   } else if (parsedHours === 0) {
-  //     parsedHours = 12; // Midnight is 12:00 AM
-  //   }
-
-  //   // Format the time as "hh:mm"
-  //   return `${parsedHours.toString().padStart(2, "0")}:${minutes}`;
-  // }
-
-  // const editformattedTime = convertTo12HourFormat(SelectedTimeforUpdate);
-
-  // console.log(editformattedTime);
-
-  // *******************************************************
-  // const validateAndFormatTime = (time) => {
-  //   // Split the time into hours and minutes
-  //   const [hours, minutes] = time.split(":").map(Number);
-
-  //   // Check if hours and minutes are valid
-  //   if (
-  //     Number.isNaN(hours) ||
-  //     Number.isNaN(minutes) ||
-  //     hours < 0 ||
-  //     hours > 23 ||
-  //     minutes < 0 ||
-  //     minutes > 59
-  //   ) {
-  //     // Invalid hours or minutes
-  //     console.log("Invalid hours or minutes");
-  //     return "";
-  //   }
-
-  //   // Format the time as "hh:mm AM" or "hh:mm PM"
-  //   let formattedTime = `${String(hours % 12).padStart(2, "0")}:${String(
-  //     minutes
-  //   ).padStart(2, "0")} ${hours >= 12 ? "PM" : "AM"}`;
-
-  //   return formattedTime;
-  // };
   // *******************************************************
   const [itemId, setItemId] = useState();
-
-  const parseTime = (timeString) => {
-    if (!timeString) return ""; // Handle empty or invalid values
-    const date = new Date(timeString);
-    if (isNaN(date)) return ""; // Handle invalid date
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const ampm = hours >= 12 ? "PM" : "AM";
-    const formattedHours = hours % 12 || 12; // Convert 0 to 12 for AM
-    return `${formattedHours}:${minutes} ${ampm}`;
-  };
 
   const convertToIsoTime = (formattedTime) => {
     // Convert "hh:mm AM/PM" to "hh:mm"
@@ -565,19 +554,6 @@ const Estimator = () => {
     return formattedTime;
   };
 
-  // const convertToIsoTime = (formattedTime) => {
-  //   const date = new Date(formattedTime);
-  //   if (!isNaN(date)) {
-  //     const hours = date.getHours();
-  //     const minutes = date.getMinutes();
-  //     const ampm = hours >= 12 ? 'PM' : 'AM';
-  //     const formattedHours = hours % 12 || 12;
-  //     return `${String(formattedHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${ampm}`;
-  //   }
-  //   return formattedTime;
-  // };
-
-  // console.log("SelectedTimeforUpdate:", SelectedTimeforUpdate);
   const formattedTimeEdit = convertToIsoTime(SelectedTimeforUpdate);
   // console.log("formattedTimeEdit:", formattedTimeEdit);
 
@@ -653,34 +629,9 @@ const Estimator = () => {
     },
   ]);
 
-  // const [entryData, setEntryData] = useState([
-  //   {
-  //     specific_name: "Base Bid Drywall/Framing",
-  //     budget: null,
-  //     sefic: [],
-  //   },
-  // ]);
-  const [entryCount, setEntryCount] = useState(1); // Initialize with 1
 
   // ****************new entry of scope of work with unique id
 
-  const formatNumber = (value) => {
-    // Remove any existing commas and non-numeric characters
-    const numericValue = value.replace(/[^0-9]/g, "");
-
-    // Check if the numeric value is not empty
-    if (numericValue.length > 0) {
-      // Convert the numeric value to a number
-      const numberValue = parseFloat(numericValue);
-
-      // Format the number with commas for thousands and millions
-      const formattedValue = numberValue.toLocaleString("en-US");
-
-      return formattedValue;
-    }
-
-    return ""; // Return an empty string if the input is empty or contains non-numeric characters
-  };
 
   const [services, setServices] = useState([]);
   async function fetchServiceData() {
@@ -914,11 +865,7 @@ const Estimator = () => {
 
   const filteredData = useSelector(selectFilteredData);
 
-  const sortedData = filteredData.slice().sort((a, b) => {
-    const dueDateA = new Date(a.due_date);
-    const dueDateB = new Date(b.due_date);
-    return dueDateA - dueDateB; // Sort by due date, ascending order
-  });
+
 
   const handlestartDateChange = (e) => {
     setStartDate(e.target.value);
@@ -957,9 +904,7 @@ const Estimator = () => {
     setLocation(e.target.value);
   };
 
-  const handleBidAmountChange = (e) => {
-    setBidAmount(e.target.value);
-  };
+
 
   const handleBidderChange = (e) => {
     setbidderName(e.target.value);
@@ -980,15 +925,6 @@ const Estimator = () => {
   };
 
   // Event handler for the budget input
-  const handlebudgetchange = (e) => {
-    const inputValue = e.target.value;
-    const numericValue = parseInt(inputValue.replace(/[^0-9]/g, ""), 10); // Parse the input to an integer
-
-    setStep2FormData({
-      ...step2FormData,
-      budget: isNaN(numericValue) ? null : numericValue, // Store as integer or null if not a valid number
-    });
-  };
 
   // **********************
 
@@ -1048,10 +984,7 @@ const Estimator = () => {
     if (amount === null) return ""; // Return an empty string if the amount is null
     return amount.toLocaleString("en-US");
   };
-  const viewpdf = () => {
-    // navigate("/homepage/purposal");
-    // navigate("/homepage/rawproposal");
-  };
+
   const movetoWonProjectsPage = () => {
     navigate("/homepage/wonProjectspage/");
   };
@@ -1288,8 +1221,14 @@ const Estimator = () => {
                     className="form-control"
                     id="projectName"
                     placeholder="AutoPopulate not shown on frontend"
-                    value={selectedProjectID}
-                    onChange={handleProjectIDChange}
+                    value={selectedEstimatingID}
+                            onChange={(e) =>
+                              setStep0FormData({
+                                ...step0FormData,
+                                estimating: e.target.value,
+                              })
+                            }
+                            readOnly
                   />
                 </div>
                 <div className="bothDiv gap-3 mt-3">
@@ -1452,13 +1391,13 @@ const Estimator = () => {
                     <select
                       className="form-select"
                       id="ProjectEngineerID"
-                      value={selectedProjectEngineer}
-                      onChange={handleProjectEngineerChange}
+                      value={SelectedGeneralSuperintendent}
+                      onChange={handleGenralSuperintendentChange}
                     >
                       <option value="">Select Project Engineer</option>
 
-                      {ProjEnger && ProjEnger.length > 0 ? (
-                        ProjEnger.map((user) => (
+                      {GeneralSuperintendent && GeneralSuperintendent.length > 0 ? (
+                        GeneralSuperintendent.map((user) => (
                           <option value={user.id} key={user.id}>
                             {user.full_Name}
                           </option>
@@ -1479,9 +1418,9 @@ const Estimator = () => {
                     type="text"
                     className="form-control"
                     id="projectName"
-                    placeholder="AutoPopulate not shown on frontend"
-                    value={selectedProjectID}
-                    onChange={handleProjectIDChange}
+                    placeholder="Your project address!"
+                    value={selectedProjectAddress}
+                    onChange={handleProjectAddressChange}
                   />
                 </div>
 
@@ -1493,8 +1432,8 @@ const Estimator = () => {
                     <select
                       className="form-select"
                       id="bimOperatorID"
-                      value={selectedBimOperator} // Use the selectedBimOperator value
-                      onChange={handleBimOperatorChange}
+                      value={selectedAddendum} // Use the selectedBimOperator value
+                      onChange={handleSelectedAddendumChange}
                     >
                       <option value="">Select Addendum</option>
                       <option value="Available">Available</option>
@@ -1509,8 +1448,8 @@ const Estimator = () => {
                     <select
                       className="form-select"
                       id="ProjectEngineerID"
-                      value={selectedProjectEngineer}
-                      onChange={handleProjectEngineerChange}
+                      value={selectedBid}
+                      onChange={handleSelectedBidChange}
                     >
                       <option value="">Select Bid</option>
                       <option value="Available">Available</option>
@@ -1526,8 +1465,8 @@ const Estimator = () => {
                     <select
                       className="form-select"
                       id="bimOperatorID"
-                      value={selectedBimOperator} // Use the selectedBimOperator value
-                      onChange={handleBimOperatorChange}
+                      value={selectedspec} // Use the selectedBimOperator value
+                      onChange={handleSelectedSpecChange}
                     >
                       <option value="">Select Spec's</option>
                       <option value="Available">Available</option>
@@ -1542,11 +1481,12 @@ const Estimator = () => {
                     <select
                       className="form-select"
                       id="ProjectEngineerID"
-                      value={selectedProjectEngineer}
-                      onChange={handleProjectEngineerChange}
+                      value={selectedWallType}
+                      onChange={handleWallTypeChange}
                     >
-                      <option value="">Select Bid</option>
-                      <option value="On build">On build</option>
+                      <option value="">Select Choice</option>
+                      <option value="Completed">Completed</option>
+                      <option value="Working">Working</option>
                       <option value="Pending">Pending</option>
                     </select>
                   </div>
@@ -1559,11 +1499,12 @@ const Estimator = () => {
                     <select
                       className="form-select"
                       id="ProjectEngineerID"
-                      value={selectedProjectEngineer}
-                      onChange={handleProjectEngineerChange}
+                      value={selectedDrywell}
+                      onChange={handleDrywellChange}
                     >
-                      <option value="">Select Bid</option>
-                      <option value="On build">On build</option>
+                      <option value="">Select Choice</option>
+                      <option value="Submited">Submited</option>
+                      <option value="Working">Working</option>
                       <option value="Pending">Pending</option>
                     </select>
                   </div>
@@ -1575,11 +1516,12 @@ const Estimator = () => {
                     <select
                       className="form-select"
                       id="ProjectEngineerID"
-                      value={selectedProjectEngineer}
-                      onChange={handleProjectEngineerChange}
+                      value={selectedFINISHLEVELMARKUPS}
+                      onChange={handleFINISHLEVELMARKUPSChange}
                     >
-                      <option value="">Select Bid</option>
-                      <option value="On build">On build</option>
+                      <option value="">Select Choice</option>
+                      <option value="Completed">Completed</option>
+                      <option value="Working">Working</option>
                       <option value="Pending">Pending</option>
                     </select>
                   </div>
@@ -1592,11 +1534,12 @@ const Estimator = () => {
                     <select
                       className="form-select"
                       id="ProjectEngineerID"
-                      value={selectedProjectEngineer}
-                      onChange={handleProjectEngineerChange}
+                      value={selectedPROGRESSTRACKING}
+                      onChange={handlePROGRESSTRACKINGChange}
                     >
-                      <option value="">Select Bid</option>
-                      <option value="On build">On build</option>
+                      <option value="">Select Choice</option>
+                      <option value="Completed">Completed</option>
+                      <option value="Working">Working</option>
                       <option value="Pending">Pending</option>
                     </select>
                   </div>
@@ -1608,12 +1551,14 @@ const Estimator = () => {
                     <select
                       className="form-select"
                       id="ProjectEngineerID"
-                      value={selectedProjectEngineer}
-                      onChange={handleProjectEngineerChange}
+                      value={selectedRO_Door}
+                      onChange={handleRO_DoorChange}
                     >
-                      <option value="">Select Bid</option>
-                      <option value="On build">On build</option>
+                      <option value="">Select Choice</option>
+                      <option value="Working">Working</option>
+                      <option value="Submited">Submited</option>
                       <option value="Pending">Pending</option>
+                      <option value="Done">Done</option>
                     </select>
                   </div>
                 </div>
@@ -1625,12 +1570,14 @@ const Estimator = () => {
                     <select
                       className="form-select"
                       id="ProjectEngineerID"
-                      value={selectedProjectEngineer}
-                      onChange={handleProjectEngineerChange}
+                      value={selectedRO_Window}
+                      onChange={handleRO_WindowChange}
                     >
-                      <option value="">Select Bid</option>
-                      <option value="On build">On build</option>
+                      <option value="">Select Choice</option>
+                      <option value="Working">Working</option>
+                      <option value="Submited">Submited</option>
                       <option value="Pending">Pending</option>
+                      <option value="Done">Done</option>
                     </select>
                   </div>
 
@@ -1641,8 +1588,8 @@ const Estimator = () => {
                     <select
                       className="form-select"
                       id="ProjectEngineerID"
-                      value={selectedProjectEngineer}
-                      onChange={handleProjectEngineerChange}
+                      value={selectedProjectStatus}
+                      onChange={handleProjectStatusChange}
                     >
                       <option value="">Select Bid</option>
                       <option value="C">C</option>
@@ -1652,8 +1599,26 @@ const Estimator = () => {
                       <option value="X">X</option>
                     </select>
                   </div>
+                  
                 </div>
-                <div className="projName">
+                <div className="bothDiv  gap-3">
+                <div className="Oneline">
+                    <label htmlFor="location" className="form-label">
+                    Contacts:
+                    </label>
+                    <select
+                      className="form-select"
+                      id="ProjectEngineerID"
+                      value={selectedContacts}
+                      onChange={handleContactsChange}
+                    >
+                      <option value="">Select Bid</option>
+                      <option value="On build">On build</option>
+                      <option value="Pending">Pending</option>
+                      
+                    </select>
+                  </div>
+                <div className="Oneline">
                   <label htmlFor="projectName" className="form-label">
                     Substitution:
                   </label>
@@ -1661,11 +1626,15 @@ const Estimator = () => {
                     type="text"
                     className="form-control"
                     id="projectName"
-                    placeholder="AutoPopulate not shown on frontend"
-                    value={selectedProjectID}
-                    onChange={handleProjectIDChange}
+                    placeholder="Write here!"
+                    value={selectedSubstitution}
+                    onChange={handleSubstitutionChange}
                   />
                 </div>
+                  
+                </div>
+
+                
 
                 <div className="px-3" style={{ width: "100%" }}>
                   <div>
@@ -2975,6 +2944,10 @@ const Estimator = () => {
                           onClick={() => {
                             console.log(item.prjct_name);
                             setItemId(item.id);
+                            setStep0FormData({
+                              ...step0FormData,
+                              estimating: item.id,
+                            });
                             setSelectedEstimatingID(item.prjct_name);
                             setshowProjectModal(true);
                           }}

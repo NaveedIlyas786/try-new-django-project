@@ -1,43 +1,79 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import "./decision.css";
+import axios from "axios";
 
 const AdminDecisionpage = () => {
   const navigate = useNavigate();
-  return (
-    // <div className="admindecisionPage">
-    //   <h1>
-    //     Please Take decision and chose ( Approval/Rejection ) regarding
-    //     registration Request
-    //   </h1>
+  const { userId } = useParams();
+  const [userData, setUserData] = useState(null);
 
-    //   <div className="d-flex gap-3">
-    //     <button onClick={()=>{
-    //         navigate("/")
-    //     }} className="btn btn-success">Approve</button>
-    //     <button onClick={()=>{
-    //         navigate("/rejectionPage")
-    //     }} className="btn btn-danger">Reject</button>
-    //   </div>
-    // </div>
+  useEffect(() => {
+    // Fetch user data when the component mounts
+    console.log("User ID:", userId); // Log the userId to verify it's not undefined
+    axios
+      .get(`http://127.0.0.1:8000/api/user/register/${userId}`)
+      .then((response) => {
+        console.log(response.data);
+        setUserData(response.data);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch user data:", error);
+      });
+  }, [userId]);
+
+  return (
     <div className="admindecisionPage">
       <div className="contentwaiting px-5">
         <h1>
-          Please Take decision and chose ( Approval/Rejection ) regarding
+          Please Take a decision and choose (Approval/Rejection) regarding
           registration Request
         </h1>
+        {userData && (
+          <h2>
+            {userData.full_Name} is sending you the request for joining the DMS
+            System and needs your approval
+          </h2>
+        )}
         <div className="d-flex justify-content-center gap-3">
           <button
             onClick={() => {
-              navigate("/");
+              // Handle Approval, and pass the userId to the API
+              axios
+                .post(`http://127.0.0.1:8000/api/user/approve_user/${userId}/`)
+                .then((response) => {
+                  // Handle success, e.g., show a success message
+                  console.log(response);
+                  console.log("Approved From Admin");
+                  navigate("/");
+                })
+                .catch((error) => {
+                  // Handle error, e.g., show an error message
+                  console.error("Approval failed:", error);
+                });
             }}
             className="btn btn-success"
           >
             Approve
           </button>
+
           <button
             onClick={() => {
-              navigate("/rejectionPage");
+              // Handle Rejection, and pass the userId to the API
+              axios
+                .post(
+                  `http://127.0.0.1:8000/api/user/disapprove_user/${userId}/`
+                )
+                .then((response) => {
+                  // Handle success, e.g., show a success message
+                  console.log(response);
+                  console.log("Rejected From Admin");
+                  navigate("/rejectionPage");
+                })
+                .catch((error) => {
+                  // Handle error, e.g., show an error message
+                  console.error("Rejection failed:", error);
+                });
             }}
             className="btn btn-danger"
           >

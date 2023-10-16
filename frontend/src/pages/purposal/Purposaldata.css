@@ -1,7 +1,13 @@
-.addendumdate{
-text-decoration: underline;
+/* Updated CSS */
+.addendumdate {
+  text-decoration: underline;
 }
-.rawk{
-    margin-top: 70px;
-    background-color: rgb(216, 214, 218);
-  }
+.rawk {
+  margin-top: 70px;
+  padding: 30px; /* Add padding to the content */
+  box-sizing: border-box; /* Ensure padding is included in element size */
+}
+.printable-content {
+  padding-top: 30mm; /* Adjust padding as needed */
+  page-break-before: always; /* Force a page break before this element */
+}

@@ -76,7 +76,7 @@ const Signup = () => {
             setTimeout(() => {
               navigate("/waitingPage")
               // navigate("/");
-            }, 1400);
+            }, 1000);
             // Redirect the user to a success page or do something else
           })
           .catch((error) => {

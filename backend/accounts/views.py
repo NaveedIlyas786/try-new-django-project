@@ -67,7 +67,7 @@ class UserRegistrationView(APIView):
                             'User Request',
                             message,
                             settings.EMAIL_HOST_USER,
-                            ['mubeenjutt9757@gmail.com'],
+                            ['naveedilyas321@gmail.com'],
                             fail_silently=False,
                     )
             

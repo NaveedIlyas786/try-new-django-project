@@ -41,7 +41,7 @@ function App() {
         <Route path="/forgotScreen" element={<Forgot />} />
           <Route path="/waitingPage" element={<Waiting />} />
           <Route path="/rejectionPage" element={<RejectionPage />} />
-          <Route path="/adminDecisionPage" element={<AdminDecisionpage />} />
+          <Route path="/adminDecisionPage/:userId" element={<AdminDecisionpage />} />
         {/* <Route path="/purposal" element={<Purposal />} /> */}
         <Route path="/homepage/" element={<HomePage />}>
           <Route path="dashboard" element={<Dashboard />} />

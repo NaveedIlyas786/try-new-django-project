@@ -708,3 +708,9 @@ td {
   top: 0;
   z-index: 2;
 }
+
+/* ******************* */
+
+.projectPopup{
+  overflow-y: scroll;
+}

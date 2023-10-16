@@ -247,7 +247,7 @@ const Estimator = () => {
     const formData = {
       start_date: startDate,
       job_num: jobNo,
-      estimating: selectedEstimatingID,
+      // estimating:selectedEstimatingID,
       prjct_mngr: selectedProjectManager,
       Forman: selectedForeman,
       bim_oprtr: selectedBimOperator,
@@ -266,8 +266,12 @@ const Estimator = () => {
       status:selectedProjectStatus,
       contacts:selectedContacts,
       substitution:selectedSubstitution,
-      contracts: selectedContract, //........
-      contract_date:selectedProjectDate, //........
+      contracts: [
+        {
+          contract: selectedContract, 
+          contract_date: selectedProjectDate, 
+        },
+      ],
     };
 
     console.log("formData to be sent", formData);
@@ -1217,7 +1221,7 @@ const Estimator = () => {
               <h4 className="text-center addnewtxt">Add New Project Entry</h4>
               <button className="close-btn" onClick={closeModal}></button>
               <div className="d-flex justify-content-center  align-items-center flex-column gap-5 pb-5 px-5">
-                <div className="projName">
+                {/* <div className="projName">
                   <label htmlFor="projectName" className="form-label">
                     Estimating/Project Name:
                   </label>
@@ -1235,7 +1239,7 @@ const Estimator = () => {
                             }
                             readOnly
                   />
-                </div>
+                </div> */}
                 <div className="bothDiv gap-3 mt-3">
                   <div className="projName Oneline">
                     <label htmlFor="projectName" className="form-label">
@@ -1647,26 +1651,25 @@ const Estimator = () => {
                       <span> Contract</span>
                     </label>
                     <div id="" className="input-group">
-                      <select
-                        className="form-select"
-                        placeholder="Contract"
-                        id="ProjectEngineerID"
-                        value={selectedContract}
-                        onChange={handleContractChange}
-                      >
-                        <option value="">Select Choice</option>
-                        <option value="On build">Fully Executed</option>
-                        <option value="Pending">Pending</option>
-                      </select>
-                      <input
-                        id=""
-                        type="date"
-                        name="date" // Set the name attribute to differentiate
-                        className="form-control"
-                        value={selectedProjectDate}
-                        onChange={handleProjectDateChange}
-
-                      />
+                    <select
+        className="form-select"
+        placeholder="Contract"
+        id="ProjectEngineerID"
+        value={selectedContract}
+        onChange={handleContractChange}
+      >
+        <option value="">Select Choice</option>
+        <option value="Fully Executed">Fully Executed</option> {/* Set the desired contract value */}
+        <option value="Pending">Pending</option>
+      </select>
+      <input
+        id=""
+        type="date"
+        name="date" // Set the name attribute to differentiate
+        className="form-control"
+        value={selectedProjectDate}
+        onChange={handleProjectDateChange}
+      />
                     </div>
                   </div>
                 </div>
@@ -2624,7 +2627,7 @@ const Estimator = () => {
                               key={detailIndex}
                               className="input-group myrowInputgrouup"
                             >
-                               <select
+                                <select
                                 className="form-select"
                                 aria-label="Select Specification"
                                 value={entry.specific_name || ""}
@@ -2656,7 +2659,7 @@ const Estimator = () => {
                                 </option>
                                 
                               </select>
-                               <select
+                                <select
                                 className="form-select"
                                 aria-label="Select Specification"
                                 value={entry.specific_name || ""}
@@ -2721,7 +2724,7 @@ const Estimator = () => {
                               key={detailIndex}
                               className="input-group myrowInputgrouup"
                             >
-                               <select
+                                <select
                                 className="form-select"
                                 aria-label="Select Specification"
                                 value={entry.specific_name || ""}
@@ -2947,20 +2950,21 @@ const Estimator = () => {
                           Create
                         </button>
                         <button
-                          className="btn dropbtns btn-danger"
-                          onClick={() => {
-                            console.log(item.prjct_name);
-                            setItemId(item.id);
-                            setStep0FormData({
-                              ...step0FormData,
-                              estimating: item.id,
-                            });
-                            setSelectedEstimatingID(item.prjct_name);
-                            setshowProjectModal(true);
-                          }}
-                        >
-                          project
-                        </button>
+  className="btn dropbtns btn-danger"
+  onClick={() => {
+    console.log(item.prjct_name);
+    setItemId(item.id);
+    setStep0FormData({
+      ...step0FormData,
+      estimating: parseInt(item.id, 10), // Parse the string to an integer
+    });
+    setSelectedEstimatingID(item.prjct_name);
+    setshowProjectModal(true);
+  }}
+>
+  project
+</button>
+
 
                         <button
                           className="btn dropbtns btn-secondary"

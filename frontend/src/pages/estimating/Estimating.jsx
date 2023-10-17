@@ -195,7 +195,8 @@ const Estimator = () => {
   const [selectedProjectID, setSelectedProjectID] = useState("");
   const [selectedProjectManager, setSelectedProjectManager] = useState("");
   const [selectedBimOperator, setSelectedBimOperator] = useState("");
-  const [SelectedGeneralSuperintendent, setSelectedGeneralSuperintendent] = useState("");
+  const [SelectedGeneralSuperintendent, setSelectedGeneralSuperintendent] =
+    useState("");
   const [selectedProjectAddress, setselectedProjectAddress] = useState("");
   const [selectedAddendum, setselectedAddendum] = useState("");
   const [selectedBid, setselectedBid] = useState("");
@@ -210,27 +211,34 @@ const Estimator = () => {
   const [selectedSubstitution, setSelectedSubstitution] = useState("");
   const [selectedContract, setSelectedContract] = useState("");
   const [selectedProjectDate, setSelectedProjectDate] = useState("");
-  const [selectedFINISHLEVELMARKUPS, setSelectedFINISHLEVELMARKUPS] = useState("");
+  const [selectedFINISHLEVELMARKUPS, setSelectedFINISHLEVELMARKUPS] =
+    useState("");
 
   // Event handlers for form inputs
   const handleStartDateChange = (e) => setStartDate(e.target.value);
   const handleJobNoChange = (e) => setJobNo(e.target.value);
   const handleForemanChange = (e) => setSelectedForeman(e.target.value);
   const handleBimOperatorChange = (e) => setSelectedBimOperator(e.target.value);
-  const handleGenralSuperintendentChange = (e) => setSelectedGeneralSuperintendent(e.target.value);
-  const handleProjectAddressChange = (e) => setselectedProjectAddress(e.target.value);
-  const handleSelectedAddendumChange = (e) => setselectedAddendum(e.target.value);
+  const handleGenralSuperintendentChange = (e) =>
+    setSelectedGeneralSuperintendent(e.target.value);
+  const handleProjectAddressChange = (e) =>
+    setselectedProjectAddress(e.target.value);
+  const handleSelectedAddendumChange = (e) =>
+    setselectedAddendum(e.target.value);
   const handleSelectedBidChange = (e) => setselectedBid(e.target.value);
   const handleSelectedSpecChange = (e) => setselectedspec(e.target.value);
   const handleWallTypeChange = (e) => setSelectedWallType(e.target.value);
-  const handlePROGRESSTRACKINGChange = (e) => setSelectedPROGRESSTRACKING(e.target.value);
-  const handleFINISHLEVELMARKUPSChange = (e) => setSelectedFINISHLEVELMARKUPS(e.target.value);
+  const handlePROGRESSTRACKINGChange = (e) =>
+    setSelectedPROGRESSTRACKING(e.target.value);
+  const handleFINISHLEVELMARKUPSChange = (e) =>
+    setSelectedFINISHLEVELMARKUPS(e.target.value);
   const handleDrywellChange = (e) => setSelectedDrywell(e.target.value);
   const handleRO_DoorChange = (e) => setSelectedRO_Door(e.target.value);
   const handleRO_WindowChange = (e) => setSelectedRO_Window(e.target.value);
   const handleProjectStatusChange = (e) => setProjectStatus(e.target.value);
   const handleContactsChange = (e) => setSelectedContacts(e.target.value);
-  const handleSubstitutionChange = (e) => setSelectedSubstitution(e.target.value);
+  const handleSubstitutionChange = (e) =>
+    setSelectedSubstitution(e.target.value);
   const handleContractChange = (e) => setSelectedContract(e.target.value);
   const handleProjectDateChange = (e) => setSelectedProjectDate(e.target.value);
   const handleProjectEngineerChange = (e) =>
@@ -242,7 +250,16 @@ const Estimator = () => {
   // Function to handle form submission
   //TODO: Multistep Form  React Code
   const [projectactiveStep, setprojectActiveStep] = useState(0);
-  const projectSteps = ["Step 1", "Step 2", "Step 3", "Step 4","Step 5", "Step 6", "Step 7", "Step 8"];
+  const projectSteps = [
+    "Step 1",
+    "Step 2",
+    "Step 3",
+    "Step 4",
+    "Step 5",
+    "Step 6",
+    "Step 7",
+    "Step 8",
+  ];
 
   const handleprojectBack = () => {
     setprojectActiveStep((prevStep) => prevStep - 1);
@@ -263,22 +280,22 @@ const Estimator = () => {
       Forman: selectedForeman,
       bim_oprtr: selectedBimOperator,
       prjct_engnr: selectedProjectEngineer,
-      general_superintendent:SelectedGeneralSuperintendent,
-      project_address:selectedProjectAddress,
-      addendums:selectedAddendum,
-      bid:selectedBid,
-      Spec:selectedspec,
-      wall_type:selectedWallType,
-      progress:selectedPROGRESSTRACKING,
-      finish:selectedFINISHLEVELMARKUPS,
-      drywell:selectedDrywell,
-      ro_door:selectedRO_Door,
-      ro_window:selectedRO_Window,
-      status:selectedProjectStatus,
-      contacts:selectedContacts,
-      substitution:selectedSubstitution,
+      general_superintendent: SelectedGeneralSuperintendent,
+      project_address: selectedProjectAddress,
+      addendums: selectedAddendum,
+      bid: selectedBid,
+      Spec: selectedspec,
+      wall_type: selectedWallType,
+      progress: selectedPROGRESSTRACKING,
+      finish: selectedFINISHLEVELMARKUPS,
+      drywell: selectedDrywell,
+      ro_door: selectedRO_Door,
+      ro_window: selectedRO_Window,
+      status: selectedProjectStatus,
+      contacts: selectedContacts,
+      substitution: selectedSubstitution,
       contracts: selectedContract, //........
-      contract_date:selectedProjectDate, //........
+      contract_date: selectedProjectDate, //........
     };
 
     console.log("formData to be sent", formData);
@@ -295,20 +312,18 @@ const Estimator = () => {
         const updatedEstimatingData = estimatingData.filter(
           (entry) => entry.id !== formData.estimating // Replace 'id' with your actual identifier field
         );
-  
-  
+
         setshowProjectModal(false);
         setEstimatingData(updatedEstimatingData);
 
-
         // Clear the form fields by resetting the state variables
-        setStartDate(""); 
-        setJobNo(""); 
+        setStartDate("");
+        setJobNo("");
         setSelectedProjectID("");
-        setSelectedProjectManager(""); 
+        setSelectedProjectManager("");
         setSelectedForeman("");
-        setSelectedBimOperator(""); 
-        setSelectedProjectEngineer(""); 
+        setSelectedBimOperator("");
+        setSelectedProjectEngineer("");
         setTimeout(() => {
           setshowProjectModal(false);
         }, 200);
@@ -371,7 +386,9 @@ const Estimator = () => {
       .get("http://127.0.0.1:8000/api/user/register/")
       .then((response) => response.data)
       .then((data) => {
-        const formanUser = data.filter((user) => user.roles.includes("Foreman"));
+        const formanUser = data.filter((user) =>
+          user.roles.includes("Foreman")
+        );
         console.log(formanUser);
         setFormanName(formanUser);
       })
@@ -458,7 +475,6 @@ const Estimator = () => {
     return formattedTime;
   };
 
-
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
 
@@ -522,7 +538,6 @@ const Estimator = () => {
         console.log("Response data:", error.response.data);
       });
   };
-
 
   //************* Define the handleEstimatingEditing function
 
@@ -652,9 +667,7 @@ const Estimator = () => {
     },
   ]);
 
-
   // ****************new entry of scope of work with unique id
-
 
   const [services, setServices] = useState([]);
   async function fetchServiceData() {
@@ -856,19 +869,17 @@ const Estimator = () => {
     return data
       .filter((customer) => {
         return (
-          ((customer.prjct_name &&
+          (customer.prjct_name &&
             customer.prjct_name.toUpperCase().includes(filter.toUpperCase())) ||
-            (customer.status &&
-              customer.status
-                .trim()
-                .toUpperCase()
-                .includes(filter.trim().toUpperCase())) ||
-            (customer.estimator &&
-              customer.estimator
-                .toUpperCase()
-                .includes(filter.toUpperCase())) ||
-            (customer.bidder &&
-              customer.bidder.toUpperCase().includes(filter.toUpperCase()))) 
+          (customer.status &&
+            customer.status
+              .trim()
+              .toUpperCase()
+              .includes(filter.trim().toUpperCase())) ||
+          (customer.estimator &&
+            customer.estimator.toUpperCase().includes(filter.toUpperCase())) ||
+          (customer.bidder &&
+            customer.bidder.toUpperCase().includes(filter.toUpperCase()))
         );
       })
       .sort((a, b) => {
@@ -886,8 +897,6 @@ const Estimator = () => {
   });
 
   const filteredData = useSelector(selectFilteredData);
-
-
 
   const handlestartDateChange = (e) => {
     setStartDate(e.target.value);
@@ -925,8 +934,6 @@ const Estimator = () => {
   const handleLocationChange = (e) => {
     setLocation(e.target.value);
   };
-
-
 
   const handleBidderChange = (e) => {
     setbidderName(e.target.value);
@@ -1165,11 +1172,10 @@ const Estimator = () => {
     }
   };
 
-  
   const handleStatusChange = async (event, itemId) => {
     const updatedStatus = event.target.value;
     console.log("Updated Status:", updatedStatus);
-  
+
     try {
       const response = await fetch(
         `http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`,
@@ -1183,15 +1189,15 @@ const Estimator = () => {
           }),
         }
       );
-  
+
       console.log("API Response:", response);
-  
+
       if (response.ok) {
         // Handle success response here
         const updatedStatusMap = { ...statusMap };
         updatedStatusMap[itemId] = updatedStatus;
         setStatusMap(updatedStatusMap);
-  
+
         // Fetch the "prjct_name" corresponding to the selected "itemId"
         const responseEstimating = await fetch(
           `http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`
@@ -1201,12 +1207,12 @@ const Estimator = () => {
           // Set the "prjct_name" as the value for the "Estimating/Project Name" field
           setSelectedEstimatingID(estimatingData.prjct_name);
         }
-  
+
         // Check if the updated status is "Won" and open the project modal
         if (updatedStatus === "Won") {
           setshowProjectModal(true);
         }
-  
+
         // Log a success message to the console
         console.log(`Status updated successfully for item with ID ${itemId}`);
         // You may need to refresh the UI or update the specific row accordingly
@@ -1224,10 +1230,7 @@ const Estimator = () => {
       console.error("Error updating status:", error);
     }
   };
-  
-  
-  
-  
+
   const MovetoURLpage = () => {
     navigate("/homepage/urlpage");
   };
@@ -1287,1585 +1290,1863 @@ const Estimator = () => {
               </div>
             </div>
           </div>
-          
 
-
-{showProjectModal && (
-        <div
-          className={`modal-container pt-5 ps-2 ${showProjectModal ? "show" : ""}`}
-        >
-          <h4 className="text-center addnewtxt">Add Project Entries</h4>
-          <button className="close-btn" onClick={closeModal}></button>
-          <div className="purposal-content px-5">
-            {/* ************* Implementation of Multistep-Form using Material UI */}
-            Project
-            <Modal
-              open={showProjectModal}
-              onClose={closeModal}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
+          {showProjectModal && (
+            <div
+              className={`modal-container pt-5 ps-2 ${
+                showProjectModal ? "show" : ""
+              }`}
             >
-              <div
-                className={`modal-container pt-5 ps-2 ${
-                  showProjectModal ? "show" : ""
-                }`}
-              >
-                <h4 className="text-center addnewtxt">Add Project Entries</h4>{" "}
-                <button className="close-btn" onClick={closeModal}></button>
-                <div className="purposal-content pt-4 px-5">
-                  <Stepper activeStep={projectactiveStep} alternativeLabel>
-                    {projectSteps.map((label) => (
-                      <Step key={label}>
-                        <StepLabel>{label}</StepLabel>
-                      </Step>
-                    ))}
-                  </Stepper>
-                  <form
-                    className="d-flex flex-column"
+              <h4 className="text-center addnewtxt">Add Project Entries</h4>
+              <button className="close-btn" onClick={closeModal}></button>
+              <div className="purposal-content px-5">
+                {/* ************* Implementation of Multistep-Form using Material UI */}
+                Project
+                <Modal
+                  open={showProjectModal}
+                  onClose={closeModal}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <div
+                    className={`modal-container pt-5 ps-2 ${
+                      showProjectModal ? "show" : ""
+                    }`}
                   >
-                    {projectactiveStep === 0 && (
-                      <>
-                        <div className="projName">
-          <label htmlFor="projectName" className="form-label">
-            Estimating/Project Name:
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="projectName"
-            placeholder="AutoPopulate not shown on frontend"
-            defaultValue={selectedEstimatingID}
-            readOnly
-          />
-        </div>
-        <div className="bothDiv lllp gap-3 mt-3">
-          <div className="projName Oneline">
-            <label htmlFor="projectName" className="form-label">
-              Start Date:
-            </label>
-            <input
-              type="date"
-              className="form-control"
-              id="DateId"
-              value={startDate}
-              onChange={handleStartDateChange}
-            />
-          </div>
-          <div className="projName Oneline">
-            <label htmlFor="projectName" className="form-label">
-              Job Number:
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="projectID"
-              value={jobNo}
-              onChange={handleJobNoChange}
-            />
-          </div>
-        </div>
-        <div className="bothDiv gap-3">
-          <div className="Oneline">
-            <label htmlFor="estimatorName" className="form-label">
-              Project Manager:
-            </label>
-            <select
-              className="form-select"
-              id="projectManagerID"
-              value={selectedProjectManager}
-              onChange={handleProjectManagerChange}
-            >
-              <option value="">Select Project Manager</option>
-              {projectManager && projectManager.length > 0 ? (
-                projectManager.map((user) => (
-                  <option value={user.id} key={user.id}>
-                    {user.full_Name}
-                  </option>
-                ))
-              ) : (
-                <option value="" disabled>
-                  Loading...
-                </option>
-              )}
-            </select>
-          </div>
-          <div className="Oneline">
-            <label htmlFor="location" className="form-label">
-              Foreman:
-            </label>
-            <select
-              className="form-select"
-              id="estimatorNameID"
-              value={selectedForeman}
-              onChange={handleForemanChange}
-            >
-              <option value="">Select Forman</option>
-              {formanName.length > 0 ? (
-                formanName.map((user) => (
-                  <option value={user.id} key={user.id}>
-                    {user.full_Name}
-                  </option>
-                ))
-              ) : (
-                <option value="" disabled>
-                  Loading...
-                </option>
-              )}
-            </select>
-          </div>
-        </div>
+                    <h4 className="text-center addnewtxt">
+                      Add Project Entries
+                    </h4>{" "}
+                    <button className="close-btn" onClick={closeModal}></button>
+                    <div className="purposal-content pt-4 px-5">
+                      <Stepper activeStep={projectactiveStep} alternativeLabel>
+                        {projectSteps.map((label) => (
+                          <Step key={label}>
+                            <StepLabel>{label}</StepLabel>
+                          </Step>
+                        ))}
+                      </Stepper>
+                      <form className="d-flex mt-4 gap-3 flex-column">
+                        {projectactiveStep === 0 && (
+                          <>
+                            <div className="projName mt-3" style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label"
+                              >
+                                Estimating/Project Name:
+                              </label>
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="projectName"
+                                placeholder="AutoPopulate not shown on frontend"
+                                defaultValue={selectedEstimatingID}
+                                readOnly
+                              />
+                            </div>
+                            <div className="bothDiv gap-3">
+                              <div className="projName Oneline">
+                                <label
+                                  htmlFor="projectName"
+                                  className="form-label"
+                                >
+                                  Start Date:
+                                </label>
+                                <input
+                                  type="date"
+                                  className="form-control"
+                                  id="DateId"
+                                  value={startDate}
+                                  onChange={handleStartDateChange}
+                                />
+                              </div>
+                              <div className="projName Oneline">
+                                <label
+                                  htmlFor="projectName"
+                                  className="form-label"
+                                >
+                                  Job Number:
+                                </label>
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  id="projectID"
+                                  value={jobNo}
+                                  onChange={handleJobNoChange}
+                                />
+                              </div>
+                            </div>
+                            <div className="bothDiv gap-3">
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="estimatorName"
+                                  className="form-label"
+                                >
+                                  Project Manager:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="projectManagerID"
+                                  value={selectedProjectManager}
+                                  onChange={handleProjectManagerChange}
+                                >
+                                  <option value="">
+                                    Select Project Manager
+                                  </option>
+                                  {projectManager &&
+                                  projectManager.length > 0 ? (
+                                    projectManager.map((user) => (
+                                      <option value={user.id} key={user.id}>
+                                        {user.full_Name}
+                                      </option>
+                                    ))
+                                  ) : (
+                                    <option value="" disabled>
+                                      Loading...
+                                    </option>
+                                  )}
+                                </select>
+                              </div>
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  Foreman:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="estimatorNameID"
+                                  value={selectedForeman}
+                                  onChange={handleForemanChange}
+                                >
+                                  <option value="">Select Forman</option>
+                                  {formanName.length > 0 ? (
+                                    formanName.map((user) => (
+                                      <option value={user.id} key={user.id}>
+                                        {user.full_Name}
+                                      </option>
+                                    ))
+                                  ) : (
+                                    <option value="" disabled>
+                                      Loading...
+                                    </option>
+                                  )}
+                                </select>
+                              </div>
+                            </div>
 
-        <div className="bothDiv gap-3">
-          <div className="Oneline">
-            <label htmlFor="estimatorName" className="form-label">
-              Bim Operator:
-            </label>
-            <select
-              className="form-select"
-              id="bimOperatorID"
-              value={selectedBimOperator} // Use the selectedBimOperator value
-              onChange={handleBimOperatorChange}
-            >
-              <option value="">Select Bim Operator</option>
-              {BimOperator && BimOperator.length > 0 ? (
-                BimOperator.map((user) => (
-                  <option value={user.id} key={user.id}>
-                    {user.full_Name}
-                  </option>
-                ))
-              ) : (
-                <option value="" disabled>
-                  Loading...
-                </option>
-              )}
-            </select>
-          </div>
-          <div className="Oneline">
-            <label htmlFor="location" className="form-label">
-              Project Engineer:
-            </label>
-            <select
-              className="form-select"
-              id="ProjectEngineerID"
-              value={selectedProjectEngineer}
-              onChange={handleProjectEngineerChange}
-            >
-              <option value="">Select Project Engineer</option>
+                            <div className="bothDiv gap-3">
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="estimatorName"
+                                  className="form-label"
+                                >
+                                  Bim Operator:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="bimOperatorID"
+                                  value={selectedBimOperator} // Use the selectedBimOperator value
+                                  onChange={handleBimOperatorChange}
+                                >
+                                  <option value="">Select Bim Operator</option>
+                                  {BimOperator && BimOperator.length > 0 ? (
+                                    BimOperator.map((user) => (
+                                      <option value={user.id} key={user.id}>
+                                        {user.full_Name}
+                                      </option>
+                                    ))
+                                  ) : (
+                                    <option value="" disabled>
+                                      Loading...
+                                    </option>
+                                  )}
+                                </select>
+                              </div>
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  Project Engineer:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="ProjectEngineerID"
+                                  value={selectedProjectEngineer}
+                                  onChange={handleProjectEngineerChange}
+                                >
+                                  <option value="">
+                                    Select Project Engineer
+                                  </option>
 
-              {ProjEnger && ProjEnger.length > 0 ? (
-                ProjEnger.map((user) => (
-                  <option value={user.id} key={user.id}>
-                    {user.full_Name}
-                  </option>
-                ))
-              ) : (
-                <option value="" disabled>
-                  Loading...
-                </option>
-              )}
-            </select>
-          </div>
-        </div>
-        
-                      </>
-                    )}
-                    {projectactiveStep === 1 && (
-                      <div className="mt-2">
-                        <div className="bothDiv gap-3">
-          <div className="Oneline">
-            <label htmlFor="estimatorName" className="form-label">
-              BIM Modeler:
-            </label>
-            <select
-              className="form-select"
-              id="bimOperatorID"
-              value={selectedBimOperator} // Use the selectedBimOperator value
-              onChange={handleBimOperatorChange}
-            >
-              <option value="">Select Bim Operator</option>
-              {BimOperator && BimOperator.length > 0 ? (
-                BimOperator.map((user) => (
-                  <option value={user.id} key={user.id}>
-                    {user.full_Name}
-                  </option>
-                ))
-              ) : (
-                <option value="" disabled>
-                  Loading...
-                </option>
-              )}
-            </select>
-          </div>
-          <div className="Oneline">
-            <label htmlFor="location" className="form-label">
-              Genral_superintendent:
-            </label>
-            <select
-              className="form-select"
-              id="ProjectEngineerID"
-              value={SelectedGeneralSuperintendent}
-              onChange={handleGenralSuperintendentChange}
-            >
-              <option value="">Select Project Engineer</option>
+                                  {ProjEnger && ProjEnger.length > 0 ? (
+                                    ProjEnger.map((user) => (
+                                      <option value={user.id} key={user.id}>
+                                        {user.full_Name}
+                                      </option>
+                                    ))
+                                  ) : (
+                                    <option value="" disabled>
+                                      Loading...
+                                    </option>
+                                  )}
+                                </select>
+                              </div>
+                            </div>
+                          </>
+                        )}
+                        {projectactiveStep === 1 && (
+                          <>
+                            <div className="bothDiv gap-3 mt-4">
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="estimatorName"
+                                  className="form-label"
+                                >
+                                  BIM Modeler:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="bimOperatorID"
+                                  value={selectedBimOperator} // Use the selectedBimOperator value
+                                  onChange={handleBimOperatorChange}
+                                >
+                                  <option value="">Select Bim Operator</option>
+                                  {BimOperator && BimOperator.length > 0 ? (
+                                    BimOperator.map((user) => (
+                                      <option value={user.id} key={user.id}>
+                                        {user.full_Name}
+                                      </option>
+                                    ))
+                                  ) : (
+                                    <option value="" disabled>
+                                      Loading...
+                                    </option>
+                                  )}
+                                </select>
+                              </div>
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  Genral_superintendent:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="ProjectEngineerID"
+                                  value={SelectedGeneralSuperintendent}
+                                  onChange={handleGenralSuperintendentChange}
+                                >
+                                  <option value="">
+                                    Select Project Engineer
+                                  </option>
 
-              {GeneralSuperintendent && GeneralSuperintendent.length > 0 ? (
-                GeneralSuperintendent.map((user) => (
-                  <option value={user.id} key={user.id}>
-                    {user.full_Name}
-                  </option>
-                ))
-              ) : (
-                <option value="" disabled>
-                  Loading...
-                </option>
-              )}
-            </select>
-          </div>
-        </div>
-        <div className="projName">
-          <label htmlFor="projectName" className="form-label">
-            Add project address::
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="projectName"
-            placeholder="Your project address!"
-            value={selectedProjectAddress}
-            onChange={handleProjectAddressChange}
-          />
-        </div>
-        <div className="bothDiv gap-3">
-          <div className="Oneline">
-            <label htmlFor="estimatorName" className="form-label">
-              Addendum:
-            </label>
-            <select
-              className="form-select"
-              id="bimOperatorID"
-              value={selectedAddendum} // Use the selectedBimOperator value
-              onChange={handleSelectedAddendumChange}
-            >
-              <option value="">Select Addendum</option>
-              <option value="Available">Available</option>
-              <option value="Not Available">Not Available</option>
-            </select>
-          </div>
+                                  {GeneralSuperintendent &&
+                                  GeneralSuperintendent.length > 0 ? (
+                                    GeneralSuperintendent.map((user) => (
+                                      <option value={user.id} key={user.id}>
+                                        {user.full_Name}
+                                      </option>
+                                    ))
+                                  ) : (
+                                    <option value="" disabled>
+                                      Loading...
+                                    </option>
+                                  )}
+                                </select>
+                              </div>
+                            </div>
+                            <div className="projName" style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label"
+                              >
+                                Add project address::
+                              </label>
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="projectName"
+                                placeholder="Your project address!"
+                                value={selectedProjectAddress}
+                                onChange={handleProjectAddressChange}
+                              />
+                            </div>
+                            <div className="bothDiv gap-3">
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="estimatorName"
+                                  className="form-label"
+                                >
+                                  Addendum:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="bimOperatorID"
+                                  value={selectedAddendum} // Use the selectedBimOperator value
+                                  onChange={handleSelectedAddendumChange}
+                                >
+                                  <option value="">Select Addendum</option>
+                                  <option value="Available">Available</option>
+                                  <option value="Not Available">
+                                    Not Available
+                                  </option>
+                                </select>
+                              </div>
 
-          <div className="Oneline">
-            <label htmlFor="location" className="form-label">
-              Bid:
-            </label>
-            <select
-              className="form-select"
-              id="ProjectEngineerID"
-              value={selectedBid}
-              onChange={handleSelectedBidChange}
-            >
-              <option value="">Select Bid</option>
-              <option value="Available">Available</option>
-              <option value="Not Available">Not Available</option>
-            </select>
-          </div>
-        </div>
-        <div className="bothDiv gap-3">
-          <div className="Oneline">
-            <label htmlFor="estimatorName" className="form-label">
-              Spec's per our Scope:
-            </label>
-            <select
-              className="form-select"
-              id="bimOperatorID"
-              value={selectedspec} // Use the selectedBimOperator value
-              onChange={handleSelectedSpecChange}
-            >
-              <option value="">Select Spec's</option>
-              <option value="Available">Available</option>
-              <option value="Not Available">Not Available</option>
-            </select>
-          </div>
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  Bid:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="ProjectEngineerID"
+                                  value={selectedBid}
+                                  onChange={handleSelectedBidChange}
+                                >
+                                  <option value="">Select Bid</option>
+                                  <option value="Available">Available</option>
+                                  <option value="Not Available">
+                                    Not Available
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                            <div className="bothDiv gap-3">
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="estimatorName"
+                                  className="form-label"
+                                >
+                                  Spec's per our Scope:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="bimOperatorID"
+                                  value={selectedspec} // Use the selectedBimOperator value
+                                  onChange={handleSelectedSpecChange}
+                                >
+                                  <option value="">Select Spec's</option>
+                                  <option value="Available">Available</option>
+                                  <option value="Not Available">
+                                    Not Available
+                                  </option>
+                                </select>
+                              </div>
 
-          <div className="Oneline">
-            <label htmlFor="location" className="form-label">
-              WALL TYPE MAPPING:
-            </label>
-            <select
-              className="form-select"
-              id="ProjectEngineerID"
-              value={selectedWallType}
-              onChange={handleWallTypeChange}
-            >
-              <option value="">Select Choice</option>
-              <option value="Completed">Completed</option>
-              <option value="Working">Working</option>
-              <option value="Pending">Pending</option>
-            </select>
-          </div>
-        </div>
-                      </div>
-                    )}
-                    {projectactiveStep === 2 && (
-                      <div>
-                         <div className="bothDiv gap-3">
-          <div className="Oneline">
-            <label htmlFor="location" className="form-label">
-              Drywell Conttrol Joins:
-            </label>
-            <select
-              className="form-select"
-              id="ProjectEngineerID"
-              value={selectedDrywell}
-              onChange={handleDrywellChange}
-            >
-              <option value="">Select Choice</option>
-              <option value="Submited">Submited</option>
-              <option value="Working">Working</option>
-              <option value="Pending">Pending</option>
-            </select>
-          </div>
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  WALL TYPE MAPPING:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="ProjectEngineerID"
+                                  value={selectedWallType}
+                                  onChange={handleWallTypeChange}
+                                >
+                                  <option value="">Select Choice</option>
+                                  <option value="Completed">Completed</option>
+                                  <option value="Working">Working</option>
+                                  <option value="Pending">Pending</option>
+                                </select>
+                              </div>
+                            </div>
+                          </>
+                        )}
+                        {projectactiveStep === 2 && (
+                          <>
+                            <div className="bothDiv gap-3 mt-4">
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  Drywell Conttrol Joins:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="ProjectEngineerID"
+                                  value={selectedDrywell}
+                                  onChange={handleDrywellChange}
+                                >
+                                  <option value="">Select Choice</option>
+                                  <option value="Submited">Submited</option>
+                                  <option value="Working">Working</option>
+                                  <option value="Pending">Pending</option>
+                                </select>
+                              </div>
 
-          <div className="Oneline">
-            <label htmlFor="location" className="form-label">
-              FINISH LEVEL MARKUPS:
-            </label>
-            <select
-              className="form-select"
-              id="ProjectEngineerID"
-              value={selectedFINISHLEVELMARKUPS}
-              onChange={handleFINISHLEVELMARKUPSChange}
-            >
-              <option value="">Select Choice</option>
-              <option value="Completed">Completed</option>
-              <option value="Working">Working</option>
-              <option value="Pending">Pending</option>
-            </select>
-          </div>
-        </div>
-        <div className="bothDiv gap-3">
-          <div className="Oneline">
-            <label htmlFor="location" className="form-label">
-              PROGRESS TRACKING:
-            </label>
-            <select
-              className="form-select"
-              id="ProjectEngineerID"
-              value={selectedPROGRESSTRACKING}
-              onChange={handlePROGRESSTRACKINGChange}
-            >
-              <option value="">Select Choice</option>
-              <option value="Completed">Completed</option>
-              <option value="Working">Working</option>
-              <option value="Pending">Pending</option>
-            </select>
-          </div>
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  FINISH LEVEL MARKUPS:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="ProjectEngineerID"
+                                  value={selectedFINISHLEVELMARKUPS}
+                                  onChange={handleFINISHLEVELMARKUPSChange}
+                                >
+                                  <option value="">Select Choice</option>
+                                  <option value="Completed">Completed</option>
+                                  <option value="Working">Working</option>
+                                  <option value="Pending">Pending</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div className="bothDiv gap-3">
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  PROGRESS TRACKING:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="ProjectEngineerID"
+                                  value={selectedPROGRESSTRACKING}
+                                  onChange={handlePROGRESSTRACKINGChange}
+                                >
+                                  <option value="">Select Choice</option>
+                                  <option value="Completed">Completed</option>
+                                  <option value="Working">Working</option>
+                                  <option value="Pending">Pending</option>
+                                </select>
+                              </div>
 
-          <div className="Oneline">
-            <label htmlFor="location" className="form-label">
-              RO-Door:
-            </label>
-            <select
-              className="form-select"
-              id="ProjectEngineerID"
-              value={selectedRO_Door}
-              onChange={handleRO_DoorChange}
-            >
-              <option value="">Select Choice</option>
-              <option value="Working">Working</option>
-              <option value="Submited">Submited</option>
-              <option value="Pending">Pending</option>
-              <option value="Done">Done</option>
-            </select>
-          </div>
-        </div>
-        <div className="bothDiv  gap-3">
-          <div className="Oneline">
-            <label htmlFor="location" className="form-label">
-              RO-Window:
-            </label>
-            <select
-              className="form-select"
-              id="ProjectEngineerID"
-              value={selectedRO_Window}
-              onChange={handleRO_WindowChange}
-            >
-              <option value="">Select Choice</option>
-              <option value="Working">Working</option>
-              <option value="Submited">Submited</option>
-              <option value="Pending">Pending</option>
-              <option value="Done">Done</option>
-            </select>
-          </div>
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  RO-Door:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="ProjectEngineerID"
+                                  value={selectedRO_Door}
+                                  onChange={handleRO_DoorChange}
+                                >
+                                  <option value="">Select Choice</option>
+                                  <option value="Working">Working</option>
+                                  <option value="Submited">Submited</option>
+                                  <option value="Pending">Pending</option>
+                                  <option value="Done">Done</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div className="bothDiv  gap-3">
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  RO-Window:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="ProjectEngineerID"
+                                  value={selectedRO_Window}
+                                  onChange={handleRO_WindowChange}
+                                >
+                                  <option value="">Select Choice</option>
+                                  <option value="Working">Working</option>
+                                  <option value="Submited">Submited</option>
+                                  <option value="Pending">Pending</option>
+                                  <option value="Done">Done</option>
+                                </select>
+                              </div>
 
-          <div className="Oneline">
-            <label htmlFor="location" className="form-label">
-              Status:
-            </label>
-            <select
-              className="form-select"
-              id="ProjectEngineerID"
-              value={selectedProjectStatus}
-              onChange={handleProjectStatusChange}
-            >
-              <option value="">Select Bid</option>
-              <option value="C">C</option>
-              <option value="P">P</option>
-              <option value="Q">Q</option>
-              <option value="V">V</option>
-              <option value="X">X</option>
-            </select>
-          </div>
-        </div>
-        <div className="bothDiv  gap-3">
-          <div className="Oneline">
-            <label htmlFor="location" className="form-label">
-              Contacts:
-            </label>
-            <select
-              className="form-select"
-              id="ProjectEngineerID"
-              value={selectedContacts}
-              onChange={handleContactsChange}
-            >
-              <option value="">Select Bid</option>
-              <option value="On build">On build</option>
-              <option value="Pending">Pending</option>
-            </select>
-          </div>
-          <div className="Oneline">
-            <label htmlFor="projectName" className="form-label">
-              Substitution:
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="projectName"
-              placeholder="Write here!"
-              value={selectedSubstitution}
-              onChange={handleSubstitutionChange}
-            />
-          </div>
-        </div>
-                      </div>
-                    )}
-                    {projectactiveStep === 3 && (
-                      <div className="mb-2 mt-3">
-                         
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  Status:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="ProjectEngineerID"
+                                  value={selectedProjectStatus}
+                                  onChange={handleProjectStatusChange}
+                                >
+                                  <option value="">Select Bid</option>
+                                  <option value="C">C</option>
+                                  <option value="P">P</option>
+                                  <option value="Q">Q</option>
+                                  <option value="V">V</option>
+                                  <option value="X">X</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div className="bothDiv  gap-3">
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  Contacts:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="ProjectEngineerID"
+                                  value={selectedContacts}
+                                  onChange={handleContactsChange}
+                                >
+                                  <option value="">Select Bid</option>
+                                  <option value="On build">On build</option>
+                                  <option value="Pending">Pending</option>
+                                </select>
+                              </div>
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="projectName"
+                                  className="form-label"
+                                >
+                                  Substitution:
+                                </label>
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  id="projectName"
+                                  placeholder="Write here!"
+                                  value={selectedSubstitution}
+                                  onChange={handleSubstitutionChange}
+                                />
+                              </div>
+                            </div>
+                          </>
+                        )}
+                        {projectactiveStep === 3 && (
+                          <>
+                            <div className="mt-4" style={{ width: "100%" }}>
+                              <div>
+                                <label className="form-label">
+                                  <span> Contract</span>
+                                </label>
+                                <div id="" className="input-group">
+                                  <select
+                                    className="form-select"
+                                    placeholder="Contract"
+                                    id="ProjectEngineerID"
+                                    value={selectedContract}
+                                    onChange={handleContractChange}
+                                  >
+                                    <option value="">Select Choice</option>
+                                    <option value="On build">
+                                      Fully Executed
+                                    </option>
+                                    <option value="Pending">Pending</option>
+                                  </select>
+                                  <input
+                                    id=""
+                                    type="date"
+                                    name="date" // Set the name attribute to differentiate
+                                    className="form-control"
+                                    value={selectedProjectDate}
+                                    onChange={handleProjectDateChange}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div  style={{ width: "100%" }}>
+                              <div>
+                                <label className="form-label">
+                                  <span>SCHEDULE_OF_ VALUES:</span>
+                                </label>
+                                <div id="" className="input-group">
+                                  <select
+                                    className="form-select"
+                                    placeholder="Contract"
+                                    id="ProjectEngineerID"
+                                    value=""
+                                    onChange={() => {}}
+                                  >
+                                    <option value="">Select Choice</option>
+                                    <option value="On build">
+                                      Fully Executed
+                                    </option>
+                                    <option value="Pending">Pending</option>
+                                  </select>
+                                  <input
+                                    id=""
+                                    type="date"
+                                    name="date" // Set the name attribute to differentiate
+                                    className="form-control"
+                                    value=""
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div  style={{ width: "100%" }}>
+                              <div>
+                                <label className="form-label">
+                                  <span>INSURANCES:</span>
+                                </label>
+                                <div id="" className="input-group">
+                                  <select
+                                    className="form-select"
+                                    placeholder="Contract"
+                                    id="ProjectEngineerID"
+                                    value=""
+                                    onChange={() => {}}
+                                  >
+                                    <option value="">Select Choice</option>
+                                    <option value="On build">
+                                      Fully Executed
+                                    </option>
+                                    <option value="Pending">Pending</option>
+                                  </select>
+                                  <input
+                                    id=""
+                                    type="date"
+                                    name="date" // Set the name attribute to differentiate
+                                    className="form-control"
+                                    value=""
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div  style={{ width: "100%" }}>
+                              <div>
+                                <label className="form-label">
+                                  <span>BONDS:</span>
+                                </label>
+                                <div id="" className="input-group">
+                                  <select
+                                    className="form-select"
+                                    placeholder="Contract"
+                                    id="ProjectEngineerID"
+                                    value=""
+                                    onChange={() => {}}
+                                  >
+                                    <option value="">Select Choice</option>
+                                    <option value="On build">
+                                      Fully Executed
+                                    </option>
+                                    <option value="Pending">Pending</option>
+                                  </select>
+                                  <input
+                                    id=""
+                                    type="date"
+                                    name="date" // Set the name attribute to differentiate
+                                    className="form-control"
+                                    value=""
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        )}
+                        {projectactiveStep === 4 && (
+                          <>
+                            <div className="mt-4" style={{ width: "100%" }}>
+                              <div>
+                                <label className="form-label">
+                                  <span>ZLIENS:</span>
+                                </label>
+                                <div id="" className="input-group">
+                                  <select
+                                    className="form-select"
+                                    placeholder="Contract"
+                                    id="ProjectEngineerID"
+                                    value=""
+                                    onChange={() => {}}
+                                  >
+                                    <option value="">Select Choice</option>
+                                    <option value="On build">
+                                      Fully Executed
+                                    </option>
+                                    <option value="Pending">Pending</option>
+                                  </select>
+                                  <input
+                                    id=""
+                                    type="date"
+                                    name="date" // Set the name attribute to differentiate
+                                    className="form-control"
+                                    value=""
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div style={{ width: "100%" }}>
+                              <div>
+                                <label className="form-label">
+                                  <span>SUBMITTALSS</span>
+                                </label>
+                                <div id="" className="input-group">
+                                  <select
+                                    className="form-select"
+                                    placeholder="Contract"
+                                    id="ProjectEngineerID"
+                                    value=""
+                                    onChange={() => {}}
+                                  >
+                                    <option value="">Select Choice</option>
+                                    <option value="On build">
+                                      Fully Executed
+                                    </option>
+                                    <option value="Pending">Pending</option>
+                                  </select>
+                                  <input
+                                    id=""
+                                    type="date"
+                                    name="date" // Set the name attribute to differentiate
+                                    className="form-control"
+                                    value=""
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div style={{ width: "100%" }}>
+                              <div>
+                                <label className="form-label">
+                                  <span>RO-Window:</span>
+                                </label>
+                                <div id="" className="input-group">
+                                  <select
+                                    className="form-select"
+                                    placeholder="Contract"
+                                    id="ProjectEngineerID"
+                                    value=""
+                                    onChange={() => {}}
+                                  >
+                                    <option value="">Select Choice</option>
+                                    <option value="On build">
+                                      Fully Executed
+                                    </option>
+                                    <option value="Pending">Pending</option>
+                                  </select>
+                                  <input
+                                    id=""
+                                    type="date"
+                                    name="date" // Set the name attribute to differentiate
+                                    className="form-control"
+                                    value=""
+                                  />
+                                </div>
+                              </div>
+                            </div>
 
-        <div className="px-3" style={{ width: "100%" }}>
-          <div>
-            <label className="form-label">
-              <span> Contract</span>
-            </label>
-            <div id="" className="input-group">
-              <select
-                className="form-select"
-                placeholder="Contract"
-                id="ProjectEngineerID"
-                value={selectedContract}
-                onChange={handleContractChange}
-              >
-                <option value="">Select Choice</option>
-                <option value="On build">Fully Executed</option>
-                <option value="Pending">Pending</option>
-              </select>
-              <input
-                id=""
-                type="date"
-                name="date" // Set the name attribute to differentiate
-                className="form-control"
-                value={selectedProjectDate}
-                onChange={handleProjectDateChange}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="px-3" style={{ width: "100%" }}>
-          <div>
-            <label className="form-label">
-              <span>SCHEDULE_OF_ VALUES:</span>
-            </label>
-            <div id="" className="input-group">
-              <select
-                className="form-select"
-                placeholder="Contract"
-                id="ProjectEngineerID"
-                value=""
-                onChange={() => {}}
-              >
-                <option value="">Select Choice</option>
-                <option value="On build">Fully Executed</option>
-                <option value="Pending">Pending</option>
-              </select>
-              <input
-                id=""
-                type="date"
-                name="date" // Set the name attribute to differentiate
-                className="form-control"
-                value=""
-              />
-            </div>
-          </div>
-        </div>
-        <div className="px-3" style={{ width: "100%" }}>
-          <div>
-            <label className="form-label">
-              <span>INSURANCES:</span>
-            </label>
-            <div id="" className="input-group">
-              <select
-                className="form-select"
-                placeholder="Contract"
-                id="ProjectEngineerID"
-                value=""
-                onChange={() => {}}
-              >
-                <option value="">Select Choice</option>
-                <option value="On build">Fully Executed</option>
-                <option value="Pending">Pending</option>
-              </select>
-              <input
-                id=""
-                type="date"
-                name="date" // Set the name attribute to differentiate
-                className="form-control"
-                value=""
-              />
-            </div>
-          </div>
-        </div>
-        <div className="px-3" style={{ width: "100%" }}>
-          <div>
-            <label className="form-label">
-              <span>BONDS:</span>
-            </label>
-            <div id="" className="input-group">
-              <select
-                className="form-select"
-                placeholder="Contract"
-                id="ProjectEngineerID"
-                value=""
-                onChange={() => {}}
-              >
-                <option value="">Select Choice</option>
-                <option value="On build">Fully Executed</option>
-                <option value="Pending">Pending</option>
-              </select>
-              <input
-                id=""
-                type="date"
-                name="date" // Set the name attribute to differentiate
-                className="form-control"
-                value=""
-              />
-            </div>
-          </div>
-        </div>
-                      </div>
-                    )}
-                    {projectactiveStep === 4 && (
-                      <div className="mb-2 mt-3">
-                         
+                            <div style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>SUBMITTALSS</span>
+                              </label>
+                              {step2FormData.map((entry, index) => (
+                                <div
+                                  className="wholespecificationEntry"
+                                  key={index}
+                                >
+                                  <div className="ScopofWorkSectionRemove">
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger"
+                                      onClick={() =>
+                                        handleRemoveWholeWorkSectionEntry(index)
+                                      }
+                                    >
+                                      <i className="far">X</i>
+                                    </button>
+                                  </div>
+                                  <div className="mt-5">
+                                    <label
+                                      htmlFor={`specificBudget-${index}`}
+                                      className="form-label"
+                                    >
+                                      Add Proposal:
+                                    </label>
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      id={`specificBudget-${index}`}
+                                      value=""
+                                    />
+                                  </div>
+                                  <div className="mb-2 mt-2">
+                                    <label
+                                      htmlFor={`specificName-${index}`}
+                                      className="form-label"
+                                    >
+                                      Add scope of Work
+                                    </label>
+                                    <select
+                                      className="form-select"
+                                      aria-label="Select Specification"
+                                      value={entry.specific_name || ""}
+                                      onChange={(e) =>
+                                        handleEntryChange(
+                                          index,
+                                          "specific_name",
+                                          e.target.value
+                                        )
+                                      }
+                                    >
+                                      <option value="Base Bid Drywall/Framing">
+                                        All scope numbers wil here
+                                      </option>
+                                    </select>
+                                  </div>
+                                  <div className="bothDiv  gap-3">
+                                    <div className="Oneline mb-4">
+                                      <label
+                                        htmlFor="location"
+                                        className="form-label"
+                                      >
+                                        Submittals:
+                                      </label>
+                                      <select
+                                        className="form-select"
+                                        id="ProjectEngineerID"
+                                        value={selectedProjectEngineer}
+                                        onChange={handleProjectEngineerChange}
+                                      >
+                                        <option value="">Select Choice</option>
+                                        <option value="On build">
+                                          Approved
+                                        </option>
+                                        <option value="Pending">Pending</option>
+                                      </select>
+                                    </div>
 
-                         <div className="px-3" style={{ width: "100%" }}>
-          <div>
-            <label className="form-label">
-              <span>ZLIENS:</span>
-            </label>
-            <div id="" className="input-group">
-              <select
-                className="form-select"
-                placeholder="Contract"
-                id="ProjectEngineerID"
-                value=""
-                onChange={() => {}}
-              >
-                <option value="">Select Choice</option>
-                <option value="On build">Fully Executed</option>
-                <option value="Pending">Pending</option>
-              </select>
-              <input
-                id=""
-                type="date"
-                name="date" // Set the name attribute to differentiate
-                className="form-control"
-                value=""
-              />
-            </div>
-          </div>
-        </div>
-        <div className="px-3" style={{ width: "100%" }}>
-          <div>
-            <label className="form-label">
-              <span>SUBMITTALSS</span>
-            </label>
-            <div id="" className="input-group">
-              <select
-                className="form-select"
-                placeholder="Contract"
-                id="ProjectEngineerID"
-                value=""
-                onChange={() => {}}
-              >
-                <option value="">Select Choice</option>
-                <option value="On build">Fully Executed</option>
-                <option value="Pending">Pending</option>
-              </select>
-              <input
-                id=""
-                type="date"
-                name="date" // Set the name attribute to differentiate
-                className="form-control"
-                value=""
-              />
-            </div>
-          </div>
-        </div>
-        <div className="px-3" style={{ width: "100%" }}>
-          <div>
-            <label className="form-label">
-              <span>RO-Window:</span>
-            </label>
-            <div id="" className="input-group">
-              <select
-                className="form-select"
-                placeholder="Contract"
-                id="ProjectEngineerID"
-                value=""
-                onChange={() => {}}
-              >
-                <option value="">Select Choice</option>
-                <option value="On build">Fully Executed</option>
-                <option value="Pending">Pending</option>
-              </select>
-              <input
-                id=""
-                type="date"
-                name="date" // Set the name attribute to differentiate
-                className="form-control"
-                value=""
-              />
-            </div>
-          </div>
-        </div>
+                                    <div className="Oneline">
+                                      <label
+                                        htmlFor="location"
+                                        className="form-label"
+                                      >
+                                        Status:
+                                      </label>
+                                      <input
+                                        type="date"
+                                        className="form-control"
+                                        id="dueDate"
+                                        value=""
+                                        onChange={() => {}}
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
 
-        <div className="px-3" style={{ width: "100%" }}>
-          <label htmlFor="projectName" className="form-label mt-2">
-            <span>SUBMITTALSS</span>
-          </label>
-          {step2FormData.map((entry, index) => (
-            <div className="wholespecificationEntry" key={index}>
-              <div className="ScopofWorkSectionRemove">
-                <button
-                  type="button"
-                  className="btn btn-danger"
-                  onClick={() => handleRemoveWholeWorkSectionEntry(index)}
-                >
-                  <i className="far">X</i>
-                </button>
-              </div>
-              <div className="mt-5">
-                <label
-                  htmlFor={`specificBudget-${index}`}
-                  className="form-label"
-                >
-                  Add Proposal:
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id={`specificBudget-${index}`}
-                  value=""
-                />
-              </div>
-              <div className="mb-2 mt-2">
-                <label htmlFor={`specificName-${index}`} className="form-label">
-                  Add scope of Work
-                </label>
-                <select
-                  className="form-select"
-                  aria-label="Select Specification"
-                  value={entry.specific_name || ""}
-                  onChange={(e) =>
-                    handleEntryChange(index, "specific_name", e.target.value)
-                  }
-                >
-                  <option value="Base Bid Drywall/Framing">
-                    All scope numbers wil here
-                  </option>
-                </select>
-              </div>
-              <div className="bothDiv  gap-3">
-                <div className="Oneline mb-4">
-                  <label htmlFor="location" className="form-label">
-                    Submittals:
-                  </label>
-                  <select
-                    className="form-select"
-                    id="ProjectEngineerID"
-                    value={selectedProjectEngineer}
-                    onChange={handleProjectEngineerChange}
-                  >
-                    <option value="">Select Choice</option>
-                    <option value="On build">Approved</option>
-                    <option value="Pending">Pending</option>
-                  </select>
-                </div>
+                              <button
+                                type="button"
+                                className="btn btn-success"
+                                onClick={handleAddEntry}
+                              >
+                                Add SUBMITTALSS
+                              </button>
+                            </div>
+                          </>
+                        )}
+                        {projectactiveStep === 5 && (
+                          <>
+                            <div className=" mt-3" style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>SHOP DRAWINGS</span>
+                              </label>
+                              {step2FormData.map((entry, index) => (
+                                <div
+                                  className="wholespecificationEntry"
+                                  key={index}
+                                >
+                                  <div className="ScopofWorkSectionRemove">
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger"
+                                      onClick={() =>
+                                        handleRemoveWholeWorkSectionEntry(index)
+                                      }
+                                    >
+                                      <i className="far">X</i>
+                                    </button>
+                                  </div>
+                                  <div className="mt-5">
+                                    <label
+                                      htmlFor={`specificBudget-${index}`}
+                                      className="form-label"
+                                    >
+                                      Add Proposal:
+                                    </label>
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      id={`specificBudget-${index}`}
+                                      value=""
+                                    />
+                                  </div>
+                                  <div className="mb-2 mt-2">
+                                    <label
+                                      htmlFor={`specificName-${index}`}
+                                      className="form-label"
+                                    >
+                                      Add scope of Work
+                                    </label>
+                                    <select
+                                      className="form-select"
+                                      aria-label="Select Specification"
+                                      value={entry.specific_name || ""}
+                                      onChange={(e) =>
+                                        handleEntryChange(
+                                          index,
+                                          "specific_name",
+                                          e.target.value
+                                        )
+                                      }
+                                    >
+                                      <option value="Base Bid Drywall/Framing">
+                                        All scope numbers wil here
+                                      </option>
+                                    </select>
+                                  </div>
+                                  <div className="bothDiv  gap-3">
+                                    <div className="Oneline mb-4">
+                                      <label
+                                        htmlFor="location"
+                                        className="form-label"
+                                      >
+                                        Submittals:
+                                      </label>
+                                      <select
+                                        className="form-select"
+                                        id="ProjectEngineerID"
+                                        value={selectedProjectEngineer}
+                                        onChange={handleProjectEngineerChange}
+                                      >
+                                        <option value="">Select Choice</option>
+                                        <option value="On build">
+                                          Approved
+                                        </option>
+                                        <option value="Pending">Pending</option>
+                                      </select>
+                                    </div>
 
-                <div className="Oneline">
-                  <label htmlFor="location" className="form-label">
-                    Status:
-                  </label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    id="dueDate"
-                    value=""
-                    onChange={() => {}}
-                  />
-                </div>
-              </div>
-            </div>
-          ))}
+                                    <div className="Oneline">
+                                      <label
+                                        htmlFor="location"
+                                        className="form-label"
+                                      >
+                                        Status:
+                                      </label>
+                                      <input
+                                        type="date"
+                                        className="form-control"
+                                        id="dueDate"
+                                        value=""
+                                        onChange={() => {}}
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
 
-          <button
-            type="button"
-            className="btn btn-success"
-            onClick={handleAddEntry}
-          >
-            Add SUBMITTALSS
-          </button>
-        </div>
-                      </div>
-                    )}
-                    {projectactiveStep === 5 && (
-                      <div className=" mt-3">
-                         
+                              <button
+                                type="button"
+                                className="btn btn-success"
+                                onClick={handleAddEntry}
+                              >
+                                Add SHOP DRAWINGS
+                              </button>
+                            </div>
+                            <div className="px-3" style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>SAFITYS</span>
+                              </label>
+                              {step2FormData.map((entry, index) => (
+                                <div
+                                  className="wholespecificationEntry"
+                                  key={index}
+                                >
+                                  <div className="ScopofWorkSectionRemove">
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger"
+                                      onClick={() =>
+                                        handleRemoveWholeWorkSectionEntry(index)
+                                      }
+                                    >
+                                      <i className="far">X</i>
+                                    </button>
+                                  </div>
+                                  <div className="mt-5">
+                                    <label
+                                      htmlFor={`specificBudget-${index}`}
+                                      className="form-label"
+                                    >
+                                      Add Proposal:
+                                    </label>
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      id={`specificBudget-${index}`}
+                                      value=""
+                                    />
+                                  </div>
+                                  <div className="mb-2 mt-2">
+                                    <label
+                                      htmlFor={`specificName-${index}`}
+                                      className="form-label"
+                                    >
+                                      Add scope of Work
+                                    </label>
+                                    <select
+                                      className="form-select"
+                                      aria-label="Select Specification"
+                                      value={entry.specific_name || ""}
+                                      onChange={(e) =>
+                                        handleEntryChange(
+                                          index,
+                                          "specific_name",
+                                          e.target.value
+                                        )
+                                      }
+                                    >
+                                      <option value="Base Bid Drywall/Framing">
+                                        All scope numbers wil here
+                                      </option>
+                                    </select>
+                                  </div>
+                                  <div className="bothDiv  gap-3">
+                                    <div className="Oneline mb-4">
+                                      <label
+                                        htmlFor="location"
+                                        className="form-label"
+                                      >
+                                        Submittals:
+                                      </label>
+                                      <select
+                                        className="form-select"
+                                        id="ProjectEngineerID"
+                                        value={selectedProjectEngineer}
+                                        onChange={handleProjectEngineerChange}
+                                      >
+                                        <option value="">Select Choice</option>
+                                        <option value="On build">
+                                          Approved
+                                        </option>
+                                        <option value="Pending">Pending</option>
+                                      </select>
+                                    </div>
 
-                         <div className="px-3" style={{ width: "100%" }}>
-          <label htmlFor="projectName" className="form-label mt-2">
-            <span>SHOP DRAWINGS</span>
-          </label>
-          {step2FormData.map((entry, index) => (
-            <div className="wholespecificationEntry" key={index}>
-              <div className="ScopofWorkSectionRemove">
-                <button
-                  type="button"
-                  className="btn btn-danger"
-                  onClick={() => handleRemoveWholeWorkSectionEntry(index)}
-                >
-                  <i className="far">X</i>
-                </button>
-              </div>
-              <div className="mt-5">
-                <label
-                  htmlFor={`specificBudget-${index}`}
-                  className="form-label"
-                >
-                  Add Proposal:
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id={`specificBudget-${index}`}
-                  value=""
-                />
-              </div>
-              <div className="mb-2 mt-2">
-                <label htmlFor={`specificName-${index}`} className="form-label">
-                  Add scope of Work
-                </label>
-                <select
-                  className="form-select"
-                  aria-label="Select Specification"
-                  value={entry.specific_name || ""}
-                  onChange={(e) =>
-                    handleEntryChange(index, "specific_name", e.target.value)
-                  }
-                >
-                  <option value="Base Bid Drywall/Framing">
-                    All scope numbers wil here
-                  </option>
-                </select>
-              </div>
-              <div className="bothDiv  gap-3">
-                <div className="Oneline mb-4">
-                  <label htmlFor="location" className="form-label">
-                    Submittals:
-                  </label>
-                  <select
-                    className="form-select"
-                    id="ProjectEngineerID"
-                    value={selectedProjectEngineer}
-                    onChange={handleProjectEngineerChange}
-                  >
-                    <option value="">Select Choice</option>
-                    <option value="On build">Approved</option>
-                    <option value="Pending">Pending</option>
-                  </select>
-                </div>
+                                    <div className="Oneline">
+                                      <label
+                                        htmlFor="location"
+                                        className="form-label"
+                                      >
+                                        Status:
+                                      </label>
+                                      <input
+                                        type="date"
+                                        className="form-control"
+                                        id="dueDate"
+                                        value=""
+                                        onChange={() => {}}
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="mt-2">
+                                    <label htmlFor="comment">Comment:</label>
+                                    <textarea
+                                      id="comment"
+                                      style={{
+                                        width: "100%",
+                                        backgroundColor: "white",
+                                        color: "black",
+                                        padding: "10px",
+                                      }}
+                                      rows="2"
+                                      placeholder=" Write your comment here !"
+                                    ></textarea>
+                                  </div>
+                                </div>
+                              ))}
 
-                <div className="Oneline">
-                  <label htmlFor="location" className="form-label">
-                    Status:
-                  </label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    id="dueDate"
-                    value=""
-                    onChange={() => {}}
-                  />
-                </div>
-              </div>
-            </div>
-          ))}
+                              <button
+                                type="button"
+                                className="btn btn-success"
+                                onClick={handleAddEntry}
+                              >
+                                Add SAFITYs
+                              </button>
+                            </div>
+                            <div className="px-3" style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>Schedules</span>
+                              </label>
+                              {step2FormData.map((entry, index) => (
+                                <div
+                                  className="wholespecificationEntry"
+                                  key={index}
+                                >
+                                  <div className="mb-2 mt-3">
+                                    <label
+                                      htmlFor={`specificDetails-${index}`}
+                                      className="form-label"
+                                    >
+                                      Scope of work divisions
+                                    </label>
+                                    {Array.isArray(entry.sefic) &&
+                                      entry.sefic.map((detail, detailIndex) => (
+                                        <div
+                                          key={detailIndex}
+                                          className="input-group myrowInputgrouup"
+                                        >
+                                          <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Scope Of Work Number"
+                                            value={detail.number}
+                                            onChange={(e) =>
+                                              handleScopeDivisionInputChange(
+                                                index,
+                                                detailIndex,
+                                                "number",
+                                                e.target.value
+                                              )
+                                            }
+                                          />
+                                          <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Scope Of Work Description"
+                                            value={detail.name}
+                                            onChange={(e) =>
+                                              handleScopeDivisionInputChange(
+                                                index,
+                                                detailIndex,
+                                                "name",
+                                                e.target.value
+                                              )
+                                            }
+                                          />
+                                          <button
+                                            type="button"
+                                            className="btn btn-danger"
+                                            onClick={() =>
+                                              handleRemoveScopeDivisionEntry(
+                                                index,
+                                                detailIndex
+                                              )
+                                            }
+                                          >
+                                            <i className="far">X</i>
+                                          </button>
+                                        </div>
+                                      ))}
+                                    <button
+                                      type="button"
+                                      className="btn btn-success bk"
+                                      onClick={() =>
+                                        handleAddScopeDivisionEntry(index)
+                                      }
+                                    >
+                                      <i className="fa-regular icon fa-plus"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
 
-          <button
-            type="button"
-            className="btn btn-success"
-            onClick={handleAddEntry}
-          >
-            Add SHOP DRAWINGS
-          </button>
-        </div>
-        <div className="px-3" style={{ width: "100%" }}>
-          <label htmlFor="projectName" className="form-label mt-2">
-            <span>SAFITYS</span>
-          </label>
-          {step2FormData.map((entry, index) => (
-            <div className="wholespecificationEntry" key={index}>
-              <div className="ScopofWorkSectionRemove">
-                <button
-                  type="button"
-                  className="btn btn-danger"
-                  onClick={() => handleRemoveWholeWorkSectionEntry(index)}
-                >
-                  <i className="far">X</i>
-                </button>
-              </div>
-              <div className="mt-5">
-                <label
-                  htmlFor={`specificBudget-${index}`}
-                  className="form-label"
-                >
-                  Add Proposal:
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id={`specificBudget-${index}`}
-                  value=""
-                />
-              </div>
-              <div className="mb-2 mt-2">
-                <label htmlFor={`specificName-${index}`} className="form-label">
-                  Add scope of Work
-                </label>
-                <select
-                  className="form-select"
-                  aria-label="Select Specification"
-                  value={entry.specific_name || ""}
-                  onChange={(e) =>
-                    handleEntryChange(index, "specific_name", e.target.value)
-                  }
-                >
-                  <option value="Base Bid Drywall/Framing">
-                    All scope numbers wil here
-                  </option>
-                </select>
-              </div>
-              <div className="bothDiv  gap-3">
-                <div className="Oneline mb-4">
-                  <label htmlFor="location" className="form-label">
-                    Submittals:
-                  </label>
-                  <select
-                    className="form-select"
-                    id="ProjectEngineerID"
-                    value={selectedProjectEngineer}
-                    onChange={handleProjectEngineerChange}
-                  >
-                    <option value="">Select Choice</option>
-                    <option value="On build">Approved</option>
-                    <option value="Pending">Pending</option>
-                  </select>
-                </div>
-
-                <div className="Oneline">
-                  <label htmlFor="location" className="form-label">
-                    Status:
-                  </label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    id="dueDate"
-                    value=""
-                    onChange={() => {}}
-                  />
-                </div>
-              </div>
-              <div className="mt-2">
-                <label htmlFor="comment">Comment:</label>
-                <textarea
-                  id="comment"
-                  style={{
-                    width: "100%",
-                    backgroundColor: "white",
-                    color: "black",
-                    padding: "10px",
-                  }}
-                  rows="2"
-                  placeholder=" Write your comment here !"
-                ></textarea>
-              </div>
-            </div>
-          ))}
-
-          <button
-            type="button"
-            className="btn btn-success"
-            onClick={handleAddEntry}
-          >
-            Add SAFITYs
-          </button>
-        </div>
-        <div className="px-3" style={{ width: "100%" }}>
-          <label htmlFor="projectName" className="form-label mt-2">
-            <span>Schedules</span>
-          </label>
-          {step2FormData.map((entry, index) => (
-            <div className="wholespecificationEntry" key={index}>
-              <div className="mb-2 mt-3">
-                <label
-                  htmlFor={`specificDetails-${index}`}
-                  className="form-label"
-                >
-                  Scope of work divisions
-                </label>
-                {Array.isArray(entry.sefic) &&
-                  entry.sefic.map((detail, detailIndex) => (
-                    <div
-                      key={detailIndex}
-                      className="input-group myrowInputgrouup"
-                    >
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Scope Of Work Number"
-                        value={detail.number}
-                        onChange={(e) =>
-                          handleScopeDivisionInputChange(
-                            index,
-                            detailIndex,
-                            "number",
-                            e.target.value
-                          )
-                        }
-                      />
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Scope Of Work Description"
-                        value={detail.name}
-                        onChange={(e) =>
-                          handleScopeDivisionInputChange(
-                            index,
-                            detailIndex,
-                            "name",
-                            e.target.value
-                          )
-                        }
-                      />
-                      <button
-                        type="button"
-                        className="btn btn-danger"
-                        onClick={() =>
-                          handleRemoveScopeDivisionEntry(index, detailIndex)
-                        }
-                      >
-                        <i className="far">X</i>
-                      </button>
-                    </div>
-                  ))}
-                <button
-                  type="button"
-                  className="btn btn-success bk"
-                  onClick={() => handleAddScopeDivisionEntry(index)}
-                >
-                  <i className="fa-regular icon fa-plus"></i>
-                </button>
-              </div>
-            </div>
-          ))}
-
-          <button
-            type="button"
-            className="btn btn-success"
-            onClick={handleAddEntry}
-          >
-            Add Schedule
-          </button>
-        </div>
-        <div className="px-3" style={{ width: "100%" }}>
-          <label htmlFor="projectName" className="form-label mt-2">
-            <span>SUB_ CONTRACTORSS</span>
-          </label>
-          {step2FormData.map((entry, index) => (
-            <div className="wholespecificationEntry" key={index}>
-              <div className="mb-2 mt-3">
-                <label
-                  htmlFor={`specificDetails-${index}`}
-                  className="form-label"
-                >
-                  Scope of work divisions
-                </label>
-                {Array.isArray(entry.sefic) &&
-                  entry.sefic.map((detail, detailIndex) => (
-                    <div
-                      key={detailIndex}
-                      className="input-group myrowInputgrouup"
-                    >
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Scope Of Work Number"
-                        value={detail.number}
-                        onChange={(e) =>
-                          handleScopeDivisionInputChange(
-                            index,
-                            detailIndex,
-                            "number",
-                            e.target.value
-                          )
-                        }
-                      />
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Scope Of Work Description"
-                        value={detail.name}
-                        onChange={(e) =>
-                          handleScopeDivisionInputChange(
-                            index,
-                            detailIndex,
-                            "name",
-                            e.target.value
-                          )
-                        }
-                      />
-                      <button
-                        type="button"
-                        className="btn btn-danger"
-                        onClick={() =>
-                          handleRemoveScopeDivisionEntry(index, detailIndex)
-                        }
-                      >
-                        <i className="far">X</i>
-                      </button>
-                    </div>
-                  ))}
-                <div className="mt-2">
-                  <label htmlFor="comment">Comment:</label>
-                  <textarea
-                    id="comment"
-                    style={{
-                      width: "100%",
-                      backgroundColor: "white",
-                      color: "black",
-                      padding: "10px",
-                    }}
-                    rows="2"
-                    placeholder=" Write your comment here !"
-                  ></textarea>
-                </div>
-                <button
-                  type="button"
-                  className="btn btn-success bk"
-                  onClick={() => handleAddScopeDivisionEntry(index)}
-                >
-                  <i className="fa-regular icon fa-plus"></i>
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-                      </div>
-                    )}
-                    {projectactiveStep === 6 && (
-                      <div className=" mt-3">
-                         
-
-                         <div className="px-3" style={{ width: "100%" }}>
-          <label htmlFor="projectName" className="form-label mt-2">
-            <span>LABOR RATES</span>
-          </label>
-          {step2FormData.map((entry, index) => (
-            <div className="wholespecificationEntry" key={index}>
-              <div className="mb-2 mt-3">
-                <label
-                  htmlFor={`specificDetails-${index}`}
-                  className="form-label"
-                >
-                  Scope of work divisions
-                </label>
-                {Array.isArray(entry.sefic) &&
-                  entry.sefic.map((detail, detailIndex) => (
-                    <div
-                      key={detailIndex}
-                      className="input-group myrowInputgrouup"
-                    >
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Scope Of Work Number"
-                        value={detail.number}
-                        onChange={(e) =>
-                          handleScopeDivisionInputChange(
-                            index,
-                            detailIndex,
-                            "number",
-                            e.target.value
-                          )
-                        }
-                      />
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Scope Of Work Description"
-                        value={detail.name}
-                        onChange={(e) =>
-                          handleScopeDivisionInputChange(
-                            index,
-                            detailIndex,
-                            "name",
-                            e.target.value
-                          )
-                        }
-                      />
-                      <button
-                        type="button"
-                        className="btn btn-danger"
-                        onClick={() =>
-                          handleRemoveScopeDivisionEntry(index, detailIndex)
-                        }
-                      >
-                        <i className="far">X</i>
-                      </button>
-                    </div>
-                  ))}
-                <div className="mt-2">
-                  <label htmlFor="comment">Comment:</label>
-                  <textarea
-                    id="comment"
-                    style={{
-                      width: "100%",
-                      backgroundColor: "white",
-                      color: "black",
-                      padding: "10px",
-                    }}
-                    rows="2"
-                    placeholder=" Write your comment here !"
-                  ></textarea>
-                </div>
-                <button
-                  type="button"
-                  className="btn btn-success bk"
-                  onClick={() => handleAddScopeDivisionEntry(index)}
-                >
-                  <i className="fa-regular icon fa-plus"></i>
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="px-3" style={{ width: "100%" }}>
-          <label htmlFor="projectName" className="form-label mt-2">
-            <span>BILLINGS</span>
-          </label>
-          {step2FormData.map((entry, index) => (
-            <div className="wholespecificationEntry" key={index}>
-              <div className="mb-2 mt-3">
-                {/* <label
+                              <button
+                                type="button"
+                                className="btn btn-success"
+                                onClick={handleAddEntry}
+                              >
+                                Add Schedule
+                              </button>
+                            </div>
+                            <div className="px-3" style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>SUB_ CONTRACTORSS</span>
+                              </label>
+                              {step2FormData.map((entry, index) => (
+                                <div
+                                  className="wholespecificationEntry"
+                                  key={index}
+                                >
+                                  <div className="mb-2 mt-3">
+                                    <label
+                                      htmlFor={`specificDetails-${index}`}
+                                      className="form-label"
+                                    >
+                                      Scope of work divisions
+                                    </label>
+                                    {Array.isArray(entry.sefic) &&
+                                      entry.sefic.map((detail, detailIndex) => (
+                                        <div
+                                          key={detailIndex}
+                                          className="input-group myrowInputgrouup"
+                                        >
+                                          <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Scope Of Work Number"
+                                            value={detail.number}
+                                            onChange={(e) =>
+                                              handleScopeDivisionInputChange(
+                                                index,
+                                                detailIndex,
+                                                "number",
+                                                e.target.value
+                                              )
+                                            }
+                                          />
+                                          <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Scope Of Work Description"
+                                            value={detail.name}
+                                            onChange={(e) =>
+                                              handleScopeDivisionInputChange(
+                                                index,
+                                                detailIndex,
+                                                "name",
+                                                e.target.value
+                                              )
+                                            }
+                                          />
+                                          <button
+                                            type="button"
+                                            className="btn btn-danger"
+                                            onClick={() =>
+                                              handleRemoveScopeDivisionEntry(
+                                                index,
+                                                detailIndex
+                                              )
+                                            }
+                                          >
+                                            <i className="far">X</i>
+                                          </button>
+                                        </div>
+                                      ))}
+                                    <div className="mt-2">
+                                      <label htmlFor="comment">Comment:</label>
+                                      <textarea
+                                        id="comment"
+                                        style={{
+                                          width: "100%",
+                                          backgroundColor: "white",
+                                          color: "black",
+                                          padding: "10px",
+                                        }}
+                                        rows="2"
+                                        placeholder=" Write your comment here !"
+                                      ></textarea>
+                                    </div>
+                                    <button
+                                      type="button"
+                                      className="btn btn-success bk"
+                                      onClick={() =>
+                                        handleAddScopeDivisionEntry(index)
+                                      }
+                                    >
+                                      <i className="fa-regular icon fa-plus"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </>
+                        )}
+                        {projectactiveStep === 6 && (
+                          <>
+                            <div className="mt-4" style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>LABOR RATES</span>
+                              </label>
+                              {step2FormData.map((entry, index) => (
+                                <div
+                                  className="wholespecificationEntry"
+                                  key={index}
+                                >
+                                  <div className="mb-2 mt-3">
+                                    <label
+                                      htmlFor={`specificDetails-${index}`}
+                                      className="form-label"
+                                    >
+                                      Scope of work divisions
+                                    </label>
+                                    {Array.isArray(entry.sefic) &&
+                                      entry.sefic.map((detail, detailIndex) => (
+                                        <div
+                                          key={detailIndex}
+                                          className="input-group myrowInputgrouup"
+                                        >
+                                          <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Scope Of Work Number"
+                                            value={detail.number}
+                                            onChange={(e) =>
+                                              handleScopeDivisionInputChange(
+                                                index,
+                                                detailIndex,
+                                                "number",
+                                                e.target.value
+                                              )
+                                            }
+                                          />
+                                          <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Scope Of Work Description"
+                                            value={detail.name}
+                                            onChange={(e) =>
+                                              handleScopeDivisionInputChange(
+                                                index,
+                                                detailIndex,
+                                                "name",
+                                                e.target.value
+                                              )
+                                            }
+                                          />
+                                          <button
+                                            type="button"
+                                            className="btn btn-danger"
+                                            onClick={() =>
+                                              handleRemoveScopeDivisionEntry(
+                                                index,
+                                                detailIndex
+                                              )
+                                            }
+                                          >
+                                            <i className="far">X</i>
+                                          </button>
+                                        </div>
+                                      ))}
+                                    <div className="mt-2">
+                                      <label htmlFor="comment">Comment:</label>
+                                      <textarea
+                                        id="comment"
+                                        style={{
+                                          width: "100%",
+                                          backgroundColor: "white",
+                                          color: "black",
+                                          padding: "10px",
+                                        }}
+                                        rows="2"
+                                        placeholder=" Write your comment here !"
+                                      ></textarea>
+                                    </div>
+                                    <button
+                                      type="button"
+                                      className="btn btn-success bk"
+                                      onClick={() =>
+                                        handleAddScopeDivisionEntry(index)
+                                      }
+                                    >
+                                      <i className="fa-regular icon fa-plus"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                            <div className="px-3" style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>BILLINGS</span>
+                              </label>
+                              {step2FormData.map((entry, index) => (
+                                <div
+                                  className="wholespecificationEntry"
+                                  key={index}
+                                >
+                                  <div className="mb-2 mt-3">
+                                    {/* <label
                       htmlFor={`specificDetails-${index}`}
                       className="form-label"
                     >
                       Scope of work divisions
                     </label> */}
-                {Array.isArray(entry.sefic) &&
-                  entry.sefic.map((detail, detailIndex) => (
-                    <div
-                      key={detailIndex}
-                      className="input-group myrowInputgrouup"
-                    >
-                      <input
-                        type="date"
-                        className="form-control"
-                        placeholder="Due Date"
-                        value=""
-                        onChange={() => {}}
-                      />
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Add Reduction:"
-                        value=""
-                        onChange={() => {}}
-                      />
-                      <button
-                        type="button"
-                        className="btn btn-danger"
-                        onClick={() =>
-                          handleRemoveScopeDivisionEntry(index, detailIndex)
-                        }
-                      >
-                        <i className="far">X</i>
-                      </button>
-                    </div>
-                  ))}
+                                    {Array.isArray(entry.sefic) &&
+                                      entry.sefic.map((detail, detailIndex) => (
+                                        <div
+                                          key={detailIndex}
+                                          className="input-group myrowInputgrouup"
+                                        >
+                                          <input
+                                            type="date"
+                                            className="form-control"
+                                            placeholder="Due Date"
+                                            value=""
+                                            onChange={() => {}}
+                                          />
+                                          <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Add Reduction:"
+                                            value=""
+                                            onChange={() => {}}
+                                          />
+                                          <button
+                                            type="button"
+                                            className="btn btn-danger"
+                                            onClick={() =>
+                                              handleRemoveScopeDivisionEntry(
+                                                index,
+                                                detailIndex
+                                              )
+                                            }
+                                          >
+                                            <i className="far">X</i>
+                                          </button>
+                                        </div>
+                                      ))}
 
-                <button
-                  type="button"
-                  className="btn btn-success bk"
-                  onClick={() => handleAddScopeDivisionEntry(index)}
-                >
-                  <i className="fa-regular icon fa-plus"></i>
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="px-3" style={{ width: "100%" }}>
-          <label htmlFor="projectName" className="form-label mt-2">
-            <span>SOVS</span>
-          </label>
-          {step2FormData.map((entry, index) => (
-            <div className="wholespecificationEntry" key={index}>
-              <div className="mb-2 mt-3">
-                {/* <label
+                                    <button
+                                      type="button"
+                                      className="btn btn-success bk"
+                                      onClick={() =>
+                                        handleAddScopeDivisionEntry(index)
+                                      }
+                                    >
+                                      <i className="fa-regular icon fa-plus"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                            <div className="px-3" style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>SOVS</span>
+                              </label>
+                              {step2FormData.map((entry, index) => (
+                                <div
+                                  className="wholespecificationEntry"
+                                  key={index}
+                                >
+                                  <div className="mb-2 mt-3">
+                                    {/* <label
                       htmlFor={`specificDetails-${index}`}
                       className="form-label"
                     >
                       Scope of work divisions
                     </label> */}
-                {Array.isArray(entry.sefic) &&
-                  entry.sefic.map((detail, detailIndex) => (
-                    <div
-                      key={detailIndex}
-                      className="input-group myrowInputgrouup"
-                    >
-                      <select
-                        className="form-select"
-                        aria-label="Select Specification"
-                        value={entry.specific_name || ""}
-                        onChange={() => {}}
-                      >
-                        <option value="">Select Choice</option>
-                        <option value="Approved">Approved</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Custom">Custom</option>
-                      </select>
-                      <input
-                        type="date"
-                        className="form-control"
-                        placeholder="Due Date"
-                        value=""
-                        onChange={() => {}}
-                      />
-                      <button
-                        type="button"
-                        className="btn btn-danger"
-                        onClick={() =>
-                          handleRemoveScopeDivisionEntry(index, detailIndex)
-                        }
-                      >
-                        <i className="far">X</i>
-                      </button>
-                    </div>
-                  ))}
+                                    {Array.isArray(entry.sefic) &&
+                                      entry.sefic.map((detail, detailIndex) => (
+                                        <div
+                                          key={detailIndex}
+                                          className="input-group myrowInputgrouup"
+                                        >
+                                          <select
+                                            className="form-select"
+                                            aria-label="Select Specification"
+                                            value={entry.specific_name || ""}
+                                            onChange={() => {}}
+                                          >
+                                            <option value="">
+                                              Select Choice
+                                            </option>
+                                            <option value="Approved">
+                                              Approved
+                                            </option>
+                                            <option value="Pending">
+                                              Pending
+                                            </option>
+                                            <option value="Custom">
+                                              Custom
+                                            </option>
+                                          </select>
+                                          <input
+                                            type="date"
+                                            className="form-control"
+                                            placeholder="Due Date"
+                                            value=""
+                                            onChange={() => {}}
+                                          />
+                                          <button
+                                            type="button"
+                                            className="btn btn-danger"
+                                            onClick={() =>
+                                              handleRemoveScopeDivisionEntry(
+                                                index,
+                                                detailIndex
+                                              )
+                                            }
+                                          >
+                                            <i className="far">X</i>
+                                          </button>
+                                        </div>
+                                      ))}
 
-                <button
-                  type="button"
-                  className="btn btn-success bk"
-                  onClick={() => handleAddScopeDivisionEntry(index)}
-                >
-                  <i className="fa-regular icon fa-plus"></i>
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-                      </div>
-                    )}
-                    {projectactiveStep === 7 && (
-                      <div className=" mt-3">
-                         
+                                    <button
+                                      type="button"
+                                      className="btn btn-success bk"
+                                      onClick={() =>
+                                        handleAddScopeDivisionEntry(index)
+                                      }
+                                    >
+                                      <i className="fa-regular icon fa-plus"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </>
+                        )}
+                        {projectactiveStep === 7 && (
+                          <div className=" mt-3">
+                            <div className="px-3" style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>HD S_SYSTEMS</span>
+                              </label>
+                              {step2FormData.map((entry, index) => (
+                                <div
+                                  className="wholespecificationEntry"
+                                  key={index}
+                                >
+                                  <div className="mb-2 mt-3">
+                                    <label
+                                      htmlFor={`specificDetails-${index}`}
+                                      className="form-label"
+                                    >
+                                      Scope of work divisions
+                                    </label>
+                                    {Array.isArray(entry.sefic) &&
+                                      entry.sefic.map((detail, detailIndex) => (
+                                        <div
+                                          key={detailIndex}
+                                          className="input-group myrowInputgrouup"
+                                        >
+                                          <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Scope Of Work Number"
+                                            value={detail.number}
+                                            onChange={(e) =>
+                                              handleScopeDivisionInputChange(
+                                                index,
+                                                detailIndex,
+                                                "number",
+                                                e.target.value
+                                              )
+                                            }
+                                          />
+                                          <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Scope Of Work Description"
+                                            value={detail.name}
+                                            onChange={(e) =>
+                                              handleScopeDivisionInputChange(
+                                                index,
+                                                detailIndex,
+                                                "name",
+                                                e.target.value
+                                              )
+                                            }
+                                          />
+                                          <button
+                                            type="button"
+                                            className="btn btn-danger"
+                                            onClick={() =>
+                                              handleRemoveScopeDivisionEntry(
+                                                index,
+                                                detailIndex
+                                              )
+                                            }
+                                          >
+                                            <i className="far">X</i>
+                                          </button>
+                                        </div>
+                                      ))}
+                                    <div className="mt-2">
+                                      <label htmlFor="comment">Comment:</label>
+                                      <textarea
+                                        id="comment"
+                                        style={{
+                                          width: "100%",
+                                          backgroundColor: "white",
+                                          color: "black",
+                                          padding: "10px",
+                                        }}
+                                        rows="2"
+                                        placeholder=" Write your comment here !"
+                                      ></textarea>
+                                    </div>
+                                    <button
+                                      type="button"
+                                      className="btn btn-success bk"
+                                      onClick={() =>
+                                        handleAddScopeDivisionEntry(index)
+                                      }
+                                    >
+                                      <i className="fa-regular icon fa-plus"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
 
-                         <div className="px-3" style={{ width: "100%" }}>
-          <label htmlFor="projectName" className="form-label mt-2">
-            <span>HD S_SYSTEMS</span>
-          </label>
-          {step2FormData.map((entry, index) => (
-            <div className="wholespecificationEntry" key={index}>
-              <div className="mb-2 mt-3">
-                <label
-                  htmlFor={`specificDetails-${index}`}
-                  className="form-label"
-                >
-                  Scope of work divisions
-                </label>
-                {Array.isArray(entry.sefic) &&
-                  entry.sefic.map((detail, detailIndex) => (
-                    <div
-                      key={detailIndex}
-                      className="input-group myrowInputgrouup"
-                    >
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Scope Of Work Number"
-                        value={detail.number}
-                        onChange={(e) =>
-                          handleScopeDivisionInputChange(
-                            index,
-                            detailIndex,
-                            "number",
-                            e.target.value
-                          )
-                        }
-                      />
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Scope Of Work Description"
-                        value={detail.name}
-                        onChange={(e) =>
-                          handleScopeDivisionInputChange(
-                            index,
-                            detailIndex,
-                            "name",
-                            e.target.value
-                          )
-                        }
-                      />
-                      <button
-                        type="button"
-                        className="btn btn-danger"
-                        onClick={() =>
-                          handleRemoveScopeDivisionEntry(index, detailIndex)
-                        }
-                      >
-                        <i className="far">X</i>
-                      </button>
-                    </div>
-                  ))}
-                <div className="mt-2">
-                  <label htmlFor="comment">Comment:</label>
-                  <textarea
-                    id="comment"
-                    style={{
-                      width: "100%",
-                      backgroundColor: "white",
-                      color: "black",
-                      padding: "10px",
-                    }}
-                    rows="2"
-                    placeholder=" Write your comment here !"
-                  ></textarea>
-                </div>
-                <button
-                  type="button"
-                  className="btn btn-success bk"
-                  onClick={() => handleAddScopeDivisionEntry(index)}
-                >
-                  <i className="fa-regular icon fa-plus"></i>
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="px-3" style={{ width: "100%" }}>
-          <label htmlFor="projectName" className="form-label mt-2">
-            <span>ON BUILDS</span>
-          </label>
-          {step2FormData.map((entry, index) => (
-            <div className="wholespecificationEntry" key={index}>
-              <div className="mb-2 mt-3">
-                {/* <label
+                            <div className="px-3" style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>ON BUILDS</span>
+                              </label>
+                              {step2FormData.map((entry, index) => (
+                                <div
+                                  className="wholespecificationEntry"
+                                  key={index}
+                                >
+                                  <div className="mb-2 mt-3">
+                                    {/* <label
                       htmlFor={`specificDetails-${index}`}
                       className="form-label"
                     >
                       Scope of work divisions
                     </label> */}
-                {Array.isArray(entry.sefic) &&
-                  entry.sefic.map((detail, detailIndex) => (
-                    <div
-                      key={detailIndex}
-                      className="input-group myrowInputgrouup"
-                    >
-                      <select
-                        className="form-select"
-                        aria-label="Select Specification"
-                        value={entry.specific_name || ""}
-                        onChange={() => {}}
-                      >
-                        <option value="">Select Choice</option>
-                        <option value="Approved">Bid Proposal</option>
-                        <option value="Pending">Specs</option>
-                        <option value="Custom">Contract</option>
-                        <option value="Approved">Submitile</option>
-                        <option value="Pending">Safety</option>
-                        <option value="Custom">Shop Drawing</option>
-                        <option value="Custom">Budget</option>
-                      </select>
-                      <select
-                        className="form-select"
-                        aria-label="Select Specification"
-                        value={entry.specific_name || ""}
-                        onChange={() => {}}
-                      >
-                        <option value="">Select Choice</option>
-                        <option value="Approved">Upload</option>
-                        <option value="Pending">Pending</option>
-                      </select>
+                                    {Array.isArray(entry.sefic) &&
+                                      entry.sefic.map((detail, detailIndex) => (
+                                        <div
+                                          key={detailIndex}
+                                          className="input-group myrowInputgrouup"
+                                        >
+                                          <select
+                                            className="form-select"
+                                            aria-label="Select Specification"
+                                            value={entry.specific_name || ""}
+                                            onChange={() => {}}
+                                          >
+                                            <option value="">
+                                              Select Choice
+                                            </option>
+                                            <option value="Approved">
+                                              Bid Proposal
+                                            </option>
+                                            <option value="Pending">
+                                              Specs
+                                            </option>
+                                            <option value="Custom">
+                                              Contract
+                                            </option>
+                                            <option value="Approved">
+                                              Submitile
+                                            </option>
+                                            <option value="Pending">
+                                              Safety
+                                            </option>
+                                            <option value="Custom">
+                                              Shop Drawing
+                                            </option>
+                                            <option value="Custom">
+                                              Budget
+                                            </option>
+                                          </select>
+                                          <select
+                                            className="form-select"
+                                            aria-label="Select Specification"
+                                            value={entry.specific_name || ""}
+                                            onChange={() => {}}
+                                          >
+                                            <option value="">
+                                              Select Choice
+                                            </option>
+                                            <option value="Approved">
+                                              Upload
+                                            </option>
+                                            <option value="Pending">
+                                              Pending
+                                            </option>
+                                          </select>
 
-                      <button
-                        type="button"
-                        className="btn btn-danger"
-                        onClick={() =>
-                          handleRemoveScopeDivisionEntry(index, detailIndex)
-                        }
-                      >
-                        <i className="far">X</i>
-                      </button>
-                    </div>
-                  ))}
+                                          <button
+                                            type="button"
+                                            className="btn btn-danger"
+                                            onClick={() =>
+                                              handleRemoveScopeDivisionEntry(
+                                                index,
+                                                detailIndex
+                                              )
+                                            }
+                                          >
+                                            <i className="far">X</i>
+                                          </button>
+                                        </div>
+                                      ))}
 
-                <button
-                  type="button"
-                  className="btn btn-success bk"
-                  onClick={() => handleAddScopeDivisionEntry(index)}
-                >
-                  <i className="fa-regular icon fa-plus"></i>
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="px-3" style={{ width: "100%" }}>
-          <label htmlFor="projectName" className="form-label mt-2">
-            <span>BUGETS</span>
-          </label>
-          {step2FormData.map((entry, index) => (
-            <div className="wholespecificationEntry" key={index}>
-              <div className="mb-2 mt-3">
-                {/* <label
+                                    <button
+                                      type="button"
+                                      className="btn btn-success bk"
+                                      onClick={() =>
+                                        handleAddScopeDivisionEntry(index)
+                                      }
+                                    >
+                                      <i className="fa-regular icon fa-plus"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                            <div className="px-3" style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>BUGETS</span>
+                              </label>
+                              {step2FormData.map((entry, index) => (
+                                <div
+                                  className="wholespecificationEntry"
+                                  key={index}
+                                >
+                                  <div className="mb-2 mt-3">
+                                    {/* <label
                       htmlFor={`specificDetails-${index}`}
                       className="form-label"
                     >
                       Scope of work divisions
                     </label> */}
-                {Array.isArray(entry.sefic) &&
-                  entry.sefic.map((detail, detailIndex) => (
-                    <div
-                      key={detailIndex}
-                      className="input-group myrowInputgrouup"
-                    >
-                      <select
-                        className="form-select"
-                        aria-label="Select Specification"
-                        value={entry.specific_name || ""}
-                        onChange={() => {}}
-                      >
-                        <option value="">Select Choice</option>
-                        <option value="Approved">Done</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Custom">Custom</option>
-                      </select>
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Comment"
-                        value=""
-                        onChange={() => {}}
-                      />
+                                    {Array.isArray(entry.sefic) &&
+                                      entry.sefic.map((detail, detailIndex) => (
+                                        <div
+                                          key={detailIndex}
+                                          className="input-group myrowInputgrouup"
+                                        >
+                                          <select
+                                            className="form-select"
+                                            aria-label="Select Specification"
+                                            value={entry.specific_name || ""}
+                                            onChange={() => {}}
+                                          >
+                                            <option value="">
+                                              Select Choice
+                                            </option>
+                                            <option value="Approved">
+                                              Done
+                                            </option>
+                                            <option value="Pending">
+                                              Pending
+                                            </option>
+                                            <option value="Custom">
+                                              Custom
+                                            </option>
+                                          </select>
+                                          <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Comment"
+                                            value=""
+                                            onChange={() => {}}
+                                          />
 
-                      <button
-                        type="button"
-                        className="btn btn-danger"
-                        onClick={() =>
-                          handleRemoveScopeDivisionEntry(index, detailIndex)
-                        }
-                      >
-                        <i className="far">X</i>
-                      </button>
-                    </div>
-                  ))}
+                                          <button
+                                            type="button"
+                                            className="btn btn-danger"
+                                            onClick={() =>
+                                              handleRemoveScopeDivisionEntry(
+                                                index,
+                                                detailIndex
+                                              )
+                                            }
+                                          >
+                                            <i className="far">X</i>
+                                          </button>
+                                        </div>
+                                      ))}
 
-                <button
-                  type="button"
-                  className="btn btn-success bk"
-                  onClick={() => handleAddScopeDivisionEntry(index)}
-                >
-                  <i className="fa-regular icon fa-plus"></i>
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-                      </div>
-                    )}
-
-                    <div className="mt-1">
-                      {projectactiveStep < 7 ? (
-                        <div className="parentbtnsdiv">
-                          <div className="spacebtns">
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              disabled={projectactiveStep === 0} // Disable the button when activeStep is 0
-                              onClick={handleprojectBack}
-                            >
-                              Back
-                            </Button>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              onClick={handleprojectNext}
-                            >
-                              Next
-                            </Button>
+                                    <button
+                                      type="button"
+                                      className="btn btn-success bk"
+                                      onClick={() =>
+                                        handleAddScopeDivisionEntry(index)
+                                      }
+                                    >
+                                      <i className="fa-regular icon fa-plus"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
                           </div>
+                        )}
+
+                        <div className="mt-1">
+                          {projectactiveStep < 7 ? (
+                            <div className="parentbtnsdiv">
+                              <div className="spacebtns">
+                                <Button
+                                  variant="contained"
+                                  color="primary"
+                                  disabled={projectactiveStep === 0} // Disable the button when activeStep is 0
+                                  onClick={handleprojectBack}
+                                >
+                                  Back
+                                </Button>
+                                <Button
+                                  variant="contained"
+                                  color="primary"
+                                  onClick={handleprojectNext}
+                                >
+                                  Next
+                                </Button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="parentbtnsdiv">
+                              <div className="spacebtns">
+                                <Button
+                                  variant="contained"
+                                  color="primary"
+                                  onClick={handleprojectBack}
+                                >
+                                  Back
+                                </Button>
+                                <Button
+                                  variant="contained"
+                                  color="primary"
+                                  type="button"
+                                  onClick={handleProjectFormSubmit}
+                                >
+                                  Submit
+                                </Button>
+                              </div>
+                            </div>
+                          )}
                         </div>
-                      ) : (
-                        <div className="parentbtnsdiv">
-                          <div className="spacebtns">
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              onClick={handleprojectBack}
-                            >
-                              Back
-                            </Button>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              type="button"
-                              onClick={handleProjectFormSubmit}
-                            >
-                              Submit
-                            </Button>
-                          </div>
-                        </div>
-                      )}
+                      </form>
                     </div>
-                  </form>
-                </div>
+                  </div>
+                </Modal>
               </div>
-            </Modal>
-          </div>
-        </div>
-      )}
+            </div>
+          )}
 
           <ParticlesAnimation numberOfCircles={numberOfCircles} />
           <div
@@ -3041,15 +3322,18 @@ const Estimator = () => {
                         </button>
 
                         <button
-  className="btn dropbtns btn-secondary"
-  onClick={() => {
-    const encodedProjectName = encodeURIComponent(item.id);
-    navigate(`/homepage/rawproposal/${encodedProjectName}`);
-  }}
->
-  View
-</button>
-
+                          className="btn dropbtns btn-secondary"
+                          onClick={() => {
+                            const encodedProjectName = encodeURIComponent(
+                              item.id
+                            );
+                            navigate(
+                              `/homepage/rawproposal/${encodedProjectName}`
+                            );
+                          }}
+                        >
+                          View
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -3261,7 +3545,7 @@ const Estimator = () => {
           </div>
         </div>
       )}
-      
+
       {showEstimatingEditModal && (
         <div
           className={`modal-container bg-white pt-5 ps-2 ${

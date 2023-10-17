@@ -20,6 +20,7 @@ from django.core.mail import EmailMessage
 from django.core.files.base import ContentFile
 import base64
 import logging
+from concurrent.futures import ThreadPoolExecutor
 
 
 
@@ -58,7 +59,6 @@ class DMS_DertoryView(APIView):
 
         DMS_Dertory.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
 class SendEmailView(APIView):
 
     def post(self, request, estimating_id, format=None):
@@ -72,13 +72,16 @@ class SendEmailView(APIView):
 
             email_from = 'mubeenjutt9757@gmail.com'  # Default sender email
 
+
             pdf_base64 = request.data.get('pdf')
             if not pdf_base64:
                 logger.error('PDF not provided')
+                logger.error(f'Request Data: {request.data}')  # Log the entire request data
                 return Response({'error': 'PDF is required'}, status=status.HTTP_400_BAD_REQUEST)
 
             pdf_data = base64.b64decode(pdf_base64)
             pdf_file = ContentFile(pdf_data, 'proposal.pdf')
+
 
             subject = 'Proposal'
             message = f"""
@@ -109,7 +112,9 @@ class SendEmailView(APIView):
 
         except Exception as e:
             logger.error(str(e))
+            logger.error(f'Request Data: {request.data}')  # Log the entire request data
             return Response({'error': 'Failed to send email', 'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 class UrlsListViews(APIView):
     def get(self,request):

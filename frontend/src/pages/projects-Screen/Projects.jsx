@@ -79,7 +79,7 @@ const Projects = () => {
               <th>Foreman</th>
             </tr>
           </thead>
-          <tbody className="cursor-pointer  bg-info jloop">
+          <tbody className="bg-info jloop">
             {filteredData.map((item) => (
               <tr
                 key={item.id}

@@ -20,7 +20,7 @@ import Rawpurposal from "../purposal/rawpurposal";
 import { margin } from "@mui/system";
 
 const Estimator = () => {
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
   const [filter, setFilter] = useState("");
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
   const [showEstimatingEditModal, setshowEstimatingEditModal] = useState(false); // State to control modal visibility
@@ -30,7 +30,7 @@ const Estimator = () => {
   const [projectName, setProjectName] = useState("");
   const [estimatorName, setEstimatorName] = useState("");
   const [location, setLocation] = useState("");
-  const [bidAmount, setBidAmount] = useState("");
+  // const [bidAmount, setBidAmount] = useState("");
   const [company, setCompany] = useState(""); // Updated to store company name as a string
 
   // ***********************************
@@ -508,7 +508,7 @@ const Estimator = () => {
 
   //************* Define the handleEstimatingEditing function
 
-  const [selectedEstimatingID, setSelectedEstimatingID] = useState("");
+  const [selectedEstimatingID, setSelectedEstimatingID] = useState(null);
   const [selectedEstimator, setSelectedEstimator] = useState("");
   const [selectedBidder, setSelectedBidder] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
@@ -850,9 +850,8 @@ const Estimator = () => {
                 .toUpperCase()
                 .includes(filter.toUpperCase())) ||
             (customer.bidder &&
-              customer.bidder.toUpperCase().includes(filter.toUpperCase()))) &&
-          (customer.status === "Working" || customer.status === "Pending")
-        ); // Filter by 'Working' and 'Pending' status
+              customer.bidder.toUpperCase().includes(filter.toUpperCase()))) 
+        );
       })
       .sort((a, b) => {
         // Parse the due dates as Date objects
@@ -1148,6 +1147,69 @@ const Estimator = () => {
     }
   };
 
+  
+  const handleStatusChange = async (event, itemId) => {
+    const updatedStatus = event.target.value;
+    console.log("Updated Status:", updatedStatus);
+  
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            status: updatedStatus, // Update the status
+          }),
+        }
+      );
+  
+      console.log("API Response:", response);
+  
+      if (response.ok) {
+        // Handle success response here
+        const updatedStatusMap = { ...statusMap };
+        updatedStatusMap[itemId] = updatedStatus;
+        setStatusMap(updatedStatusMap);
+  
+        // Fetch the "prjct_name" corresponding to the selected "itemId"
+        const responseEstimating = await fetch(
+          `http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`
+        );
+        if (responseEstimating.ok) {
+          const estimatingData = await responseEstimating.json();
+          // Set the "prjct_name" as the value for the "Estimating/Project Name" field
+          setSelectedEstimatingID(estimatingData.prjct_name);
+        }
+  
+        // Check if the updated status is "Won" and open the project modal
+        if (updatedStatus === "Won") {
+          setshowProjectModal(true);
+        }
+  
+        // Log a success message to the console
+        console.log(`Status updated successfully for item with ID ${itemId}`);
+        // You may need to refresh the UI or update the specific row accordingly
+      } else {
+        if (response.status === 404) {
+          // Handle the case where the resource was not found (404 error)
+          console.error("Resource not found.");
+        } else {
+          // Handle other non-success responses
+          const responseData = await response.text();
+          console.error("Failed to update! Server response:", responseData);
+        }
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
+  };
+  
+  
+  
+  
   const MovetoURLpage = () => {
     navigate("/homepage/urlpage");
   };
@@ -1207,7 +1269,6 @@ const Estimator = () => {
               </div>
             </div>
           </div>
-          {/* {ProjectformModal && ( */}
           {showProjectModal && (
             <div
               className={`modal-container projectPopup bg-white pt-5 ps-2 ${
@@ -1222,21 +1283,15 @@ const Estimator = () => {
                     Estimating/Project Name:
                   </label>
                   <input
-                    type="text"
-                    className="form-control"
-                    id="projectName"
-                    placeholder="AutoPopulate not shown on frontend"
-                    value={selectedEstimatingID}
-                            onChange={(e) =>
-                              setStep0FormData({
-                                ...step0FormData,
-                                estimating: e.target.value,
-                              })
-                            }
-                            readOnly
-                  />
+  type="text"
+  className="form-control"
+  id="projectName"
+  placeholder="AutoPopulate not shown on frontend"
+  defaultValue={selectedEstimatingID}
+  readOnly
+/>
                 </div>
-                <div className="bothDiv gap-3 mt-3">
+                <div className="bothDiv lllp gap-3 mt-3">
                   <div className="projName Oneline">
                     <label htmlFor="projectName" className="form-label">
                       Start Date:
@@ -2893,7 +2948,7 @@ const Estimator = () => {
                       <select
                         className="dropUpdation "
                         id="estimatorName"
-                        onChange={(event) => handleAreaChange(event, item.id)}
+                        onChange={(event) => handleStatusChange(event, item.id)}
                         value={statusMap[item.id] || item.status}
                       >
                         <option value={item.status}>{item.status}</option>
@@ -2940,7 +2995,7 @@ const Estimator = () => {
                               ...step0FormData,
                               estimating: item.id,
                             });
-                            setSelectedEstimatingID(item.prjct_name);
+                            setSelectedEstimatingID(item.id);
                             setPurposalModal(true);
                           }}
                         >
@@ -2963,13 +3018,15 @@ const Estimator = () => {
                         </button>
 
                         <button
-                          className="btn dropbtns btn-secondary"
-                          onClick={() => {
-                            navigate(`/homepage/rawproposal/${item.id}`);
-                          }}
-                        >
-                          View
-                        </button>
+  className="btn dropbtns btn-secondary"
+  onClick={() => {
+    const encodedProjectName = encodeURIComponent(item.id);
+    navigate(`/homepage/rawproposal/${encodedProjectName}`);
+  }}
+>
+  View
+</button>
+
                       </div>
                     </td>
                   </tr>

@@ -58,3 +58,9 @@
 .baseh5{
   font-size: 21px;
 }
+.emailbtn{
+  cursor: pointer;
+}
+.emailbtn:focus{
+scale: 1.2;
+}

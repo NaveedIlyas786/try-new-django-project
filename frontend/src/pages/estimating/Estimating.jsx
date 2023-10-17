@@ -1166,22 +1166,22 @@ const Estimator = () => {
                 type="text"
                 placeholder="Filter by Project Name, Estimator Name, Bidders, Bid Amount, Status"
                 value={filter}
-                className="myinput p-2"
+                className="mysearchinput p-2"
                 onChange={(e) => setFilter(e.target.value)}
               />
               <button className="btn btn-primary" onClick={MovetoURLpage}>
                 URL
               </button>
               <button
-                className="btn btn-success"
+                className="btn btn-primary"
                 onClick={() => setShowModal(true)}
               >
                 New
               </button>
             </div>
-            <div className="d-flex mt-5  justify-content-between ">
+            <div className="d-flex mt-5  justify-content-between align-items-center h-70 ">
               <div>
-                <h3 className="text-black" data-aos="fade-left">
+                <h3 className=" estisum" data-aos="fade-left">
                   Estimating Summary
                 </h3>
               </div>
@@ -1191,7 +1191,7 @@ const Estimator = () => {
               >
                 <button
                   type="button"
-                  className="btn btn-outline-success lp"
+                  className="btn  lp wonb"
                   onClick={movetoWonProjectsPage}
                 >
                   Won Projects
@@ -2795,7 +2795,7 @@ const Estimator = () => {
             data-aos="fade-up"
           >
             <table
-              className="table table-striped table-bordered table-hover"
+              className="table table-bordered table-hover"
               style={{ tableLayout: "auto" }}
             >
               <thead className="proposalHeader">
@@ -2908,9 +2908,9 @@ const Estimator = () => {
                     </td>
                     <td className="mytd centered-td actionTD">
                       <div className="relative-container loop">
-                        <button
+                        <div  
                           type="button"
-                          className="btn dropbtns btn-primary"
+                         className="pb-2"
                           onClick={() => {
                             setItemId(item.id);
                             setSelectedEstimatingID(item.prjct_name);
@@ -2927,11 +2927,13 @@ const Estimator = () => {
                             setshowEstimatingEditModal(true);
                           }}
                         >
-                          Edit
-                        </button>
+                          <i class="fa-solid fa-pen-to-square size11 edit "></i>
+                        </div>
 
-                        <button
-                          className="btn dropbtns btn-success"
+                        <div
+                        type="button"
+                        className="pb-2"
+      
                           onClick={() => {
                             console.log(item.prjct_name);
                             setItemId(item.id);
@@ -2944,10 +2946,10 @@ const Estimator = () => {
                             setPurposalModal(true);
                           }}
                         >
-                          Create
-                        </button>
-                        <button
-                          className="btn dropbtns btn-danger"
+                          <i class="fa-solid fa-square-plus size11"></i>
+                        </div>
+                        {/* <div
+                          className="dropbtns"
                           onClick={() => {
                             console.log(item.prjct_name);
                             setItemId(item.id);
@@ -2959,17 +2961,18 @@ const Estimator = () => {
                             setshowProjectModal(true);
                           }}
                         >
-                          project
-                        </button>
+                          <i class="fa-solid fa-tarp"></i>
+                        </div> */}
 
-                        <button
-                          className="btn dropbtns btn-secondary"
+                        <div
+                          
+                          type="button"
                           onClick={() => {
                             navigate(`/homepage/rawproposal/${item.id}`);
                           }}
                         >
-                          View
-                        </button>
+                         <i class="fa-solid fa-eye size11"></i>
+                        </div>
                       </div>
                     </td>
                   </tr>

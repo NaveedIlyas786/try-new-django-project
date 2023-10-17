@@ -229,7 +229,7 @@ const Dashboard = () => {
       <div className="ms-4 mb-2 btn-group dropright">
         <button
           type="button"
-          className="btn btn-success dropdown-toggle"
+          className="btn  dropdown-toggle"
           data-bs-toggle="dropdown"
           aria-expanded="false"
         >
@@ -586,9 +586,9 @@ const Dashboard = () => {
                 <Bar dataKey="Lost" stackId="a" fill="#ff7f7f" />
               </BarChart>
               <div className="mt-2 d-flex totalamount">
-                <h1>Total Amount: </h1>
+                <h1 className="dashh">Total Amount: </h1>
                 {companyiesData[2] && (
-                  <h1>
+                  <h1 className="dashh">
                     {formatNumberWithCommas(
                       companyiesData[2].total_won_bid_amount
                     )}

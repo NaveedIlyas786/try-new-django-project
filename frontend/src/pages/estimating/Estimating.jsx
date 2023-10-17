@@ -281,7 +281,14 @@ const Estimator = () => {
       })
       .then((response) => {
         console.log("Data successfully submitted", response.data);
-        // dispatch(addProject(response.data));
+        const updatedEstimatingData = estimatingData.filter(
+          (entry) => entry.id !== formData.estimating // Replace 'id' with your actual identifier field
+        );
+  
+  
+        setshowProjectModal(false);
+        setEstimatingData(updatedEstimatingData);
+
 
         // Clear the form fields by resetting the state variables
         setStartDate(""); 

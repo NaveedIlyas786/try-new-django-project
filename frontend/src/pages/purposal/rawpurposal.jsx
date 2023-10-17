@@ -124,12 +124,13 @@ function Rawpurposal() {
                   proposal:
                 </p>
                 <ul>
-                  {entry.Addendums.map((e) => (
-                    <li key={`${e.id}-${e.addendum_Number}`}>
-                      Addendum #{e.addendum_Number} Dated{" "}
-                      <span className="addendumdate ms-1">{e.date}</span>
-                    </li>
-                  ))}
+                {entry.Addendums.map((e) => (
+  <li key={`${e.id}-${e.addendum_Number}`}>
+    Addendum #{e.addendum_Number} Dated{" "}
+    <span className="addendumdate ms-1">{e.date}</span>
+  </li>
+))}
+
                 </ul>
               </div>
               <div className="dmsdrywall">

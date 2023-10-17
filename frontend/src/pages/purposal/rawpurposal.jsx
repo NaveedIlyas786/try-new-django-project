@@ -7,6 +7,7 @@ import { useReactToPrint } from "react-to-print";
 import axios from "axios";
 import html2pdf from "html2pdf.js";
 
+
 function Rawpurposal() {
   const { id } = useParams();
   const [proposalData, setProposalData] = useState(null);
@@ -86,17 +87,20 @@ function Rawpurposal() {
 
   return (
     <div className="rawk">
-      <div id="pdf-content">
-        <button className="btn btn-success" onClick={generatePDF}>
-          PDF
+      
+      <div className="pdfside ">
+        <button className="btn" onClick={generatePDF} style={{width:"70px"}}>
+          {/* <img src="../../../src/assets/pngegg.png" alt="PDF IMAGE" style={{width:"100px", height:'60px'}} /> */}
+          <i class="fa-solid fa-file-pdf" style={{fontSize:"38px", color:"#ee1d22", fontWeight:"900"}}></i>
         </button>
         <img
           onClick={sendMyEmail}
-          style={{ width: "100px" }}
+          style={{ width: "100px", cursor: "pointer" ,height:'60px'}}
           src="../../../src/assets/emailImg.png"
           alt="EMail img"
         />
-        <div ref={conponentPDF} id="pdf-content">
+        </div>
+        <div ref={conponentPDF} id="pdf-content" className="mt-5">
           <header className="header">
             <div className="topSection">
               <img
@@ -106,7 +110,7 @@ function Rawpurposal() {
               />
               <div className="rightTop">
                 <p className="topinfo">2900 E. Belle Terrace,</p>
-                <p className="topinfo">Unit A</p>
+                <p className="topinfo newww">Unit A</p>
                 <p className="topinfo">Bakersfield, CA 93307</p>
                 <p className="topinfo">Office (415) 508-4968</p>
                 <p className="topinfo">Fax (415) 508-4585</p>
@@ -117,8 +121,8 @@ function Rawpurposal() {
           {proposalData && (
             <main>
               <div>
-                <p>January 24, 2023</p>
-                <p className="">
+                <p className="fs-5">January 24, 2023</p>
+                <p className="fs-6 DMS">
                   <strong> DMS Drywall & Interior Systems Inc.</strong> is
                   submitting the following bid proposal for the{" "}
                   <strong> {proposalData.estimating}</strong> The plans used to
@@ -128,13 +132,13 @@ function Rawpurposal() {
                 </p>
               </div>
               <div className="Addendum">
-                <p>
+                <p className="DMS">
                   The following addendums were also included in the bid
                   proposal:
                 </p>
-                <ul>
-                  {proposalData.Addendums.map((e) => (
-                    <li key={`${e.id}-${e.addendum_Number}`}>
+                <ul >
+                  {proposalData.Addendums.map((e) => (  
+                    <li key={`${e.id}-${e.addendum_Number}`} className="DMS">
                       Addendum #{e.addendum_Number} Dated{" "}
                       <span className="addendumdate ms-1">{e.date}</span>
                     </li>
@@ -142,22 +146,22 @@ function Rawpurposal() {
                 </ul>
               </div>
               <div className="dmsdrywall">
-                <p>
+                <p className="DMS">
                   <strong> DMS Drywall & Interior Systems Inc.</strong> submits
                   the below price for the following scope:
                 </p>
               </div>
               {proposalData.spcifc.map((e) => (
-                <div className="baseBiddrywall" key={e.id}>
-                  <h4 className="baseh4">
+                <div className="baseBiddrywall " key={e.id}>
+                  <h4 className="baseh4  ">
                     {e.specific_name} : $
-                    <span className="ms-1">{e.budget}.00</span>
+                    <span className="ms-1 baseh4">{e.budget}.00</span>
                   </h4>
                   <ul className="mt-3">
                     {e.sefic.map((a) => (
-                      <li className="li ms-4" key={a.id}>
+                      <li className="li ms-4 fwww" key={a.id} >
                         <h5 key={`${e.id}-${a.id}`}>
-                          {a.number} <span className="ms-2">{a.sefic}</span>
+                          {a.number} <span className="ms-2 fwww  ">{a.sefic}</span>
                         </h5>
                       </li>
                     ))}
@@ -166,52 +170,52 @@ function Rawpurposal() {
               ))}
 
               <div className="drywall-interior">
-                <h4>
+                <h4 className="baseh5">
                   DMS Drywall & Interior Systems Inc. Signatory to the
                   Carpenters Union
                 </h4>
               </div>
-              <div className="inclusions">
+              <div className="inclusions ms-3">
                 <p>
-                  <strong>INCLUSIONS:</strong>
+                  <strong className="headd">INCLUSIONS:</strong>
                 </p>
                 <ul>
                   {proposalData.services
                     .filter((a) => a.service_type === "IN")
                     .map((e) => (
-                      <li key={e.id}>{e.service}</li>
+                      <li key={e.id} className="DMS ms-5">{e.service}</li>
                     ))}
                 </ul>
               </div>
-              <div className="exclusions">
+              <div className="exclusions ms-3 mt-4">
                 <p>
-                  <strong>EXCLUSIONS:</strong>
+                  <strong className="headd">EXCLUSIONS:</strong>
                 </p>
                 <ul>
                   {proposalData.services
                     .filter((a) => a.service_type === "EX")
                     .map((e) => (
-                      <li key={e.id}>{e.service}</li>
+                      <li key={e.id} className="DMS ms-5 ">{e.service}</li>
                     ))}
                 </ul>
               </div>
-              <div className="qualifications">
+              <div className="qualifications ms-3 mt-4">
                 <p>
-                  <strong>QUALIFICATIONS:</strong>
+                  <strong className="headd">QUALIFICATIONS:</strong>
                 </p>
                 <ul>
                   {qualificationData.map((e) => (
-                    <li key={e.id}>{e.detail}</li>
+                    <li key={e.id} className="DMS ms-5">{e.detail}</li>
                   ))}
                 </ul>
               </div>
               <div className="estimator">
-                <p className="myesti"> Louie Hoelscher </p>
-                <p className="myesti"> 636-383-2105 </p>
+                <p className="myesti "> Louie Hoelscher </p>
+                <p className="myesti DMS">cell: 636-383-2105 </p>
               </div>
             </main>
           )}
-        </div>
+        
       </div>
     </div>
   );

@@ -24,15 +24,16 @@ const AdminDecisionpage = () => {
 
   return (
     <div className="admindecisionPage">
-      <div className="contentwaiting px-5">
-        <h1>
-          Please Take a decision and choose (Approval/Rejection) regarding
+      <div className=" px-5 contentwait">
+      <div className="newcontent">
+        <h1 className="DMS fw-2 dmsh1">
+          Please Take a decision and choose (<span className="span12 ss1">Approval</span>/<span className="span12 ss2">Rejection</span>) regarding
           registration Request
         </h1>
         {userData && (
-          <h2>
-            {userData.full_Name} is sending you the request for joining the DMS
-            System and needs your approval
+          <h2 className="DMS dmsh2">
+            {userData.full_Name} needs your approval for registration in  <span className="span11">DMS System</span>
+           
           </h2>
         )}
         <div className="d-flex justify-content-center gap-3">
@@ -52,7 +53,7 @@ const AdminDecisionpage = () => {
                   console.error("Approval failed:", error);
                 });
             }}
-            className="btn btn-success"
+            className="btn newbtnsuccess"
           >
             Approve
           </button>
@@ -75,11 +76,12 @@ const AdminDecisionpage = () => {
                   console.error("Rejection failed:", error);
                 });
             }}
-            className="btn btn-danger"
+            className="btn newbtnsuccess1"
           >
             Reject
           </button>
         </div>
+      </div>
       </div>
     </div>
   );

@@ -1,3 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+/* *{
+    font-family: 'Poppins', sans-serif;
+} */
+
+
+
+
+
+
 /* Updated CSS */
 .addendumdate {
   text-decoration: underline;
@@ -11,6 +22,39 @@
   padding-top: 30mm; /* Adjust padding as needed */
   page-break-before: always; /* Force a page break before this element */
 }
-.emailbtn{
-  cursor: pointer;
+.rightTop{
+  color: #014db1;
+  font-family: 'Poppins', sans-serif;
+}
+.topinfo{
+  font-size: 20px !important;
+  font-weight: 400;
+}
+.DMS{
+  font-family: 'Poppins', sans-serif;
+}
+.myesti{
+  font-weight: 700 !important;
+  font-size: 20px;
+}
+.headd{
+  text-decoration: underline;
+}
+.newww{
+  text-align: right;
+  padding-right: 40px;
+}
+.fwww{
+  font-weight: bold !important;
+}
+.pdfside{
+  float: right;
+  padding: 0px 50px;
+  margin-bottom: 40px !important;
+}
+.baseh4{
+  font-size: 18px;
+}
+.baseh5{
+  font-size: 21px;
 }

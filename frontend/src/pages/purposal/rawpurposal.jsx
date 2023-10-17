@@ -97,7 +97,7 @@ function Rawpurposal() {
               />
               <div className="rightTop">
                 <p className="topinfo">2900 E. Belle Terrace,</p>
-                <p className="topinfo">Unit A</p>
+                <p className="topinfo newww">Unit A</p>
                 <p className="topinfo">Bakersfield, CA 93307</p>
                 <p className="topinfo">Office (415) 508-4968</p>
                 <p className="topinfo">Fax (415) 508-4585</p>
@@ -119,7 +119,7 @@ function Rawpurposal() {
                 </p>
               </div>
               <div className="Addendum">
-                <p>
+                <p className="DMS">
                   The following addendums were also included in the bid
                   proposal:
                 </p>
@@ -133,7 +133,7 @@ function Rawpurposal() {
                 </ul>
               </div>
               <div className="dmsdrywall">
-                <p>
+                <p className="DMS">
                   <strong> DMS Drywall & Interior Systems Inc.</strong> submits
                   the below price for the following scope:
                 </p>
@@ -142,13 +142,13 @@ function Rawpurposal() {
                 <div className="baseBiddrywall" key={e.id}>
                   <h4 className="baseh4">
                     {e.specific_name} : $
-                    <span className="ms-1">{e.budget}.00</span>
+                    <span className="ms-1 baseh4">{e.budget}.00</span>
                   </h4>
                   <ul className="mt-3">
                     {e.sefic.map((a) => (
-                      <li className="li ms-4" key={a.id}>
+                      <li className="li ms-4 fwww" key={a.id} >
                         <h5 key={`${e.id}-${a.id}`}>
-                          {a.number} <span className="ms-2">{a.sefic}</span>
+                          {a.number} <span className="ms-2 fwww  ">{a.sefic}</span>
                         </h5>
                       </li>
                     ))}
@@ -157,48 +157,48 @@ function Rawpurposal() {
               ))}
 
               <div className="drywall-interior">
-                <h4>
+                <h4 className="baseh5">
                   DMS Drywall & Interior Systems Inc. Signatory to the
                   Carpenters Union
                 </h4>
               </div>
-              <div className="inclusions">
+              <div className="inclusions ms-3">
                 <p>
-                  <strong>INCLUSIONS:</strong>
+                  <strong className="headd">INCLUSIONS:</strong>
                 </p>
                 <ul>
                   {entry.services
                     .filter((a) => a.service_type === "IN")
                     .map((e) => (
-                      <li key={e.id}>{e.service}</li>
+                      <li key={e.id} className="DMS ms-5">{e.service}</li>
                     ))}
                 </ul>
               </div>
-              <div className="exclusions">
+              <div className="exclusions ms-3 mt-4">
                 <p>
-                  <strong>EXCLUSIONS:</strong>
+                  <strong className="headd">EXCLUSIONS:</strong>
                 </p>
                 <ul>
                   {entry.services
                     .filter((a) => a.service_type === "EX")
                     .map((e) => (
-                      <li key={e.id}>{e.service}</li>
+                      <li key={e.id} className="DMS ms-5 ">{e.service}</li>
                     ))}
                 </ul>
               </div>
-              <div className="qualifications">
+              <div className="qualifications ms-3 mt-4">
                 <p>
-                  <strong>QUALIFICATIONS:</strong>
+                  <strong className="headd">QUALIFICATIONS:</strong>
                 </p>
                 <ul>
                   {qualificationData.map((e) => (
-                    <li key={e.id}>{e.detail}</li>
+                    <li key={e.id} className="DMS ms-5">{e.detail}</li>
                   ))}
                 </ul>
               </div>
               <div className="estimator">
-                <p className="myesti"> Louie Hoelscher </p>
-                <p className="myesti"> 636-383-2105 </p>
+                <p className="myesti "> Louie Hoelscher </p>
+                <p className="myesti DMS">cell: 636-383-2105 </p>
               </div>
           </main>
         ))}

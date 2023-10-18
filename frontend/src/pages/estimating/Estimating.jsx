@@ -274,6 +274,22 @@ const Estimator = () => {
     ro_window: "",
     substitution: "",
   });
+  const [ProjectStep4FormData, setProjectStep4FormData] = useState({
+    contracts: [],
+    schedule_of_values: [],
+    insurancs: [],
+    bond: [],
+  });
+  const [ProjectStep5FormData, setProjectStep5FormData] = useState({
+    zliens: [],
+    submittals: [],
+  });
+  const [ProjectStep6FormData, setProjectStep6FormData] = useState({
+    shopdrawing: [],
+    safity: [],
+    schedule: [],
+    sub_contractors: [],
+  });
 
   // Function to handle form submission
   //TODO: Multistep Form  React Code
@@ -854,18 +870,6 @@ const Estimator = () => {
         const responseData = await response.json();
         // console.log("Response data:", responseData);
         console.log("Data Successfully Submitted !", responseData);
-
-        // const submittedData = {
-        //   date: step0FormData.date,
-        //   estimating: step0FormData.estimating,
-        //   architect_name: step0FormData.architect_name,
-        //   architect_firm: step0FormData.architect_firm,
-        //   Addendums: step1FormData.Addendums,
-        //   spcifc: step2FormData,
-        //   services: services,
-        // };
-        // localStorage.setItem('proposalData', JSON.stringify(submittedData));
-        // dispatch(storeProposalData(submittedData));
 
         // Clear form fields after successful submission
         setStep0FormData({
@@ -2144,66 +2148,6 @@ const Estimator = () => {
                                 </div>
                               </div>
                             </div>
-                            <div style={{ width: "100%" }}>
-                              <div>
-                                <label className="form-label">
-                                  <span>SUBMITTALSS</span>
-                                </label>
-                                <div id="" className="input-group">
-                                  <select
-                                    className="form-select"
-                                    placeholder="Contract"
-                                    id="ProjectEngineerID"
-                                    value=""
-                                    onChange={() => {}}
-                                  >
-                                    <option value="">Select Choice</option>
-                                    <option value="On build">
-                                      Fully Executed
-                                    </option>
-                                    <option value="Pending">Pending</option>
-                                  </select>
-                                  <input
-                                    id=""
-                                    type="date"
-                                    name="date" // Set the name attribute to differentiate
-                                    className="form-control"
-                                    value=""
-                                    onChange={() => {}}
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                            <div style={{ width: "100%" }}>
-                              <div>
-                                <label className="form-label">
-                                  <span>RO-Window:</span>
-                                </label>
-                                <div id="" className="input-group">
-                                  <select
-                                    className="form-select"
-                                    placeholder="Contract"
-                                    id="ProjectEngineerID"
-                                    value=""
-                                    onChange={() => {}}
-                                  >
-                                    <option value="">Select Choice</option>
-                                    <option value="On build">
-                                      Fully Executed
-                                    </option>
-                                    <option value="Pending">Pending</option>
-                                  </select>
-                                  <input
-                                    id=""
-                                    type="date"
-                                    name="date" // Set the name attribute to differentiate
-                                    className="form-control"
-                                    value=""
-                                    onChange={() => {}}
-                                  />
-                                </div>
-                              </div>
-                            </div>
 
                             <div style={{ width: "100%" }}>
                               <label
@@ -2434,7 +2378,7 @@ const Estimator = () => {
                                 Add SHOP DRAWINGS
                               </button>
                             </div>
-                            <div className="px-3" style={{ width: "100%" }}>
+                            <div  style={{ width: "100%" }}>
                               <label
                                 htmlFor="projectName"
                                 className="form-label mt-2"
@@ -2561,7 +2505,7 @@ const Estimator = () => {
                                 Add SAFITYs
                               </button>
                             </div>
-                            <div className="px-3" style={{ width: "100%" }}>
+                            <div  style={{ width: "100%" }}>
                               <label
                                 htmlFor="projectName"
                                 className="form-label mt-2"
@@ -2653,7 +2597,7 @@ const Estimator = () => {
                                 Add Schedule
                               </button>
                             </div>
-                            <div className="px-3" style={{ width: "100%" }}>
+                            <div  style={{ width: "100%" }}>
                               <label
                                 htmlFor="projectName"
                                 className="form-label mt-2"
@@ -2851,7 +2795,7 @@ const Estimator = () => {
                               </div>
                               {/* ))} */}
                             </div>
-                            <div className="px-3" style={{ width: "100%" }}>
+                            <div  style={{ width: "100%" }}>
                               <label
                                 htmlFor="projectName"
                                 className="form-label mt-2"
@@ -2918,7 +2862,7 @@ const Estimator = () => {
                               </div>
                               {/* ))} */}
                             </div>
-                            <div className="px-3" style={{ width: "100%" }}>
+                            <div  style={{ width: "100%" }}>
                               <label
                                 htmlFor="projectName"
                                 className="form-label mt-2"
@@ -2993,7 +2937,7 @@ const Estimator = () => {
                         )}
                         {projectactiveStep === 7 && (
                           <div className=" mt-3">
-                            <div className="px-3" style={{ width: "100%" }}>
+                            <div  style={{ width: "100%" }}>
                               <label
                                 htmlFor="projectName"
                                 className="form-label mt-2"
@@ -3090,7 +3034,7 @@ const Estimator = () => {
                               {/* ))} */}
                             </div>
 
-                            <div className="px-3" style={{ width: "100%" }}>
+                            <div  style={{ width: "100%" }}>
                               <label
                                 htmlFor="projectName"
                                 className="form-label mt-2"
@@ -3175,7 +3119,7 @@ const Estimator = () => {
                               </div>
                               {/* ))} */}
                             </div>
-                            <div className="px-3" style={{ width: "100%" }}>
+                            <div  style={{ width: "100%" }}>
                               <label
                                 htmlFor="projectName"
                                 className="form-label mt-2"

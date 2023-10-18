@@ -247,7 +247,7 @@ const Estimator = () => {
     setSelectedProjectManager(e.target.value);
 
   // ****************** Smart way to handle Nested Fields with multistep form **********
-  const [ProjectStep0FormData, setProjectStep0FormData] = useState({
+  const [ProjectStep1FormData, setProjectStep1FormData] = useState({
     start_date: getCurrentDate(),
     estimating: selectedEstimatingID,
     job_num: "",
@@ -255,6 +255,24 @@ const Estimator = () => {
     Forman: "",
     bim_oprtr: "",
     prjct_engnr: "",
+  });
+  const [ProjectStep2FormData, setProjectStep2FormData] = useState({
+    general_superintendent: "",
+    addendums: "",
+    project_address: "",
+    Spec: "",
+    bid: "",
+    wall_type: "",
+    drywell: "",
+  });
+  const [ProjectStep3FormData, setProjectStep3FormData] = useState({
+    finish: "",
+    progress: "",
+    contacts: "",
+    status: "",
+    ro_door: "",
+    ro_window: "",
+    substitution: "",
   });
 
   // Function to handle form submission
@@ -283,28 +301,37 @@ const Estimator = () => {
     e.preventDefault();
 
     const formData = {
-      start_date: ProjectStep0FormData.start_date,
-      job_num: ProjectStep0FormData.job_num,
-      estimating: ProjectStep0FormData.estimating,
-      prjct_mngr: ProjectStep0FormData.prjct_mngr,
-      Forman: ProjectStep0FormData.Forman,
-      bim_oprtr: ProjectStep0FormData.bim_oprtr,
-      prjct_engnr: ProjectStep0FormData.prjct_engnr,
+      // *****step 01
+      start_date: ProjectStep1FormData.start_date,
+      job_num: ProjectStep1FormData.job_num,
+      estimating: ProjectStep1FormData.estimating,
+      prjct_mngr: ProjectStep1FormData.prjct_mngr,
+      Forman: ProjectStep1FormData.Forman,
+      bim_oprtr: ProjectStep1FormData.bim_oprtr,
+      prjct_engnr: ProjectStep1FormData.prjct_engnr,
+
+      // *****step 02
+
+      general_superintendent: ProjectStep2FormData.general_superintendent,
+      addendums: ProjectStep2FormData.addendums,
+      project_address: ProjectStep2FormData.project_address,
+      bid: ProjectStep2FormData.bid,
+      Spec: ProjectStep2FormData.Spec,
+      drywell: ProjectStep2FormData.drywell,
+      wall_type: ProjectStep2FormData.wall_type,
       
-      general_superintendent: SelectedGeneralSuperintendent,
-      project_address: selectedProjectAddress,
-      addendums: selectedAddendum,
-      bid: selectedBid,
-      Spec: selectedspec,
-      wall_type: selectedWallType,
-      progress: selectedPROGRESSTRACKING,
-      finish: selectedFINISHLEVELMARKUPS,
-      drywell: selectedDrywell,
-      ro_door: selectedRO_Door,
-      ro_window: selectedRO_Window,
-      status: selectedProjectStatus,
-      contacts: selectedContacts,
-      substitution: selectedSubstitution,
+      // *****step 03
+
+      finish: ProjectStep3FormData.finish,
+      progress: ProjectStep3FormData.progress,
+      contacts: ProjectStep3FormData.contacts,
+      ro_door: ProjectStep3FormData.ro_door,
+      ro_window: ProjectStep3FormData.ro_window,
+      status: ProjectStep3FormData.status,
+      substitution: ProjectStep3FormData.substitution,
+
+      // *****step 04
+
       contracts: selectedContract, //........
       contract_date: selectedProjectDate, //........
     };
@@ -1393,10 +1420,10 @@ const Estimator = () => {
                                   className="form-control"
                                   id="dateId"
                                   name="dateID"
-                                  value={ProjectStep0FormData.start_date}
+                                  value={ProjectStep1FormData.start_date}
                                   onChange={(e) =>
-                                    setProjectStep0FormData({
-                                      ...ProjectStep0FormData,
+                                    setProjectStep1FormData({
+                                      ...ProjectStep1FormData,
                                       start_date: e.target.value,
                                     })
                                   }
@@ -1414,10 +1441,10 @@ const Estimator = () => {
                                   name="jobNumber"
                                   id="jobNumber"
                                   className="form-control"
-                                  value={ProjectStep0FormData.job_num}
+                                  value={ProjectStep1FormData.job_num}
                                   onChange={(e) =>
-                                    setProjectStep0FormData({
-                                      ...ProjectStep0FormData,
+                                    setProjectStep1FormData({
+                                      ...ProjectStep1FormData,
                                       job_num: e.target.value,
                                     })
                                   }
@@ -1436,10 +1463,10 @@ const Estimator = () => {
                                   className="form-select"
                                   id="projectManagerID"
                                   name="dateID"
-                                  value={ProjectStep0FormData.prjct_mngr}
+                                  value={ProjectStep1FormData.prjct_mngr}
                                   onChange={(e) =>
-                                    setProjectStep0FormData({
-                                      ...ProjectStep0FormData,
+                                    setProjectStep1FormData({
+                                      ...ProjectStep1FormData,
                                       prjct_mngr: e.target.value,
                                     })
                                   }
@@ -1472,10 +1499,10 @@ const Estimator = () => {
                                   className="form-select"
                                   id="formanID"
                                   name="formanID"
-                                  value={ProjectStep0FormData.Forman}
+                                  value={ProjectStep1FormData.Forman}
                                   onChange={(e) =>
-                                    setProjectStep0FormData({
-                                      ...ProjectStep0FormData,
+                                    setProjectStep1FormData({
+                                      ...ProjectStep1FormData,
                                       Forman: e.target.value,
                                     })
                                   }
@@ -1508,10 +1535,10 @@ const Estimator = () => {
                                   className="form-select"
                                   id="bimOperatorID"
                                   name="bimOperatorID"
-                                  value={ProjectStep0FormData.bim_oprtr}
+                                  value={ProjectStep1FormData.bim_oprtr}
                                   onChange={(e) =>
-                                    setProjectStep0FormData({
-                                      ...ProjectStep0FormData,
+                                    setProjectStep1FormData({
+                                      ...ProjectStep1FormData,
                                       bim_oprtr: e.target.value,
                                     })
                                   }
@@ -1541,10 +1568,10 @@ const Estimator = () => {
                                   className="form-select"
                                   id="ProjectEngineerID"
                                   name="ProjectEngineerID"
-                                  value={ProjectStep0FormData.prjct_engnr}
+                                  value={ProjectStep1FormData.prjct_engnr}
                                   onChange={(e) =>
-                                    setProjectStep0FormData({
-                                      ...ProjectStep0FormData,
+                                    setProjectStep1FormData({
+                                      ...ProjectStep1FormData,
                                       prjct_engnr: e.target.value,
                                     })
                                   }
@@ -1581,9 +1608,15 @@ const Estimator = () => {
                                 </label>
                                 <select
                                   className="form-select"
-                                  id="ProjectEngineerID"
-                                  value={SelectedGeneralSuperintendent}
-                                  onChange={handleGenralSuperintendentChange}
+                                  id="general_superintendent"
+                                  name="general_superintendent"
+                                  value={ProjectStep2FormData.general_superintendent}
+                                  onChange={(e) =>
+                                    setProjectStep2FormData({
+                                      ...ProjectStep2FormData,
+                                      general_superintendent: e.target.value,
+                                    })
+                                  }
                                 >
                                   <option value="">
                                     Select Project Engineer
@@ -1612,9 +1645,15 @@ const Estimator = () => {
                                 </label>
                                 <select
                                   className="form-select"
-                                  id="bimOperatorID"
-                                  value={selectedAddendum} // Use the selectedBimOperator value
-                                  onChange={handleSelectedAddendumChange}
+                                  id="addundumID"
+                                  name="addundumID"
+                                  value={ProjectStep2FormData.addendums}
+                                  onChange={(e) =>
+                                    setProjectStep2FormData({
+                                      ...ProjectStep2FormData,
+                                      addendums: e.target.value,
+                                    })
+                                  }
                                 >
                                   <option value="">Select Addendum</option>
                                   <option value="Available">Available</option>
@@ -1634,10 +1673,16 @@ const Estimator = () => {
                               <input
                                 type="text"
                                 className="form-control"
-                                id="projectName"
+                                id="projectaddress"
+                                name="projectaddress"
                                 placeholder="Your project address!"
-                                value={selectedProjectAddress}
-                                onChange={handleProjectAddressChange}
+                                value={ProjectStep2FormData.project_address}
+                                onChange={(e) =>
+                                  setProjectStep2FormData({
+                                    ...ProjectStep2FormData,
+                                    project_address: e.target.value,
+                                  })
+                                }
                               />
                             </div>
                             <div className="bothDiv gap-3">
@@ -1650,9 +1695,15 @@ const Estimator = () => {
                                 </label>
                                 <select
                                   className="form-select"
-                                  id="bimOperatorID"
-                                  value={selectedspec} // Use the selectedBimOperator value
-                                  onChange={handleSelectedSpecChange}
+                                  id="SpecID"
+                                  name="SpecID"
+                                  value={ProjectStep2FormData.Spec}
+                                onChange={(e) =>
+                                  setProjectStep2FormData({
+                                    ...ProjectStep2FormData,
+                                    Spec: e.target.value,
+                                  })
+                                }
                                 >
                                   <option value="">Select Spec's</option>
                                   <option value="Available">Available</option>
@@ -1670,9 +1721,15 @@ const Estimator = () => {
                                 </label>
                                 <select
                                   className="form-select"
-                                  id="ProjectEngineerID"
-                                  value={selectedBid}
-                                  onChange={handleSelectedBidChange}
+                                  id="ProjectBid"
+                                  name="ProjectBid"
+                                  value={ProjectStep2FormData.bid}
+                                  onChange={(e) =>
+                                    setProjectStep2FormData({
+                                      ...ProjectStep2FormData,
+                                      bid: e.target.value,
+                                    })
+                                  }
                                 >
                                   <option value="">Select Bid</option>
                                   <option value="Available">Available</option>
@@ -1692,9 +1749,15 @@ const Estimator = () => {
                                 </label>
                                 <select
                                   className="form-select"
-                                  id="ProjectEngineerID"
-                                  value={selectedDrywell}
-                                  onChange={handleDrywellChange}
+                                  id="Projectdrywell"
+                                  name="Projectdrywell"
+                                  value={ProjectStep2FormData.drywell}
+                                  onChange={(e) =>
+                                    setProjectStep2FormData({
+                                      ...ProjectStep2FormData,
+                                      drywell: e.target.value,
+                                    })
+                                  }
                                 >
                                   <option value="">Select Choice</option>
                                   <option value="Submited">Submited</option>
@@ -1711,9 +1774,15 @@ const Estimator = () => {
                                 </label>
                                 <select
                                   className="form-select"
-                                  id="ProjectEngineerID"
-                                  value={selectedWallType}
-                                  onChange={handleWallTypeChange}
+                                  id="Projectwall_type"
+                                  name="Projectwall_type"
+                                  value={ProjectStep2FormData.wall_type}
+                                  onChange={(e) =>
+                                    setProjectStep2FormData({
+                                      ...ProjectStep2FormData,
+                                      wall_type: e.target.value,
+                                    })
+                                  }
                                 >
                                   <option value="">Select Choice</option>
                                   <option value="Completed">Completed</option>
@@ -1736,9 +1805,15 @@ const Estimator = () => {
                                 </label>
                                 <select
                                   className="form-select"
-                                  id="ProjectEngineerID"
-                                  value={selectedFINISHLEVELMARKUPS}
-                                  onChange={handleFINISHLEVELMARKUPSChange}
+                                  id="Projectfinish"
+                                  name="Projectfinish"
+                                  value={ProjectStep3FormData.finish}
+                                  onChange={(e) =>
+                                    setProjectStep3FormData({
+                                      ...ProjectStep3FormData,
+                                      finish: e.target.value,
+                                    })
+                                  }
                                 >
                                   <option value="">Select Choice</option>
                                   <option value="Completed">Completed</option>
@@ -1755,11 +1830,17 @@ const Estimator = () => {
                                 </label>
                                 <select
                                   className="form-select"
-                                  id="ProjectEngineerID"
+                                  id="Projectprogress"
+                                  name="Projectprogress"
                                   // value={selectedPROGRESSTRACKING}
                                   // onChange={handlePROGRESSTRACKINGChange}
-                                  value=""
-                                  onChange={() => {}}
+                                  value={ProjectStep3FormData.progress}
+                                  onChange={(e) =>
+                                    setProjectStep3FormData({
+                                      ...ProjectStep3FormData,
+                                      progress: e.target.value,
+                                    })
+                                  }
                                 >
                                   <option value="">Select Choice</option>
                                   <option value="Completed">Completed</option>
@@ -1778,11 +1859,17 @@ const Estimator = () => {
                                 </label>
                                 <select
                                   className="form-select"
-                                  id="ProjectEngineerID"
+                                  id="ProjectRo_door"
+                                  name="ProjectRo_door"
                                   // value={selectedRO_Door}
                                   // onChange={handleRO_DoorChange}
-                                  value=""
-                                  onChange={() => {}}
+                                  value={ProjectStep3FormData.ro_door}
+                                  onChange={(e) =>
+                                    setProjectStep3FormData({
+                                      ...ProjectStep3FormData,
+                                      ro_door: e.target.value,
+                                    })
+                                  }
                                 >
                                   <option value="">Select Choice</option>
                                   <option value="Working">Working</option>
@@ -1800,11 +1887,17 @@ const Estimator = () => {
                                 </label>
                                 <select
                                   className="form-select"
-                                  id="ProjectEngineerID"
+                                  id="ProjectRO-Window"
+                                  name="ProjectRO-Window"
                                   // value={selectedRO_Window}
                                   // onChange={handleRO_WindowChange}
-                                  value=""
-                                  onChange={() => {}}
+                                  value={ProjectStep3FormData.ro_window}
+                                  onChange={(e) =>
+                                    setProjectStep3FormData({
+                                      ...ProjectStep3FormData,
+                                      ro_window: e.target.value,
+                                    })
+                                  }
                                 >
                                   <option value="">Select Choice</option>
                                   <option value="Working">Working</option>
@@ -1827,8 +1920,13 @@ const Estimator = () => {
                                   id="ProjectEngineerID"
                                   // value={selectedProjectStatus}
                                   // onChange={handleProjectStatusChange}
-                                  value=""
-                                  onChange={() => {}}
+                                  value={ProjectStep3FormData.status}
+                                  onChange={(e) =>
+                                    setProjectStep3FormData({
+                                      ...ProjectStep3FormData,
+                                      status: e.target.value,
+                                    })
+                                  }
                                 >
                                   <option value="">Select Bid</option>
                                   <option value="C">C</option>
@@ -1847,11 +1945,17 @@ const Estimator = () => {
                                 </label>
                                 <select
                                   className="form-select"
-                                  id="ProjectEngineerID"
+                                  id="Projectcontacts"
+                                  name="Projectcontacts"
                                   // value={selectedContacts}
                                   // onChange={handleContactsChange}
-                                  value=""
-                                  onChange={() => {}}
+                                  value={ProjectStep3FormData.contacts}
+                                  onChange={(e) =>
+                                    setProjectStep3FormData({
+                                      ...ProjectStep3FormData,
+                                      contacts: e.target.value,
+                                    })
+                                  }
                                 >
                                   <option value="">Select Bid</option>
                                   <option value="On build">On build</option>
@@ -1869,12 +1973,18 @@ const Estimator = () => {
                               <input
                                 type="text"
                                 className="form-control"
-                                id="projectName"
+                                id="projectsubstitution"
+                                name="projectsubstitution"
                                 placeholder="Write here!"
                                 // value={selectedSubstitution}
                                 // onChange={handleSubstitutionChange}
-                                value=""
-                                onChange={() => {}}
+                                value={ProjectStep3FormData.substitution}
+                                  onChange={(e) =>
+                                    setProjectStep3FormData({
+                                      ...ProjectStep3FormData,
+                                      substitution: e.target.value,
+                                    })
+                                  }
                               />
                             </div>
                           </>

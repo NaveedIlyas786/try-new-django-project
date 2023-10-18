@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "font-awesome/css/font-awesome.min.css";
 import "react-datepicker/dist/react-datepicker.css";
 import { fetchEstimatingData } from "../../store/EstimatingSlice";
-import { addProject } from "../../store/ProjectFormSlice";
+// import { addProject } from "../../store/ProjectFormSlice";
 import { Modal, Button, Stepper, Step, StepLabel } from "@mui/material";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -15,9 +15,8 @@ import ParticlesAnimation from "../../components/particleAnimation/ParticlesAnim
 import { useSelector, useDispatch } from "react-redux";
 import { updateStatus } from "../../store/EstimatingSlice";
 import { createSelector } from "reselect";
-import { storeProposalData } from "../../store/EstimatingProposalSlice";
-import Rawpurposal from "../purposal/rawpurposal";
-import { margin } from "@mui/system";
+// import { storeProposalData } from "../../store/EstimatingProposalSlice";
+// import { margin } from "@mui/system";
 
 const Estimator = () => {
   // const [data, setData] = useState([]);

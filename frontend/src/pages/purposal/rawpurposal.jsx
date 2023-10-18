@@ -98,127 +98,133 @@ function Rawpurposal() {
         alt="EMail img"
         className="emailbtn"
       />
-     {filteredEntries.map((entry, index) => (
+      {filteredEntries.length > 0 ? (
+  filteredEntries.map((entry, index) => (
     <div key={index}>
-      <div className="header">
-        <div className="topSection">
-          <img
-            className="logoimg"
-            src="../../../src/assets/purposal_logo-top.png"
-            alt="myimg"
-          />
-          <div className="rightTop">
-            <p className="topinfo">{entry.estimating.company.adress}</p>
-            {/* <p className="topinfo newww">Unit A</p> */}
-            <p className="topinfo">Bakersfield, CA 93307</p>
-            <p className="topinfo">Office: <span>{entry.estimating.company.office_phone_number}</span> </p>
-            <p className="topinfo">Fax: <span>{entry.estimating.company.fax_number}</span> </p>
-            <p className="topinfo">Email: {entry.estimating.company.email}</p>
-          </div>
+            <div className="header">
+              <div className="topSection">
+                <img
+                  className="logoimg"
+                  src="../../../src/assets/purposal_logo-top.png"
+                  alt="myimg"
+                />
+                <div className="rightTop">
+                  <p className="topinfo">{entry.estimating.company.adress}</p>
+                  {/* <p className="topinfo newww">Unit A</p> */}
+                  <p className="topinfo">Bakersfield, CA 93307</p>
+                  <p className="topinfo">Office: <span>{entry.estimating.company.office_phone_number}</span> </p>
+                  <p className="topinfo">Fax: <span>{entry.estimating.company.fax_number}</span> </p>
+                  <p className="topinfo">Email: {entry.estimating.company.email}</p>
+                </div>
+              </div>
+            </div>
+            <main key={index}>
+        <div>
+          <p>January 24, 2023</p>
+          <p className="">
+            <strong> {entry.estimating.company.Cmpny_Name}</strong> is submitting the following bid proposal for the{" "}
+            <strong>{entry.estimating.prjct_name}</strong>. The plans used to formulate the bid proposal are dated XX/XX/20XX, drafted by
+            <strong>{entry.architect_firm}</strong> FIRM, and approved by
+            <strong>{entry.architect_name}</strong>.
+          </p>
         </div>
+        <div className="Addendum">
+          <p className="DMS">
+            The following addendums were also included in the bid proposal:
+          </p>
+          <ul>
+            {entry.Addendums.map((e) => (
+              <li key={`${e.id}-${e.addendum_Number}`}>
+                Addendum #{e.addendum_Number} Dated{" "}
+                <span className="addendumdate ms-1">{e.date}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="dmsdrywall">
+          <p className="DMS">
+            <strong> DMS Drywall & Interior Systems Inc.</strong> submits
+            the below price for the following scope:
+          </p>
+        </div>
+        {entry.spcifc.map((e) => (
+          <div className="baseBiddrywall" key={e.id}>
+            <h4 className="baseh4">
+              {e.specific_name} : $
+              <span className="ms-1 baseh4">{e.budget}.00</span>
+            </h4>
+            <ul className="mt-3">
+              {e.sefic.map((a) => (
+                <li className="li ms-4 fwww" key={a.id}>
+                  <h5 key={`${e.id}-${a.id}`}>
+                    {a.number}
+                    <span className="ms-2 fwww  ">{a.sefic}</span>
+                  </h5>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      
+        <div className="drywall-interior">
+          <h4 className="baseh5">
+            DMS Drywall & Interior Systems Inc. Signatory to the Carpenters
+            Union
+          </h4>
+        </div>
+        <div className="inclusions ms-3">
+          <p>
+            <strong className="headd">INCLUSIONS:</strong>
+          </p>
+          <ul>
+            {entry.services
+              .filter((a) => a.service_type === "IN")
+              .map((e) => (
+                <li key={e.id} className="DMS ms-5">
+                  {e.service}
+                </li>
+              ))}
+          </ul>
+        </div>
+        <div className="exclusions ms-3 mt-4">
+          <p>
+            <strong className="headd">EXCLUSIONS:</strong>
+          </p>
+          <ul>
+            {entry.services
+              .filter((a) => a.service_type === "EX")
+              .map((e) => (
+                <li key={e.id} className="DMS ms-5 ">
+                  {e.service}
+                </li>
+              ))}
+          </ul>
+        </div>
+        <div className="qualifications ms-3 mt-4">
+          <p>
+            <strong className="headd">QUALIFICATIONS:</strong>
+          </p>
+          <ul>
+            {qualificationData.map((e) => (
+              <li key={e.id} className="DMS ms-5">
+                {e.detail}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="estimator">
+          <p className="myesti "> Louie Hoelscher </p>
+          <p className="myesti DMS">cell: 636-383-2105 </p>
+        </div>
+      </main>
+      
       </div>
-      <main key={index}>
+  ))
+) : (
   <div>
-    <p>January 24, 2023</p>
-    <p className="">
-      <strong> {entry.estimating.company.Cmpny_Name}</strong> is submitting the following bid proposal for the{" "}
-      <strong>{entry.estimating.prjct_name}</strong>. The plans used to formulate the bid proposal are dated XX/XX/20XX, drafted by
-      <strong>{entry.architect_firm}</strong> FIRM, and approved by
-      <strong>{entry.architect_name}</strong>.
-    </p>
+    <p>Sorry: you didn't create the proposal yet. Create it first.</p>
   </div>
-  <div className="Addendum">
-    <p className="DMS">
-      The following addendums were also included in the bid proposal:
-    </p>
-    <ul>
-      {entry.Addendums.map((e) => (
-        <li key={`${e.id}-${e.addendum_Number}`}>
-          Addendum #{e.addendum_Number} Dated{" "}
-          <span className="addendumdate ms-1">{e.date}</span>
-        </li>
-      ))}
-    </ul>
-  </div>
-  <div className="dmsdrywall">
-    <p className="DMS">
-      <strong> DMS Drywall & Interior Systems Inc.</strong> submits
-      the below price for the following scope:
-    </p>
-  </div>
-  {entry.spcifc.map((e) => (
-    <div className="baseBiddrywall" key={e.id}>
-      <h4 className="baseh4">
-        {e.specific_name} : $
-        <span className="ms-1 baseh4">{e.budget}.00</span>
-      </h4>
-      <ul className="mt-3">
-        {e.sefic.map((a) => (
-          <li className="li ms-4 fwww" key={a.id}>
-            <h5 key={`${e.id}-${a.id}`}>
-              {a.number}
-              <span className="ms-2 fwww  ">{a.sefic}</span>
-            </h5>
-          </li>
-        ))}
-      </ul>
-    </div>
-  ))}
-
-  <div className="drywall-interior">
-    <h4 className="baseh5">
-      DMS Drywall & Interior Systems Inc. Signatory to the Carpenters
-      Union
-    </h4>
-  </div>
-  <div className="inclusions ms-3">
-    <p>
-      <strong className="headd">INCLUSIONS:</strong>
-    </p>
-    <ul>
-      {entry.services
-        .filter((a) => a.service_type === "IN")
-        .map((e) => (
-          <li key={e.id} className="DMS ms-5">
-            {e.service}
-          </li>
-        ))}
-    </ul>
-  </div>
-  <div className="exclusions ms-3 mt-4">
-    <p>
-      <strong className="headd">EXCLUSIONS:</strong>
-    </p>
-    <ul>
-      {entry.services
-        .filter((a) => a.service_type === "EX")
-        .map((e) => (
-          <li key={e.id} className="DMS ms-5 ">
-            {e.service}
-          </li>
-        ))}
-    </ul>
-  </div>
-  <div className="qualifications ms-3 mt-4">
-    <p>
-      <strong className="headd">QUALIFICATIONS:</strong>
-    </p>
-    <ul>
-      {qualificationData.map((e) => (
-        <li key={e.id} className="DMS ms-5">
-          {e.detail}
-        </li>
-      ))}
-    </ul>
-  </div>
-  <div className="estimator">
-    <p className="myesti "> Louie Hoelscher </p>
-    <p className="myesti DMS">cell: 636-383-2105 </p>
-  </div>
-</main>
-
-</div>
-))}
+)}
     </div>
   );
 }

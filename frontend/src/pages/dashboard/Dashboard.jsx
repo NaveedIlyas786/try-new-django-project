@@ -271,7 +271,6 @@ const Dashboard = () => {
 
           <div
             className=" row table-responsive table-design pk"
-            data-aos="fade-left"
           >
             <div className="col-md-12">
               <table className="table jk">

@@ -3,8 +3,8 @@ import "./decision.css";
 
 const RejectionPage = () => {
     return (
-    <div className='rejectPage'>
-        <h1>You are not Approved From Admin Side</h1>
+    <div className='rejectPage' >
+        <h1 style={{color:"red"}}>You are not Approved From Admin Side</h1>
     </div>
     )
 }

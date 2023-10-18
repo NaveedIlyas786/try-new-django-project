@@ -69,10 +69,8 @@ function Rawpurposal() {
           }
         }
 
-        // For testing, download the PDF
         pdf.save("test.pdf");
 
-        // Further code to send email with PDF...
       })
       .catch((error) => {
         console.error("Failed to generate PDF:", error);
@@ -129,7 +127,6 @@ function Rawpurposal() {
     <div className="rawk">
       <div className="pdfside ">
         <button className="btn" onClick={generatePDF} style={{ width: "70px" }}>
-          {/* <img src="../../../src/assets/pngegg.png" alt="PDF IMAGE" style={{width:"100px", height:'60px'}} /> */}
           <i
             class="fa-solid fa-file-pdf"
             style={{ fontSize: "38px", color: "#ee1d22", fontWeight: "900" }}
@@ -143,33 +140,31 @@ function Rawpurposal() {
         />
       </div>
         {filteredEntries.length > 0 && (
-      <div ref={conponentPDF} id="pdf-content" className="mt-5">
-        {/* <div className="header">
-              <div className="topSection">
+      <div ref={conponentPDF} id="pdf-content" className=" coverdiv">
+
+            {filteredEntries.map((proposalData) => (
+          <div>
+              <header className="topSection">
                 <img
                   className="logoimg"
                   src="../../../src/assets/purposal_logo-top.png"
                   alt="myimg"
                 />
                 <div className="rightTop">
-                  <p className="topinfo">{entry.estimating.company.adress}</p>
+                  <p className="topinfo">{proposalData.estimating.company.adress}</p>
                   <p className="topinfo">Bakersfield, CA 93307</p>
                   <p className="topinfo">
                     Office:{" "}
-                    <span>{entry.estimating.company.office_phone_number}</span>{" "}
+                    <span>{proposalData.estimating.company.office_phone_number}</span>{" "}
                   </p>
                   <p className="topinfo">
-                    Fax: <span>{entry.estimating.company.fax_number}</span>{" "}
+                    Fax: <span>{proposalData.estimating.company.fax_number}</span>{" "}
                   </p>
                   <p className="topinfo">
-                    Email: {entry.estimating.company.email}
+                    Email: {proposalData.estimating.company.email}
                   </p>
                 </div>
-              </div>
-            </div> */}
-
-          <main>
-            {filteredEntries.map((proposalData) => (
+              </header>
               <div key={proposalData.id}>
                 {/* ... (rest of your existing code) */}
 
@@ -203,15 +198,65 @@ function Rawpurposal() {
                   </ul>
                 </div>
 
-                {/* ... (rest of your existing code) */}
-
-                {proposalData.spcifc.map((e) => (
-                  <div className="baseBiddrywall " key={e.id}>
-                    {/* ... (rest of your existing code) */}
-                  </div>
-                ))}
+                           <div className="dmsdrywall">
+               <p className="DMS">
+                 <strong> DMS Drywall & Interior Systems Inc.</strong> submits
+                 the below price for the following scope:
+               </p>
+             </div>
+             {proposalData.spcifc.map((e) => (
+               <div className="baseBiddrywall " key={e.id}>
+                 <h4 className="baseh4  ">
+                   {e.specific_name} : $
+                   <span className="ms-1 baseh4">{e.budget}.00</span>
+                 </h4>
+                 <ul className="mt-3">
+                   {e.sefic.map((a) => (
+                     <li className="li ms-4 fwww" key={a.id}>
+                       <h5 key={`${e.id}-${a.id}`}>
+                         {a.number}{" "}
+                         <span className="ms-2 fwww  ">{a.sefic}</span>
+                       </h5>
+                     </li>
+                   ))}
+                 </ul>
+               </div>
+             ))}
               </div>
-            ))}
+                         <div className="drywall-interior">
+               <h4 className="baseh5">
+                 DMS Drywall & Interior Systems Inc. Signatory to the Carpenters
+                 Union
+               </h4>
+             </div>
+             <div className="inclusions ms-3">
+               <p>
+                 <strong className="headd">INCLUSIONS:</strong>
+               </p>
+               <ul>
+                 {proposalData.services
+                   .filter((a) => a.service_type === "IN")
+                   .map((e) => (
+                     <li key={e.id} className="DMS ms-5">
+                       {e.service}
+                     </li>
+                   ))}
+               </ul>
+             </div>
+             <div className="exclusions ms-3 mt-4">
+               <p>
+                 <strong className="headd">EXCLUSIONS:</strong>
+               </p>
+               <ul>
+                 {proposalData.services
+                   .filter((a) => a.service_type === "EX")
+                   .map((e) => (
+                     <li key={e.id} className="DMS ms-5 ">
+                       {e.service}
+                     </li>
+                   ))}
+               </ul>
+             </div>
 
             <div className="qualifications ms-3 mt-4">
               <p>
@@ -227,7 +272,8 @@ function Rawpurposal() {
             </div>
 
             {/* ... (rest of your existing code) */}
-          </main>
+          </div>
+           ))}
       </div>
         )}
     </div>

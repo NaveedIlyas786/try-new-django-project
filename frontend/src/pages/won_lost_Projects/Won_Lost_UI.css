@@ -76,10 +76,10 @@
     background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
   }
 .lostredColor{
-  background-color: #dc3545 !important;
+  background-color: #1976d2  !important;
 }
 .successgreenColor{
-  background-color: #198754 !important;
+  background-color: #1976d2  !important;
 }
   .mydiv {
     position: absolute;
@@ -102,4 +102,9 @@
   }
   .UrlTable{
     border-radius: 10px;
+  }
+  .texth{
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  text-shadow: 2px 2px 8px rgb(144, 204, 231);
+  font-size: 50px !important
   }

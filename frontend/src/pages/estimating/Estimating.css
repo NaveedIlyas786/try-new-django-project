@@ -41,6 +41,7 @@ td {
   border-radius: 0 !important;
   transition: all 0.5s ease-in-out;
 }
+
 #myInput {
   /* background-image: url('/css/searchicon.png'); */
   background-position: 10px 10px;
@@ -236,17 +237,28 @@ input:focus {
 .modal-title {
   color: black;
 }
-.dropbtns {
+/* .dropbtns {
   width: 100% !important;
   padding: 0 !important;
-  font-size: 17px !important;
+  font-size: 30px !important;
   border-radius: 2px !important;
   margin: 1px 0;
-  color: white !important;
+  color: black !important;
 }
 .dropbtns:hover {
   padding: 0.3px 0 !important;
+} */
+.size11{
+  font-size: 25px;
+  color: #1976d2;
+  transition: all 0.3s ease-out !important;
+  scale: 1;
 }
+.size11:hover{
+  scale: 1.2;
+  transition: all 0.3s ease-out !important;
+}
+
 
 .mytdbidder,
 .myproject {
@@ -703,6 +715,19 @@ td {
 .lpk:hover{
   background-color: #4bc712 !important;
 }
+.wonb{
+  color: #1976d2 !important;
+  background-color: white !important;
+  border: 1px solid #1976d2;
+}
+.wonb:hover{
+  
+  border: 1px solid #1976d2 !important;
+  transition: background-color 1s ease !important;
+  background-color: #1976d2 !important;
+  color:white !important;
+}
+
 .wonloseDiv{
   width: 458px !important;
 }
@@ -716,4 +741,11 @@ td {
 
 .projectPopup{
   overflow-y: scroll;
+}
+.estisum{
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  text-shadow: 2px 2px 8px rgb(144, 204, 231);
+  font-size: 50px !important;
+  /* font-family: cursive; */
+  color: rgb(85, 82, 82) !important;
 }

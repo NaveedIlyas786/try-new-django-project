@@ -41,7 +41,7 @@ const WonProjects = () => {
   return (
     <div className="parentDiv px-5">
       <div className="titleWithSearch">
-        <h3 className="text-success">Won Projects</h3>
+        <h3 className="text-primary texth">Won Projects</h3>
         <div className="inputSearchDiv">
           <input
             type="text"
@@ -50,12 +50,13 @@ const WonProjects = () => {
             className="myinput"
             onChange={(e) => setFilter(e.target.value)}
           />
+          <button className="btn btn-primary searchbtn">Search</button>
         </div>
       </div>
       <button
         type="button"
         onClick={movetoEstimatingPage}
-        className="btn btn-outline-success backbtn"
+        className="btn btn-outline-primary backbtn"
       >
        <i className="fa-duotone me-2 fa fa-angles-left icons backicon"></i> Back
       </button>

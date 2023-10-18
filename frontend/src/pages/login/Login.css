@@ -56,13 +56,15 @@ h1{
     border-radius: 2px;
     border: none;
     padding: 2px 8px;
-    background-color: #071088;
+    background-color: #1976d2 !important;
+    color: white;
 }
 .submitbtn:hover{
-    background-color: #07109f;
+    background-color: #07109f !important;
 }
 .signuplink{
     margin-top: -10px;
+    color: rgb(105, 92, 92) !important;
 }
 .pass{
     position: relative;

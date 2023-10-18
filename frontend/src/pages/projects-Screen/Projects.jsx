@@ -62,7 +62,7 @@ const Projects = () => {
             className="myinput"
             onChange={(e) => setFilter(e.target.value)}
           />
-          <button className="btn btn-success searchbtn">Search</button>
+          <button className="btn btn-primary searchbtn">Search</button>
         </div>
       </div>
 

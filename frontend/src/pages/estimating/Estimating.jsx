@@ -335,7 +335,7 @@ const Estimator = () => {
       Spec: ProjectStep2FormData.Spec,
       drywell: ProjectStep2FormData.drywell,
       wall_type: ProjectStep2FormData.wall_type,
-      
+
       // *****step 03
 
       finish: ProjectStep3FormData.finish,
@@ -348,8 +348,24 @@ const Estimator = () => {
 
       // *****step 04
 
-      contracts: selectedContract, //........
-      contract_date: selectedProjectDate, //........
+      contracts: ProjectStep4FormData.contracts.map((mycontract) => ({
+        contract: mycontract.contract,
+        contract_date: mycontract.contract_date,
+      })),
+      schedule_of_values: ProjectStep4FormData.schedule_of_values.map(
+        (myschedule) => ({
+          schedule: myschedule.schedule,
+          schedule_date: myschedule.schedule_date,
+        })
+      ),
+      insurancs: ProjectStep4FormData.insurancs.map((myinsurancs) => ({
+        insurance: myinsurancs.insurancs,
+        date: myinsurancs.date,
+      })),
+      bond: ProjectStep4FormData.contracts.map((mybond) => ({
+        bond: mybond.bond,
+        date: mybond.date,
+      })),
     };
 
     console.log("formData to be sent", formData);
@@ -1308,21 +1324,6 @@ const Estimator = () => {
                 <h3 className=" estisum" data-aos="fade-left">
                   Estimating Summary
                 </h3>
-                <button
-                  className="btn dropbtns btn-danger"
-                  onClick={() => {
-                    // console.log(item.prjct_name);
-                    // setItemId(item.id);
-                    // setStep0FormData({
-                    //   ...step0FormData,
-                    //   estimating: item.id,
-                    // });
-                    // setSelectedEstimatingID(item.prjct_name);
-                    setshowProjectModal(true);
-                  }}
-                >
-                  open project
-                </button>
               </div>
               <div
                 className="btn-group btn-group-md bg-info  wonloseDiv"
@@ -1614,7 +1615,9 @@ const Estimator = () => {
                                   className="form-select"
                                   id="general_superintendent"
                                   name="general_superintendent"
-                                  value={ProjectStep2FormData.general_superintendent}
+                                  value={
+                                    ProjectStep2FormData.general_superintendent
+                                  }
                                   onChange={(e) =>
                                     setProjectStep2FormData({
                                       ...ProjectStep2FormData,
@@ -1702,12 +1705,12 @@ const Estimator = () => {
                                   id="SpecID"
                                   name="SpecID"
                                   value={ProjectStep2FormData.Spec}
-                                onChange={(e) =>
-                                  setProjectStep2FormData({
-                                    ...ProjectStep2FormData,
-                                    Spec: e.target.value,
-                                  })
-                                }
+                                  onChange={(e) =>
+                                    setProjectStep2FormData({
+                                      ...ProjectStep2FormData,
+                                      Spec: e.target.value,
+                                    })
+                                  }
                                 >
                                   <option value="">Select Spec's</option>
                                   <option value="Available">Available</option>
@@ -1983,12 +1986,12 @@ const Estimator = () => {
                                 // value={selectedSubstitution}
                                 // onChange={handleSubstitutionChange}
                                 value={ProjectStep3FormData.substitution}
-                                  onChange={(e) =>
-                                    setProjectStep3FormData({
-                                      ...ProjectStep3FormData,
-                                      substitution: e.target.value,
-                                    })
-                                  }
+                                onChange={(e) =>
+                                  setProjectStep3FormData({
+                                    ...ProjectStep3FormData,
+                                    substitution: e.target.value,
+                                  })
+                                }
                               />
                             </div>
                           </>
@@ -1998,18 +2001,25 @@ const Estimator = () => {
                             <div className="mt-4" style={{ width: "100%" }}>
                               <div>
                                 <label className="form-label">
-                                  <span> Contract</span>
+                                  <span>Contract</span>
                                 </label>
                                 <div id="" className="input-group">
                                   <select
                                     className="form-select"
                                     placeholder="Contract"
-                                    id="ProjectEngineerID"
-                                    value={selectedContract}
-                                    onChange={handleContractChange}
+                                    id="contract"
+                                    value={
+                                      ProjectStep4FormData.contracts.contract
+                                    }
+                                    onChange={(e) => {
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        contracts: { contract: e.target.value },
+                                      });
+                                    }}
                                   >
                                     <option value="">Select Choice</option>
-                                    <option value="On build">
+                                    <option value="Fully Executed">
                                       Fully Executed
                                     </option>
                                     <option value="Pending">Pending</option>
@@ -2017,10 +2027,21 @@ const Estimator = () => {
                                   <input
                                     id=""
                                     type="date"
-                                    name="date" // Set the name attribute to differentiate
+                                    name="contract_date"
                                     className="form-control"
-                                    value={selectedProjectDate}
-                                    onChange={handleProjectDateChange}
+                                    value={
+                                      ProjectStep4FormData.contracts
+                                        .contract_date
+                                    }
+                                    onChange={(e) => {
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        contracts: {
+                                          ...ProjectStep4FormData.contracts,
+                                          contract_date: e.target.value,
+                                        },
+                                      });
+                                    }}
                                   />
                                 </div>
                               </div>
@@ -2028,18 +2049,28 @@ const Estimator = () => {
                             <div style={{ width: "100%" }}>
                               <div>
                                 <label className="form-label">
-                                  <span>SCHEDULE_OF_ VALUES:</span>
+                                  <span>SCHEDULE_OF_VALUES:</span>
                                 </label>
                                 <div id="" className="input-group">
                                   <select
                                     className="form-select"
-                                    placeholder="Contract"
-                                    id="ProjectEngineerID"
-                                    value=""
-                                    onChange={() => {}}
+                                    placeholder="Schedule"
+                                    id="schedule"
+                                    value={
+                                      ProjectStep4FormData.schedule_of_values
+                                        .schedule
+                                    }
+                                    onChange={(e) => {
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        schedule_of_values: {
+                                          schedule: e.target.value,
+                                        },
+                                      });
+                                    }}
                                   >
                                     <option value="">Select Choice</option>
-                                    <option value="On build">
+                                    <option value="Fully Executed">
                                       Fully Executed
                                     </option>
                                     <option value="Pending">Pending</option>
@@ -2047,10 +2078,21 @@ const Estimator = () => {
                                   <input
                                     id=""
                                     type="date"
-                                    name="date" // Set the name attribute to differentiate
+                                    name="schedule_date"
                                     className="form-control"
-                                    value=""
-                                    onChange={() => {}}
+                                    value={
+                                      ProjectStep4FormData.schedule_of_values
+                                        .schedule_date
+                                    }
+                                    onChange={(e) => {
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        schedule_of_values: {
+                                          ...ProjectStep4FormData.schedule_of_values,
+                                          schedule_date: e.target.value,
+                                        },
+                                      });
+                                    }}
                                   />
                                 </div>
                               </div>
@@ -2063,13 +2105,22 @@ const Estimator = () => {
                                 <div id="" className="input-group">
                                   <select
                                     className="form-select"
-                                    placeholder="Contract"
-                                    id="ProjectEngineerID"
-                                    value=""
-                                    onChange={() => {}}
+                                    placeholder="Insurance"
+                                    id="insurance"
+                                    value={
+                                      ProjectStep4FormData.insurancs.insurance
+                                    }
+                                    onChange={(e) => {
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        insurancs: {
+                                          insurance: e.target.value,
+                                        },
+                                      });
+                                    }}
                                   >
                                     <option value="">Select Choice</option>
-                                    <option value="On build">
+                                    <option value="Fully Executed">
                                       Fully Executed
                                     </option>
                                     <option value="Pending">Pending</option>
@@ -2077,10 +2128,18 @@ const Estimator = () => {
                                   <input
                                     id=""
                                     type="date"
-                                    name="date" // Set the name attribute to differentiate
+                                    name="date"
                                     className="form-control"
-                                    value=""
-                                    onChange={() => {}}
+                                    value={ProjectStep4FormData.insurancs.date}
+                                    onChange={(e) => {
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        insurancs: {
+                                          ...ProjectStep4FormData.insurancs,
+                                          date: e.target.value,
+                                        },
+                                      });
+                                    }}
                                   />
                                 </div>
                               </div>
@@ -2093,13 +2152,18 @@ const Estimator = () => {
                                 <div id="" className="input-group">
                                   <select
                                     className="form-select"
-                                    placeholder="Contract"
-                                    id="ProjectEngineerID"
-                                    value=""
-                                    onChange={() => {}}
+                                    placeholder="Bond"
+                                    id="bond"
+                                    value={ProjectStep4FormData.bond.bond}
+                                    onChange={(e) => {
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        bond: { bond: e.target.value },
+                                      });
+                                    }}
                                   >
                                     <option value="">Select Choice</option>
-                                    <option value="On build">
+                                    <option value="Fully Executed">
                                       Fully Executed
                                     </option>
                                     <option value="Pending">Pending</option>
@@ -2107,16 +2171,25 @@ const Estimator = () => {
                                   <input
                                     id=""
                                     type="date"
-                                    name="date" // Set the name attribute to differentiate
+                                    name="date"
                                     className="form-control"
-                                    value=""
-                                    onChange={() => {}}
+                                    value={ProjectStep4FormData.bond.date}
+                                    onChange={(e) => {
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        bond: {
+                                          ...ProjectStep4FormData.bond,
+                                          date: e.target.value,
+                                        },
+                                      });
+                                    }}
                                   />
                                 </div>
                               </div>
                             </div>
                           </>
                         )}
+
                         {projectactiveStep === 4 && (
                           <>
                             <div className="mt-4" style={{ width: "100%" }}>
@@ -2378,7 +2451,7 @@ const Estimator = () => {
                                 Add SHOP DRAWINGS
                               </button>
                             </div>
-                            <div  style={{ width: "100%" }}>
+                            <div style={{ width: "100%" }}>
                               <label
                                 htmlFor="projectName"
                                 className="form-label mt-2"
@@ -2505,7 +2578,7 @@ const Estimator = () => {
                                 Add SAFITYs
                               </button>
                             </div>
-                            <div  style={{ width: "100%" }}>
+                            <div style={{ width: "100%" }}>
                               <label
                                 htmlFor="projectName"
                                 className="form-label mt-2"
@@ -2597,7 +2670,7 @@ const Estimator = () => {
                                 Add Schedule
                               </button>
                             </div>
-                            <div  style={{ width: "100%" }}>
+                            <div style={{ width: "100%" }}>
                               <label
                                 htmlFor="projectName"
                                 className="form-label mt-2"
@@ -2795,7 +2868,7 @@ const Estimator = () => {
                               </div>
                               {/* ))} */}
                             </div>
-                            <div  style={{ width: "100%" }}>
+                            <div style={{ width: "100%" }}>
                               <label
                                 htmlFor="projectName"
                                 className="form-label mt-2"
@@ -2862,7 +2935,7 @@ const Estimator = () => {
                               </div>
                               {/* ))} */}
                             </div>
-                            <div  style={{ width: "100%" }}>
+                            <div style={{ width: "100%" }}>
                               <label
                                 htmlFor="projectName"
                                 className="form-label mt-2"
@@ -2937,7 +3010,7 @@ const Estimator = () => {
                         )}
                         {projectactiveStep === 7 && (
                           <div className=" mt-3">
-                            <div  style={{ width: "100%" }}>
+                            <div style={{ width: "100%" }}>
                               <label
                                 htmlFor="projectName"
                                 className="form-label mt-2"
@@ -3034,7 +3107,7 @@ const Estimator = () => {
                               {/* ))} */}
                             </div>
 
-                            <div  style={{ width: "100%" }}>
+                            <div style={{ width: "100%" }}>
                               <label
                                 htmlFor="projectName"
                                 className="form-label mt-2"
@@ -3119,7 +3192,7 @@ const Estimator = () => {
                               </div>
                               {/* ))} */}
                             </div>
-                            <div  style={{ width: "100%" }}>
+                            <div style={{ width: "100%" }}>
                               <label
                                 htmlFor="projectName"
                                 className="form-label mt-2"
@@ -3364,9 +3437,9 @@ const Estimator = () => {
                     </td>
                     <td className="mytd centered-td actionTD">
                       <div className="relative-container loop">
-                        <div  
+                        <div
                           type="button"
-                         className="pb-2"
+                          className="pb-2"
                           onClick={() => {
                             setItemId(item.id);
                             setSelectedEstimatingID(item.prjct_name);
@@ -3387,9 +3460,8 @@ const Estimator = () => {
                         </div>
 
                         <div
-                        type="button"
-                        className="pb-2"
-      
+                          type="button"
+                          className="pb-2"
                           onClick={() => {
                             console.log(item.prjct_name);
                             setItemId(item.id);
@@ -3421,7 +3493,6 @@ const Estimator = () => {
                         </div> */}
 
                         <div
-                          
                           type="button"
                           onClick={() => {
                             const encodedProjectName = encodeURIComponent(
@@ -3432,7 +3503,7 @@ const Estimator = () => {
                             );
                           }}
                         >
-                         <i class="fa-solid fa-eye size11"></i>
+                          <i class="fa-solid fa-eye size11"></i>
                         </div>
                       </div>
                     </td>

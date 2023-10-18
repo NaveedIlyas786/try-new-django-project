@@ -10,7 +10,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar navbar-expand-sm">
+    <nav className="navbar navbar-expand-lg ">
       <div className="container-fluid px-5">
         <Link
           className="navbar-brand"

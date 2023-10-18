@@ -432,11 +432,11 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="container mt-5">
-          <div className="row ">
+          <div className="row">
             <div
               className="col-md-4 twoTable  mt-3 table-responsive-custom"
             >
-              <table className="table twoTable table-striped text-center ">
+              <table className="table twoTable  table-hover text-center ">
                 <thead className="thead-dark ">
                   <tr>
                     <th rowSpan={2} className="align-middle ">
@@ -560,7 +560,7 @@ const Dashboard = () => {
               </div>
             </div> */}
             <div
-              className="ms-5 col-md-7 col-sm-7 text-center graphimg"
+              className="ms-3 col-md-7 col-sm-7 text-center graphimg"
               
             >
               <BarChart

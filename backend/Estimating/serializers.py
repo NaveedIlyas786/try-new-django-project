@@ -85,6 +85,7 @@ class EstimatingSerializer(serializers.ModelSerializer):
  
     start_date = serializers.DateField(
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+    company=CompanySerializer(many=True,read_only=True)
 
 
     class Meta:
@@ -113,7 +114,7 @@ class EstimatingSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
 
         # Updating representation to include names instead of IDs for foreign keys
-        representation['company'] = instance.company.Cmpny_Name if instance.company else None
+        # representation['company'] = instance.company.Cmpny_Name if instance.company else None
         representation['location'] = instance.location.name if instance.location else None
         representation['estimator'] = instance.estimator.full_Name if instance.estimator else None
 

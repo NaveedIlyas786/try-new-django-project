@@ -1,653 +1,331 @@
-import React, { useEffect, useState, PureComponent } from "react";
-import "./DMSDirectory.css"
-import { LineChart, Line } from "recharts";
-// import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import {
-  BarChart,
-  Bar,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
-import "./Dashboard.css";
+import React, { useState, useEffect } from "react";
+import "./DMSDirectory.css";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import AOS from "aos";
-import "aos/dist/aos.css";
-// import ApexCharts from 'apexcharts'
 
-const Dashboaard = () => {
-  const [dashData, setDashData] = useState([]);
+const DMSDirectory = () => {
+  const [showModal, setShowModal] = useState(false); // State to control modal visibility
+  const [filter, setFilter] = useState("");
+  const [DMSUserDirectory, setDMSUserDirectory] = useState([]);
+  const closeModal = () => {
+    setShowModal(false);
 
+    // Remove the 'modal-active' class when the modal is closed
+    document.body.classList.remove("modal-active");
+  };
   useEffect(() => {
     // Fetch data from the API
     axios
-      .get("http://127.0.0.1:8000/api/estimating/api/estimators/summary/")
+      .get("http://127.0.0.1:8000/api/estimating/dmsDrectory/")
       .then((response) => response.data)
       .then((data) => {
         console.log(data);
-        setDashData(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []);
-  const [companyiesData, setcompanyiesData] = useState([]);
-
-  useEffect(() => {
-    // Fetch data from the API
-    axios
-      .get("http://127.0.0.1:8000/api/estimating/company_won_bashboard/")
-      .then((response) => response.data)
-      .then((data) => {
-        console.log(data);
-        setcompanyiesData(data);
+        setDMSUserDirectory(data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   }, []);
 
-  const data = [
-    {
-      name: "Page A",
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
-    },
-    {
-      name: "Page B",
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
-    },
-    {
-      name: "Page C",
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
-    },
-    {
-      name: "Page D",
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: "Page E",
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: "Page F",
-      uv: 2390,
-      pv: 3800,
-      amt: 2500,
-    },
-    {
-      name: "Page G",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
-    },
-  ];
+  const navigate = useNavigate();
 
-  const formatNumberWithCommas = (value) => {
-    if (value === null) return ""; // Return an empty string if the value is null
-    return value.toLocaleString("en-US");
+  const filteredData = DMSUserDirectory.filter((customer) => {
+    return (
+      (customer.first_name &&
+        customer.first_name.toUpperCase().includes(filter.toUpperCase())) ||
+      (customer.email &&
+        customer.email
+          .trim()
+          .toUpperCase()
+          .includes(filter.trim().toUpperCase())) ||
+      (customer.mobile_number &&
+        customer.mobile_number.toUpperCase().includes(filter.toUpperCase()))
+    );
+  });
+
+  const movetoEstimatingPage = () => {
+    navigate("/homepage/estimating/");
   };
-
-  function formatPercentage(value) {
-    // Parse the input value as a float
-    const floatValue = parseFloat(value);
-
-    // Check if it's a valid number
-    if (!isNaN(floatValue)) {
-      // Round the value to two decimal places
-      const roundedValue = Math.round(floatValue * 100) / 100;
-
-      // Convert the rounded value to a string with '%' symbol
-      const formattedValue = `${roundedValue.toFixed(0)}%`;
-
-      return formattedValue;
-    } else {
-      // If the input is not a valid number, return an empty string or handle it accordingly
-      return "";
-    }
-  }
-  const colors = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "red", "pink"];
-  const getPath = (x, y, width, height) => {
-    return `M${x},${y + height}C${x + width / 3},${y + height} ${
-      x + width / 2
-    },${y + height / 3}
-    ${x + width / 2}, ${y}
-    C${x + width / 2},${y + height / 3} ${x + (2 * width) / 3},${y + height} ${
-      x + width
-    }, ${y + height}
-    Z`;
-  };
-  const TriangleBar = (props) => {
-    const { fill, x, y, width, height } = props;
-
-    return <path d={getPath(x, y, width, height)} stroke="none" fill={fill} />;
-  };
-
-  // Assuming your data is stored in a variable called 'dashData'
-  const chartData = dashData.map((e) => ({
-    name: e.estimator,
-    Working: e.summary?.Working?.total || 0,
-    Pending: e.summary?.Pending?.total || 0,
-    Won: e.summary?.Won?.total || 0,
-    Lost: e.summary?.Lost?.total || 0,
-  }));
-
-
-    const [selectedYear, setSelectedYear] = useState(2023);
-  // const [dashData, setDashData] = useState([]); // Initialize with an empty array
-
-  // Fetch data based on the selected year
-  useEffect(() => {
-    // Create a function to fetch data based on the selected year
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`http://127.0.0.1:8000/api/estimating/api/estimators/summary/?year=${selectedYear}`);
-        if (response.ok) {
-          const data = await response.json();
-          setDashData(data); // Update the state with fetched data
-        } else {
-          console.error('Error fetching data');
-        }
-      } catch (error) {
-        console.error('An error occurred:', error.message);
-      }
-    };
-
-    // Call the fetchData function when selectedYear changes
-    fetchData();
-  }, [selectedYear]);
-
-  // Event handler for changing the selected year
-  const handleYearChange = (year) => {
-    setSelectedYear(year);
-  };
-
 
   return (
-    <>
-      <div className=" container dashboard ">
-        <div className=" row projectStatus justify-content-around">
-          <div className=" col-md-2  ProjectStatus pendinggreen d-flex justify-content-center align-items-center">
-          <p className="mt-2">
-              <i className="fa-solid fa-circle-check check "></i>
-            </p>
-            <h5 className="ps-3 headsett">Won</h5>
-            <h4 className="ps-3 headsettNo">
-              {dashData.reduce((acc, e) => acc + (e?.Won?.total || 0), 0)}
-            </h4>
-          </div>
-
-          <div className=" col-md-2   ProjectStatus pendingyellow d-flex justify-content-center align-items-center">
-          <p className="mt-2">
-              <i className="fa-solid  fa-question fs-5 pend"></i>
-            </p>
-            <h5 className="ps-3 headsett">Pending</h5>
-            <h4 className="ps-3 headsettNo">
-              {dashData.reduce((acc, e) => acc + (e?.Pending?.total || 0), 0)}
-            </h4>
-          </div>
-          <div className=" col-md-2   ProjectStatus pendingWorking d-flex justify-content-center align-items-center" >
-          <p className="mt-2">
-              <i className="fa-solid fa-spinner fs-5 working"></i>
-            </p>
-            <h5 className="ps-3 headsett">Working</h5>
-            <h4 className="ps-3 headsettNo">
-              {dashData.reduce((acc, e) => acc + (e?.Working?.total || 0), 0)}
-            </h4>
-            {/* <p>
-              <i className="fa-solid fa-square-this-way-up "></i>
-            </p> */}
-          </div>
-          <div className=" col-md-2  ProjectStatus pendingLost d-flex justify-content-center align-items-center" >
-          <p className="mt-3">
-              <i className=" mark fa-duotone fa fa-ban"></i>
-            </p>
-            <h5 className="ps-3 headsett">Lost</h5>
-            <h4 className="ps-3 headsettNo">
-              {dashData.reduce((acc, e) => acc + (e?.Lost?.total || 0), 0)}
-            </h4>
-          </div>
+    <div className="parentDiv px-5">
+      <div className="titleWithSearch">
+        <h3 className="text-primary">DMS Directory</h3>
+        <div className="inputSearchDiv">
+          <input
+            type="text"
+            placeholder="Filter by Project Name, prjct_engnr Name, bim_oprtrs, job_num"
+            value={filter}
+            className="myinput"
+            onChange={(e) => setFilter(e.target.value)}
+          />
+          <button className="btn btn-primary   searchbtn" onClick={(e)=>{
+            setShowModal(true)
+          }}>New</button>
         </div>
       </div>
-      <div className="mt-1">
-        <div className=" container mytable ">
-         
-        <div>
-      {/* Dropdown for selecting the year */}
-      <div className="ms-2 mb-2 btn-group dropright">
-        <button
-          type="button"
-          className="btn  dropdown-toggle"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
+      <button
+        type="button"
+        onClick={movetoEstimatingPage}
+        className="btn btn-outline-primary backbtn"
+      >
+        Back
+      </button>
+
+      <div className="table-responsive proposalTable mt-2">
+        <table
+          className="table table-striped table-bordered table-hover"
+          style={{ tableLayout: "auto" }}
         >
-          Filter based on year
-        </button>
-        <ul className="dropdown-menu text-center">
-          <li>
-            <a
-              className={`dropdown-item ${selectedYear === 2023 ? 'active' : ''}`}
-              href="#"
-              onClick={() => handleYearChange(2023)}
-            >
-              2023
-            </a>
-          </li>
-          <li>
-            <a
-              className={`dropdown-item ${selectedYear === 2022 ? 'active' : ''}`}
-              href="#"
-              onClick={() => handleYearChange(2022)}
-            >
-              2022
-            </a>
-          </li>
-          <li>
-            <a
-              className={`dropdown-item ${selectedYear === 2020 ? 'active' : ''}`}
-              href="#"
-              onClick={() => handleYearChange(2020)}
-            >
-              2020
-            </a>
-          </li>
-        </ul>
-        <h4 className="myh4">{selectedYear}</h4>
-      </div>
-      </div>
+          <thead className="proposalHeader">
+            <tr>
+              <th className="successgreenColor">Last Name</th>
+              <th className="successgreenColor">First Name</th>
+              <th className="successgreenColor">Job Title</th>
+              <th className="successgreenColor">Company</th>
+              <th className="successgreenColor">Location</th>
+              <th className="successgreenColor">Department</th>
+              <th className="successgreenColor">Mobile</th>
+              <th className="successgreenColor">Direct</th>
+              <th className="successgreenColor">Email</th>
+            </tr>
+          </thead>
+          <tbody className="cursor-pointer jktable bg-info jloop">
+            {filteredData.map((item) => (
+              <tr key={item.id}>
+                <td className=" dmsTD centered-td">{item.last_name}</td>
+                <td className=" dmsTD centered-td">{item.first_name}</td>
+                <td className=" dmsTD centered-td">{item.job_title}</td>
+                <td className=" dmsTD  centered-td">{item.company}</td>
+                <td className=" dmsTD centered-td">{item.locaton}</td>
+                <td className=" dmsTD centered-td">{item.department}</td>
+                <td className=" dmsTD centered-td">{item.mobile_number}</td>
+                <td className=" dmsTD centered-td">{item.direct_number}</td>
+                <td className=" dmsTD centered-td">{item.email}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
+        {showModal && (
+        <div
+          className={`modal-container bg-white pt-5 ps-2 ${
+            showModal ? "show" : ""
+          }`}
+        >
+          <h4 className="text-center addnewtxt">DMS Directory</h4>
+          <button className="close-btn" onClick={closeModal}></button>
+          <div className="modal-content px-5">
+            <form className="MyForm">
+              <div className="bothDiv gap-2 mt-5">
+                <div className="Oneline">
+                  <label htmlFor="first_name" className="form-label">
+                    First Name:
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
 
-          <div
-            className=" row table-responsive table-design pk mt-2"
-            data-aos="fade-left"
-          >
-            <div className="col-md-12">
-              <table className="table jk">
-                <thead className="thead-dark myhead text-center">
-                  <tr className="pk">
-                    <th rowSpan={2} className="align-middle">
-                      Estimator
-                    </th>
-                    <th rowSpan={2} className="align-middle">
-                      Working
-                    </th>
-                    <th colSpan={3}>Pending</th>
-                    <th colSpan={3}>Won</th>
-                    <th colSpan={3}>Lost</th>
-                    <th colSpan={2}>Ytd Total</th>
-                  </tr>
-                  <tr>
-                    <th className="thBackgroundpend">#</th>
-                    <th className="thBackgroundpend">%</th>
-                    <th className="thBackgroundpend">Estimated $</th>
-                    <th className="thBackgroundWon">#</th>
-                    <th className="thBackgroundWon">%</th>
-                    <th className="thBackgroundWon">Estimated $</th>
-                    <th className="thBackgroundLost">#</th>
-                    <th className="thBackgroundLost">%</th>
-                    <th className="thBackgroundLost">Estimated $</th>
-                    <th># </th>
-                    <th>Estimated $</th>
-                  </tr>
-                </thead>
-                <tbody className="jk">
-                  {dashData.map((e, index) => (
-                    <tr key={index}>
-                      <td className="dashtd">{e.estimator}</td>
-                      <td className="dashtd">
-                        {e.summary?.Working?.total || 0}
-                      </td>
-                      {/* <td className="dashtd">{e?.["Grand Total"]?.bid_amount || 0}</td> */}
+                    id="first_name"
+                    // value={startDate}
+                    // onChange={handlestartDateChange}
+                  />
+                </div>
+                <div className="Oneline">
+                  <label htmlFor="last_name" className="form-label">
+                    Last Name:
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
 
-                      <td className="dashtd">
-                        {e.summary?.Pending?.total || 0}
-                      </td>
-                      <td className="dashtd">
-                        {formatPercentage(e.summary?.Pending?.percentage || 0)}
-                      </td>
-                      <td className="dashtd">
-                        ${" "}
-                        {formatNumberWithCommas(
-                          e.summary?.Pending?.bid_amount || 0
-                        )}
-                      </td>
-                      <td className="dashtd">{e.summary?.Won?.total || 0}</td>
-                      <td className="dashtd">
-                        {formatPercentage(e.summary?.Won?.percentage || 0)}
-                      </td>
-                      <td className="dashtd">
-                        ${" "}
-                        {formatNumberWithCommas(
-                          e.summary?.Won?.bid_amount || 0
-                        )}
-                      </td>
-                      <td className="dashtd">{e.summary?.Lost?.total || 0}</td>
-                      <td className="dashtd">
-                        {formatPercentage(e.summary?.Lost?.percentage || 0)}
-                      </td>
-                      <td className="dashtd">
-                        ${" "}
-                        {formatNumberWithCommas(
-                          e.summary?.Lost?.bid_amount || 0
-                        )}
-                      </td>
-                      <td className="dashtd">{e.ytd_total || 0}</td>
-                      {/* <td className="dashtd">{e?.["Grand Total"]?.bid_amount || 0}</td>
-                      <td className="dashtd">{e?.["Grand Total"]?.total || 0}</td> */}
+                    id="last_name"
+                    // value={startDate}
+                    // onChange={handlestartDateChange}
+                  />
+                </div>
+                <div className="Oneline">
+                  <label htmlFor="companyName" className="form-label">
+                    Company
+                  </label>
+                  <select
+                    className="form-select"
+                    id="companyName"
+                    // value={company}
+                    // onChange={handleCompanyNameChange}
+                  >
+                    <option value="">Select Company</option>
+                    {/* {companyName && companyName.length > 0 ? (
+                      companyName.map((companyItem) => (
+                        <option value={companyItem.id} key={companyItem.id}>
+                          {companyItem.Cmpny_Name}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="" disabled>
+                        {companyName ? "No companies available" : "Loading..."}
+                      </option>
+                    )} */}
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label htmlFor="Job_Title" className="form-label">
+                Job Title:
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="Job_Title"
+                  // value={projectName}
+                  // onChange={handleProjectNameChange}
+                />
+              </div>
 
-                      <td className="dashtd">
-                        $ {formatNumberWithCommas(e.ytd_total_bid_amount || 0)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-                <tfoot className="mytfoot">
-                  <tr>
-                    <td className="totalsection dashtd">Grand Total</td>
-                    <td className="totalsection dashtd">
-                      {dashData.reduce(
-                        (acc, e) => acc + (e?.Working?.total || 0),
-                        0
-                      )}
-                    </td>
-                    <td className="totalsection dashtd">
-                      {dashData.reduce(
-                        (acc, e) => acc + (e?.Pending?.total || 0),
-                        0
-                      )}
-                    </td>
-                    <td className="totalsection dashtd"></td>
-                    <td className="totalsection dashtd">
-                      {formatNumberWithCommas(
-                        dashData.reduce(
-                          (acc, e) => acc + (e?.Pending?.bid_amount || 0),
-                          0
-                        )
-                      )}
-                    </td>
-                    <td className="totalsection dashtd">
-                      {dashData.reduce(
-                        (acc, e) => acc + (e?.Won?.total || 0),
-                        0
-                      )}
-                    </td>
-                    <td className="totalsection dashtd"></td>
-                    <td className="totalsection dashtd">
-                      ${" "}
-                      {formatNumberWithCommas(
-                        dashData.reduce(
-                          (acc, e) => acc + (e?.Won?.bid_amount || 0),
-                          0
-                        )
-                      )}
-                    </td>
-                    <td className="totalsection dashtd">
-                      {dashData.reduce(
-                        (acc, e) => acc + (e?.Lost?.total || 0),
-                        0
-                      )}
-                    </td>
-                    <td className="totalsection dashtd"></td>
-                    <td className="totalsection dashtd">
-                      ${" "}
-                      {formatNumberWithCommas(
-                        dashData.reduce(
-                          (acc, e) => acc + (e?.Lost?.bid_amount || 0),
-                          0
-                        )
-                      )}
-                    </td>
-                    <td className="totalsection dashtd">
-                      {dashData.reduce(
-                        (acc, e) => acc + (e?.["Grand Total"]?.total || 0),
-                        0
-                      )}
-                    </td>
-                    <td className="totalsection dashtd">
-                      ${" "}
-                      {formatNumberWithCommas(
-                        dashData.reduce(
-                          (acc, e) =>
-                            acc + (e?.["Grand Total"]?.bid_amount || 0),
-                          0
-                        )
-                      )}
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
+              <div className="bothDiv">
+                <div className="Oneline">
+                  <label htmlFor="email" className="form-label">
+                    Estimator Name:
+                  </label>
+                  <select
+                    className="form-select"
+                    id="email"
+                    // value={estimatorName}
+                    // onChange={handleEstimatorNameChange}
+                  >
+                    <option value="">Select Estimator Name</option>
+
+                    {/* {EstimatorName && EstimatorName.length > 0 ? (
+                      EstimatorName.map((user) => (
+                        <option value={user.id} key={user.id}>
+                          {user.full_Name}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="" disabled>
+                        Loading...
+                      </option>
+                    )} */}
+                  </select>
+                </div>
+
+                <div className="Oneline">
+                  <label htmlFor="location" className="form-label">
+                    Location:
+                  </label>
+                  <select
+                    className="form-select"
+                    id="location"
+                    // value={location}
+                    // onChange={handleLocationChange}
+                  >
+                    <option value="">Select Location</option>
+
+                    {/* {userLocation && userLocation.length > 0 ? (
+                      userLocation.map((place) => (
+                        <option value={place.id} key={place.id}>
+                          {place.name}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="" disabled>
+                        Loading...
+                      </option>
+                    )} */}
+                  </select>
+                </div>
+              </div>
+
+              <div className="bothDiv">
+                <div className="Oneline">
+                  <label htmlFor="dueDate" className="form-label">
+                    Due Date:
+                  </label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    id="dueDate"
+                    // value={dueDate}
+                    // onChange={handleDueDateChange}
+                  />
+                </div>
+                <div className="Oneline timefield">
+                  <label htmlFor="time" className="form-label">
+                    Time:
+                  </label>
+                  <div className="d-flex bg-white">
+                    <input
+                      type="time"
+                      placeholder="Select Time"
+                      // value={selectedTime}
+                      // onChange={(e) => setSelectedTime(e.target.value)}
+                    />
+                    {/* <p>Selected Time: {selectedTime}</p> */}
+                    <select
+                      // value={timezone}
+                      // onChange={handleTimeZoneChange}
+                      className="selectpicker"
+                    >
+                      <option value="">Select TimeZone</option>
+                      <option value="PDT">PDT</option>
+                      <option value="CT">CT</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              {/* <div className="bothDiv"> */}
+              {/* <div className="Oneline">
+                  <label htmlFor="bidAmount" className="form-label">
+                    Bid Amount:
+                  </label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="bidAmount"
+                    value={bidAmount}
+                    onChange={handleBidAmountChange}
+                  />
+                </div> */}
+              <div>
+                <label htmlFor="bidderName" className="form-label">
+                  Bidder Name:
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="bidderName"
+                  // value={bidderName}
+                  // onChange={handleBidderChange}
+                />
+              </div>
+              {/* </div> */}
+              <div>
+                <label htmlFor="bidderDetails" className="form-label">
+                  Bidder Details:
+                </label>
+                <textarea
+                  name="#"
+                  className="form-control"
+                  id="bidderDetails"
+                  placeholder="Write your details!"
+                  cols="10"
+                  rows="10"
+                  // value={bidder_detail}
+                  // onChange={handleBidderDetailChange}
+                ></textarea>
+              </div>
+              <button type="submit" className="btn btn-submit mt-3 mb-4">
+                Add
+              </button>
+            </form>
           </div>
         </div>
-        {/* <div className="container mt-5">
-          <div className="row">
-            <div
-              className="col-md-4 twoTable  mt-3 table-responsive-custom"
-            >
-              <table className="table twoTable  table-hover text-center ">
-                <thead className="thead-dark ">
-                  <tr>
-                    <th rowSpan={2} className="align-middle ">
-                      Company
-                    </th>
-                    <th colSpan={2} className="align-middle ">
-                      Won
-                    </th>
-                  </tr>
-                  <tr>
-                    <th className="align-middle">#</th>
-                    <th className="align-middle">Estimated $</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {companyiesData.map((e, index) => (
-                    <tr className="graphCompany" key={index}>
-                      <td className="dashtd">{e.company_name}</td>
-                      <td className="dashtd">{e.total_won}</td>
-                      <td className="dashtd">
-                        {formatNumberWithCommas(e.total_won_bid_amount)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            {/* <div className="ms-5 col-md-7 col-sm-7 graphimg">
-              <ResponsiveContainer width="100%" height={500}>
-                <BarChart
-                  width={500}
-                  height={500}
-                  data={companyiesData}
-                  margin={{
-                    top: 5,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="company_name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="total_won" fill="#8884d8" />
-                  <Bar dataKey="total_won_bid_amount" fill="#82ca9d" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div> */}
-            {/* <div className="ms-5 col-md-7 col-sm-7 graphimg">
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart
-                  width={500}
-                  height={500}
-                  data={companyiesData}
-                  margin={{
-                    top: 5,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="company_name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Line
-                    type="monotone"
-                    dataKey="total_won_estimating"
-                    stroke="#8884d8"
-                    activeDot={{ r: 8 }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="total_won_bid_amount"
-                    stroke="#82ca9d"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div> */}
-            {/* <div
-              className="ms-5 col-md-7 col-sm-7 text-center graphimg"
-              
-            >
-              <BarChart
-                width={650}
-                height={350}
-                data={companyiesData}
-                margin={{
-                  top: 20,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="company_name" />
-                <YAxis />
-                <Tooltip formatter={(value) => formatNumberWithCommas(value)} />
-                <Bar
-                  dataKey="total_won_bid_amount"
-                  fill="#8884d8"
-                  shape={<TriangleBar />}
-                  label={{ position: "top" }}
-                >
-                  {companyiesData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={colors[index % 20]} />
-                  ))}
-                </Bar>
-              </BarChart>
-              <div className="mt-2 d-flex totalamount">
-                <h1>Total Amount: </h1>
-                {companyiesData[2] && (
-                  <h1>
-                    {formatNumberWithCommas(
-                      companyiesData[2].total_won_bid_amount
-                    )}
-                  </h1>
-                )}
-              </div>
-            </div> */}
-            {/* <div
-              className="ms-3 col-md-7 col-sm-7 text-center graphimg"
-              
-            >
-              <BarChart
-                width={800}
-                height={400}
-                data={chartData}
-                margin={{
-                  top: 20,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
+      )}
 
-                <Bar dataKey="Working" stackId="a" fill="#8884d8" />
-                <Bar dataKey="Pending" stackId="a" fill="#82ca9d" />
-                <Bar dataKey="Won" stackId="a" fill="#ffc658" />
-                <Bar dataKey="Lost" stackId="a" fill="#ff7f7f" />
-              </BarChart>
-              <div className="mt-2 d-flex totalamount">
-                <h1 className="dashh">Total Amount: </h1>
-                {companyiesData[2] && (
-                  <h1 className="dashh">
-                    {formatNumberWithCommas(
-                      companyiesData[2].total_won_bid_amount
-                    )}
-                  </h1>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>  */}
-       <div className="container mt-5">
-       <div className="row mt-5">
-      <div
-              className="ms-2 col text-center graphimg mt-5"
-              
-            >
-              <BarChart
-                width={1100}
-                height={440}
-                data={companyiesData}
-                margin={{
-                  top: 20,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="company_name" />
-                <YAxis />
-                <Tooltip formatter={(value) => formatNumberWithCommas(value)} />
-                <Bar
-                  dataKey="total_won_bid_amount"
-                  fill="#8884d8"
-                  shape={<TriangleBar />}
-                  label={{ position: "top" }}
-                >
-                  {companyiesData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={colors[index % 20]} />
-                  ))}
-                </Bar>
-              </BarChart>
-              <div className="mt-4 d-flex totalamount">
-                <h1>Total Amount: </h1>
-                {companyiesData[2] && (
-                  <h1>
-                    {formatNumberWithCommas(
-                      companyiesData[2].total_won_bid_amount
-                    )}
-                  </h1>
-                )}
-              </div>
-            </div>
-       </div>
 
-       </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export default Dashboard;
+export default DMSDirectory;

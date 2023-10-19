@@ -50,7 +50,7 @@ const Login = () => {
           navigate("/homepage/dashboard");
         }, 1700);
       } else {
-        // Handle authentication failure, display an error message
+        // Handle authentication failure, display an error messagae
         setError(<div className="modal-overlay">
         <div className="popupred">
           <p>Invalid Email OR Password</p>

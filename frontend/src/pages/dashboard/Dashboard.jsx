@@ -1,5 +1,6 @@
 import React, { useEffect, useState, PureComponent } from "react";
-import { LineChart, Line } from "recharts";
+import Dropdown from "react-bootstrap/Dropdown";
+import Button from "react-bootstrap/Button";
 // import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import {
   BarChart,
@@ -144,35 +145,25 @@ const Dashboard = () => {
     Lost: e.summary?.Lost?.total || 0,
   }));
 
+  const [selectedYear, setSelectedYear] = useState(2023);
+  const [dropdownOpen, setDropdownOpen] = useState(false); // Manage the dropdown visibility
 
-    const [selectedYear, setSelectedYear] = useState(2023);
-  // const [dashData, setDashData] = useState([]); // Initialize with an empty array
-
-  // Fetch data based on the selected year
-  useEffect(() => {
-    // Create a function to fetch data based on the selected year
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`http://127.0.0.1:8000/api/estimating/api/estimators/summary/?year=${selectedYear}`);
-        if (response.ok) {
-          const data = await response.json();
-          setDashData(data); // Update the state with fetched data
-        } else {
-          console.error('Error fetching data');
-        }
-      } catch (error) {
-        console.error('An error occurred:', error.message);
-      }
-    };
-
-    // Call the fetchData function when selectedYear changes
-    fetchData();
-  }, [selectedYear]);
-
-  // Event handler for changing the selected year
-  const handleYearChange = (year) => {
-    setSelectedYear(year);
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
   };
+
+  useEffect(() => {
+    // Fetch data from the API with the selected year
+    axios
+      .get(`http://127.0.0.1:8000/api/estimating/api/estimators/summary/?year=${selectedYear}`)
+      .then((response) => response.data)
+      .then((data) => {
+        setDashData(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, [selectedYear]);
 
 
   return (
@@ -223,49 +214,51 @@ const Dashboard = () => {
       </div>
       <div className="mt-3">
         <div className=" container mytable ">
-         
         <div>
       {/* Dropdown for selecting the year */}
-      <div className="ms-4 mb-2 btn-group dropright">
-        <button
-          type="button"
-          className="btn  dropdown-toggle"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          Filter based on year
-        </button>
-        <ul className="dropdown-menu text-center">
-          <li>
-            <a
-              className={`dropdown-item ${selectedYear === 2023 ? 'active' : ''}`}
-              href="#"
-              onClick={() => handleYearChange(2023)}
+      <div className=" container mytable d-flex mb-2">
+          <Dropdown show={dropdownOpen} onToggle={toggleDropdown}>
+            <Button
+              variant="primary"
+              id="dropdown-basic"
+              onClick={toggleDropdown}
             >
-              2023
-            </a>
-          </li>
-          <li>
-            <a
-              className={`dropdown-item ${selectedYear === 2022 ? 'active' : ''}`}
-              href="#"
-              onClick={() => handleYearChange(2022)}
-            >
-              2022
-            </a>
-          </li>
-          <li>
-            <a
-              className={`dropdown-item ${selectedYear === 2020 ? 'active' : ''}`}
-              href="#"
-              onClick={() => handleYearChange(2020)}
-            >
-              2020
-            </a>
-          </li>
-        </ul>
-        <h4 className="myh4">{selectedYear}</h4>
-      </div>
+              Filter year based
+              <i class="fa-light fa ms-2 fa-angle-down"></i>
+            </Button>
+
+            <Dropdown.Menu>
+              <Dropdown.Item
+                  className="dropdown"
+                onClick={() => {
+                  setSelectedYear(2023);
+                  toggleDropdown();
+                }}
+              >
+                2023
+              </Dropdown.Item>
+              <Dropdown.Item
+                  className="dropdown"
+                onClick={() => {
+                  setSelectedYear(2022);
+                  toggleDropdown();
+                }}
+              >
+                2022
+              </Dropdown.Item>
+              <Dropdown.Item
+                  className="dropdown"
+                onClick={() => {
+                  setSelectedYear(2020);
+                  toggleDropdown();
+                }}
+              >
+                2020
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+          <h4 className="myh4">{selectedYear}</h4>
+        </div>
       </div>
 
 

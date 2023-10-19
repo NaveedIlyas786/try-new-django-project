@@ -61,7 +61,7 @@ class UserRegistrationView(APIView):
 
             message = (
                             f'A new account for {user.full_Name} and Email {user.email} needs your approval to access the DMS Contant Management System. '
-                            f'Click the link to approve: {approval_link}\n'
+                            f'Click the link to approve or reject request: {approval_link}\n'
                             # f'Click this link to disapprove: {disapproval_link}\n'
                             # f'Use this token for authorization: Bearer {admin_token}'
                         )
@@ -205,7 +205,6 @@ class UserPasswordResetViews(APIView):
             serializer = UserPasswordResetSerializer(data=request.data, context={'request': request})  
             if serializer.is_valid():
                 password = serializer.validated_data.get('password')
-                print("Validated Password:", password)
                 user.set_password(password)
                 user.save()
                 return Response({'msg': 'Password reset successful'}, status=status.HTTP_200_OK)
@@ -231,19 +230,22 @@ def approve_user(request, user_id):
     user.save()
 
     message=(
-        f'You are a part of the DMS Cantact Management System.'
-        f'"Click on this link and login http://localhost:5173/'
-    )
 
+        f'<p style="font-size:20px;"><b>Congratulations!</b><br></p>'
+        f'<p style="font-size:18px;">You are a part of the DMS Contact Management System.'
+        f'Click on this link for login <a href="http://localhost:5173/">http://localhost:5173/</a></p>'
+    )
 
 
     # Send confirmation email to the user
     send_mail(
-        'Congratulations',
-        message,
+        'DMS Contact Management System Access',
+        ' ',
         settings.EMAIL_HOST_USER,
         [user.email],
         fail_silently=False,
+        html_message=message,
+
     )
 
     return Response({'msg': 'User approved and activated successfully'}, status=status.HTTP_200_OK)

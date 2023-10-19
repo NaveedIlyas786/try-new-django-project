@@ -285,20 +285,20 @@ const Dashboard = () => {
                     <th colSpan={3}>Pending</th>
                     <th colSpan={3}>Won</th>
                     <th colSpan={3}>Lost</th>
-                    <th colSpan={2}>Ytd Total</th>
+                    <th colSpan={2}>YTD Total</th>
                   </tr>
                   <tr>
                     <th className="thBackgroundpend">#</th>
                     <th className="thBackgroundpend">%</th>
-                    <th className="thBackgroundpend">Estimated $</th>
+                    <th className="thBackgroundpend">Estimated </th>
                     <th className="thBackgroundWon">#</th>
                     <th className="thBackgroundWon">%</th>
-                    <th className="thBackgroundWon">Estimated $</th>
+                    <th className="thBackgroundWon">Estimated </th>
                     <th className="thBackgroundLost">#</th>
                     <th className="thBackgroundLost">%</th>
-                    <th className="thBackgroundLost">Estimated $</th>
+                    <th className="thBackgroundLost">Estimated </th>
                     <th># </th>
-                    <th>Estimated $</th>
+                    <th>Estimated </th>
                   </tr>
                 </thead>
                 <tbody className="jk">
@@ -317,7 +317,7 @@ const Dashboard = () => {
                         {formatPercentage(e.summary?.Pending?.percentage || 0)}
                       </td>
                       <td className="dashtd">
-                        ${" "}
+                        $
                         {formatNumberWithCommas(
                           e.summary?.Pending?.bid_amount || 0
                         )}
@@ -327,7 +327,7 @@ const Dashboard = () => {
                         {formatPercentage(e.summary?.Won?.percentage || 0)}
                       </td>
                       <td className="dashtd">
-                        ${" "}
+                        $
                         {formatNumberWithCommas(
                           e.summary?.Won?.bid_amount || 0
                         )}
@@ -352,7 +352,7 @@ const Dashboard = () => {
                     </tr>
                   ))}
                 </tbody>
-                <tfoot className="mytfoot">
+                {/* <tfoot className="mytfoot">
                   <tr>
                     <td className="totalsection dashtd">Grand Total</td>
                     <td className="totalsection dashtd">
@@ -400,7 +400,7 @@ const Dashboard = () => {
                     </td>
                     <td className="totalsection dashtd"></td>
                     <td className="totalsection dashtd">
-                      ${" "}
+                      $
                       {formatNumberWithCommas(
                         dashData.reduce(
                           (acc, e) => acc + (e?.Lost?.bid_amount || 0),
@@ -415,7 +415,7 @@ const Dashboard = () => {
                       )}
                     </td>
                     <td className="totalsection dashtd">
-                      ${" "}
+                      $
                       {formatNumberWithCommas(
                         dashData.reduce(
                           (acc, e) =>
@@ -425,7 +425,7 @@ const Dashboard = () => {
                       )}
                     </td>
                   </tr>
-                </tfoot>
+                </tfoot> */}
               </table>
             </div>
           </div>
@@ -447,7 +447,7 @@ const Dashboard = () => {
                   </tr>
                   <tr>
                     <th className="align-middle">#</th>
-                    <th className="align-middle">Estimated $</th>
+                    <th className="align-middle">Estimated </th>
                   </tr>
                 </thead>
                 <tbody>

@@ -669,24 +669,64 @@ td:nth-child(8) {
   /* background-color: #4caf50; */
 }
 .AllbackDivs {
-  background-color: #1976d2 ;
+  background-color: #c2dbf1 ;
   position: absolute;
   border-radius: 50%;
   top: -60px;
   left: -60px;
-  width: 250px;
-  height: 250px;
+  width: 170px;
+  height: 170px;
   z-index: -99;
 }
 .backDiv1 {
-  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,62,121,0.4374124649859944) 0%, rgba(0,255,244,0.8519782913165266) 100%);
-  width: 100px;
-  height: 100px;
+  background: linear-gradient(
+    90deg,
+    rgb(241, 154, 23) 0%,
+    rgba(172, 17, 243, 0.452) 0%,
+    rgba(0, 162, 255, 0.852) 100%
+  );
+  width: 40px;
+  height: 40px;
   position: absolute;
-  border-radius: 50%;
-  top: 100px;
-  left:80px;
+  border-radius:  50% 0;
+  top: 85px;
+  left: 80px;
+  animation: rotate 4s linear infinite; /* Here, "rotate" is the name of the animation */
 }
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+/* .backDiv2 {
+  background: linear-gradient(
+    90deg,
+    rgb(64, 255, 6) 0%,
+    rgba(180, 18, 255, 0.452) 0%,
+    rgba(255, 177, 8, 0.852) 100%
+  );
+  width: 30px;
+  height: 40px;
+  position: absolute;
+  border-radius:  50% 0;
+  top: 90px;
+  left: 80px;
+  animation: rotate 6s linear infinite; 
+}
+
+@keyframes rotate {
+  50% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+} */
+
 /* ******************* */
 
 .table-responsive {
@@ -747,10 +787,11 @@ td {
  /* font-family: ' Helvetica, Arial, Georgia, Tahoma and Roboto'; */
  font-family: 'Source Sans Pro';
  /* font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
-  text-shadow: 2px 2px 8px rgb(144, 204, 231);
-  font-size: 50px !important;
+  text-shadow: 2px 2px 8px rgb(177, 219, 238);
+  font-size: 40px !important;
   /* font-family: cursive; */
-  color: rgb(83, 76, 76) !important;
+  color: rgb(99, 92, 92) !important;
+  text-wrap: nowrap;
 }
 @media (max-width: 993px) {
   .estisum {

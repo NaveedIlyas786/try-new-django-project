@@ -1330,7 +1330,7 @@ const Estimator = () => {
       <div className={`estimator ${showModal ? "modal-active" : ""}`}>
         <div className="AllbackDivs">
           <div className="backDiv1"></div>
-          <div className="backDiv1"></div>
+          <div className="backDiv2"></div>
         </div>
 
         <div className="estimatingTable px-5">
@@ -1355,7 +1355,7 @@ const Estimator = () => {
             </div>
             <div className="d-flex mt-5  justify-content-between align-items-center h-70 ">
               <div>
-                <h3 className=" estisum nowrap-text " data-aos="fade-left">
+                <h3 className=" estisum  " data-aos="fade-left">
                   Estimating Summary
                 </h3>
               </div>
@@ -2453,7 +2453,7 @@ const Estimator = () => {
                                     // htmlFor={`specificName-${index}`}
                                     className="form-label"
                                   >
-                                    Add scope of Work
+                                    Add scope of Working
                                   </label>
                                   <select
                                     className="form-select"

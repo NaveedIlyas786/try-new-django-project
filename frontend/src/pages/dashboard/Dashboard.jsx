@@ -1,5 +1,6 @@
 import React, { useEffect, useState, PureComponent } from "react";
-import { LineChart, Line } from "recharts";
+import Dropdown from "react-bootstrap/Dropdown";
+import Button from "react-bootstrap/Button";
 // import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import {
   BarChart,
@@ -144,41 +145,31 @@ const Dashboard = () => {
     Lost: e.summary?.Lost?.total || 0,
   }));
 
+  const [selectedYear, setSelectedYear] = useState(2023);
+  const [dropdownOpen, setDropdownOpen] = useState(false); // Manage the dropdown visibility
 
-    const [selectedYear, setSelectedYear] = useState(2023);
-  // const [dashData, setDashData] = useState([]); // Initialize with an empty array
-
-  // Fetch data based on the selected year
-  useEffect(() => {
-    // Create a function to fetch data based on the selected year
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`http://127.0.0.1:8000/api/estimating/api/estimators/summary/?year=${selectedYear}`);
-        if (response.ok) {
-          const data = await response.json();
-          setDashData(data); // Update the state with fetched data
-        } else {
-          console.error('Error fetching data');
-        }
-      } catch (error) {
-        console.error('An error occurred:', error.message);
-      }
-    };
-
-    // Call the fetchData function when selectedYear changes
-    fetchData();
-  }, [selectedYear]);
-
-  // Event handler for changing the selected year
-  const handleYearChange = (year) => {
-    setSelectedYear(year);
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
   };
+
+  useEffect(() => {
+    // Fetch data from the API with the selected year
+    axios
+      .get(`http://127.0.0.1:8000/api/estimating/api/estimators/summary/?year=${selectedYear}`)
+      .then((response) => response.data)
+      .then((data) => {
+        setDashData(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, [selectedYear]);
 
 
   return (
     <>
       <div className=" container dashboard ">
-        <div className=" row projectStatus justify-content-around">
+      <div className=" row projectStatus justify-content-around">
           <div className=" col-md-2  ProjectStatus pendinggreen d-flex justify-content-center align-items-center">
           <p className="mt-2">
               <i className="fa-solid fa-circle-check check "></i>
@@ -221,57 +212,57 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-      <div className="mt-1">
+      <div className="mt-3">
         <div className=" container mytable ">
-         
         <div>
-      {/* Dropdown for selecting the year */}
-      <div className="ms-2 mb-2 btn-group dropright">
-        <button
-          type="button"
-          className="btn  dropdown-toggle"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          Filter based on year
-        </button>
-        <ul className="dropdown-menu text-center">
-          <li>
-            <a
-              className={`dropdown-item ${selectedYear === 2023 ? 'active' : ''}`}
-              href="#"
-              onClick={() => handleYearChange(2023)}
+      <div className=" container mytable d-flex mb-2">
+          <Dropdown show={dropdownOpen} onToggle={toggleDropdown}>
+            <Button
+              variant="primary"
+              id="dropdown-basic"
+              onClick={toggleDropdown}
             >
-              2023
-            </a>
-          </li>
-          <li>
-            <a
-              className={`dropdown-item ${selectedYear === 2022 ? 'active' : ''}`}
-              href="#"
-              onClick={() => handleYearChange(2022)}
-            >
-              2022
-            </a>
-          </li>
-          <li>
-            <a
-              className={`dropdown-item ${selectedYear === 2020 ? 'active' : ''}`}
-              href="#"
-              onClick={() => handleYearChange(2020)}
-            >
-              2020
-            </a>
-          </li>
-        </ul>
-        <h4 className="myh4">{selectedYear}</h4>
-      </div>
+              Filter year based
+              <i class="fa-light fa ms-2 fa-angle-down"></i>
+            </Button>
+
+            <Dropdown.Menu>
+              <Dropdown.Item
+                  className="dropdown"
+                onClick={() => {
+                  setSelectedYear(2023);
+                  toggleDropdown();
+                }}
+              >
+                2023
+              </Dropdown.Item>
+              <Dropdown.Item
+                  className="dropdown"
+                onClick={() => {
+                  setSelectedYear(2022);
+                  toggleDropdown();
+                }}
+              >
+                2022
+              </Dropdown.Item>
+              <Dropdown.Item
+                  className="dropdown"
+                onClick={() => {
+                  setSelectedYear(2020);
+                  toggleDropdown();
+                }}
+              >
+                2020
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+          <h4 className="myh4">{selectedYear}</h4>
+        </div>
       </div>
 
 
           <div
-            className=" row table-responsive table-design pk mt-2"
-            data-aos="fade-left"
+            className=" row table-responsive table-design pk"
           >
             <div className="col-md-12">
               <table className="table jk">
@@ -286,20 +277,20 @@ const Dashboard = () => {
                     <th colSpan={3}>Pending</th>
                     <th colSpan={3}>Won</th>
                     <th colSpan={3}>Lost</th>
-                    <th colSpan={2}>Ytd Total</th>
+                    <th colSpan={2}>YTD Total</th>
                   </tr>
                   <tr>
                     <th className="thBackgroundpend">#</th>
                     <th className="thBackgroundpend">%</th>
-                    <th className="thBackgroundpend">Estimated $</th>
+                    <th className="thBackgroundpend">Estimated </th>
                     <th className="thBackgroundWon">#</th>
                     <th className="thBackgroundWon">%</th>
-                    <th className="thBackgroundWon">Estimated $</th>
+                    <th className="thBackgroundWon">Estimated </th>
                     <th className="thBackgroundLost">#</th>
                     <th className="thBackgroundLost">%</th>
-                    <th className="thBackgroundLost">Estimated $</th>
+                    <th className="thBackgroundLost">Estimated </th>
                     <th># </th>
-                    <th>Estimated $</th>
+                    <th>Estimated </th>
                   </tr>
                 </thead>
                 <tbody className="jk">
@@ -318,7 +309,7 @@ const Dashboard = () => {
                         {formatPercentage(e.summary?.Pending?.percentage || 0)}
                       </td>
                       <td className="dashtd">
-                        ${" "}
+                        $
                         {formatNumberWithCommas(
                           e.summary?.Pending?.bid_amount || 0
                         )}
@@ -328,7 +319,7 @@ const Dashboard = () => {
                         {formatPercentage(e.summary?.Won?.percentage || 0)}
                       </td>
                       <td className="dashtd">
-                        ${" "}
+                        $
                         {formatNumberWithCommas(
                           e.summary?.Won?.bid_amount || 0
                         )}
@@ -353,7 +344,7 @@ const Dashboard = () => {
                     </tr>
                   ))}
                 </tbody>
-                <tfoot className="mytfoot">
+                {/* <tfoot className="mytfoot">
                   <tr>
                     <td className="totalsection dashtd">Grand Total</td>
                     <td className="totalsection dashtd">
@@ -401,7 +392,7 @@ const Dashboard = () => {
                     </td>
                     <td className="totalsection dashtd"></td>
                     <td className="totalsection dashtd">
-                      ${" "}
+                      $
                       {formatNumberWithCommas(
                         dashData.reduce(
                           (acc, e) => acc + (e?.Lost?.bid_amount || 0),
@@ -416,7 +407,7 @@ const Dashboard = () => {
                       )}
                     </td>
                     <td className="totalsection dashtd">
-                      ${" "}
+                      $
                       {formatNumberWithCommas(
                         dashData.reduce(
                           (acc, e) =>
@@ -426,179 +417,12 @@ const Dashboard = () => {
                       )}
                     </td>
                   </tr>
-                </tfoot>
+                </tfoot> */}
               </table>
             </div>
           </div>
         </div>
-        {/* <div className="container mt-5">
-          <div className="row">
-            <div
-              className="col-md-4 twoTable  mt-3 table-responsive-custom"
-            >
-              <table className="table twoTable  table-hover text-center ">
-                <thead className="thead-dark ">
-                  <tr>
-                    <th rowSpan={2} className="align-middle ">
-                      Company
-                    </th>
-                    <th colSpan={2} className="align-middle ">
-                      Won
-                    </th>
-                  </tr>
-                  <tr>
-                    <th className="align-middle">#</th>
-                    <th className="align-middle">Estimated $</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {companyiesData.map((e, index) => (
-                    <tr className="graphCompany" key={index}>
-                      <td className="dashtd">{e.company_name}</td>
-                      <td className="dashtd">{e.total_won}</td>
-                      <td className="dashtd">
-                        {formatNumberWithCommas(e.total_won_bid_amount)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            {/* <div className="ms-5 col-md-7 col-sm-7 graphimg">
-              <ResponsiveContainer width="100%" height={500}>
-                <BarChart
-                  width={500}
-                  height={500}
-                  data={companyiesData}
-                  margin={{
-                    top: 5,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="company_name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="total_won" fill="#8884d8" />
-                  <Bar dataKey="total_won_bid_amount" fill="#82ca9d" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div> */}
-            {/* <div className="ms-5 col-md-7 col-sm-7 graphimg">
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart
-                  width={500}
-                  height={500}
-                  data={companyiesData}
-                  margin={{
-                    top: 5,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="company_name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Line
-                    type="monotone"
-                    dataKey="total_won_estimating"
-                    stroke="#8884d8"
-                    activeDot={{ r: 8 }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="total_won_bid_amount"
-                    stroke="#82ca9d"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div> */}
-            {/* <div
-              className="ms-5 col-md-7 col-sm-7 text-center graphimg"
-              
-            >
-              <BarChart
-                width={650}
-                height={350}
-                data={companyiesData}
-                margin={{
-                  top: 20,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="company_name" />
-                <YAxis />
-                <Tooltip formatter={(value) => formatNumberWithCommas(value)} />
-                <Bar
-                  dataKey="total_won_bid_amount"
-                  fill="#8884d8"
-                  shape={<TriangleBar />}
-                  label={{ position: "top" }}
-                >
-                  {companyiesData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={colors[index % 20]} />
-                  ))}
-                </Bar>
-              </BarChart>
-              <div className="mt-2 d-flex totalamount">
-                <h1>Total Amount: </h1>
-                {companyiesData[2] && (
-                  <h1>
-                    {formatNumberWithCommas(
-                      companyiesData[2].total_won_bid_amount
-                    )}
-                  </h1>
-                )}
-              </div>
-            </div> */}
-            {/* <div
-              className="ms-3 col-md-7 col-sm-7 text-center graphimg"
-              
-            >
-              <BarChart
-                width={800}
-                height={400}
-                data={chartData}
-                margin={{
-                  top: 20,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-
-                <Bar dataKey="Working" stackId="a" fill="#8884d8" />
-                <Bar dataKey="Pending" stackId="a" fill="#82ca9d" />
-                <Bar dataKey="Won" stackId="a" fill="#ffc658" />
-                <Bar dataKey="Lost" stackId="a" fill="#ff7f7f" />
-              </BarChart>
-              <div className="mt-2 d-flex totalamount">
-                <h1 className="dashh">Total Amount: </h1>
-                {companyiesData[2] && (
-                  <h1 className="dashh">
-                    {formatNumberWithCommas(
-                      companyiesData[2].total_won_bid_amount
-                    )}
-                  </h1>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>  */}
-       <div className="container mt-5">
+        <div className="container mt-5">
        <div className="row mt-5">
       <div
               className="ms-2 col text-center graphimg mt-5"

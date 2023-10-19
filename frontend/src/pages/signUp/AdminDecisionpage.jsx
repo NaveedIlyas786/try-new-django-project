@@ -25,20 +25,20 @@ const AdminDecisionpage = () => {
   return (
     <div className="admindecisionPage">
       <div className=" px-5 contentwait">
-      <div className="newcontent">
-        <h1 className="DMS fw-2 dmsh1">
-          Please Take a decision and choose (<span className="span12 ss1">Approval</span>/<span className="span12 ss2">Rejection</span>) regarding
+      <div className="newcontent d-flex flex-column gap-3">
+        <h4 className="DMS ">
+          Please Chose(<span className=" ss1">Approve</span>/<span className=" ss2">Reject</span>) regarding
           registration Request
-        </h1>
+        </h4>
         {userData && (
-          <h2 className="DMS dmsh2">
-            {userData.full_Name} needs your approval for registration in  <span className="span11">DMS System</span>
+          <p className="userinfo">
+            <strong className="text-primary"> {userData.full_Name} </strong>  needs your approval for registration in  <i>DMS Contact Management System</i>
            
-          </h2>
+          </p>
         )}
         <div className="d-flex justify-content-center gap-3">
           <button
-            onClick={() => {
+            onClick={() => { 
               // Handle Approval, and pass the userId to the API
               axios
                 .post(`http://127.0.0.1:8000/api/user/approve_user/${userId}/`)
@@ -46,7 +46,7 @@ const AdminDecisionpage = () => {
                   // Handle success, e.g., show a success message
                   console.log(response);
                   console.log("Approved From Admin");
-                  navigate("/");
+                  // navigate("/");
                 })
                 .catch((error) => {
                   // Handle error, e.g., show an error message
@@ -69,7 +69,7 @@ const AdminDecisionpage = () => {
                   // Handle success, e.g., show a success message
                   console.log(response);
                   console.log("Rejected From Admin");
-                  navigate("/rejectionPage");
+                  // navigate("/rejectionPage");
                 })
                 .catch((error) => {
                   // Handle error, e.g., show an error message

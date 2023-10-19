@@ -25,13 +25,13 @@ class DMS_DertoryAdmin(admin.ModelAdmin):
     get_job_title.short_description = 'job_title'
 
 
-    list_display=('id','full_Name','email','get_job_title','company','department','direct_number','locaton','mobile_number')
+    list_display=('id', 'first_name','last_name','email','get_job_title','company','department','direct_number','locaton','mobile_number')
     add_fieldsets = [
         (
             None,
             {
                 "classes": ["wide"],
-                "fields": ["email", "full_Name", "job_title","mobile_number","company","department","direct_number","locaton"],
+                "fields": ["email", "first_name","last_name", "job_title","mobile_number","company","department","direct_number","locaton"],
             },
         ),
     ]
@@ -62,7 +62,7 @@ class EstimatingAdmin(admin.ModelAdmin):
     list_display = ['id', 'start_date', 'prjct_name','time','timezone',
                     'due_date', 'status','company',
                     'bid_amount', 'location', 'estimator',
-                    'bidder','link','bidder_mail','bidder_address']
+                    'bidder','bidder_mail','bidder_detail']
     list_filter = ['estimator']  # Use 'username' or another field that exists in the 'User' model
 
     def get_queryset(self, request):

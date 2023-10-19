@@ -20,8 +20,15 @@ class Project(models.Model):
         roles__name='BIM Modeler/Trimble Operator') | models.Q(roles__name='BIM/Manager PR'), on_delete=models.SET_NULL, null=True, blank=True)
     Forman = models.ForeignKey(User, verbose_name="FOREMAN/Superintendent", related_name='Forman_as_Forman', limit_choices_to=models.Q(roles__name='Foreman') | models.Q(
         roles__name='General Superintendent') | models.Q(roles__name='So. Cal. General Manager') | models.Q(roles__name='No. Cal. General Manager'), on_delete=models.SET_NULL, null=True, blank=True)
+    
+    
+    
     prjct_mngr = models.ForeignKey(User, verbose_name="Project Manager", related_name='Project_Manager', limit_choices_to=models.Q(
-        roles__name='Project Manager'), on_delete=models.SET_NULL, null=True, blank=True)
+        roles__name='Project Manager') | 
+        models.Q(roles__name='Proconstruction Manager') |
+        models.Q(roles__name='Vice President') |
+        models.Q(roles__name='No. Cal. General Manager'),
+          on_delete=models.SET_NULL, null=True, blank=True)
     estimating = models.ForeignKey(Estimating, verbose_name="estimating",
                                    related_name='projects_start_date', on_delete=models.CASCADE, null=True, blank=True)
     start_date = models.DateField(

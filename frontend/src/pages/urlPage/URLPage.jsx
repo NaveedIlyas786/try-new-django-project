@@ -108,7 +108,7 @@ const URLPage = () => {
   return (
     <div className="parentDiv px-5">
       <div className="titleWithSearch">
-        <h3 className="text-black">URLPage Summary</h3>
+        <h3 className="text-black">URL Page Summary</h3>
           
         <div className="inputSearchDiv">
           <input

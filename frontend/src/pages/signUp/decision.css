@@ -11,6 +11,10 @@
     font-size: 35px !important;
     font-family: 'Poppins', sans-serif;
 }
+.userinfo{
+    /* line-height: 50px; */
+    font-size: 20px;
+}
 .ss1{
     color: #4fd311;
 }
@@ -26,7 +30,7 @@
 }
 #waitingpage{
     min-height: 100vh ;
-    background-color: rgb(238, 238, 241);
+    background-color: rgb(255, 255, 255);
     display: grid;
     place-items: center;
     
@@ -39,7 +43,7 @@
 .newcontent{
     border: 2px solid transparent;
     border-radius: 30px;
-    background-color: rgb(211, 218, 223);
+    background-color: rgb(248, 252, 255);
     /* box-shadow: 10px 10px 5px 12px rgb(202, 230, 240); */
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     padding: 70px 50px;

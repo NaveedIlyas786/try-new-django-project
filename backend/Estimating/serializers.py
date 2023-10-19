@@ -14,7 +14,7 @@ from Estimating.models import Company,Estimating, Estimating_detail, Proposal, A
 class DMS_DertorySezializers(serializers.ModelSerializer):
     class Meta:
         model = DMS_Dertory
-        fields = ['id', 'full_Name', 'email', 'job_title', 'company', 'department', 'direct_number', 'locaton', 'mobile_number']
+        fields = ['id', 'first_name','last_name', 'email', 'job_title', 'company', 'department', 'direct_number', 'locaton', 'mobile_number']
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -85,7 +85,7 @@ class EstimatingSerializer(serializers.ModelSerializer):
  
     start_date = serializers.DateField(
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
-
+    company=CompanySerializer(read_only=True)
 
     class Meta:
         model = Estimating
@@ -103,8 +103,8 @@ class EstimatingSerializer(serializers.ModelSerializer):
             'estimator',
             'bidder',
             'bidder_mail',
-            'bidder_address',
-            'link',
+            'bidder_detail',
+    
         ]
 
 
@@ -113,7 +113,7 @@ class EstimatingSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
 
         # Updating representation to include names instead of IDs for foreign keys
-        representation['company'] = instance.company.Cmpny_Name if instance.company else None
+        # representation['company'] = instance.company.Cmpny_Name if instance.company else None
         representation['location'] = instance.location.name if instance.location else None
         representation['estimator'] = instance.estimator.full_Name if instance.estimator else None
 
@@ -220,17 +220,17 @@ class ProposalSerializer(serializers.ModelSerializer):
     services = ProposalServiceSerializer(many=True, read_only=True)
     Addendums=AddendumSerializer(many=True,read_only=True)
     spcifc=SpecificationSerializer(many=True,read_only=True)
-
+    estimating=EstimatingSerializer(read_only=True)
     
     class Meta:
         model = Proposal
         fields = ['id','estimating', 'date', 'architect_name', 'architect_firm','Addendums', 'services','spcifc'] 
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
 
 
-        representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None
+    #     representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None
 
 
-        return representation
+    #     return representation

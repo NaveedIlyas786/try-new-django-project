@@ -43,6 +43,10 @@ h5 {
 .pendingyellow{
   border:2px solid#f7bb07;
 }
+.dropdown:hover{
+background-color: #118cd3;
+color: white;
+}
 .pendingWorking{
   border:2px solid rgb(81, 161, 231);
 }

@@ -17,6 +17,10 @@
   margin-top: 70px;
   padding: 30px; /* Add padding to the content */
   box-sizing: border-box; /* Ensure padding is included in element size */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 .printable-content {
   padding-top: 30mm; /* Adjust padding as needed */
@@ -52,9 +56,24 @@
   padding: 0px 50px;
   margin-bottom: 40px !important;
 }
+.topSection{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.coverdiv{
+  padding: 40px 100px;
+  margin: 0 100px;
+}
 .baseh4{
   font-size: 18px;
 }
 .baseh5{
   font-size: 21px;
+}
+.emailbtn{
+  cursor: pointer;
+}
+.emailbtn:focus{
+scale: 1.2;
 }

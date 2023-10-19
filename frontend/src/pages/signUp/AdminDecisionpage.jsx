@@ -38,7 +38,7 @@ const AdminDecisionpage = () => {
         )}
         <div className="d-flex justify-content-center gap-3">
           <button
-            onClick={() => {
+            onClick={() => { 
               // Handle Approval, and pass the userId to the API
               axios
                 .post(`http://127.0.0.1:8000/api/user/approve_user/${userId}/`)

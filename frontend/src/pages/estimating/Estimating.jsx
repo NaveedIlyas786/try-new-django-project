@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "font-awesome/css/font-awesome.min.css";
 import "react-datepicker/dist/react-datepicker.css";
 import { fetchEstimatingData } from "../../store/EstimatingSlice";
-import { addProject } from "../../store/ProjectFormSlice";
+// import { addProject } from "../../store/ProjectFormSlice";
 import { Modal, Button, Stepper, Step, StepLabel } from "@mui/material";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -15,12 +15,11 @@ import ParticlesAnimation from "../../components/particleAnimation/ParticlesAnim
 import { useSelector, useDispatch } from "react-redux";
 import { updateStatus } from "../../store/EstimatingSlice";
 import { createSelector } from "reselect";
-import { storeProposalData } from "../../store/EstimatingProposalSlice";
-import Rawpurposal from "../purposal/rawpurposal";
-import { margin } from "@mui/system";
+// import { storeProposalData } from "../../store/EstimatingProposalSlice";
+// import { margin } from "@mui/system";
 
 const Estimator = () => {
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
   const [filter, setFilter] = useState("");
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
   const [showEstimatingEditModal, setshowEstimatingEditModal] = useState(false); // State to control modal visibility
@@ -30,7 +29,7 @@ const Estimator = () => {
   const [projectName, setProjectName] = useState("");
   const [estimatorName, setEstimatorName] = useState("");
   const [location, setLocation] = useState("");
-  const [bidAmount, setBidAmount] = useState("");
+  // const [bidAmount, setBidAmount] = useState("");
   const [company, setCompany] = useState(""); // Updated to store company name as a string
 
   // ***********************************
@@ -195,7 +194,8 @@ const Estimator = () => {
   const [selectedProjectID, setSelectedProjectID] = useState("");
   const [selectedProjectManager, setSelectedProjectManager] = useState("");
   const [selectedBimOperator, setSelectedBimOperator] = useState("");
-  const [SelectedGeneralSuperintendent, setSelectedGeneralSuperintendent] = useState("");
+  const [SelectedGeneralSuperintendent, setSelectedGeneralSuperintendent] =
+    useState("");
   const [selectedProjectAddress, setselectedProjectAddress] = useState("");
   const [selectedAddendum, setselectedAddendum] = useState("");
   const [selectedBid, setselectedBid] = useState("");
@@ -210,64 +210,196 @@ const Estimator = () => {
   const [selectedSubstitution, setSelectedSubstitution] = useState("");
   const [selectedContract, setSelectedContract] = useState("");
   const [selectedProjectDate, setSelectedProjectDate] = useState("");
-  const [selectedFINISHLEVELMARKUPS, setSelectedFINISHLEVELMARKUPS] = useState("");
+  const [selectedFINISHLEVELMARKUPS, setSelectedFINISHLEVELMARKUPS] =
+    useState("");
 
-  // Event handlers for form inputs
+  const [selectedEstimatingID, setSelectedEstimatingID] = useState(null);
+
   const handleStartDateChange = (e) => setStartDate(e.target.value);
   const handleJobNoChange = (e) => setJobNo(e.target.value);
   const handleForemanChange = (e) => setSelectedForeman(e.target.value);
   const handleBimOperatorChange = (e) => setSelectedBimOperator(e.target.value);
-  const handleGenralSuperintendentChange = (e) => setSelectedGeneralSuperintendent(e.target.value);
-  const handleProjectAddressChange = (e) => setselectedProjectAddress(e.target.value);
-  const handleSelectedAddendumChange = (e) => setselectedAddendum(e.target.value);
+  const handleGenralSuperintendentChange = (e) =>
+    setSelectedGeneralSuperintendent(e.target.value);
+  const handleProjectAddressChange = (e) =>
+    setselectedProjectAddress(e.target.value);
+  const handleSelectedAddendumChange = (e) =>
+    setselectedAddendum(e.target.value);
   const handleSelectedBidChange = (e) => setselectedBid(e.target.value);
   const handleSelectedSpecChange = (e) => setselectedspec(e.target.value);
   const handleWallTypeChange = (e) => setSelectedWallType(e.target.value);
-  const handlePROGRESSTRACKINGChange = (e) => setSelectedPROGRESSTRACKING(e.target.value);
-  const handleFINISHLEVELMARKUPSChange = (e) => setSelectedFINISHLEVELMARKUPS(e.target.value);
+  const handlePROGRESSTRACKINGChange = (e) =>
+    setSelectedPROGRESSTRACKING(e.target.value);
+  const handleFINISHLEVELMARKUPSChange = (e) =>
+    setSelectedFINISHLEVELMARKUPS(e.target.value);
   const handleDrywellChange = (e) => setSelectedDrywell(e.target.value);
   const handleRO_DoorChange = (e) => setSelectedRO_Door(e.target.value);
   const handleRO_WindowChange = (e) => setSelectedRO_Window(e.target.value);
   const handleProjectStatusChange = (e) => setProjectStatus(e.target.value);
   const handleContactsChange = (e) => setSelectedContacts(e.target.value);
-  const handleSubstitutionChange = (e) => setSelectedSubstitution(e.target.value);
+  const handleSubstitutionChange = (e) =>
+    setSelectedSubstitution(e.target.value);
   const handleContractChange = (e) => setSelectedContract(e.target.value);
   const handleProjectDateChange = (e) => setSelectedProjectDate(e.target.value);
   const handleProjectEngineerChange = (e) =>
     setSelectedProjectEngineer(e.target.value);
   const handleProjectManagerChange = (e) =>
     setSelectedProjectManager(e.target.value);
-  const handleProjectIDChange = (e) => setSelectedProjectID(e.target.value);
+
+  // ****************** Smart way to handle Nested Fields with multistep form **********
+  const [ProjectStep1FormData, setProjectStep1FormData] = useState({
+    start_date: getCurrentDate(),
+    estimating: selectedEstimatingID,
+    job_num: "",
+    prjct_mngr: "",
+    Forman: "",
+    bim_oprtr: "",
+    prjct_engnr: "",
+  });
+  const [ProjectStep2FormData, setProjectStep2FormData] = useState({
+    general_superintendent: "",
+    addendums: "",
+    project_address: "",
+    Spec: "",
+    bid: "",
+    wall_type: "",
+    drywell: "",
+  });
+  const [ProjectStep3FormData, setProjectStep3FormData] = useState({
+    finish: "",
+    progress: "",
+    contacts: "",
+    status: "",
+    ro_door: "",
+    ro_window: "",
+    substitution: "",
+  });
+  const [ProjectStep4FormData, setProjectStep4FormData] = useState({
+    contracts: [],
+    schedule_of_values: [],
+    insurancs: [],
+    bond: [],
+  });
+  const [ProjectStep5FormData, setProjectStep5FormData] = useState({
+    zliens: [
+      {
+        zlien: "",
+        date: "",
+      },
+    ],
+    submittals: [
+      {
+        scop_work_number: "",
+        status: "",
+        date: "",
+      },
+    ],
+  });
+
+  const [ProjectStep6FormData, setProjectStep6FormData] = useState({
+    shopdrawing: [],
+    safity: [],
+    schedule: [],
+    sub_contractors: [],
+  });
 
   // Function to handle form submission
+  //TODO: Multistep Form  React Code
+  const [projectactiveStep, setprojectActiveStep] = useState(0);
+  const projectSteps = [
+    "Step 1",
+    "Step 2",
+    "Step 3",
+    "Step 4",
+    "Step 5",
+    "Step 6",
+    "Step 7",
+    "Step 8",
+  ];
 
+  const handleprojectBack = () => {
+    setprojectActiveStep((prevStep) => prevStep - 1);
+  };
+  const handleprojectNext = () => {
+    setprojectActiveStep((prevStep) => prevStep + 1);
+    console.log(projectactiveStep);
+  };
+
+  const handleFieldChange = (field, value, index, category) => {
+    setProjectStep5FormData((prevData) => {
+      const updatedData = { ...prevData };
+      updatedData[category][index] = {
+        ...updatedData[category][index],
+        [field]: value,
+      };
+      return updatedData;
+    });
+  };
   const handleProjectFormSubmit = (e) => {
     e.preventDefault();
 
     const formData = {
-      start_date: startDate,
-      job_num: jobNo,
-      estimating: selectedEstimatingID,
-      prjct_mngr: selectedProjectManager,
-      Forman: selectedForeman,
-      bim_oprtr: selectedBimOperator,
-      prjct_engnr: selectedProjectEngineer,
-      general_superintendent:SelectedGeneralSuperintendent,
-      project_address:selectedProjectAddress,
-      addendums:selectedAddendum,
-      bid:selectedBid,
-      Spec:selectedspec,
-      wall_type:selectedWallType,
-      progress:selectedPROGRESSTRACKING,
-      finish:selectedFINISHLEVELMARKUPS,
-      drywell:selectedDrywell,
-      ro_door:selectedRO_Door,
-      ro_window:selectedRO_Window,
-      status:selectedProjectStatus,
-      contacts:selectedContacts,
-      substitution:selectedSubstitution,
-      contracts: selectedContract, //........
-      contract_date:selectedProjectDate, //........
+      // *****step 01
+      start_date: ProjectStep1FormData.start_date,
+      job_num: ProjectStep1FormData.job_num,
+      estimating: ProjectStep1FormData.estimating,
+      prjct_mngr: ProjectStep1FormData.prjct_mngr,
+      Forman: ProjectStep1FormData.Forman,
+      bim_oprtr: ProjectStep1FormData.bim_oprtr,
+      prjct_engnr: ProjectStep1FormData.prjct_engnr,
+
+      // *****step 02
+
+      general_superintendent: ProjectStep2FormData.general_superintendent,
+      addendums: ProjectStep2FormData.addendums,
+      project_address: ProjectStep2FormData.project_address,
+      bid: ProjectStep2FormData.bid,
+      Spec: ProjectStep2FormData.Spec,
+      drywell: ProjectStep2FormData.drywell,
+      wall_type: ProjectStep2FormData.wall_type,
+
+      // *****step 03
+
+      finish: ProjectStep3FormData.finish,
+      progress: ProjectStep3FormData.progress,
+      contacts: ProjectStep3FormData.contacts,
+      ro_door: ProjectStep3FormData.ro_door,
+      ro_window: ProjectStep3FormData.ro_window,
+      status: ProjectStep3FormData.status,
+      substitution: ProjectStep3FormData.substitution,
+
+      // *****step 04
+
+      contracts: ProjectStep4FormData.contracts.map((mycontract) => ({
+        contract: mycontract.contract,
+        contract_date: mycontract.contract_date,
+      })),
+      schedule_of_values: ProjectStep4FormData.schedule_of_values.map(
+        (myschedule) => ({
+          schedule: myschedule.schedule,
+          schedule_date: myschedule.schedule_date,
+        })
+      ),
+      insurancs: ProjectStep4FormData.insurancs.map((myinsurancs) => ({
+        insurance: myinsurancs.insurancs,
+        date: myinsurancs.date,
+      })),
+      bond: ProjectStep4FormData.contracts.map((mybond) => ({
+        bond: mybond.bond,
+        date: mybond.date,
+      })),
+
+      // *****step 05
+
+      zliens: ProjectStep5FormData.zliens.map((myzliens) => ({
+        zlien: myzliens.zlien,
+        date: myzliens.date,
+      })),
+      submittals: ProjectStep5FormData.submittals.map((mysubmittals) => ({
+        status: mysubmittals.status,
+        date: mysubmittals.date,
+        scop_work_number: mysubmittals.scop_work_number,
+      })),
     };
 
     console.log("formData to be sent", formData);
@@ -281,16 +413,21 @@ const Estimator = () => {
       })
       .then((response) => {
         console.log("Data successfully submitted", response.data);
-        // dispatch(addProject(response.data));
+        const updatedEstimatingData = estimatingData.filter(
+          (entry) => entry.id !== formData.estimating // Replace 'id' with your actual identifier field
+        );
+
+        setshowProjectModal(false);
+        setEstimatingData(updatedEstimatingData);
 
         // Clear the form fields by resetting the state variables
-        setStartDate(""); 
-        setJobNo(""); 
+        setStartDate("");
+        setJobNo("");
         setSelectedProjectID("");
-        setSelectedProjectManager(""); 
+        setSelectedProjectManager("");
         setSelectedForeman("");
-        setSelectedBimOperator(""); 
-        setSelectedProjectEngineer(""); 
+        setSelectedBimOperator("");
+        setSelectedProjectEngineer("");
         setTimeout(() => {
           setshowProjectModal(false);
         }, 200);
@@ -353,7 +490,9 @@ const Estimator = () => {
       .get("http://127.0.0.1:8000/api/user/register/")
       .then((response) => response.data)
       .then((data) => {
-        const formanUser = data.filter((user) => user.roles.includes("Foreman"));
+        const formanUser = data.filter((user) =>
+          user.roles.includes("Foreman")
+        );
         console.log(formanUser);
         setFormanName(formanUser);
       })
@@ -440,7 +579,6 @@ const Estimator = () => {
     return formattedTime;
   };
 
-
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
 
@@ -505,10 +643,8 @@ const Estimator = () => {
       });
   };
 
-
   //************* Define the handleEstimatingEditing function
 
-  const [selectedEstimatingID, setSelectedEstimatingID] = useState("");
   const [selectedEstimator, setSelectedEstimator] = useState("");
   const [selectedBidder, setSelectedBidder] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
@@ -634,9 +770,7 @@ const Estimator = () => {
     },
   ]);
 
-
   // ****************new entry of scope of work with unique id
-
 
   const [services, setServices] = useState([]);
   async function fetchServiceData() {
@@ -787,18 +921,6 @@ const Estimator = () => {
         // console.log("Response data:", responseData);
         console.log("Data Successfully Submitted !", responseData);
 
-        // const submittedData = {
-        //   date: step0FormData.date,
-        //   estimating: step0FormData.estimating,
-        //   architect_name: step0FormData.architect_name,
-        //   architect_firm: step0FormData.architect_firm,
-        //   Addendums: step1FormData.Addendums,
-        //   spcifc: step2FormData,
-        //   services: services,
-        // };
-        // localStorage.setItem('proposalData', JSON.stringify(submittedData));
-        // dispatch(storeProposalData(submittedData));
-
         // Clear form fields after successful submission
         setStep0FormData({
           date: getCurrentDate(),
@@ -838,21 +960,18 @@ const Estimator = () => {
     return data
       .filter((customer) => {
         return (
-          ((customer.prjct_name &&
+          (customer.prjct_name &&
             customer.prjct_name.toUpperCase().includes(filter.toUpperCase())) ||
-            (customer.status &&
-              customer.status
-                .trim()
-                .toUpperCase()
-                .includes(filter.trim().toUpperCase())) ||
-            (customer.estimator &&
-              customer.estimator
-                .toUpperCase()
-                .includes(filter.toUpperCase())) ||
-            (customer.bidder &&
-              customer.bidder.toUpperCase().includes(filter.toUpperCase()))) &&
-          (customer.status === "Working" || customer.status === "Pending")
-        ); // Filter by 'Working' and 'Pending' status
+          (customer.status &&
+            customer.status
+              .trim()
+              .toUpperCase()
+              .includes(filter.trim().toUpperCase())) ||
+          (customer.estimator &&
+            customer.estimator.toUpperCase().includes(filter.toUpperCase())) ||
+          (customer.bidder &&
+            customer.bidder.toUpperCase().includes(filter.toUpperCase()))
+        );
       })
       .sort((a, b) => {
         // Parse the due dates as Date objects
@@ -869,8 +988,6 @@ const Estimator = () => {
   });
 
   const filteredData = useSelector(selectFilteredData);
-
-
 
   const handlestartDateChange = (e) => {
     setStartDate(e.target.value);
@@ -908,8 +1025,6 @@ const Estimator = () => {
   const handleLocationChange = (e) => {
     setLocation(e.target.value);
   };
-
-
 
   const handleBidderChange = (e) => {
     setbidderName(e.target.value);
@@ -1148,6 +1263,65 @@ const Estimator = () => {
     }
   };
 
+  const handleStatusChange = async (event, itemId) => {
+    const updatedStatus = event.target.value;
+    console.log("Updated Status:", updatedStatus);
+
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            status: updatedStatus, // Update the status
+          }),
+        }
+      );
+
+      console.log("API Response:", response);
+
+      if (response.ok) {
+        // Handle success response here
+        const updatedStatusMap = { ...statusMap };
+        updatedStatusMap[itemId] = updatedStatus;
+        setStatusMap(updatedStatusMap);
+
+        // Fetch the "prjct_name" corresponding to the selected "itemId"
+        const responseEstimating = await fetch(
+          `http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`
+        );
+        if (responseEstimating.ok) {
+          const estimatingData = await responseEstimating.json();
+          // Set the "prjct_name" as the value for the "Estimating/Project Name" field
+          setSelectedEstimatingID(estimatingData.prjct_name);
+        }
+
+        // Check if the updated status is "Won" and open the project modal
+        if (updatedStatus === "Won") {
+          setshowProjectModal(true);
+        }
+
+        // Log a success message to the console
+        console.log(`Status updated successfully for item with ID ${itemId}`);
+        // You may need to refresh the UI or update the specific row accordingly
+      } else {
+        if (response.status === 404) {
+          // Handle the case where the resource was not found (404 error)
+          console.error("Resource not found.");
+        } else {
+          // Handle other non-success responses
+          const responseData = await response.text();
+          console.error("Failed to update! Server response:", responseData);
+        }
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
+  };
+
   const MovetoURLpage = () => {
     navigate("/homepage/urlpage");
   };
@@ -1156,7 +1330,7 @@ const Estimator = () => {
       <div className={`estimator ${showModal ? "modal-active" : ""}`}>
         <div className="AllbackDivs">
           <div className="backDiv1"></div>
-          <div className="backDiv1"></div>
+          <div className="backDiv2"></div>
         </div>
 
         <div className="estimatingTable px-5">
@@ -1181,7 +1355,7 @@ const Estimator = () => {
             </div>
             <div className="d-flex mt-5  justify-content-between align-items-center h-70 ">
               <div>
-                <h3 className=" estisum nowrap-text " data-aos="fade-left">
+                <h3 className=" estisum  " data-aos="fade-left">
                   Estimating Summary
                 </h3>
               </div>
@@ -1207,1584 +1381,2011 @@ const Estimator = () => {
               </div>
             </div>
           </div>
-          {/* {ProjectformModal && ( */}
+
           {showProjectModal && (
             <div
-              className={`modal-container projectPopup bg-white pt-5 ps-2 ${
+              className={`modal-container pt-5 ps-2 ${
                 showProjectModal ? "show" : ""
               }`}
             >
-              <h4 className="text-center addnewtxt">Add New Project Entry</h4>
+              <h4 className="text-center addnewtxt">Add Project Entries</h4>
               <button className="close-btn" onClick={closeModal}></button>
-              <div className="d-flex justify-content-center  align-items-center flex-column gap-5 pb-5 px-5">
-                <div className="projName">
-                  <label htmlFor="projectName" className="form-label">
-                    Estimating/Project Name:
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="projectName"
-                    placeholder="AutoPopulate not shown on frontend"
-                    value={selectedEstimatingID}
-                            onChange={(e) =>
-                              setStep0FormData({
-                                ...step0FormData,
-                                estimating: e.target.value,
-                              })
-                            }
-                            readOnly
-                  />
-                </div>
-                <div className="bothDiv gap-3 mt-3">
-                  <div className="projName Oneline">
-                    <label htmlFor="projectName" className="form-label">
-                      Start Date:
-                    </label>
-                    <input
-                      type="date"
-                      className="form-control"
-                      id="DateId"
-                      value={startDate}
-                      onChange={handleStartDateChange}
-                    />
-                  </div>
-                  <div className="projName Oneline">
-                    <label htmlFor="projectName" className="form-label">
-                      Job Number:
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="projectID"
-                      value={jobNo}
-                      onChange={handleJobNoChange}
-                    />
-                  </div>
-                </div>
-                <div className="bothDiv gap-3">
-                  <div className="Oneline">
-                    <label htmlFor="estimatorName" className="form-label">
-                      Project Manager:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="projectManagerID"
-                      value={selectedProjectManager}
-                      onChange={handleProjectManagerChange}
-                    >
-                      <option value="">Select Project Manager</option>
-                      {projectManager && projectManager.length > 0 ? (
-                        projectManager.map((user) => (
-                          <option value={user.id} key={user.id}>
-                            {user.full_Name}
-                          </option>
-                        ))
-                      ) : (
-                        <option value="" disabled>
-                          Loading...
-                        </option>
-                      )}
-                    </select>
-                  </div>
-                  <div className="Oneline">
-                    <label htmlFor="location" className="form-label">
-                      Foreman:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="estimatorNameID"
-                      value={selectedForeman}
-                      onChange={handleForemanChange}
-                    >
-                      <option value="">Select Forman</option>
-                      {formanName.length > 0 ? (
-                        formanName.map((user) => (
-                          <option value={user.id} key={user.id}>
-                            {user.full_Name}
-                          </option>
-                        ))
-                      ) : (
-                        <option value="" disabled>
-                          Loading...
-                        </option>
-                      )}
-                    </select>
-                  </div>
-                </div>
-
-                <div className="bothDiv gap-3">
-                  <div className="Oneline">
-                    <label htmlFor="estimatorName" className="form-label">
-                      Bim Operator:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="bimOperatorID"
-                      value={selectedBimOperator} // Use the selectedBimOperator value
-                      onChange={handleBimOperatorChange}
-                    >
-                      <option value="">Select Bim Operator</option>
-                      {BimOperator && BimOperator.length > 0 ? (
-                        BimOperator.map((user) => (
-                          <option value={user.id} key={user.id}>
-                            {user.full_Name}
-                          </option>
-                        ))
-                      ) : (
-                        <option value="" disabled>
-                          Loading...
-                        </option>
-                      )}
-                    </select>
-                  </div>
-                  <div className="Oneline">
-                    <label htmlFor="location" className="form-label">
-                      Project Engineer:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="ProjectEngineerID"
-                      value={selectedProjectEngineer}
-                      onChange={handleProjectEngineerChange}
-                    >
-                      <option value="">Select Project Engineer</option>
-
-                      {ProjEnger && ProjEnger.length > 0 ? (
-                        ProjEnger.map((user) => (
-                          <option value={user.id} key={user.id}>
-                            {user.full_Name}
-                          </option>
-                        ))
-                      ) : (
-                        <option value="" disabled>
-                          Loading...
-                        </option>
-                      )}
-                    </select>
-                  </div>
-                </div>
-                <div className="bothDiv gap-3">
-                  <div className="Oneline">
-                    <label htmlFor="estimatorName" className="form-label">
-                      BIM Modeler:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="bimOperatorID"
-                      value={selectedBimOperator} // Use the selectedBimOperator value
-                      onChange={handleBimOperatorChange}
-                    >
-                      <option value="">Select Bim Operator</option>
-                      {BimOperator && BimOperator.length > 0 ? (
-                        BimOperator.map((user) => (
-                          <option value={user.id} key={user.id}>
-                            {user.full_Name}
-                          </option>
-                        ))
-                      ) : (
-                        <option value="" disabled>
-                          Loading...
-                        </option>
-                      )}
-                    </select>
-                  </div>
-                  <div className="Oneline">
-                    <label htmlFor="location" className="form-label">
-                      Genral_superintendent:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="ProjectEngineerID"
-                      value={SelectedGeneralSuperintendent}
-                      onChange={handleGenralSuperintendentChange}
-                    >
-                      <option value="">Select Project Engineer</option>
-
-                      {GeneralSuperintendent && GeneralSuperintendent.length > 0 ? (
-                        GeneralSuperintendent.map((user) => (
-                          <option value={user.id} key={user.id}>
-                            {user.full_Name}
-                          </option>
-                        ))
-                      ) : (
-                        <option value="" disabled>
-                          Loading...
-                        </option>
-                      )}
-                    </select>
-                  </div>
-                </div>
-                <div className="projName">
-                  <label htmlFor="projectName" className="form-label">
-                    Add project address::
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="projectName"
-                    placeholder="Your project address!"
-                    value={selectedProjectAddress}
-                    onChange={handleProjectAddressChange}
-                  />
-                </div>
-
-                <div className="bothDiv gap-3">
-                  <div className="Oneline">
-                    <label htmlFor="estimatorName" className="form-label">
-                      Addendum:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="bimOperatorID"
-                      value={selectedAddendum} // Use the selectedBimOperator value
-                      onChange={handleSelectedAddendumChange}
-                    >
-                      <option value="">Select Addendum</option>
-                      <option value="Available">Available</option>
-                      <option value="Not Available">Not Available</option>
-                    </select>
-                  </div>
-
-                  <div className="Oneline">
-                    <label htmlFor="location" className="form-label">
-                      Bid:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="ProjectEngineerID"
-                      value={selectedBid}
-                      onChange={handleSelectedBidChange}
-                    >
-                      <option value="">Select Bid</option>
-                      <option value="Available">Available</option>
-                      <option value="Not Available">Not Available</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="bothDiv gap-3">
-                  <div className="Oneline">
-                    <label htmlFor="estimatorName" className="form-label">
-                      Spec's per our Scope:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="bimOperatorID"
-                      value={selectedspec} // Use the selectedBimOperator value
-                      onChange={handleSelectedSpecChange}
-                    >
-                      <option value="">Select Spec's</option>
-                      <option value="Available">Available</option>
-                      <option value="Not Available">Not Available</option>
-                    </select>
-                  </div>
-
-                  <div className="Oneline">
-                    <label htmlFor="location" className="form-label">
-                      WALL TYPE MAPPING:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="ProjectEngineerID"
-                      value={selectedWallType}
-                      onChange={handleWallTypeChange}
-                    >
-                      <option value="">Select Choice</option>
-                      <option value="Completed">Completed</option>
-                      <option value="Working">Working</option>
-                      <option value="Pending">Pending</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="bothDiv gap-3">
-                  <div className="Oneline">
-                    <label htmlFor="location" className="form-label">
-                      Drywell Conttrol Joins:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="ProjectEngineerID"
-                      value={selectedDrywell}
-                      onChange={handleDrywellChange}
-                    >
-                      <option value="">Select Choice</option>
-                      <option value="Submited">Submited</option>
-                      <option value="Working">Working</option>
-                      <option value="Pending">Pending</option>
-                    </select>
-                  </div>
-
-                  <div className="Oneline">
-                    <label htmlFor="location" className="form-label">
-                      FINISH LEVEL MARKUPS:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="ProjectEngineerID"
-                      value={selectedFINISHLEVELMARKUPS}
-                      onChange={handleFINISHLEVELMARKUPSChange}
-                    >
-                      <option value="">Select Choice</option>
-                      <option value="Completed">Completed</option>
-                      <option value="Working">Working</option>
-                      <option value="Pending">Pending</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="bothDiv gap-3">
-                  <div className="Oneline">
-                    <label htmlFor="location" className="form-label">
-                      PROGRESS TRACKING:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="ProjectEngineerID"
-                      value={selectedPROGRESSTRACKING}
-                      onChange={handlePROGRESSTRACKINGChange}
-                    >
-                      <option value="">Select Choice</option>
-                      <option value="Completed">Completed</option>
-                      <option value="Working">Working</option>
-                      <option value="Pending">Pending</option>
-                    </select>
-                  </div>
-
-                  <div className="Oneline">
-                    <label htmlFor="location" className="form-label">
-                      RO-Door:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="ProjectEngineerID"
-                      value={selectedRO_Door}
-                      onChange={handleRO_DoorChange}
-                    >
-                      <option value="">Select Choice</option>
-                      <option value="Working">Working</option>
-                      <option value="Submited">Submited</option>
-                      <option value="Pending">Pending</option>
-                      <option value="Done">Done</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="bothDiv  gap-3">
-                  <div className="Oneline">
-                    <label htmlFor="location" className="form-label">
-                      RO-Window:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="ProjectEngineerID"
-                      value={selectedRO_Window}
-                      onChange={handleRO_WindowChange}
-                    >
-                      <option value="">Select Choice</option>
-                      <option value="Working">Working</option>
-                      <option value="Submited">Submited</option>
-                      <option value="Pending">Pending</option>
-                      <option value="Done">Done</option>
-                    </select>
-                  </div>
-
-                  <div className="Oneline">
-                    <label htmlFor="location" className="form-label">
-                      Status:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="ProjectEngineerID"
-                      value={selectedProjectStatus}
-                      onChange={handleProjectStatusChange}
-                    >
-                      <option value="">Select Bid</option>
-                      <option value="C">C</option>
-                      <option value="P">P</option>
-                      <option value="Q">Q</option>
-                      <option value="V">V</option>
-                      <option value="X">X</option>
-                    </select>
-                  </div>
-                  
-                </div>
-                <div className="bothDiv  gap-3">
-                <div className="Oneline">
-                    <label htmlFor="location" className="form-label">
-                    Contacts:
-                    </label>
-                    <select
-                      className="form-select"
-                      id="ProjectEngineerID"
-                      value={selectedContacts}
-                      onChange={handleContactsChange}
-                    >
-                      <option value="">Select Bid</option>
-                      <option value="On build">On build</option>
-                      <option value="Pending">Pending</option>
-                      
-                    </select>
-                  </div>
-                <div className="Oneline">
-                  <label htmlFor="projectName" className="form-label">
-                    Substitution:
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="projectName"
-                    placeholder="Write here!"
-                    value={selectedSubstitution}
-                    onChange={handleSubstitutionChange}
-                  />
-                </div>
-                  
-                </div>
-
-                
-
-                <div className="px-3" style={{ width: "100%" }}>
-                  <div>
-                    <label className="form-label">
-                      <span> Contract</span>
-                    </label>
-                    <div id="" className="input-group">
-                      <select
-                        className="form-select"
-                        placeholder="Contract"
-                        id="ProjectEngineerID"
-                        value={selectedContract}
-                        onChange={handleContractChange}
-                      >
-                        <option value="">Select Choice</option>
-                        <option value="On build">Fully Executed</option>
-                        <option value="Pending">Pending</option>
-                      </select>
-                      <input
-                        id=""
-                        type="date"
-                        name="date" // Set the name attribute to differentiate
-                        className="form-control"
-                        value={selectedProjectDate}
-                        onChange={handleProjectDateChange}
-
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="px-3" style={{ width: "100%" }}>
-                  <div>
-                    <label className="form-label">
-                      <span>SCHEDULE_OF_ VALUES:</span>
-                    </label>
-                    <div id="" className="input-group">
-                      <select
-                        className="form-select"
-                        placeholder="Contract"
-                        id="ProjectEngineerID"
-                        value=""
-                        onChange={() => {}}
-                      >
-                        <option value="">Select Choice</option>
-                        <option value="On build">Fully Executed</option>
-                        <option value="Pending">Pending</option>
-                      </select>
-                      <input
-                        id=""
-                        type="date"
-                        name="date" // Set the name attribute to differentiate
-                        className="form-control"
-                        value=""
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="px-3" style={{ width: "100%" }}>
-                  <div>
-                    <label className="form-label">
-                      <span>INSURANCES:</span>
-                    </label>
-                    <div id="" className="input-group">
-                      <select
-                        className="form-select"
-                        placeholder="Contract"
-                        id="ProjectEngineerID"
-                        value=""
-                        onChange={() => {}}
-                      >
-                        <option value="">Select Choice</option>
-                        <option value="On build">Fully Executed</option>
-                        <option value="Pending">Pending</option>
-                      </select>
-                      <input
-                        id=""
-                        type="date"
-                        name="date" // Set the name attribute to differentiate
-                        className="form-control"
-                        value=""
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="px-3" style={{ width: "100%" }}>
-                  <div>
-                    <label className="form-label">
-                      <span>BONDS:</span>
-                    </label>
-                    <div id="" className="input-group">
-                      <select
-                        className="form-select"
-                        placeholder="Contract"
-                        id="ProjectEngineerID"
-                        value=""
-                        onChange={() => {}}
-                      >
-                        <option value="">Select Choice</option>
-                        <option value="On build">Fully Executed</option>
-                        <option value="Pending">Pending</option>
-                      </select>
-                      <input
-                        id=""
-                        type="date"
-                        name="date" // Set the name attribute to differentiate
-                        className="form-control"
-                        value=""
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="px-3" style={{ width: "100%" }}>
-                  <div>
-                    <label className="form-label">
-                      <span>ZLIENS:</span>
-                    </label>
-                    <div id="" className="input-group">
-                      <select
-                        className="form-select"
-                        placeholder="Contract"
-                        id="ProjectEngineerID"
-                        value=""
-                        onChange={() => {}}
-                      >
-                        <option value="">Select Choice</option>
-                        <option value="On build">Fully Executed</option>
-                        <option value="Pending">Pending</option>
-                      </select>
-                      <input
-                        id=""
-                        type="date"
-                        name="date" // Set the name attribute to differentiate
-                        className="form-control"
-                        value=""
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="px-3" style={{ width: "100%" }}>
-                  <div>
-                    <label className="form-label">
-                      <span>SUBMITTALSS</span>
-                    </label>
-                    <div id="" className="input-group">
-                      <select
-                        className="form-select"
-                        placeholder="Contract"
-                        id="ProjectEngineerID"
-                        value=""
-                        onChange={() => {}}
-                      >
-                        <option value="">Select Choice</option>
-                        <option value="On build">Fully Executed</option>
-                        <option value="Pending">Pending</option>
-                      </select>
-                      <input
-                        id=""
-                        type="date"
-                        name="date" // Set the name attribute to differentiate
-                        className="form-control"
-                        value=""
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="px-3" style={{ width: "100%" }}>
-                  <div>
-                    <label className="form-label">
-                      <span>RO-Window:</span>
-                    </label>
-                    <div id="" className="input-group">
-                      <select
-                        className="form-select"
-                        placeholder="Contract"
-                        id="ProjectEngineerID"
-                        value=""
-                        onChange={() => {}}
-                      >
-                        <option value="">Select Choice</option>
-                        <option value="On build">Fully Executed</option>
-                        <option value="Pending">Pending</option>
-                      </select>
-                      <input
-                        id=""
-                        type="date"
-                        name="date" // Set the name attribute to differentiate
-                        className="form-control"
-                        value=""
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="px-3" style={{ width: "100%" }}>
-                  <label htmlFor="projectName" className="form-label mt-2">
-                    <span>SUBMITTALSS</span>
-                  </label>
-                  {step2FormData.map((entry, index) => (
-                    <div className="wholespecificationEntry" key={index}>
-                      <div className="ScopofWorkSectionRemove">
-                        <button
-                          type="button"
-                          className="btn btn-danger"
-                          onClick={() =>
-                            handleRemoveWholeWorkSectionEntry(index)
-                          }
-                        >
-                          <i className="far">X</i>
-                        </button>
-                      </div>
-                      <div className="mt-5">
-                        <label
-                          htmlFor={`specificBudget-${index}`}
-                          className="form-label"
-                        >
-                          Add Proposal:
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id={`specificBudget-${index}`}
-                          value=""
-                        />
-                      </div>
-                      <div className="mb-2 mt-2">
-                        <label
-                          htmlFor={`specificName-${index}`}
-                          className="form-label"
-                        >
-                          Add scope of Work
-                        </label>
-                        <select
-                          className="form-select"
-                          aria-label="Select Specification"
-                          value={entry.specific_name || ""}
-                          onChange={(e) =>
-                            handleEntryChange(
-                              index,
-                              "specific_name",
-                              e.target.value
-                            )
-                          }
-                        >
-                          <option value="Base Bid Drywall/Framing">
-                            All scope numbers wil here
-                          </option>
-                        </select>
-                      </div>
-                      <div className="bothDiv  gap-3">
-                        <div className="Oneline mb-4">
-                          <label htmlFor="location" className="form-label">
-                            Submittals:
-                          </label>
-                          <select
-                            className="form-select"
-                            id="ProjectEngineerID"
-                            value={selectedProjectEngineer}
-                            onChange={handleProjectEngineerChange}
-                          >
-                            <option value="">Select Choice</option>
-                            <option value="On build">Approved</option>
-                            <option value="Pending">Pending</option>
-                          </select>
-                        </div>
-
-                        <div className="Oneline">
-                          <label htmlFor="location" className="form-label">
-                            Status:
-                          </label>
-                          <input
-                            type="date"
-                            className="form-control"
-                            id="dueDate"
-                            value=""
-                            onChange={() => {}}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-
-                  <button
-                    type="button"
-                    className="btn btn-success"
-                    onClick={handleAddEntry}
-                  >
-                    Add SUBMITTALSS
-                  </button>
-                </div>
-                <div className="px-3" style={{ width: "100%" }}>
-                  <label htmlFor="projectName" className="form-label mt-2">
-                    <span>SHOP DRAWINGS</span>
-                  </label>
-                  {step2FormData.map((entry, index) => (
-                    <div className="wholespecificationEntry" key={index}>
-                      <div className="ScopofWorkSectionRemove">
-                        <button
-                          type="button"
-                          className="btn btn-danger"
-                          onClick={() =>
-                            handleRemoveWholeWorkSectionEntry(index)
-                          }
-                        >
-                          <i className="far">X</i>
-                        </button>
-                      </div>
-                      <div className="mt-5">
-                        <label
-                          htmlFor={`specificBudget-${index}`}
-                          className="form-label"
-                        >
-                          Add Proposal:
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id={`specificBudget-${index}`}
-                          value=""
-                        />
-                      </div>
-                      <div className="mb-2 mt-2">
-                        <label
-                          htmlFor={`specificName-${index}`}
-                          className="form-label"
-                        >
-                          Add scope of Work
-                        </label>
-                        <select
-                          className="form-select"
-                          aria-label="Select Specification"
-                          value={entry.specific_name || ""}
-                          onChange={(e) =>
-                            handleEntryChange(
-                              index,
-                              "specific_name",
-                              e.target.value
-                            )
-                          }
-                        >
-                          <option value="Base Bid Drywall/Framing">
-                            All scope numbers wil here
-                          </option>
-                        </select>
-                      </div>
-                      <div className="bothDiv  gap-3">
-                        <div className="Oneline mb-4">
-                          <label htmlFor="location" className="form-label">
-                            Submittals:
-                          </label>
-                          <select
-                            className="form-select"
-                            id="ProjectEngineerID"
-                            value={selectedProjectEngineer}
-                            onChange={handleProjectEngineerChange}
-                          >
-                            <option value="">Select Choice</option>
-                            <option value="On build">Approved</option>
-                            <option value="Pending">Pending</option>
-                          </select>
-                        </div>
-
-                        <div className="Oneline">
-                          <label htmlFor="location" className="form-label">
-                            Status:
-                          </label>
-                          <input
-                            type="date"
-                            className="form-control"
-                            id="dueDate"
-                            value=""
-                            onChange={() => {}}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-
-                  <button
-                    type="button"
-                    className="btn btn-success"
-                    onClick={handleAddEntry}
-                  >
-                    Add SHOP DRAWINGS
-                  </button>
-                </div>
-                <div className="px-3" style={{ width: "100%" }}>
-                  <label htmlFor="projectName" className="form-label mt-2">
-                    <span>SAFITYS</span>
-                  </label>
-                  {step2FormData.map((entry, index) => (
-                    <div className="wholespecificationEntry" key={index}>
-                      <div className="ScopofWorkSectionRemove">
-                        <button
-                          type="button"
-                          className="btn btn-danger"
-                          onClick={() =>
-                            handleRemoveWholeWorkSectionEntry(index)
-                          }
-                        >
-                          <i className="far">X</i>
-                        </button>
-                      </div>
-                      <div className="mt-5">
-                        <label
-                          htmlFor={`specificBudget-${index}`}
-                          className="form-label"
-                        >
-                          Add Proposal:
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id={`specificBudget-${index}`}
-                          value=""
-                        />
-                      </div>
-                      <div className="mb-2 mt-2">
-                        <label
-                          htmlFor={`specificName-${index}`}
-                          className="form-label"
-                        >
-                          Add scope of Work
-                        </label>
-                        <select
-                          className="form-select"
-                          aria-label="Select Specification"
-                          value={entry.specific_name || ""}
-                          onChange={(e) =>
-                            handleEntryChange(
-                              index,
-                              "specific_name",
-                              e.target.value
-                            )
-                          }
-                        >
-                          <option value="Base Bid Drywall/Framing">
-                            All scope numbers wil here
-                          </option>
-                        </select>
-                      </div>
-                      <div className="bothDiv  gap-3">
-                        <div className="Oneline mb-4">
-                          <label htmlFor="location" className="form-label">
-                            Submittals:
-                          </label>
-                          <select
-                            className="form-select"
-                            id="ProjectEngineerID"
-                            value={selectedProjectEngineer}
-                            onChange={handleProjectEngineerChange}
-                          >
-                            <option value="">Select Choice</option>
-                            <option value="On build">Approved</option>
-                            <option value="Pending">Pending</option>
-                          </select>
-                        </div>
-
-                        <div className="Oneline">
-                          <label htmlFor="location" className="form-label">
-                            Status:
-                          </label>
-                          <input
-                            type="date"
-                            className="form-control"
-                            id="dueDate"
-                            value=""
-                            onChange={() => {}}
-                          />
-                        </div>
-                      </div>
-                      <div className="mt-2">
-                        <label htmlFor="comment">Comment:</label>
-                        <textarea
-                          id="comment"
-                          style={{
-                            width: "100%",
-                            backgroundColor: "white",
-                            color: "black",
-                            padding: "10px",
-                          }}
-                          rows="2"
-                          placeholder=" Write your comment here !"
-                        ></textarea>
-                      </div>
-                    </div>
-                  ))}
-
-                  <button
-                    type="button"
-                    className="btn btn-success"
-                    onClick={handleAddEntry}
-                  >
-                    Add SAFITYs
-                  </button>
-                </div>
-                <div className="px-3" style={{ width: "100%" }}>
-                  <label htmlFor="projectName" className="form-label mt-2">
-                    <span>Schedules</span>
-                  </label>
-                  {step2FormData.map((entry, index) => (
-                    <div className="wholespecificationEntry" key={index}>
-                      <div className="mb-2 mt-3">
-                        <label
-                          htmlFor={`specificDetails-${index}`}
-                          className="form-label"
-                        >
-                          Scope of work divisions
-                        </label>
-                        {Array.isArray(entry.sefic) &&
-                          entry.sefic.map((detail, detailIndex) => (
-                            <div
-                              key={detailIndex}
-                              className="input-group myrowInputgrouup"
-                            >
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Scope Of Work Number"
-                                value={detail.number}
-                                onChange={(e) =>
-                                  handleScopeDivisionInputChange(
-                                    index,
-                                    detailIndex,
-                                    "number",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Scope Of Work Description"
-                                value={detail.name}
-                                onChange={(e) =>
-                                  handleScopeDivisionInputChange(
-                                    index,
-                                    detailIndex,
-                                    "name",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                              <button
-                                type="button"
-                                className="btn btn-danger"
-                                onClick={() =>
-                                  handleRemoveScopeDivisionEntry(
-                                    index,
-                                    detailIndex
-                                  )
-                                }
-                              >
-                                <i className="far">X</i>
-                              </button>
-                            </div>
-                          ))}
-                        <button
-                          type="button"
-                          className="btn btn-success bk"
-                          onClick={() => handleAddScopeDivisionEntry(index)}
-                        >
-                          <i className="fa-regular icon fa-plus"></i>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-
-                  <button
-                    type="button"
-                    className="btn btn-success"
-                    onClick={handleAddEntry}
-                  >
-                    Add Schedule
-                  </button>
-                </div>
-                <div className="px-3" style={{ width: "100%" }}>
-                  <label htmlFor="projectName" className="form-label mt-2">
-                    <span>SUB_ CONTRACTORSS</span>
-                  </label>
-                  {step2FormData.map((entry, index) => (
-                    <div className="wholespecificationEntry" key={index}>
-                      <div className="mb-2 mt-3">
-                        <label
-                          htmlFor={`specificDetails-${index}`}
-                          className="form-label"
-                        >
-                          Scope of work divisions
-                        </label>
-                        {Array.isArray(entry.sefic) &&
-                          entry.sefic.map((detail, detailIndex) => (
-                            <div
-                              key={detailIndex}
-                              className="input-group myrowInputgrouup"
-                            >
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Scope Of Work Number"
-                                value={detail.number}
-                                onChange={(e) =>
-                                  handleScopeDivisionInputChange(
-                                    index,
-                                    detailIndex,
-                                    "number",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Scope Of Work Description"
-                                value={detail.name}
-                                onChange={(e) =>
-                                  handleScopeDivisionInputChange(
-                                    index,
-                                    detailIndex,
-                                    "name",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                              <button
-                                type="button"
-                                className="btn btn-danger"
-                                onClick={() =>
-                                  handleRemoveScopeDivisionEntry(
-                                    index,
-                                    detailIndex
-                                  )
-                                }
-                              >
-                                <i className="far">X</i>
-                              </button>
-                            </div>
-                          ))}
-                        <div className="mt-2">
-                          <label htmlFor="comment">Comment:</label>
-                          <textarea
-                            id="comment"
-                            style={{
-                              width: "100%",
-                              backgroundColor: "white",
-                              color: "black",
-                              padding: "10px",
-                            }}
-                            rows="2"
-                            placeholder=" Write your comment here !"
-                          ></textarea>
-                        </div>
-                        <button
-                          type="button"
-                          className="btn btn-success bk"
-                          onClick={() => handleAddScopeDivisionEntry(index)}
-                        >
-                          <i className="fa-regular icon fa-plus"></i>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="px-3" style={{ width: "100%" }}>
-                  <label htmlFor="projectName" className="form-label mt-2">
-                    <span>LABOR RATES</span>
-                  </label>
-                  {step2FormData.map((entry, index) => (
-                    <div className="wholespecificationEntry" key={index}>
-                      <div className="mb-2 mt-3">
-                        <label
-                          htmlFor={`specificDetails-${index}`}
-                          className="form-label"
-                        >
-                          Scope of work divisions
-                        </label>
-                        {Array.isArray(entry.sefic) &&
-                          entry.sefic.map((detail, detailIndex) => (
-                            <div
-                              key={detailIndex}
-                              className="input-group myrowInputgrouup"
-                            >
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Scope Of Work Number"
-                                value={detail.number}
-                                onChange={(e) =>
-                                  handleScopeDivisionInputChange(
-                                    index,
-                                    detailIndex,
-                                    "number",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Scope Of Work Description"
-                                value={detail.name}
-                                onChange={(e) =>
-                                  handleScopeDivisionInputChange(
-                                    index,
-                                    detailIndex,
-                                    "name",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                              <button
-                                type="button"
-                                className="btn btn-danger"
-                                onClick={() =>
-                                  handleRemoveScopeDivisionEntry(
-                                    index,
-                                    detailIndex
-                                  )
-                                }
-                              >
-                                <i className="far">X</i>
-                              </button>
-                            </div>
-                          ))}
-                        <div className="mt-2">
-                          <label htmlFor="comment">Comment:</label>
-                          <textarea
-                            id="comment"
-                            style={{
-                              width: "100%",
-                              backgroundColor: "white",
-                              color: "black",
-                              padding: "10px",
-                            }}
-                            rows="2"
-                            placeholder=" Write your comment here !"
-                          ></textarea>
-                        </div>
-                        <button
-                          type="button"
-                          className="btn btn-success bk"
-                          onClick={() => handleAddScopeDivisionEntry(index)}
-                        >
-                          <i className="fa-regular icon fa-plus"></i>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="px-3" style={{ width: "100%" }}>
-                  <label htmlFor="projectName" className="form-label mt-2">
-                    <span>BILLINGS</span>
-                  </label>
-                  {step2FormData.map((entry, index) => (
-                    <div className="wholespecificationEntry" key={index}>
-                      <div className="mb-2 mt-3">
-                        {/* <label
-                                htmlFor={`specificDetails-${index}`}
-                                className="form-label"
-                              >
-                                Scope of work divisions
-                              </label> */}
-                        {Array.isArray(entry.sefic) &&
-                          entry.sefic.map((detail, detailIndex) => (
-                            <div
-                              key={detailIndex}
-                              className="input-group myrowInputgrouup"
-                            >
-                              <input
-                                type="date"
-                                className="form-control"
-                                placeholder="Due Date"
-                                value=""
-                                onChange={() => {}}
-                              />
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Add Reduction:"
-                                value=""
-                                onChange={() => {}}
-                              />
-                              <button
-                                type="button"
-                                className="btn btn-danger"
-                                onClick={() =>
-                                  handleRemoveScopeDivisionEntry(
-                                    index,
-                                    detailIndex
-                                  )
-                                }
-                              >
-                                <i className="far">X</i>
-                              </button>
-                            </div>
-                          ))}
-
-                        <button
-                          type="button"
-                          className="btn btn-success bk"
-                          onClick={() => handleAddScopeDivisionEntry(index)}
-                        >
-                          <i className="fa-regular icon fa-plus"></i>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="px-3" style={{ width: "100%" }}>
-                  <label htmlFor="projectName" className="form-label mt-2">
-                    <span>SOVS</span>
-                  </label>
-                  {step2FormData.map((entry, index) => (
-                    <div className="wholespecificationEntry" key={index}>
-                      <div className="mb-2 mt-3">
-                        {/* <label
-                                htmlFor={`specificDetails-${index}`}
-                                className="form-label"
-                              >
-                                Scope of work divisions
-                              </label> */}
-                        {Array.isArray(entry.sefic) &&
-                          entry.sefic.map((detail, detailIndex) => (
-                            <div
-                              key={detailIndex}
-                              className="input-group myrowInputgrouup"
-                            >
-                               <select
-                                className="form-select"
-                                aria-label="Select Specification"
-                                value={entry.specific_name || ""}
-                                onChange={()=>{}}
-                              >
-                                <option value="">
-                                  Select Choice
-                                </option>
-                                <option value="Approved">
-                                  Approved
-                                </option>
-                                <option value="Pending">
-                                  Pending
-                                </option>
-                                <option value="Custom">
-                                  Custom
-                                </option>
-                                
-                              </select>
-                              <input
-                                type="date"
-                                className="form-control"
-                                placeholder="Due Date"
-                                value=""
-                                onChange={() => {}}
-                              />
-                              <button
-                                type="button"
-                                className="btn btn-danger"
-                                onClick={() =>
-                                  handleRemoveScopeDivisionEntry(
-                                    index,
-                                    detailIndex
-                                  )
-                                }
-                              >
-                                <i className="far">X</i>
-                              </button>
-                            </div>
-                          ))}
-
-                        <button
-                          type="button"
-                          className="btn btn-success bk"
-                          onClick={() => handleAddScopeDivisionEntry(index)}
-                        >
-                          <i className="fa-regular icon fa-plus"></i>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="px-3" style={{ width: "100%" }}>
-                  <label htmlFor="projectName" className="form-label mt-2">
-                    <span>HD S_SYSTEMS</span>
-                  </label>
-                  {step2FormData.map((entry, index) => (
-                    <div className="wholespecificationEntry" key={index}>
-                      <div className="mb-2 mt-3">
-                        <label
-                          htmlFor={`specificDetails-${index}`}
-                          className="form-label"
-                        >
-                          Scope of work divisions
-                        </label>
-                        {Array.isArray(entry.sefic) &&
-                          entry.sefic.map((detail, detailIndex) => (
-                            <div
-                              key={detailIndex}
-                              className="input-group myrowInputgrouup"
-                            >
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Scope Of Work Number"
-                                value={detail.number}
-                                onChange={(e) =>
-                                  handleScopeDivisionInputChange(
-                                    index,
-                                    detailIndex,
-                                    "number",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Scope Of Work Description"
-                                value={detail.name}
-                                onChange={(e) =>
-                                  handleScopeDivisionInputChange(
-                                    index,
-                                    detailIndex,
-                                    "name",
-                                    e.target.value
-                                  )
-                                }
-                              />
-                              <button
-                                type="button"
-                                className="btn btn-danger"
-                                onClick={() =>
-                                  handleRemoveScopeDivisionEntry(
-                                    index,
-                                    detailIndex
-                                  )
-                                }
-                              >
-                                <i className="far">X</i>
-                              </button>
-                            </div>
-                          ))}
-                        <div className="mt-2">
-                          <label htmlFor="comment">Comment:</label>
-                          <textarea
-                            id="comment"
-                            style={{
-                              width: "100%",
-                              backgroundColor: "white",
-                              color: "black",
-                              padding: "10px",
-                            }}
-                            rows="2"
-                            placeholder=" Write your comment here !"
-                          ></textarea>
-                        </div>
-                        <button
-                          type="button"
-                          className="btn btn-success bk"
-                          onClick={() => handleAddScopeDivisionEntry(index)}
-                        >
-                          <i className="fa-regular icon fa-plus"></i>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="px-3" style={{ width: "100%" }}>
-                  <label htmlFor="projectName" className="form-label mt-2">
-                    <span>ON BUILDS</span>
-                  </label>
-                  {step2FormData.map((entry, index) => (
-                    <div className="wholespecificationEntry" key={index}>
-                      <div className="mb-2 mt-3">
-                        {/* <label
-                                htmlFor={`specificDetails-${index}`}
-                                className="form-label"
-                              >
-                                Scope of work divisions
-                              </label> */}
-                        {Array.isArray(entry.sefic) &&
-                          entry.sefic.map((detail, detailIndex) => (
-                            <div
-                              key={detailIndex}
-                              className="input-group myrowInputgrouup"
-                            >
-                               <select
-                                className="form-select"
-                                aria-label="Select Specification"
-                                value={entry.specific_name || ""}
-                                onChange={()=>{}}
-                              >
-                                <option value="">
-                                  Select Choice
-                                </option>
-                                <option value="Approved">
-                                  Bid Proposal
-                                </option>
-                                <option value="Pending">
-                                  Specs
-                                </option>
-                                <option value="Custom">
-                                  Contract
-                                </option>
-                                <option value="Approved">
-                                  Submitile
-                                </option>
-                                <option value="Pending">
-                                  Safety
-                                </option>
-                                <option value="Custom">
-                                  Shop Drawing
-                                </option>
-                                <option value="Custom">
-                                  Budget
-                                </option>
-                                
-                              </select>
-                               <select
-                                className="form-select"
-                                aria-label="Select Specification"
-                                value={entry.specific_name || ""}
-                                onChange={()=>{}}
-                              >
-                                <option value="">
-                                  Select Choice
-                                </option>
-                                <option value="Approved">
-                                  Upload
-                                </option>
-                                <option value="Pending">
-                                  Pending
-                                </option>
-                                
-                                
-                              </select>
-                              
-                              
-                              <button
-                                type="button"
-                                className="btn btn-danger"
-                                onClick={() =>
-                                  handleRemoveScopeDivisionEntry(
-                                    index,
-                                    detailIndex
-                                  )
-                                }
-                              >
-                                <i className="far">X</i>
-                              </button>
-                            </div>
-                          ))}
-
-                        <button
-                          type="button"
-                          className="btn btn-success bk"
-                          onClick={() => handleAddScopeDivisionEntry(index)}
-                        >
-                          <i className="fa-regular icon fa-plus"></i>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="px-3" style={{ width: "100%" }}>
-                  <label htmlFor="projectName" className="form-label mt-2">
-                    <span>BUGETS</span>
-                  </label>
-                  {step2FormData.map((entry, index) => (
-                    <div className="wholespecificationEntry" key={index}>
-                      <div className="mb-2 mt-3">
-                        {/* <label
-                                htmlFor={`specificDetails-${index}`}
-                                className="form-label"
-                              >
-                                Scope of work divisions
-                              </label> */}
-                        {Array.isArray(entry.sefic) &&
-                          entry.sefic.map((detail, detailIndex) => (
-                            <div
-                              key={detailIndex}
-                              className="input-group myrowInputgrouup"
-                            >
-                               <select
-                                className="form-select"
-                                aria-label="Select Specification"
-                                value={entry.specific_name || ""}
-                                onChange={()=>{}}
-                              >
-                                <option value="">
-                                  Select Choice
-                                </option>
-                                <option value="Approved">
-                                  Done
-                                </option>
-                                <option value="Pending">
-                                  Pending
-                                </option>
-                                <option value="Custom">
-                                  Custom
-                                </option>
-                                
-                                
-                              </select>
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Comment"
-                                value=''
-                                onChange={() =>{}}
-                              />
-                              
-                              
-                              <button
-                                type="button"
-                                className="btn btn-danger"
-                                onClick={() =>
-                                  handleRemoveScopeDivisionEntry(
-                                    index,
-                                    detailIndex
-                                  )
-                                }
-                              >
-                                <i className="far">X</i>
-                              </button>
-                            </div>
-                          ))}
-
-                        <button
-                          type="button"
-                          className="btn btn-success bk"
-                          onClick={() => handleAddScopeDivisionEntry(index)}
-                        >
-                          <i className="fa-regular icon fa-plus"></i>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <button
-                  type="button"
-                  onClick={handleProjectFormSubmit}
-                  className="btn btn-submit m-auto mt-3 mb-4"
+              <div className="purposal-content px-5">
+                {/* ************* Implementation of Multistep-Form using Material UI */}
+                Project
+                <Modal
+                  open={showProjectModal}
+                  onClose={closeModal}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
                 >
-                  Add Project
-                </button>
+                  <div
+                    className={`modal-container pt-5 ps-2 ${
+                      showProjectModal ? "show" : ""
+                    }`}
+                  >
+                    <h4 className="text-center addnewtxt">
+                      Add Project Entries
+                    </h4>{" "}
+                    <button className="close-btn" onClick={closeModal}></button>
+                    <div className="purposal-content pt-4 px-5">
+                      <Stepper activeStep={projectactiveStep} alternativeLabel>
+                        {projectSteps.map((label) => (
+                          <Step key={label}>
+                            <StepLabel>{label}</StepLabel>
+                          </Step>
+                        ))}
+                      </Stepper>
+                      <form className="d-flex mt-4 gap-3 flex-column">
+                        {projectactiveStep === 0 && (
+                          <>
+                            <div
+                              className="projName mt-3"
+                              style={{ width: "100%" }}
+                            >
+                              <label
+                                htmlFor="projectName"
+                                className="form-label"
+                              >
+                                Estimating/Project Name:
+                              </label>
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="projectName"
+                                name="projectName"
+                                placeholder="AutoPopulate not shown on frontend"
+                                defaultValue={selectedEstimatingID}
+                                // value={selectedEstimatingID}
+                                // onChange={(e) =>
+                                //   setStep0FormData({
+                                //     ...step0FormData,
+                                //     estimating: e.target.value,
+                                //   })
+                                // }
+                                // readOnly
+                              />
+                            </div>
+                            <div className="bothDiv gap-3">
+                              <div className="projName Oneline">
+                                <label
+                                  htmlFor="projectName"
+                                  className="form-label"
+                                >
+                                  Start Date:
+                                </label>
+                                <input
+                                  type="date"
+                                  className="form-control"
+                                  id="dateId"
+                                  name="dateID"
+                                  value={ProjectStep1FormData.start_date}
+                                  onChange={(e) =>
+                                    setProjectStep1FormData({
+                                      ...ProjectStep1FormData,
+                                      start_date: e.target.value,
+                                    })
+                                  }
+                                />
+                              </div>
+                              <div className="projName Oneline">
+                                <label
+                                  htmlFor="projectName"
+                                  className="form-label"
+                                >
+                                  Job Number:
+                                </label>
+                                <input
+                                  type="text"
+                                  name="jobNumber"
+                                  id="jobNumber"
+                                  className="form-control"
+                                  value={ProjectStep1FormData.job_num}
+                                  onChange={(e) =>
+                                    setProjectStep1FormData({
+                                      ...ProjectStep1FormData,
+                                      job_num: e.target.value,
+                                    })
+                                  }
+                                />
+                              </div>
+                            </div>
+                            <div className="bothDiv gap-3">
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="estimatorName"
+                                  className="form-label"
+                                >
+                                  Project Manager:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="projectManagerID"
+                                  name="dateID"
+                                  value={ProjectStep1FormData.prjct_mngr}
+                                  onChange={(e) =>
+                                    setProjectStep1FormData({
+                                      ...ProjectStep1FormData,
+                                      prjct_mngr: e.target.value,
+                                    })
+                                  }
+                                >
+                                  <option value="">
+                                    Select Project Manager
+                                  </option>
+                                  {projectManager &&
+                                  projectManager.length > 0 ? (
+                                    projectManager.map((user) => (
+                                      <option value={user.id} key={user.id}>
+                                        {user.full_Name}
+                                      </option>
+                                    ))
+                                  ) : (
+                                    <option value="" disabled>
+                                      Loading...
+                                    </option>
+                                  )}
+                                </select>
+                              </div>
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  Foreman:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="formanID"
+                                  name="formanID"
+                                  value={ProjectStep1FormData.Forman}
+                                  onChange={(e) =>
+                                    setProjectStep1FormData({
+                                      ...ProjectStep1FormData,
+                                      Forman: e.target.value,
+                                    })
+                                  }
+                                >
+                                  <option value="">Select Forman</option>
+                                  {formanName.length > 0 ? (
+                                    formanName.map((user) => (
+                                      <option value={user.id} key={user.id}>
+                                        {user.full_Name}
+                                      </option>
+                                    ))
+                                  ) : (
+                                    <option value="" disabled>
+                                      Loading...
+                                    </option>
+                                  )}
+                                </select>
+                              </div>
+                            </div>
+
+                            <div className="bothDiv gap-3">
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="estimatorName"
+                                  className="form-label"
+                                >
+                                  BIM Modeler:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="bimOperatorID"
+                                  name="bimOperatorID"
+                                  value={ProjectStep1FormData.bim_oprtr}
+                                  onChange={(e) =>
+                                    setProjectStep1FormData({
+                                      ...ProjectStep1FormData,
+                                      bim_oprtr: e.target.value,
+                                    })
+                                  }
+                                >
+                                  <option value="">Select Bim Operator</option>
+                                  {BimOperator && BimOperator.length > 0 ? (
+                                    BimOperator.map((user) => (
+                                      <option value={user.id} key={user.id}>
+                                        {user.full_Name}
+                                      </option>
+                                    ))
+                                  ) : (
+                                    <option value="" disabled>
+                                      Loading...
+                                    </option>
+                                  )}
+                                </select>
+                              </div>
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  Project Engineer:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="ProjectEngineerID"
+                                  name="ProjectEngineerID"
+                                  value={ProjectStep1FormData.prjct_engnr}
+                                  onChange={(e) =>
+                                    setProjectStep1FormData({
+                                      ...ProjectStep1FormData,
+                                      prjct_engnr: e.target.value,
+                                    })
+                                  }
+                                >
+                                  <option value="">
+                                    Select Project Engineer
+                                  </option>
+
+                                  {ProjEnger && ProjEnger.length > 0 ? (
+                                    ProjEnger.map((user) => (
+                                      <option value={user.id} key={user.id}>
+                                        {user.full_Name}
+                                      </option>
+                                    ))
+                                  ) : (
+                                    <option value="" disabled>
+                                      Loading...
+                                    </option>
+                                  )}
+                                </select>
+                              </div>
+                            </div>
+                          </>
+                        )}
+                        {projectactiveStep === 1 && (
+                          <>
+                            <div className="bothDiv gap-3 mt-4">
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  Genral_superintendent:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="general_superintendent"
+                                  name="general_superintendent"
+                                  value={
+                                    ProjectStep2FormData.general_superintendent
+                                  }
+                                  onChange={(e) =>
+                                    setProjectStep2FormData({
+                                      ...ProjectStep2FormData,
+                                      general_superintendent: e.target.value,
+                                    })
+                                  }
+                                >
+                                  <option value="">
+                                    Select Project Engineer
+                                  </option>
+
+                                  {GeneralSuperintendent &&
+                                  GeneralSuperintendent.length > 0 ? (
+                                    GeneralSuperintendent.map((user) => (
+                                      <option value={user.id} key={user.id}>
+                                        {user.full_Name}
+                                      </option>
+                                    ))
+                                  ) : (
+                                    <option value="" disabled>
+                                      Loading...
+                                    </option>
+                                  )}
+                                </select>
+                              </div>
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="estimatorName"
+                                  className="form-label"
+                                >
+                                  Addendum:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="addundumID"
+                                  name="addundumID"
+                                  value={ProjectStep2FormData.addendums}
+                                  onChange={(e) =>
+                                    setProjectStep2FormData({
+                                      ...ProjectStep2FormData,
+                                      addendums: e.target.value,
+                                    })
+                                  }
+                                >
+                                  <option value="">Select Addendum</option>
+                                  <option value="Available">Available</option>
+                                  <option value="Not Available">
+                                    Not Available
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                            <div style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label"
+                              >
+                                Add project address::
+                              </label>
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="projectaddress"
+                                name="projectaddress"
+                                placeholder="Your project address!"
+                                value={ProjectStep2FormData.project_address}
+                                onChange={(e) =>
+                                  setProjectStep2FormData({
+                                    ...ProjectStep2FormData,
+                                    project_address: e.target.value,
+                                  })
+                                }
+                              />
+                            </div>
+                            <div className="bothDiv gap-3">
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="estimatorName"
+                                  className="form-label"
+                                >
+                                  Spec's per our Scope:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="SpecID"
+                                  name="SpecID"
+                                  value={ProjectStep2FormData.Spec}
+                                  onChange={(e) =>
+                                    setProjectStep2FormData({
+                                      ...ProjectStep2FormData,
+                                      Spec: e.target.value,
+                                    })
+                                  }
+                                >
+                                  <option value="">Select Spec's</option>
+                                  <option value="Available">Available</option>
+                                  <option value="Not Available">
+                                    Not Available
+                                  </option>
+                                </select>
+                              </div>
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  Bid:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="ProjectBid"
+                                  name="ProjectBid"
+                                  value={ProjectStep2FormData.bid}
+                                  onChange={(e) =>
+                                    setProjectStep2FormData({
+                                      ...ProjectStep2FormData,
+                                      bid: e.target.value,
+                                    })
+                                  }
+                                >
+                                  <option value="">Select Bid</option>
+                                  <option value="Available">Available</option>
+                                  <option value="Not Available">
+                                    Not Available
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                            <div className="bothDiv gap-3">
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  Drywell Conttrol Joins:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="Projectdrywell"
+                                  name="Projectdrywell"
+                                  value={ProjectStep2FormData.drywell}
+                                  onChange={(e) =>
+                                    setProjectStep2FormData({
+                                      ...ProjectStep2FormData,
+                                      drywell: e.target.value,
+                                    })
+                                  }
+                                >
+                                  <option value="">Select Choice</option>
+                                  <option value="Submited">Submited</option>
+                                  <option value="Working">Working</option>
+                                  <option value="Pending">Pending</option>
+                                </select>
+                              </div>
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  WALL TYPE MAPPING:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="Projectwall_type"
+                                  name="Projectwall_type"
+                                  value={ProjectStep2FormData.wall_type}
+                                  onChange={(e) =>
+                                    setProjectStep2FormData({
+                                      ...ProjectStep2FormData,
+                                      wall_type: e.target.value,
+                                    })
+                                  }
+                                >
+                                  <option value="">Select Choice</option>
+                                  <option value="Completed">Completed</option>
+                                  <option value="Working">Working</option>
+                                  <option value="Pending">Pending</option>
+                                </select>
+                              </div>
+                            </div>
+                          </>
+                        )}
+                        {projectactiveStep === 2 && (
+                          <>
+                            <div className="bothDiv gap-3 mt-4">
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  FINISH LEVEL MARKUPS:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="Projectfinish"
+                                  name="Projectfinish"
+                                  value={ProjectStep3FormData.finish}
+                                  onChange={(e) =>
+                                    setProjectStep3FormData({
+                                      ...ProjectStep3FormData,
+                                      finish: e.target.value,
+                                    })
+                                  }
+                                >
+                                  <option value="">Select Choice</option>
+                                  <option value="Completed">Completed</option>
+                                  <option value="Working">Working</option>
+                                  <option value="Pending">Pending</option>
+                                </select>
+                              </div>
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  PROGRESS TRACKING:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="Projectprogress"
+                                  name="Projectprogress"
+                                  // value={selectedPROGRESSTRACKING}
+                                  // onChange={handlePROGRESSTRACKINGChange}
+                                  value={ProjectStep3FormData.progress}
+                                  onChange={(e) =>
+                                    setProjectStep3FormData({
+                                      ...ProjectStep3FormData,
+                                      progress: e.target.value,
+                                    })
+                                  }
+                                >
+                                  <option value="">Select Choice</option>
+                                  <option value="Completed">Completed</option>
+                                  <option value="Working">Working</option>
+                                  <option value="Pending">Pending</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div className="bothDiv gap-3">
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  RO-Door:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="ProjectRo_door"
+                                  name="ProjectRo_door"
+                                  // value={selectedRO_Door}
+                                  // onChange={handleRO_DoorChange}
+                                  value={ProjectStep3FormData.ro_door}
+                                  onChange={(e) =>
+                                    setProjectStep3FormData({
+                                      ...ProjectStep3FormData,
+                                      ro_door: e.target.value,
+                                    })
+                                  }
+                                >
+                                  <option value="">Select Choice</option>
+                                  <option value="Working">Working</option>
+                                  <option value="Submited">Submited</option>
+                                  <option value="Pending">Pending</option>
+                                  <option value="Done">Done</option>
+                                </select>
+                              </div>
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  RO-Window:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="ProjectRO-Window"
+                                  name="ProjectRO-Window"
+                                  // value={selectedRO_Window}
+                                  // onChange={handleRO_WindowChange}
+                                  value={ProjectStep3FormData.ro_window}
+                                  onChange={(e) =>
+                                    setProjectStep3FormData({
+                                      ...ProjectStep3FormData,
+                                      ro_window: e.target.value,
+                                    })
+                                  }
+                                >
+                                  <option value="">Select Choice</option>
+                                  <option value="Working">Working</option>
+                                  <option value="Submited">Submited</option>
+                                  <option value="Pending">Pending</option>
+                                  <option value="Done">Done</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div className="bothDiv  gap-3">
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  Status:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="ProjectEngineerID"
+                                  // value={selectedProjectStatus}
+                                  // onChange={handleProjectStatusChange}
+                                  value={ProjectStep3FormData.status}
+                                  onChange={(e) =>
+                                    setProjectStep3FormData({
+                                      ...ProjectStep3FormData,
+                                      status: e.target.value,
+                                    })
+                                  }
+                                >
+                                  <option value="">Select Bid</option>
+                                  <option value="C">C</option>
+                                  <option value="P">P</option>
+                                  <option value="Q">Q</option>
+                                  <option value="V">V</option>
+                                  <option value="X">X</option>
+                                </select>
+                              </div>
+                              <div className="Oneline">
+                                <label
+                                  htmlFor="location"
+                                  className="form-label"
+                                >
+                                  Contacts:
+                                </label>
+                                <select
+                                  className="form-select"
+                                  id="Projectcontacts"
+                                  name="Projectcontacts"
+                                  // value={selectedContacts}
+                                  // onChange={handleContactsChange}
+                                  value={ProjectStep3FormData.contacts}
+                                  onChange={(e) =>
+                                    setProjectStep3FormData({
+                                      ...ProjectStep3FormData,
+                                      contacts: e.target.value,
+                                    })
+                                  }
+                                >
+                                  <option value="">Select Bid</option>
+                                  <option value="On build">On build</option>
+                                  <option value="Pending">Pending</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label"
+                              >
+                                Substitution:
+                              </label>
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="projectsubstitution"
+                                name="projectsubstitution"
+                                placeholder="Write here!"
+                                // value={selectedSubstitution}
+                                // onChange={handleSubstitutionChange}
+                                value={ProjectStep3FormData.substitution}
+                                onChange={(e) =>
+                                  setProjectStep3FormData({
+                                    ...ProjectStep3FormData,
+                                    substitution: e.target.value,
+                                  })
+                                }
+                              />
+                            </div>
+                          </>
+                        )}
+                        {projectactiveStep === 3 && (
+                          <>
+                            <div className="mt-4" style={{ width: "100%" }}>
+                              <div>
+                                <label className="form-label">
+                                  <span>Contract</span>
+                                </label>
+                                <div id="" className="input-group">
+                                  <select
+                                    className="form-select"
+                                    placeholder="Contract"
+                                    id="contract"
+                                    value={
+                                      ProjectStep4FormData.contracts.contract
+                                    }
+                                    onChange={(e) => {
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        contracts: { contract: e.target.value },
+                                      });
+                                    }}
+                                  >
+                                    <option value="">Select Choice</option>
+                                    <option value="Fully Executed">
+                                      Fully Executed
+                                    </option>
+                                    <option value="Pending">Pending</option>
+                                  </select>
+                                  <input
+                                    id=""
+                                    type="date"
+                                    name="contract_date"
+                                    className="form-control"
+                                    value={
+                                      ProjectStep4FormData.contracts
+                                        .contract_date
+                                    }
+                                    onChange={(e) => {
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        contracts: {
+                                          ...ProjectStep4FormData.contracts,
+                                          contract_date: e.target.value,
+                                        },
+                                      });
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div style={{ width: "100%" }}>
+                              <div>
+                                <label className="form-label">
+                                  <span>SCHEDULE_OF_VALUES:</span>
+                                </label>
+                                <div id="" className="input-group">
+                                  <select
+                                    className="form-select"
+                                    placeholder="Schedule"
+                                    id="schedule"
+                                    value={
+                                      ProjectStep4FormData.schedule_of_values
+                                        .schedule
+                                    }
+                                    onChange={(e) => {
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        schedule_of_values: {
+                                          schedule: e.target.value,
+                                        },
+                                      });
+                                    }}
+                                  >
+                                    <option value="">Select Choice</option>
+                                    <option value="Fully Executed">
+                                      Fully Executed
+                                    </option>
+                                    <option value="Pending">Pending</option>
+                                  </select>
+                                  <input
+                                    id=""
+                                    type="date"
+                                    name="schedule_date"
+                                    className="form-control"
+                                    value={
+                                      ProjectStep4FormData.schedule_of_values
+                                        .schedule_date
+                                    }
+                                    onChange={(e) => {
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        schedule_of_values: {
+                                          ...ProjectStep4FormData.schedule_of_values,
+                                          schedule_date: e.target.value,
+                                        },
+                                      });
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div style={{ width: "100%" }}>
+                              <div>
+                                <label className="form-label">
+                                  <span>INSURANCES:</span>
+                                </label>
+                                <div id="" className="input-group">
+                                  <select
+                                    className="form-select"
+                                    placeholder="Insurance"
+                                    id="insurance"
+                                    value={
+                                      ProjectStep4FormData.insurancs.insurance
+                                    }
+                                    onChange={(e) => {
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        insurancs: {
+                                          insurance: e.target.value,
+                                        },
+                                      });
+                                    }}
+                                  >
+                                    <option value="">Select Choice</option>
+                                    <option value="Fully Executed">
+                                      Fully Executed
+                                    </option>
+                                    <option value="Pending">Pending</option>
+                                  </select>
+                                  <input
+                                    id=""
+                                    type="date"
+                                    name="date"
+                                    className="form-control"
+                                    value={ProjectStep4FormData.insurancs.date}
+                                    onChange={(e) => {
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        insurancs: {
+                                          ...ProjectStep4FormData.insurancs,
+                                          date: e.target.value,
+                                        },
+                                      });
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div style={{ width: "100%" }}>
+                              <div>
+                                <label className="form-label">
+                                  <span>BONDS:</span>
+                                </label>
+                                <div id="" className="input-group">
+                                  <select
+                                    className="form-select"
+                                    placeholder="Bond"
+                                    id="bond"
+                                    value={ProjectStep4FormData.bond.bond}
+                                    onChange={(e) => {
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        bond: { bond: e.target.value },
+                                      });
+                                    }}
+                                  >
+                                    <option value="">Select Choice</option>
+                                    <option value="Fully Executed">
+                                      Fully Executed
+                                    </option>
+                                    <option value="Pending">Pending</option>
+                                  </select>
+                                  <input
+                                    id=""
+                                    type="date"
+                                    name="date"
+                                    className="form-control"
+                                    value={ProjectStep4FormData.bond.date}
+                                    onChange={(e) => {
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        bond: {
+                                          ...ProjectStep4FormData.bond,
+                                          date: e.target.value,
+                                        },
+                                      });
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        )}
+
+                        {projectactiveStep === 4 && (
+                          <>
+                            {ProjectStep5FormData.zliens.map(
+                              (zlienData, index) => (
+                                <div key={index}>
+                                  <div
+                                    className="mt-4"
+                                    style={{ width: "100%" }}
+                                  >
+                                    <div>
+                                      <label className="form-label">
+                                        <span>ZLIENS:</span>
+                                      </label>
+                                      <div id="" className="input-group">
+                                        <select
+                                          className="form-select"
+                                          placeholder="Contract"
+                                          id="ProjectEngineerID"
+                                          value={
+                                            ProjectStep5FormData.zliens[index]
+                                              .zlien
+                                          }
+                                          onChange={(e) =>
+                                            handleFieldChange(
+                                              "zlien",
+                                              e.target.value,
+                                              index,
+                                              "zliens"
+                                            )
+                                          }
+                                        >
+                                          <option value="">
+                                            Select Choice
+                                          </option>
+                                          <option value="On build">
+                                            Fully Executed
+                                          </option>
+                                          <option value="Pending">
+                                            Pending
+                                          </option>
+                                        </select>
+                                        <input
+                                          id=""
+                                          type="date"
+                                          name="date" // Set the name attribute to differentiate
+                                          className="form-control"
+                                          value={
+                                            ProjectStep5FormData.zliens.date
+                                          }
+                                          onChange={(e) => {
+                                            setProjectStep5FormData({
+                                              ...ProjectStep5FormData,
+                                              date: { date: e.target.value },
+                                            });
+                                          }}
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div style={{ width: "100%" }}>
+                                    <label
+                                      htmlFor="projectName"
+                                      className="form-label mt-2"
+                                    >
+                                      <span>SUBMITTALSS</span>
+                                    </label>
+                                    <div
+                                      className="wholespecificationEntry"
+                                      // key={index}
+                                    >
+                                      <div className="ScopofWorkSectionRemove">
+                                        <button
+                                          type="button"
+                                          className="btn btn-danger"
+                                          onClick={() => {}}
+                                        >
+                                          <i className="far">X</i>
+                                        </button>
+                                      </div>
+
+                                      <div className="mb-2 mt-4">
+                                        <label className="form-label">
+                                          Add Scop Work Number
+                                        </label>
+                                        <select
+                                          className="form-select"
+                                          aria-label="Select Specification"
+                                          value={
+                                            ProjectStep5FormData.submittals[
+                                              index
+                                            ].scop_work_number
+                                          }
+                                          onChange={(e) =>
+                                            handleFieldChange(
+                                              "scop_work_number",
+                                              e.target.value,
+                                              index,
+                                              "submittals"
+                                            )
+                                          }
+                                        >
+                                          <option value="Base Bid Drywall/Framing">
+                                            All scope numbers will here
+                                          </option>
+                                        </select>
+                                      </div>
+                                      <div className="bothDiv  gap-3">
+                                        <div className="Oneline mb-4">
+                                          <label
+                                            htmlFor="location"
+                                            className="form-label"
+                                          >
+                                            Status
+                                          </label>
+                                          <select
+                                            className="form-select"
+                                            id="ProjectEngineerID"
+                                            value={
+                                              ProjectStep5FormData.submittals
+                                                .status
+                                            }
+                                            onChange={(e) => {
+                                              setProjectStep5FormData({
+                                                ...ProjectStep5FormData,
+                                                status: {
+                                                  status: e.target.value,
+                                                },
+                                              });
+                                            }}
+                                          >
+                                            <option value="">
+                                              Select Choice
+                                            </option>
+                                            <option value="On build">
+                                              Approved
+                                            </option>
+                                            <option value="Pending">
+                                              Pending
+                                            </option>
+                                          </select>
+                                        </div>
+
+                                        <div className="Oneline">
+                                          <label
+                                            htmlFor="location"
+                                            className="form-label"
+                                          >
+                                            Date:
+                                          </label>
+                                          <input
+                                            type="date"
+                                            className="form-control"
+                                            id="dueDate"
+                                            value={
+                                              ProjectStep5FormData.submittals
+                                                .date
+                                            }
+                                            onChange={(e) => {
+                                              setProjectStep5FormData({
+                                                ...ProjectStep5FormData,
+                                                date: { date: e.target.value },
+                                              });
+                                            }}
+                                          />
+                                        </div>
+                                      </div>
+                                    </div>
+                                    {/* ))} */}
+
+                                    <button
+                                      type="button"
+                                      className="btn btn-success"
+                                      // onClick={handleAddEntry}
+                                    >
+                                      Add SUBMITTALSS
+                                    </button>
+                                  </div>
+                                </div>
+                              )
+                            )}
+                          </>
+                        )}
+
+                        {projectactiveStep === 5 && (
+                          <>
+                            <div className=" mt-3" style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>SHOP DRAWINGS</span>
+                              </label>
+                              {/* {step2FormData.map((entry, index) => ( */}
+                              <div
+                                className="wholespecificationEntry"
+                                // key={index}
+                              >
+                                <div className="ScopofWorkSectionRemove">
+                                  <button
+                                    type="button"
+                                    className="btn btn-danger"
+                                    // onClick={() =>
+                                    //   handleRemoveWholeWorkSectionEntry(index)
+                                    // }
+                                  >
+                                    <i className="far">X</i>
+                                  </button>
+                                </div>
+                                <div className="mt-5">
+                                  <label
+                                    // htmlFor={`specificBudget-${index}`}
+                                    className="form-label"
+                                  >
+                                    Add Proposal:
+                                  </label>
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    // id={`specificBudget-${index}`}
+                                    value=""
+                                    onChange={() => {}}
+                                  />
+                                </div>
+                                <div className="mb-2 mt-2">
+                                  <label
+                                    // htmlFor={`specificName-${index}`}
+                                    className="form-label"
+                                  >
+                                    Add scope of Working
+                                  </label>
+                                  <select
+                                    className="form-select"
+                                    aria-label="Select Specification"
+                                    // value={entry.specific_name || ""}
+                                    // onChange={(e) =>
+                                    //   handleEntryChange(
+                                    //     index,
+                                    //     "specific_name",
+                                    //     e.target.value
+                                    //   )
+                                    // }
+                                    value=""
+                                    onChange={() => {}}
+                                  >
+                                    <option value="Base Bid Drywall/Framing">
+                                      All scope numbers wil here
+                                    </option>
+                                  </select>
+                                </div>
+                                <div className="bothDiv  gap-3">
+                                  <div className="Oneline mb-4">
+                                    <label
+                                      htmlFor="location"
+                                      className="form-label"
+                                    >
+                                      Submittals:
+                                    </label>
+                                    <select
+                                      className="form-select"
+                                      id="ProjectEngineerID"
+                                      // value={selectedProjectEngineer}
+                                      // onChange={handleProjectEngineerChange}
+                                      value=""
+                                      onChange={() => {}}
+                                    >
+                                      <option value="">Select Choice</option>
+                                      <option value="On build">Approved</option>
+                                      <option value="Pending">Pending</option>
+                                    </select>
+                                  </div>
+
+                                  <div className="Oneline">
+                                    <label
+                                      htmlFor="location"
+                                      className="form-label"
+                                    >
+                                      Status:
+                                    </label>
+                                    <input
+                                      type="date"
+                                      className="form-control"
+                                      id="dueDate"
+                                      value=""
+                                      onChange={() => {}}
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                              {/* ))} */}
+
+                              <button
+                                type="button"
+                                className="btn btn-success"
+                                // onClick={handleAddEntry}
+                              >
+                                Add SHOP DRAWINGS
+                              </button>
+                            </div>
+                            <div style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>SAFITYS</span>
+                              </label>
+                              {/* {step2FormData.map((entry, index) => ( */}
+                              <div
+                                className="wholespecificationEntry"
+                                // key={index}
+                              >
+                                <div className="ScopofWorkSectionRemove">
+                                  <button
+                                    type="button"
+                                    className="btn btn-danger"
+                                    // onClick={() =>
+                                    //   handleRemoveWholeWorkSectionEntry(index)
+                                    // }
+                                  >
+                                    <i className="far">X</i>
+                                  </button>
+                                </div>
+                                <div className="mt-5">
+                                  <label
+                                    // htmlFor={`specificBudget-${index}`}
+                                    className="form-label"
+                                  >
+                                    Add Proposal:
+                                  </label>
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    // id={`specificBudget-${index}`}
+                                    value=""
+                                  />
+                                </div>
+                                <div className="mb-2 mt-2">
+                                  <label
+                                    // htmlFor={`specificName-${index}`}
+                                    className="form-label"
+                                  >
+                                    Add scope of Work
+                                  </label>
+                                  <select
+                                    className="form-select"
+                                    aria-label="Select Specification"
+                                    // value={entry.specific_name || ""}
+                                    // onChange={(e) =>
+                                    //   handleEntryChange(
+                                    //     index,
+                                    //     "specific_name",
+                                    //     e.target.value
+                                    //   )
+                                    // }
+
+                                    value=""
+                                    onChange={() => {}}
+                                  >
+                                    <option value="Base Bid Drywall/Framing">
+                                      All scope numbers wil here
+                                    </option>
+                                  </select>
+                                </div>
+                                <div className="bothDiv  gap-3">
+                                  <div className="Oneline mb-4">
+                                    <label
+                                      htmlFor="location"
+                                      className="form-label"
+                                    >
+                                      Submittals:
+                                    </label>
+                                    <select
+                                      className="form-select"
+                                      id="ProjectEngineerID"
+                                      // value={selectedProjectEngineer}
+                                      // onChange={handleProjectEngineerChange}
+                                      value=""
+                                      onChange={() => {}}
+                                    >
+                                      <option value="">Select Choice</option>
+                                      <option value="On build">Approved</option>
+                                      <option value="Pending">Pending</option>
+                                    </select>
+                                  </div>
+
+                                  <div className="Oneline">
+                                    <label
+                                      htmlFor="location"
+                                      className="form-label"
+                                    >
+                                      Status:
+                                    </label>
+                                    <input
+                                      type="date"
+                                      className="form-control"
+                                      id="dueDate"
+                                      value=""
+                                      onChange={() => {}}
+                                    />
+                                  </div>
+                                </div>
+                                <div className="mt-2">
+                                  <label htmlFor="comment">Comment:</label>
+                                  <textarea
+                                    id="comment"
+                                    style={{
+                                      width: "100%",
+                                      backgroundColor: "white",
+                                      color: "black",
+                                      padding: "10px",
+                                    }}
+                                    rows="2"
+                                    placeholder=" Write your comment here !"
+                                  ></textarea>
+                                </div>
+                              </div>
+                              {/* ))} */}
+
+                              <button
+                                type="button"
+                                className="btn btn-success"
+                                // onClick={handleAddEntry}
+                              >
+                                Add SAFITYs
+                              </button>
+                            </div>
+                            <div style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>Schedules</span>
+                              </label>
+                              {/* {step2FormData.map((entry, index) => ( */}
+                              <div
+                                className="wholespecificationEntry"
+                                // key={index}
+                              >
+                                <div className="mb-2 mt-3">
+                                  <label
+                                    // htmlFor={`specificDetails-${index}`}
+                                    className="form-label"
+                                  >
+                                    Scope of work divisions
+                                  </label>
+                                  {/* {Array.isArray(entry.sefic) &&
+                                      entry.sefic.map((detail, detailIndex) => ( */}
+                                  <div
+                                    // key={detailIndex}
+                                    className="input-group myrowInputgrouup"
+                                  >
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      placeholder="Scope Of Work Number"
+                                      // value={detail.number}
+                                      // onChange={(e) =>
+                                      //   handleScopeDivisionInputChange(
+                                      //     index,
+                                      //     detailIndex,
+                                      //     "number",
+                                      //     e.target.value
+                                      //   )
+                                      // }
+                                      value=""
+                                      onChange={() => {}}
+                                    />
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      placeholder="Scope Of Work Description"
+                                      // value={detail.name}
+                                      // onChange={(e) =>
+                                      //   handleScopeDivisionInputChange(
+                                      //     index,
+                                      //     detailIndex,
+                                      //     "name",
+                                      //     e.target.value
+                                      //   )
+                                      // }
+                                      value=""
+                                      onChange={() => {}}
+                                    />
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger"
+                                      // onClick={() =>
+                                      //   handleRemoveScopeDivisionEntry(
+                                      //     index,
+                                      //     detailIndex
+                                      //   )
+                                      // }
+                                    >
+                                      <i className="far">X</i>
+                                    </button>
+                                  </div>
+                                  {/* ))} */}
+                                  <button
+                                    type="button"
+                                    className="btn btn-success bk"
+                                    // onClick={() =>
+                                    //   handleAddScopeDivisionEntry(index)
+                                    // }
+                                  >
+                                    <i className="fa-regular icon fa-plus"></i>
+                                  </button>
+                                </div>
+                              </div>
+                              {/* ))} */}
+
+                              <button
+                                type="button"
+                                className="btn btn-success"
+                                // onClick={handleAddEntry}
+                              >
+                                Add Schedule
+                              </button>
+                            </div>
+                            <div style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>SUB_ CONTRACTORSS</span>
+                              </label>
+                              {/* {step2FormData.map((entry, index) => ( */}
+                              <div
+                                className="wholespecificationEntry"
+                                // key={index}
+                              >
+                                <div className="mb-2 mt-3">
+                                  <label
+                                    // htmlFor={`specificDetails-${index}`}
+                                    className="form-label"
+                                  >
+                                    Scope of work divisions
+                                  </label>
+                                  {/* {Array.isArray(entry.sefic) &&
+                                      entry.sefic.map((detail, detailIndex) => ( */}
+                                  <div
+                                    // key={detailIndex}
+                                    className="input-group myrowInputgrouup"
+                                  >
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      placeholder="Scope Of Work Number"
+                                      // value={detail.number}
+                                      // onChange={(e) =>
+                                      //   handleScopeDivisionInputChange(
+                                      //     index,
+                                      //     detailIndex,
+                                      //     "number",
+                                      //     e.target.value
+                                      //   )
+                                      // }
+                                      value=""
+                                      onChange={() => {}}
+                                    />
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      placeholder="Scope Of Work Description"
+                                      // value={detail.name}
+                                      // onChange={(e) =>
+                                      //   handleScopeDivisionInputChange(
+                                      //     index,
+                                      //     detailIndex,
+                                      //     "name",
+                                      //     e.target.value
+                                      //   )
+                                      // }
+                                      value=""
+                                      onChange={() => {}}
+                                    />
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger"
+                                      // onClick={() =>
+                                      //   handleRemoveScopeDivisionEntry(
+                                      //     index,
+                                      //     detailIndex
+                                      //   )
+                                      // }
+                                    >
+                                      <i className="far">X</i>
+                                    </button>
+                                  </div>
+                                  {/* ))} */}
+                                  <div className="mt-2">
+                                    <label htmlFor="comment">Comment:</label>
+                                    <textarea
+                                      id="comment"
+                                      style={{
+                                        width: "100%",
+                                        backgroundColor: "white",
+                                        color: "black",
+                                        padding: "10px",
+                                      }}
+                                      rows="2"
+                                      placeholder=" Write your comment here !"
+                                    ></textarea>
+                                  </div>
+                                  <button
+                                    type="button"
+                                    className="btn btn-success bk"
+                                    // onClick={() =>
+                                    //   handleAddScopeDivisionEntry(index)
+                                    // }
+                                  >
+                                    <i className="fa-regular icon fa-plus"></i>
+                                  </button>
+                                </div>
+                              </div>
+                              {/* ))} */}
+                            </div>
+                          </>
+                        )}
+                        {projectactiveStep === 6 && (
+                          <>
+                            <div className="mt-4" style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>LABOR RATES</span>
+                              </label>
+                              {/* {step2FormData.map((entry, index) => ( */}
+                              <div
+                                className="wholespecificationEntry"
+                                // key={index}
+                              >
+                                <div className="mb-2 mt-3">
+                                  <label
+                                    // htmlFor={`specificDetails-${index}`}
+                                    className="form-label"
+                                  >
+                                    Scope of work divisions
+                                  </label>
+                                  {/* {Array.isArray(entry.sefic) &&
+                                      entry.sefic.map((detail, detailIndex) => ( */}
+                                  <div
+                                    // key={detailIndex}
+                                    className="input-group myrowInputgrouup"
+                                  >
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      placeholder="Scope Of Work Number"
+                                      // value={detail.number}
+                                      // onChange={(e) =>
+                                      //   handleScopeDivisionInputChange(
+                                      //     index,
+                                      //     detailIndex,
+                                      //     "number",
+                                      //     e.target.value
+                                      //   )
+                                      // }
+                                      onChange={() => {}}
+                                    />
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      placeholder="Scope Of Work Description"
+                                      // value={detail.name}
+                                      // onChange={(e) =>
+                                      //   handleScopeDivisionInputChange(
+                                      //     index,
+                                      //     detailIndex,
+                                      //     "name",
+                                      //     e.target.value
+                                      //   )
+                                      // }
+                                      onChange={() => {}}
+                                    />
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger"
+                                      // onClick={() =>
+                                      //   handleRemoveScopeDivisionEntry(
+                                      //     index,
+                                      //     detailIndex
+                                      //   )
+                                      // }
+                                    >
+                                      <i className="far">X</i>
+                                    </button>
+                                  </div>
+                                  {/* ))} */}
+                                  <div className="mt-2">
+                                    <label htmlFor="comment">Comment:</label>
+                                    <textarea
+                                      id="comment"
+                                      style={{
+                                        width: "100%",
+                                        backgroundColor: "white",
+                                        color: "black",
+                                        padding: "10px",
+                                      }}
+                                      rows="2"
+                                      placeholder=" Write your comment here !"
+                                    ></textarea>
+                                  </div>
+                                  <button
+                                    type="button"
+                                    className="btn btn-success bk"
+                                    // onClick={() =>
+                                    //   handleAddScopeDivisionEntry(index)
+                                    // }
+                                  >
+                                    <i className="fa-regular icon fa-plus"></i>
+                                  </button>
+                                </div>
+                              </div>
+                              {/* ))} */}
+                            </div>
+                            <div style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>BILLINGS</span>
+                              </label>
+                              {/* {step2FormData.map((entry, index) => ( */}
+                              <div
+                                className="wholespecificationEntry"
+                                // key={index}
+                              >
+                                <div className="mb-2 mt-3">
+                                  {/* <label
+                      htmlFor={`specificDetails-${index}`}
+                      className="form-label"
+                    >
+                      Scope of work divisions
+                    </label> */}
+                                  {/* {Array.isArray(entry.sefic) &&
+                                      entry.sefic.map((detail, detailIndex) => ( */}
+                                  <div
+                                    // key={detailIndex}
+                                    className="input-group myrowInputgrouup"
+                                  >
+                                    <input
+                                      type="date"
+                                      className="form-control"
+                                      placeholder="Due Date"
+                                      value=""
+                                      onChange={() => {}}
+                                    />
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      placeholder="Add Reduction:"
+                                      value=""
+                                      onChange={() => {}}
+                                    />
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger"
+                                      // onClick={() =>
+                                      //   handleRemoveScopeDivisionEntry(
+                                      //     index,
+                                      //     detailIndex
+                                      //   )
+                                      // }
+                                    >
+                                      <i className="far">X</i>
+                                    </button>
+                                  </div>
+                                  {/* ))} */}
+
+                                  <button
+                                    type="button"
+                                    className="btn btn-success bk"
+                                    // onClick={() =>
+                                    //   handleAddScopeDivisionEntry(index)
+                                    // }
+                                  >
+                                    <i className="fa-regular icon fa-plus"></i>
+                                  </button>
+                                </div>
+                              </div>
+                              {/* ))} */}
+                            </div>
+                            <div style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>SOVS</span>
+                              </label>
+                              {/* {step2FormData.map((entry, index) => ( */}
+                              <div
+                                className="wholespecificationEntry"
+                                // key={index}
+                              >
+                                <div className="mb-2 mt-3">
+                                  {/* <label
+                      htmlFor={`specificDetails-${index}`}
+                      className="form-label"
+                    >
+                      Scope of work divisions
+                    </label> */}
+                                  {/* {Array.isArray(entry.sefic) &&
+                                      entry.sefic.map((detail, detailIndex) => ( */}
+                                  <div
+                                    // key={detailIndex}
+                                    className="input-group myrowInputgrouup"
+                                  >
+                                    <select
+                                      className="form-select"
+                                      aria-label="Select Specification"
+                                      // value={entry.specific_name || ""}
+                                      onChange={() => {}}
+                                    >
+                                      <option value="">Select Choice</option>
+                                      <option value="Approved">Approved</option>
+                                      <option value="Pending">Pending</option>
+                                      <option value="Custom">Custom</option>
+                                    </select>
+                                    <input
+                                      type="date"
+                                      className="form-control"
+                                      placeholder="Due Date"
+                                      value=""
+                                      onChange={() => {}}
+                                    />
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger"
+                                      // onClick={() =>
+                                      //   handleRemoveScopeDivisionEntry(
+                                      //     index,
+                                      //     detailIndex
+                                      //   )
+                                      // }
+                                    >
+                                      <i className="far">X</i>
+                                    </button>
+                                  </div>
+                                  {/* ))} */}
+
+                                  <button
+                                    type="button"
+                                    className="btn btn-success bk"
+                                    // onClick={() =>
+                                    //   handleAddScopeDivisionEntry(index)
+                                    // }
+                                  >
+                                    <i className="fa-regular icon fa-plus"></i>
+                                  </button>
+                                </div>
+                              </div>
+                              {/* ))} */}
+                            </div>
+                          </>
+                        )}
+                        {projectactiveStep === 7 && (
+                          <div className=" mt-3">
+                            <div style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>HD S_SYSTEMS</span>
+                              </label>
+                              {/* {step2FormData.map((entry, index) => ( */}
+                              <div
+                                className="wholespecificationEntry"
+                                // key={index}
+                              >
+                                <div className="mb-2 mt-3">
+                                  <label
+                                    // htmlFor={`specificDetails-${index}`}
+                                    className="form-label"
+                                  >
+                                    Scope of work divisions
+                                  </label>
+                                  {/* {Array.isArray(entry.sefic) &&
+                                      entry.sefic.map((detail, detailIndex) => ( */}
+                                  <div
+                                    // key={detailIndex}
+                                    className="input-group myrowInputgrouup"
+                                  >
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      placeholder="Scope Of Work Number"
+                                      // value={detail.number}
+                                      // onChange={(e) =>
+                                      //   handleScopeDivisionInputChange(
+                                      //     index,
+                                      //     detailIndex,
+                                      //     "number",
+                                      //     e.target.value
+                                      //   )
+                                      // }
+                                      onChange={() => {}}
+                                    />
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      placeholder="Scope Of Work Description"
+                                      // value={detail.name}
+                                      // onChange={(e) =>
+                                      //   handleScopeDivisionInputChange(
+                                      //     index,
+                                      //     detailIndex,
+                                      //     "name",
+                                      //     e.target.value
+                                      //   )
+                                      // }
+                                      onChange={() => {}}
+                                    />
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger"
+                                      // onClick={() =>
+                                      //   handleRemoveScopeDivisionEntry(
+                                      //     index,
+                                      //     detailIndex
+                                      //   )
+                                      // }
+                                    >
+                                      <i className="far">X</i>
+                                    </button>
+                                  </div>
+                                  {/* ))} */}
+                                  <div className="mt-2">
+                                    <label htmlFor="comment">Comment:</label>
+                                    <textarea
+                                      id="comment"
+                                      style={{
+                                        width: "100%",
+                                        backgroundColor: "white",
+                                        color: "black",
+                                        padding: "10px",
+                                      }}
+                                      rows="2"
+                                      placeholder=" Write your comment here !"
+                                    ></textarea>
+                                  </div>
+                                  <button
+                                    type="button"
+                                    className="btn btn-success bk"
+                                    // onClick={() =>
+                                    //   handleAddScopeDivisionEntry(index)
+                                    // }
+                                  >
+                                    <i className="fa-regular icon fa-plus"></i>
+                                  </button>
+                                </div>
+                              </div>
+                              {/* ))} */}
+                            </div>
+
+                            <div style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>ON BUILDS</span>
+                              </label>
+                              {/* {step2FormData.map((entry, index) => ( */}
+                              <div
+                                className="wholespecificationEntry"
+                                // key={index}
+                              >
+                                <div className="mb-2 mt-3">
+                                  <label
+                                    // htmlFor={`specificDetails-${index}`}
+                                    className="form-label"
+                                  >
+                                    Scope of work divisions
+                                  </label>
+                                  {/* {Array.isArray(entry.sefic) &&
+                                      entry.sefic.map((detail, detailIndex) => ( */}
+                                  <div
+                                    // key={detailIndex}
+                                    className="input-group myrowInputgrouup"
+                                  >
+                                    <select
+                                      className="form-select"
+                                      aria-label="Select Specification"
+                                      // value={entry.specific_name || ""}
+                                      onChange={() => {}}
+                                    >
+                                      <option value="">Select Choice</option>
+                                      <option value="Approved">
+                                        Bid Proposal
+                                      </option>
+                                      <option value="Pending">Specs</option>
+                                      <option value="Custom">Contract</option>
+                                      <option value="Approved">
+                                        Submitile
+                                      </option>
+                                      <option value="Pending">Safety</option>
+                                      <option value="Custom">
+                                        Shop Drawing
+                                      </option>
+                                      <option value="Custom">Budget</option>
+                                    </select>
+                                    <select
+                                      className="form-select"
+                                      aria-label="Select Specification"
+                                      // value={entry.specific_name || ""}
+                                      onChange={() => {}}
+                                    >
+                                      <option value="">Select Choice</option>
+                                      <option value="Approved">Upload</option>
+                                      <option value="Pending">Pending</option>
+                                    </select>
+
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger"
+                                      // onClick={() =>
+                                      //   handleRemoveScopeDivisionEntry(
+                                      //     index,
+                                      //     detailIndex
+                                      //   )
+                                      // }
+                                    >
+                                      <i className="far">X</i>
+                                    </button>
+                                  </div>
+                                  {/* ))} */}
+
+                                  <button
+                                    type="button"
+                                    className="btn btn-success bk"
+                                    // onClick={() =>
+                                    //   handleAddScopeDivisionEntry(index)
+                                    // }
+                                  >
+                                    <i className="fa-regular icon fa-plus"></i>
+                                  </button>
+                                </div>
+                              </div>
+                              {/* ))} */}
+                            </div>
+                            <div style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>BUGETS</span>
+                              </label>
+                              {/* {step2FormData.map((entry, index) => ( */}
+                              <div
+                                className="wholespecificationEntry"
+                                // key={index}
+                              >
+                                <div className="mb-2 mt-3">
+                                  <label
+                                    // htmlFor={`specificDetails-${index}`}
+                                    className="form-label"
+                                  >
+                                    Scope of work divisions
+                                  </label>
+                                  {/* {Array.isArray(entry.sefic) &&
+                                      entry.sefic.map((detail, detailIndex) => ( */}
+                                  <div
+                                    // key={detailIndex}
+                                    className="input-group myrowInputgrouup"
+                                  >
+                                    <select
+                                      className="form-select"
+                                      aria-label="Select Specification"
+                                      // value={entry.specific_name || ""}
+                                      onChange={() => {}}
+                                    >
+                                      <option value="">Select Choice</option>
+                                      <option value="Approved">Done</option>
+                                      <option value="Pending">Pending</option>
+                                      <option value="Custom">Custom</option>
+                                    </select>
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      placeholder="Comment"
+                                      value=""
+                                      onChange={() => {}}
+                                    />
+
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger"
+                                      // onClick={() =>
+                                      //   handleRemoveScopeDivisionEntry(
+                                      //     index,
+                                      //     detailIndex
+                                      //   )
+                                      // }
+                                    >
+                                      <i className="far">X</i>
+                                    </button>
+                                  </div>
+                                  {/* ))} */}
+
+                                  <button
+                                    type="button"
+                                    className="btn btn-success bk"
+                                    // onClick={() =>
+                                    //   handleAddScopeDivisionEntry(index)
+                                    // }
+                                  >
+                                    <i className="fa-regular icon fa-plus"></i>
+                                  </button>
+                                </div>
+                              </div>
+                              {/* ))} */}
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="mt-1">
+                          {projectactiveStep < 7 ? (
+                            <div className="parentbtnsdiv">
+                              <div className="spacebtns">
+                                <Button
+                                  variant="contained"
+                                  color="primary"
+                                  disabled={projectactiveStep === 0} // Disable the button when activeStep is 0
+                                  onClick={handleprojectBack}
+                                >
+                                  Back
+                                </Button>
+                                <Button
+                                  variant="contained"
+                                  color="primary"
+                                  onClick={handleprojectNext}
+                                >
+                                  Next
+                                </Button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="parentbtnsdiv">
+                              <div className="spacebtns">
+                                <Button
+                                  variant="contained"
+                                  color="primary"
+                                  onClick={handleprojectBack}
+                                >
+                                  Back
+                                </Button>
+                                <Button
+                                  variant="contained"
+                                  color="primary"
+                                  type="button"
+                                  onClick={handleProjectFormSubmit}
+                                >
+                                  Submit
+                                </Button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </Modal>
               </div>
             </div>
           )}
@@ -2893,7 +3494,7 @@ const Estimator = () => {
                       <select
                         className="dropUpdation "
                         id="estimatorName"
-                        onChange={(event) => handleAreaChange(event, item.id)}
+                        onChange={(event) => handleStatusChange(event, item.id)}
                         value={statusMap[item.id] || item.status}
                       >
                         <option value={item.status}>{item.status}</option>
@@ -2904,13 +3505,13 @@ const Estimator = () => {
                       </select>
                     </td>
                     <td className="mytdbidder centered-td">
-                      {item.bidder + " " + item.bidder_deatil}
+                      {item.bidder + " " + item.bidder_address + " " +item.email}
                     </td>
                     <td className="mytd centered-td actionTD">
                       <div className="relative-container loop">
-                        <div  
+                        <div
                           type="button"
-                         className="pb-2"
+                          className="pb-2"
                           onClick={() => {
                             setItemId(item.id);
                             setSelectedEstimatingID(item.prjct_name);
@@ -2931,9 +3532,8 @@ const Estimator = () => {
                         </div>
 
                         <div
-                        type="button"
-                        className="pb-2"
-      
+                          type="button"
+                          className="pb-2"
                           onClick={() => {
                             console.log(item.prjct_name);
                             setItemId(item.id);
@@ -2942,7 +3542,7 @@ const Estimator = () => {
                               ...step0FormData,
                               estimating: item.id,
                             });
-                            setSelectedEstimatingID(item.prjct_name);
+                            setSelectedEstimatingID(item.id);
                             setPurposalModal(true);
                           }}
                         >
@@ -2965,13 +3565,17 @@ const Estimator = () => {
                         </div> */}
 
                         <div
-                          
                           type="button"
                           onClick={() => {
-                            navigate(`/homepage/rawproposal/${item.id}`);
+                            const encodedProjectName = encodeURIComponent(
+                              item.id
+                            );
+                            navigate(
+                              `/homepage/rawproposal/${encodedProjectName}`
+                            );
                           }}
                         >
-                         <i class="fa-solid fa-eye size11"></i>
+                          <i class="fa-solid fa-eye size11"></i>
                         </div>
                       </div>
                     </td>
@@ -3184,193 +3788,7 @@ const Estimator = () => {
           </div>
         </div>
       )}
-      {/* *********************Edit Estimating Entry information************** */}
 
-      {/* {showEstimatingEditModal && (
-        <div
-          className={`modal-container bg-white pt-5 ps-2 ${
-            showEstimatingEditModal ? "show" : ""
-          }`}
-        >
-          <h4 className="text-center addnewtxt">Edit Estimating</h4>
-          <button className="close-btn" onClick={closeModal}></button>
-          <div className="modal-content px-5">
-            <form onSubmit={handleEstimatingEditing} className="MyForm">
-              <div className="bothDiv gap-2 mt-5">
-                <div className="Oneline">
-                  <label htmlFor="dueDate" className="form-label">
-                    Start Date:
-                  </label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    id="dueDate"
-                    value={selectedstart_date}
-                    onChange={(e) => setSelectedstart_date(e.target.value)}
-                  />
-                </div>
-
-                <div className="Oneline">
-                  <label htmlFor="companyName" className="form-label">
-                    Company
-                  </label>
-                  <select
-                    className="form-select"
-                    id="companyName"
-                    value={selectedCompany}
-                    onChange={(e) => setSelectedCompany(e.target.value)}
-                  >
-                    <option value="">Select Company</option>
-                    {companyName && companyName.length > 0 ? (
-                      companyName.map((companyItem) => (
-                        <option value={companyItem.id} key={companyItem.id}>
-                          {companyItem.Cmpny_Name}
-                        </option>
-                      ))
-                    ) : (
-                      <option value="" disabled>
-                        {companyName ? "No companies available" : "Loading..."}
-                      </option>
-                    )}
-                  </select>
-                </div>
-              </div>
-              <div>
-                <label htmlFor="projectName" className="form-label">
-                  Project Name:
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="projectName"
-                  value={selectedEstimatingID}
-                  onChange={(e) => setSelectedEstimatingID(e.target.value)}
-                />
-              </div>
-
-              <div className="bothDiv">
-                <div className="Oneline">
-                  <label htmlFor="estimatorName" className="form-label">
-                    Estimator Name:
-                  </label>
-                  <select
-                    className="form-select"
-                    id="estimatorName"
-                    value={selectedEstimator}
-                    onChange={(e) => setSelectedEstimator(e.target.value)}
-                  >
-                    <option value="">Select Estimator Name</option>
-                    {EstimatorName && EstimatorName.length > 0 ? (
-                      EstimatorName.map((user) => (
-                        <option value={user.id} key={user.id}>
-                          {user.full_Name}
-                        </option>
-                      ))
-                    ) : (
-                      <option value="" disabled>
-                        Loading...
-                      </option>
-                    )}
-                  </select>
-                </div>
-
-                <div className="Oneline">
-                  <label htmlFor="location" className="form-label">
-                    Location:
-                  </label>
-                  <select
-                    className="form-select"
-                    id="location"
-                    value={location}
-                    onChange={handleLocationChange}
-                  >
-                    <option value="">Select Location</option>
-                    {userLocation && userLocation.length > 0 ? (
-                      userLocation.map((place) => (
-                        <option value={place.id} key={place.id}>
-                          {place.name}
-                        </option>
-                      ))
-                    ) : (
-                      <option value="" disabled>
-                        Loading...
-                      </option>
-                    )}
-                  </select>
-                </div>
-              </div>
-
-              <div className="bothDiv">
-                <div className="Oneline">
-                  <label htmlFor="dueDate" className="form-label">
-                    Due Date:
-                  </label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    id="dueDate"
-                    value={selecteddueDate}
-                    onChange={(e) => setSelecteddueDate(e.target.value)}
-                  />
-                </div>
-                <div className="Oneline timefield">
-                  <label htmlFor="time" className="form-label">
-                    Time:
-                  </label>
-                  <div className="d-flex bg-white">
-                    <input
-                      type="time"
-                      placeholder="Select Time"
-                      value={selectedTime}
-                      onChange={(e) => setSelectedTime(e.target.value)}
-                    />
-                    <select
-                      value={timezone}
-                      onChange={handleTimeZoneChange}
-                      className="selectpicker"
-                    >
-                      <option value="">Select TimeZone</option>
-                      <option value="PDT">PDT</option>
-                      <option value="CT">CT</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="bidderName" className="form-label">
-                  Bidder Name:
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="bidderName"
-                  value={selectedBidder}
-                  onChange={(e) => setSelectedBidder(e.target.value)}
-                />
-              </div>
-              <div>
-                <label htmlFor="bidderDetails" className="form-label">
-                  Bidder Details:
-                </label>
-                <textarea
-                  name="#"
-                  className="form-control"
-                  id="bidderDetails"
-                  placeholder="Write your details!"
-                  cols="10"
-                  rows="10"
-                  value={selectedbidder_address}
-                  onChange={(e) => setSelectedbidder_address(e.target.value)}
-                ></textarea>
-              </div>
-              <button type="submit" className="btn btn-submit mt-3 mb-4">
-                Update
-              </button>
-            </form>
-          </div>
-        </div>
-      )} */}
       {showEstimatingEditModal && (
         <div
           className={`modal-container bg-white pt-5 ps-2 ${
@@ -3953,7 +4371,7 @@ const Estimator = () => {
                         <button
                           type="button"
                           className="btn btn-success"
-                          onClick={handleAddEntry}
+                          // onClick={handleAddEntry}
                         >
                           Add alternate scope of work
                         </button>

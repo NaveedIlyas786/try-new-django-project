@@ -11,6 +11,9 @@
   margin-top: 70px;
   display: flex;
 }
+.mytr{
+  cursor: pointer;
+}
 .aside_li {
   height: 40px;
   list-style-type: none;

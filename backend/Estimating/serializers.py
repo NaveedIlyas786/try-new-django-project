@@ -226,11 +226,11 @@ class ProposalSerializer(serializers.ModelSerializer):
         model = Proposal
         fields = ['id','estimating', 'date', 'architect_name', 'architect_firm','Addendums', 'services','spcifc'] 
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
 
 
-        representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None
+    #     representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None
 
 
-        return representation
+    #     return representation

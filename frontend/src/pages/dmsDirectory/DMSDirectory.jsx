@@ -10,7 +10,7 @@ const DMSDirectory = () => {
   useEffect(() => {
     // Fetch data from the API
     axios
-      .get("http://127.0.0.1:8000/api/user/Userapi/")
+      .get("http://127.0.0.1:8000/api/estimating/dmsDrectory/")
       .then((response) => response.data)
       .then((data) => {
         console.log(data);

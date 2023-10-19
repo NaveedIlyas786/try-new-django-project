@@ -159,7 +159,7 @@ EMAIL_HOST_USER='mubeenjutt9757@gmail.com'
 EMAIL_HOST_PASSWORD='hros gaga blbm kwjv'
 
 EMAIL_USE_TLS= True
-
+  
 
 # Django project settings.py
 

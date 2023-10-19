@@ -1,245 +1,89 @@
-import React, { Component,useRef, useEffect, useState } from 'react';
-import "./Purposal.css";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
-import { useNavigate } from "react-router-dom";
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { jsPDF } from "jspdf";
 
-const Purposal = () => {
-
-  console.log("Purposal component rendered");
-  const pdfRef = useRef();
-  const { id } = useParams();
-  const [proposalData, setProposalData] = useState(null);
-  const [data, setData] = useState([]);
-  
-  useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/estimating/proposals/${id}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`API request failed with status: ${response.status}`);
-        }
-        console.log(response);
-        return response.json();
-      })
-      .then((data) => {
-        setProposalData(data);
-        console.log(data);
-      })
-      .catch((error) => console.error('Error fetching proposal data:', error));
-  }, [id]);
-
-  const Exportpdf = () => {
-    const input = pdfRef.current;
-    html2canvas(input).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4", true);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = pdfWidth - 20; // Set the image width to the page width minus the desired padding (20px on each side)
-      const imgHeight = (imgWidth * canvas.height) / canvas.width;
-      const imgX = 10; // Set the left padding
-      const imgY = 10; // Set the top padding
-
-      pdf.addImage(imgData, "PNG", imgX, imgY, imgWidth, imgHeight);
-      pdf.save("Proposal.pdf");
-    });
-  };
-
-  const navigate = useNavigate();
-  const movetoEstimatingPage = () => {
-    navigate("/homepage/estimating/");
-  };
+function RawProposal() {
+  // ... (unchanged code)
 
   return (
-    <div className="purposal ">
-      <div className="exportdiv ">
-        <button
-          type="button"
-          onClick={movetoEstimatingPage}
-          className="btn btn-outline-primary urlbackbtn"
-        >
-          <i className="fa-duotone me-2 fa fa-angles-left icons backicon"></i> Back
+    <div className="rawk">
+      <div className="pdfside">
+        <button className="btn" onClick={generatePDF} style={{ width: "70px" }}>
+          <i
+            className="fa-solid fa-file-pdf"
+            style={{ fontSize: "38px", color: "#ee1d22", fontWeight: "900" }}
+          ></i>
         </button>
-        <div className="d-flex gap-2 align-items-center">
-          <button className="btn btn-danger">EMail</button>
-          <img onClick={Exportpdf} className="exportSection pdfimg" src="../../../src/assets/pdfimg.png" alt="" />
-        </div>
+        <img
+          onClick={sendMyEmail}
+          style={{ width: "100px", cursor: "pointer", height: "60px" }}
+          src="../../../src/assets/emailImg.png"
+          alt="Email img"
+        />
       </div>
+      {filteredEntries.length > 0 && (
+        <div ref={conponentPDF} id="pdf-content" className="mt-5">
+          {filteredEntries.map((proposalData) => (
+            <div className="header">
+                     //       <div className="topSection">
+                 <img
+                   className="logoimg"
+                   src="../../../src/assets/purposal_logo-top.png"
+                   alt="myimg"
+                 />
+                 <div className="rightTop">
+                   <p className="topinfo">{entry.estimating.company.adress}</p>
+                   <p className="topinfo">Bakersfield, CA 93307</p>
+                   <p className="topinfo">
+                     Office:{" "}
+                     <span>{entry.estimating.company.office_phone_number}</span>{" "}
+                   </p>
+                   <p className="topinfo">
+                     Fax: <span>{entry.estimating.company.fax_number}</span>{" "}
+                   </p>
+                   <p className="topinfo">
+                     Email: {entry.estimating.company.email}
+                   </p>
+                 </div>
+               </div>
 
-      {/* {proposalData && (
-        <div className='mt-5 bg-info'>
-          <h2 className='mt-5'>Proposal Details</h2>
-          <p>{proposalData.estimating}</p>
-          <p>{proposalData.architect_name}</p>
-        </div>
-      )} */}
+              <div>
+                <p className="fs-5">January 24, 2023</p>
+                <p className="fs-6 DMS">
+                  <strong>{proposalData.estimating.company.Cmpny_Name}</strong> is
+                  submitting the following bid proposal for the
+                  <strong>{proposalData.estimating.name}</strong>. The plans
+                  used to formulate the bid proposal are dated XX/XX/20XX,
+                  drafted by
+                  <strong>{proposalData.architect_firm}</strong> FIRM, and
+                  approved by <strong>{proposalData.architect_name}</strong>.
+                </p>
+              </div>
 
-      <div ref={pdfRef} className="pdf_form">
-      <h1>Data from API:</h1>
-        <ul>
-          {data.map(item => (
-            <li key={item.id}>{item.architect_name}</li>
-          ))}
-        </ul>
-        <header className="header ">
-          <div className="topSection">
-            <img
-              className="logoimg"
-              src="../../../src/assets/purposal_logo-top.png"
-              alt="myimg"
-            />
-            <div className="rightTop">
-              <p className="topinfo">2900 E. Belle Terrace,</p>
-              <p className="topinfo">Unit A</p>
-              <p className="topinfo">Bakersfield, CA 93307</p>
-              <p className="topinfo">Office (415) 508-4968</p>
-              <p className="topinfo">Fax (415) 508-4585</p>
-              <p className="topinfo">estimating@dmsmgt.com</p>
+              {/* ... (unchanged code) */}
+
+              <div className="Addendum">
+                <p className="DMS">
+                  The following addendums were also included in the bid proposal:
+                </p>
+                <ul>
+                  {proposalData.Addendums.map((e) => (
+                    <li key={`${e.id}-${e.addendum_Number}`} className="DMS">
+                      Addendum #{e.addendum_Number} Dated{" "}
+                      <span className="addendumdate ms-1">{e.date}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* ... (unchanged code) */}
             </div>
-          </div>
-        </header>
-        <main>
-          <div>
-            <p>January 24, 2023</p>
-            <p className="">
-              <strong> DMS Drywall & Interior Systems Inc.</strong> is
-              submitting the following bid proposal for the{" "}
-              <strong> [PROJECT NAME] project.</strong> The plans used to
-              formulate the bid proposal are dated XX/XX/20XX, drafted by
-              <strong> ARCHITECT </strong> FIRM, and approved by{" "}
-              <strong> ARCHITECT</strong> NAME (if listed).
-            </p>
-          </div>
-          <div className="Addendum">
-            <p>
-              The following addendums were also included in the bid proposal:
-            </p>
-            <ul>
-              <li>Addendum #1 – Dated 09/24/2022</li>
-              <li>Addendum #2 – Dated 09/24/2022</li>
-              <li>Addendum #3 – Dated 09/24/2022</li>
-            </ul>
-          </div>
-          <div className="dmsdrywall">
-            <p>
-              <strong> DMS Drywall & Interior Systems Inc.</strong> submits the
-              below price for the following scope:
-            </p>
-          </div>
-          <div className="baseBiddrywall">
-            <h4 className="baseh4">
-              Base Bid Drywall/Framing/Plaster: $#,###,###.00
-            </h4>
-            <ul className="mt-3">
-              <li className="li ms-4">
-                <h5>05 40 00 Cold-Formed Metal Framing (For Our Scope Only)</h5>
-              </li>
-              <li className="li ms-4">
-                <h5>07 84 00 Fire-stopping (For Our Scope Only)</h5>
-              </li>
-              <li className="li ms-4">
-                <h5>07 92 00 Joint Sealants (For Our Scope Only)</h5>
-              </li>
-              <li className="li ms-4">
-                <h5>09 21 16.23 Gypsum Board Shaft Wall Assemblies</h5>
-              </li>
-              <li className="li ms-4">
-                <h5>09 22 16 Non-Structural Metal Framing</h5>
-              </li>
-              <li className="li ms-4">
-                <h5>09 29 00 Gypsum Board Assemblies</h5>
-              </li>
-            </ul>
-          </div>
-          <div className="baseBiddrywall">
-            <h4 className="baseh4">Add/Alt Weather Barriers: $#,###,###.00</h4>
-            <ul className="mt-3">
-              <li className="li ms-4">
-                <h5>07 25 00 Weather Barriers (For Our Scope Only)</h5>
-              </li>
-            </ul>
-          </div>
-          <div className="baseBiddrywall">
-            <h4 className="baseh4">
-              Add/Alt Integrated Ceiling Assemblies: $#,###,###.00
-            </h4>
-            <ul className="mt-3">
-              <li className="li ms-4">
-                <h5>
-                  09 54 00 Integrated Ceiling Assemblies (For Our Scope Only)
-                </h5>
-              </li>
-            </ul>
-          </div>
-          <div className="drywall-interior">
-            <h4>
-              DMS Drywall & Interior Systems Inc. Signatory to the Carpenters
-              Union
-            </h4>
-          </div>
-          <div className="inclusions">
-            <p>
-              <strong>INCLUSIONS:</strong>
-            </p>
-            <ul>
-              <li>Light gauge metal framing, wall board and finish</li>
-              <li>Cold-formed metal framing for our scope of work only</li>
-              <li>
-                Fire-stopping and joint sealants for our scope of work only
-              </li>
-              <li>Scaffolding for our scope of work only</li>
-              <li>Badging for our workers only</li>
-            </ul>
-          </div>
-          <div className="exclusions">
-            <p>
-              <strong>ExCLUSIONS:</strong>
-            </p>
-            <ul>
-              <li>Light gauge metal framing, wall board and finish</li>
-              <li>Cold-formed metal framing for our scope of work only</li>
-              <li>
-                Fire-stopping and joint sealants for our scope of work only
-              </li>
-              <li>Scaffolding for our scope of work only</li>
-              <li>Badging for our workers only</li>
-            </ul>
-          </div>
-          <div className="qualifications">
-            <p>
-              <strong>QUALIFICATIONS:</strong>
-            </p>
-            <ul>
-              <li>Light gauge metal framing, wall board and finish</li>
-              <li>Cold-formed metal framing for our scope of work only</li>
-              <li>
-                Fire-stopping and joint sealants for our scope of work only
-              </li>
-              <li>Scaffolding for our scope of work only</li>
-              <li>Badging for our workers only</li>
-              <li>Cold-formed metal framing for our scope of work only</li>
-              <li>
-                Fire-stopping and joint sealants for our scope of work only
-              </li>
-              <li>Scaffolding for our scope of work only</li>
-              <li>Badging for our workers only</li>
-              <li>Cold-formed metal framing for our scope of work only</li>
-              <li>Scaffolding for our scope of work only</li>
-              <li>Complete Car</li>
-            </ul>
-          </div>
-          <div className="estimator">
-            <p className="myesti"> Louie Hoelscher </p>
-            <p className="myesti"> 636-383-2105 </p>
-          </div>
-        </main>
-        <footer className="footer myspan text-center">
-          CSLB 1035342 DIR 1000059791
-        </footer>
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
-};
+}
 
-export default Purposal;
+export default RawProposal;

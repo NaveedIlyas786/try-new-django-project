@@ -179,54 +179,54 @@ const Dashboard = () => {
     <>
       <div className=" container dashboard ">
         <div className=" row projectStatus justify-content-around">
-          <div className=" col-md-2 p-2 ProjectStatus pendinggreen ">
-            <h4 className="pt-3 pb-2">
+          <div className=" col-md-2  ProjectStatus pendinggreen d-flex justify-content-center align-items-center">
+          <p className="mt-2">
+              <i className="fa-solid fa-circle-check check "></i>
+            </p>
+            <h5 className="ps-3 headsett">Won</h5>
+            <h4 className="ps-3 headsettNo">
               {dashData.reduce((acc, e) => acc + (e?.Won?.total || 0), 0)}
             </h4>
-            <p>
-              <i className="fa-solid fa-circle-check check"></i>
-            </p>
-            <h5>Won</h5>
           </div>
-          <div className=" col-md-2 p-2  ProjectStatus pendingyellow">
-            <h4 className="pt-3 pb-2">
-              {dashData.reduce((acc, e) => acc + (e?.Pending?.total || 0), 0)}
-            </h4>
-            <p>
+
+          <div className=" col-md-2   ProjectStatus pendingyellow d-flex justify-content-center align-items-center">
+          <p className="mt-2">
               <i className="fa-solid  fa-question fs-5 pend"></i>
             </p>
-            <h5>pending</h5>
-          </div>
-          <div className=" col-md-2 p-3  ProjectStatus pendingWorking" >
-            <h4 className="pt-2 pb-2">
-              {dashData.reduce((acc, e) => acc + (e?.Working?.total || 0), 0)}
+            <h5 className="ps-3 headsett">Pending</h5>
+            <h4 className="ps-3 headsettNo">
+              {dashData.reduce((acc, e) => acc + (e?.Pending?.total || 0), 0)}
             </h4>
-            <p>
+          </div>
+          <div className=" col-md-2   ProjectStatus pendingWorking d-flex justify-content-center align-items-center" >
+          <p className="mt-2">
               <i className="fa-solid fa-spinner fs-5 working"></i>
             </p>
-            <h5>Working</h5>
-            <p>
-              <i className="fa-solid fa-square-this-way-up "></i>
-            </p>
-          </div>
-          <div className=" col-md-2 p-3  ProjectStatus pendingLost" >
-            <h4 className="pt-2 pb-2">
-              {dashData.reduce((acc, e) => acc + (e?.Lost?.total || 0), 0)}
+            <h5 className="ps-3 headsett">Working</h5>
+            <h4 className="ps-3 headsettNo">
+              {dashData.reduce((acc, e) => acc + (e?.Working?.total || 0), 0)}
             </h4>
-
-            <p>
+            {/* <p>
+              <i className="fa-solid fa-square-this-way-up "></i>
+            </p> */}
+          </div>
+          <div className=" col-md-2  ProjectStatus pendingLost d-flex justify-content-center align-items-center" >
+          <p className="mt-3">
               <i className=" mark fa-duotone fa fa-ban"></i>
             </p>
-            <h5>Lost</h5>
+            <h5 className="ps-3 headsett">Lost</h5>
+            <h4 className="ps-3 headsettNo">
+              {dashData.reduce((acc, e) => acc + (e?.Lost?.total || 0), 0)}
+            </h4>
           </div>
         </div>
       </div>
-      <div className="mt-3">
+      <div className="mt-1">
         <div className=" container mytable ">
          
         <div>
       {/* Dropdown for selecting the year */}
-      <div className="ms-4 mb-2 btn-group dropright">
+      <div className="ms-2 mb-2 btn-group dropright">
         <button
           type="button"
           className="btn  dropdown-toggle"
@@ -270,7 +270,7 @@ const Dashboard = () => {
 
 
           <div
-            className=" row table-responsive table-design pk"
+            className=" row table-responsive table-design pk mt-2"
             data-aos="fade-left"
           >
             <div className="col-md-12">
@@ -431,7 +431,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        <div className="container mt-5">
+        {/* <div className="container mt-5">
           <div className="row">
             <div
               className="col-md-4 twoTable  mt-3 table-responsive-custom"
@@ -559,7 +559,7 @@ const Dashboard = () => {
                 )}
               </div>
             </div> */}
-            <div
+            {/* <div
               className="ms-3 col-md-7 col-sm-7 text-center graphimg"
               
             >
@@ -597,7 +597,53 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div>  */}
+       <div className="container mt-5">
+       <div className="row mt-5">
+      <div
+              className="ms-2 col text-center graphimg mt-5"
+              
+            >
+              <BarChart
+                width={1100}
+                height={440}
+                data={companyiesData}
+                margin={{
+                  top: 20,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="company_name" />
+                <YAxis />
+                <Tooltip formatter={(value) => formatNumberWithCommas(value)} />
+                <Bar
+                  dataKey="total_won_bid_amount"
+                  fill="#8884d8"
+                  shape={<TriangleBar />}
+                  label={{ position: "top" }}
+                >
+                  {companyiesData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={colors[index % 20]} />
+                  ))}
+                </Bar>
+              </BarChart>
+              <div className="mt-4 d-flex totalamount">
+                <h1>Total Amount: </h1>
+                {companyiesData[2] && (
+                  <h1>
+                    {formatNumberWithCommas(
+                      companyiesData[2].total_won_bid_amount
+                    )}
+                  </h1>
+                )}
+              </div>
+            </div>
+       </div>
+
+       </div>
       </div>
     </>
   );

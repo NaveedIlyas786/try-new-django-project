@@ -1355,7 +1355,7 @@ const Estimator = () => {
             </div>
             <div className="d-flex mt-5  justify-content-between align-items-center h-70 ">
               <div>
-                <h3 className=" estisum" data-aos="fade-left">
+                <h3 className=" estisum nowrap-text " data-aos="fade-left">
                   Estimating Summary
                 </h3>
               </div>
@@ -3505,7 +3505,7 @@ const Estimator = () => {
                       </select>
                     </td>
                     <td className="mytdbidder centered-td">
-                      {item.bidder + " " + item.bidder_deatil}
+                      {item.bidder + " " + item.bidder_address + " " +item.email}
                     </td>
                     <td className="mytd centered-td actionTD">
                       <div className="relative-container loop">

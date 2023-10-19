@@ -21,13 +21,21 @@ h5 {
 }
 
 .ProjectStatus {
-  border-radius: 50%;
+  border-radius: 15px;
   background: #f6f6fd;
-  box-shadow: 29px 29px 58px #d1d1d7, -29px -29px 58px #ffffff;
+  box-shadow: 29px 29px 58px #d1d1d6, -29px -29px 58px #ffffff;
   vertical-align: center !important;
   text-align: center;
-  height: 150px;
-  width: 150px;
+  height: 80px;
+  width: 220px;
+}
+.headsett{
+  font-size: 29px !important;
+  font-weight: 500 !important;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif !important;
+}
+.headsettNo{
+  font-size: 35px !important;
 }
 .pendinggreen{
   border:2px solid#4fd311;
@@ -100,10 +108,11 @@ h5 {
 .twoTable{
   height: 160px !important;
 }
-.graphimg img {
+
+/* .graphimg img {
   height: 250px;
   width: 600px;
-}
+} */
 .dropdown-menu li a.active{
   color: white;
   background-color:#28a745 !important ;

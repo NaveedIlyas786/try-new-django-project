@@ -33,13 +33,109 @@ const Signup = () => {
 
     // Check for empty fields
     if (!full_Name || !email || !password || !password2) {
-      setError("All fields are required");
+      // setError("All fields are required");
+      setError(
+        <>
+          <div className="modal-overlay">
+            <div  className="popuppass">
+              <p>All Fields are required</p>
+            </div>
+          </div>
+        </>
+      );
+    
+      // Use setTimeout to remove the error message after 1 second
+      setTimeout(() => {
+        setError(null); // Remove the error message
+      }, 1000);
       return;
     }
+   //if email is invalid
+   
+    
+    const emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+    const isValidEmail=  emailPattern.test(email);
+    if (!isValidEmail) {
+      setError(
+        <>
+          <div className="modal-overlay">
+            <div  className="popuppass">
+              <p>Invalid Email</p>
+            </div>
+          </div>
+        </>
+      );
+    
+      // Use setTimeout to remove the error message after 1 second
+      setTimeout(() => {
+        setError(null); // Remove the error message
+      }, 1000); // 1000 milliseconds = 1 second
+
+
+
+      useEffect(() => {
+        // Effect to handle the response from the server
+        if (email) {
+          checkDuplicateEmail(email);
+        }
+      }, [email]);
+
+      
+   
+  
+   
+    const checkDuplicateEmail = (email) => {
+      // Replace this with your own logic to check for duplicate emails
+      // Example: If your backend returns a response like { isDuplicate: true }, or { isDuplicate: false }
+      // You can adjust this code accordingly
+  
+      axios
+        .post('http://127.0.0.1:8000/api/user/register/', { email })
+        .then((response) => {
+          if (response.status==="Enter a valid email address.") {
+            setError(null);
+          } else if (response.status === 'user with this Email already exists.') {
+            setError(<div className="modal-overlay">
+            <div  className="popuppass">
+              <p>  Email Already Exist</p>
+            </div>
+          </div>);
+          }
+        })
+        .catch((error) => {
+          console.error("Error checking email:", error);
+          setError(<div className="modal-overlay">
+          <div  className="popuppass">
+            <p>  Email checking Exist</p>
+          </div>
+        </div>);
+        });
+    };
+    
+  
+
+    }
+    
+
+
 
     // Check if password and confirm password match
     if (password !== password2) {
-      setError("Passwords do not match");
+      // setError("Passwords do not match");
+      setError(
+        <>
+          <div className="modal-overlay">
+            <div  className="popuppass">
+              <p> Password do not match</p>
+            </div>
+          </div>
+        </>
+      );
+    
+      // Use setTimeout to remove the error message after 1 second
+      setTimeout(() => {
+        setError(null); // Remove the error message
+      }, 1000);
       return;
     }
 
@@ -47,15 +143,40 @@ const Signup = () => {
     const passwordRegex =
       /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Z][A-Za-z\d@$!%*?&]{7,}$/;
     const isValidPassword = passwordRegex.test(password);
-
     if (password.length < 8) {
-      setError("Password length should be equal or greater than 8");
+      // setError("Password length should be equal or greater than 8");
+      setError(
+        <>
+          <div className="modal-overlay">
+            <div  className="popuppass">
+              <p>Password length should be Equal or greater than8</p>
+            </div>
+          </div>
+        </>
+      );
+    
+      // Use setTimeout to remove the error message after 1 second
+      setTimeout(() => {
+        setError(null); // Remove the error message
+      }, 1000);
       return;
     }
     if (!isValidPassword) {
       setError(
-        <h6>Password first letter should be capital, at least one number & special character like this '<strong> Kingdom123? </strong>'</h6>
+        <>
+          <div className="modal-overlay">
+            <div  className="popuppass">
+              <p>Invalid Password</p>
+            </div>
+          </div>
+        </>
       );
+    
+      // Use setTimeout to remove the error message after 1 second
+      setTimeout(() => {
+        setError(null); // Remove the error message
+      }, 1000); // 1000 milliseconds = 1 second
+    
       return;
     }
     try {
@@ -72,7 +193,11 @@ const Signup = () => {
           .then((response) => {
             // Handle success response from the backend (if needed)
             console.log("User registration successful:", response);
-            setSuccessMessage("Registration Successful!");
+            setSuccessMessage(<div className="modal-overlay">
+            <div  className="popupsuccess">
+              <p>Registration Successfull</p>
+            </div>
+          </div>);
             setTimeout(() => {
               navigate("/waitingPage")
               // navigate("/");
@@ -89,27 +214,29 @@ const Signup = () => {
       console.error("Error checking email:", error);
       setError("Error checking email. Please try again.");
     }
+
+    
   };
 
   return (
     <div className="parent">
       <div className="sub_Parent">
         <img src="../../../src/assets/DMS_logo.png" alt="" />
-        <h1>SignUp</h1>
+        <h1 className="signnn">SignUp </h1>
         {SubmitbtnClicked && (
           <>
             {error ? (
               <div
-                className="error bg-danger w-100 p-2 text-center rounded"
-                style={{ color: "white" }}
+                // className="error bg-danger w-100 p-2 text-center rounded"
+                // style={{ color: "white" }}
               >
                 {error}
               </div>
             ) : (
               successMessage && (
                 <div
-                  className="success bg-success w-100 p-2 text-center rounded"
-                  style={{ color: "white" }}
+                  // className="success bg-success w-100 p-2 text-center rounded"
+                  // style={{ color: "white" }}
                 >
                   {successMessage}
                 </div>
@@ -147,7 +274,12 @@ const Signup = () => {
               <i className="fa-light fa fa-eye-slash"></i>
             )}
           </span>
+          
         </div>
+        <div className="password-validation">Password Should include at least First Capital letter, Number and Special Character</div>
+        
+
+        
         <div className="passfield">
           <input
             placeholder="Confirm-Password"

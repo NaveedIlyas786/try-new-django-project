@@ -22,7 +22,15 @@ const Login = () => {
   const handleLogin = async () => {
     setSubmitbtnClicked(true);
     if (!email || !password) {
-      setError("Please fill in all fields.");
+      setError(<div className="modal-overlay">
+      <div className="popupred">
+        <p>Both Fields are Required</p>
+      </div>
+    </div>);
+     setTimeout(() => {
+      setError(null); // Remove the error message
+    }, 1000);
+    
       return;
     }
 
@@ -33,14 +41,26 @@ const Login = () => {
       if (loginUser.fulfilled.match(response)) {
         // Successful login, you can redirect the user or perform other actions here
         setError(""); // Clear any previous errors
-        setSuccessMessage("Loggedin Successfully!");
+        setSuccessMessage(<div className="modal-overlay">
+        <div className="popupsuccess">
+          <p>Login Successfull</p>
+        </div>
+      </div>);
         setTimeout(() => {
           navigate("/homepage/dashboard");
         }, 1700);
       } else {
-        // Handle authentication failure, display an error message
-        setError("Invalid email or password.");
+        // Handle authentication failure, display an error messagae
+        setError(<div className="modal-overlay">
+        <div className="popupred">
+          <p>Invalid Email OR Password</p>
+        </div>
+      </div>);
       }
+      setTimeout(() => {
+        setError(null); // Remove the error message
+      }, 1000);
+    
     } catch (error) {
       console.error("An error occurred during login: ", error);
       setError("An error occurred during login.");
@@ -51,21 +71,21 @@ const Login = () => {
     <div className="parent">
       <div className="sub_Parent">
         <img src="../../../src/assets/DMS_logo.png" alt="" />
-        <h1>Login</h1>
+        <h1 className="loginhead">Login</h1>
         {SubmitbtnClicked && (
           <>
             {error ? (
               <div
-                className="error bg-danger w-100 p-2 text-center rounded"
-                style={{ color: "white" }}
+                // className="error bg-danger w-100 p-2 text-center rounded"
+                // style={{ color: "white" }}
               >
                 {error}
               </div>
             ) : (
               successMessage && (
                 <div
-                  className="success bg-success w-100 p-2 text-center rounded"
-                  style={{ color: "white" }}
+                  // className="success bg-success w-100 p-2 text-center rounded"
+                  // style={{ color: "white" }}
                 >
                   {successMessage}
                 </div>

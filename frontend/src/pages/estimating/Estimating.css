@@ -684,7 +684,7 @@ td:nth-child(8) {
     rgb(241, 154, 23) 0%,
     rgba(172, 17, 243, 0.452) 0%,
     rgba(0, 162, 255, 0.852) 100%
-  );
+  ); 
   width: 40px;
   height: 40px;
   position: absolute;

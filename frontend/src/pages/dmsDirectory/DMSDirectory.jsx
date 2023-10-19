@@ -1,4 +1,5 @@
 import React, { useEffect, useState, PureComponent } from "react";
+import "./DMSDirectory.css"
 import { LineChart, Line } from "recharts";
 // import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import {

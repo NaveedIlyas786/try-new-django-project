@@ -1,6 +1,7 @@
 from django.shortcuts import render
 #123456
 # from rest_framework
+
 from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework import status
@@ -14,14 +15,16 @@ from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.http import Http404
 
-from .serializers import UserRegisterationSerializers,UserLoginserializers,UserProfileSerializer,UserChangePasswordSerializer,SendEmailResetPasswordViewsSerializer,UserPasswordResetSerializer
+from .serializers import UserRegisterationSerializers,UserLoginserializers,UserProfileSerializer,UserChangePasswordSerializer,SendEmailResetPasswordViewsSerializer,UserPasswordResetSerializer,UserPasswordResetSerializer  
 from .models import User 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser
 
+from django.utils.encoding import force_str, DjangoUnicodeDecodeError
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
-
-
+import traceback
 
 # Create your views here.
 
@@ -177,13 +180,11 @@ class UserChangePasswordViews(APIView):
 
 # this class for Send email For the Reset or Forget Password for the User
 class SendEmailResetPasswordViews(APIView):
-    def post(self,request,format=None):
-        serializer=SendEmailResetPasswordViewsSerializer(data=request.data)
+    def post(self, request, format=None):
+        serializer = SendEmailResetPasswordViewsSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            return Response({'msg':'Password Resend Link send. Please check your Email'},status=status.HTTP_200_OK)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-    
-
+            return Response({'msg': 'Password reset link sent. Please check your email.'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -193,12 +194,29 @@ class SendEmailResetPasswordViews(APIView):
 
 
 class UserPasswordResetViews(APIView):
-    def post(self,request,token,user_ID,format=None):
-        serializer=UserPasswordResetSerializer(data=request.data,context={'user_ID':user_ID,'token':token})
-        if serializer.is_valid(raise_exception=True):
-            return Response({'msg':'Password Change Successfully'},status=status.HTTP_200_OK)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-        
+    def post(self, request, uidb64, token, format=None):
+        try:
+            print("UIDB64:", uidb64)
+            id = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(id=id)
+            print("User:", user)
+
+            # Include 'request' in the context
+            serializer = UserPasswordResetSerializer(data=request.data, context={'request': request})  
+            if serializer.is_valid():
+                password = serializer.validated_data.get('password')
+                print("Validated Password:", password)
+                user.set_password(password)
+                user.save()
+                return Response({'msg': 'Password reset successful'}, status=status.HTTP_200_OK)
+            
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            print(e)
+            return Response({'error': 'An error occurred'}, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 @api_view(['POST'])
@@ -253,3 +271,6 @@ def disapprove_user(request, user_id):
 
     
     return Response({'msg': 'User disapproved and deleted successfully'}, status=status.HTTP_200_OK)
+
+
+

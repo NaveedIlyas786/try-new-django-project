@@ -14,7 +14,7 @@ from Estimating.models import Company,Estimating, Estimating_detail, Proposal, A
 class DMS_DertorySezializers(serializers.ModelSerializer):
     class Meta:
         model = DMS_Dertory
-        fields = ['id', 'full_Name', 'email', 'job_title', 'company', 'department', 'direct_number', 'locaton', 'mobile_number']
+        fields = ['id', 'first_name','last_name', 'email', 'job_title', 'company', 'department', 'direct_number', 'locaton', 'mobile_number']
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -85,8 +85,7 @@ class EstimatingSerializer(serializers.ModelSerializer):
  
     start_date = serializers.DateField(
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
-    company=CompanySerializer(many=True,read_only=True)
-
+    company=CompanySerializer(read_only=True)
 
     class Meta:
         model = Estimating
@@ -104,8 +103,8 @@ class EstimatingSerializer(serializers.ModelSerializer):
             'estimator',
             'bidder',
             'bidder_mail',
-            'bidder_address',
-            'link',
+            'bidder_detail',
+    
         ]
 
 
@@ -221,7 +220,7 @@ class ProposalSerializer(serializers.ModelSerializer):
     services = ProposalServiceSerializer(many=True, read_only=True)
     Addendums=AddendumSerializer(many=True,read_only=True)
     spcifc=SpecificationSerializer(many=True,read_only=True)
-
+    estimating=EstimatingSerializer(read_only=True)
     
     class Meta:
         model = Proposal

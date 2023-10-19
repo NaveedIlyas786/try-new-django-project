@@ -1,13 +1,14 @@
-from django.core.mail import EmailMessage
-import os 
+from django.core.mail import send_mail
 
+def send_reset_email(data):
+    subject = data.get('subject')
+    body = data.get('body')
+    to_email = data.get('to_email')
 
-class Util:
-    @staticmethod
-    def send_email(data):
-        email=EmailMessage(
-            subject=data['subject'],
-            body=data['body'],
-            from_email=os.environ.get('EMAIL_FROM'),
-            to=[data['to_email']]
-        )
+    send_mail(
+        subject,
+        body,
+        'mubeenjutt9757@gmail.com',  # Replace with your actual sender email
+        [to_email],
+        fail_silently=False,
+    )

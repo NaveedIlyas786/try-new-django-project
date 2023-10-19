@@ -14,7 +14,7 @@ from Estimating.models import Company,Estimating, Estimating_detail, Proposal, A
 class DMS_DertorySezializers(serializers.ModelSerializer):
     class Meta:
         model = DMS_Dertory
-        fields = ['id', 'full_Name', 'email', 'job_title', 'company', 'department', 'direct_number', 'locaton', 'mobile_number']
+        fields = ['id', 'first_name','last_name', 'email', 'job_title', 'company', 'department', 'direct_number', 'locaton', 'mobile_number']
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -103,8 +103,8 @@ class EstimatingSerializer(serializers.ModelSerializer):
             'estimator',
             'bidder',
             'bidder_mail',
-            'bidder_address',
-            'link',
+            'bidder_detail',
+    
         ]
 
 

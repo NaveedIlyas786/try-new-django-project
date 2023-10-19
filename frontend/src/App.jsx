@@ -15,6 +15,7 @@ import Reports from "./pages/reports/Reports";
 import Login from "./pages/login/Login";
 import SignUp from "./pages/signUp/SignUp";
 import Forgot from "./pages/forgot-Screen/Forgot";
+import ResetPassword from "./pages/forgot-Screen/ResetPassword";
 import HomePage from "./pages/homePage/HomePage";
 import HrPayRoll from "./pages/hrPayRoll/HrPayRoll";
 import BIM from "./pages/bim/BIM";
@@ -39,6 +40,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forgotScreen" element={<Forgot />} />
+        <Route path="/resetpassword" element={<ResetPassword/>}/>
           <Route path="/waitingPage" element={<Waiting />} />
           <Route path="/rejectionPage" element={<RejectionPage />} />
           <Route path="/adminDecisionPage/:userId" element={<AdminDecisionpage />} />

@@ -11,6 +11,14 @@ h5 {
   line-height: 7px;
   line-height: 7px;
 }
+.dropdown-toggle{
+  background-color: #1976d2;
+  color: white;
+}
+.dropdown-toggle:hover{
+  background-color: #07109f;
+  color: white;
+}
 
 .ProjectStatus {
   border-radius: 50%;
@@ -161,9 +169,13 @@ h5 {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  /* padding-bottom: 100px !important; */
 }
 .totalamount h1{
-  color: rgb(8, 221, 97) !important;
+  color: #1976d2;
+  font-size: 29px;
+  padding-bottom: 90px !important;
+  font-family: 'Times New Roman', Times, serif;
 }
 @media (max-width: 768px) {
   .table-responsive-custom {

@@ -1,15 +1,20 @@
-/* Navbar.css */
 
-.navbar {
-  background-color: white;
-  box-shadow: 1px 1px 5px 1px rgb(199, 199, 199);
-  height: 70px;
+.navbar{
+  background-color: white !important;
+  box-shadow: 1px 1px 5px 1px rgb(199, 199, 199) !important;
+  height: 70px !important;
   position: fixed !important;
   width: 100%;
   top: 0;
-  z-index: 99999;
+  z-index: 99999 !important;
+}
+.navbar.expanded {
+  background-color: white !important;
 }
 
+.navbar-collapse.expanded {
+  background-color: white !important;
+}
 .navTabs a {
   padding: 5px 15px;
   border-radius: 5px;
@@ -23,27 +28,27 @@
 
 .navTabs a:hover,
 .navbar-nav .nav-item.active{
-  background-color: #283897;
+  background-color: #1976d2;
   border-radius: 5px;
   color: white !important;
 }
 
 .dmsDirectory {
-  border: 1px solid #283897;
+  border: 1px solid #1976d2;
   border-radius: 5px;
 }
 
 
 .navbar-nav a {
   text-decoration: none;
-  color: #283897;
-  font-size: 17px;
+  color: #1976d2;
+  font-size: 20px !important;
   font-weight: 500;
   letter-spacing: 1.1px;
 }
 
 .navbar-nav .nav-item.active a {
   color: white !important;
-  background-color: #283897;
+  background-color: #1976d2;
   transition: all ease-in-out 0.5s;
 }

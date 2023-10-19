@@ -44,21 +44,22 @@ const DMSDirectory = () => {
   return (
     <div className="parentDiv px-5">
       <div className="titleWithSearch">
-        <h3 className="text-success">DMS Directory</h3>
+        <h3 className="text-primary">DMS Directory</h3>
         <div className="inputSearchDiv">
           <input
             type="text"
-            placeholder="Filter your data here"
+            placeholder="Filter by Project Name, prjct_engnr Name, bim_oprtrs, job_num"
             value={filter}
             className="myinput"
             onChange={(e) => setFilter(e.target.value)}
           />
+          <button className="btn btn-primary   searchbtn">Search</button>
         </div>
       </div>
       <button
         type="button"
         onClick={movetoEstimatingPage}
-        className="btn btn-outline-success backbtn"
+        className="btn btn-outline-primary backbtn"
       >
         Back
       </button>

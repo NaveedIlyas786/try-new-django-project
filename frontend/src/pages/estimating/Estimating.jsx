@@ -2453,7 +2453,7 @@ const Estimator = () => {
                                     // htmlFor={`specificName-${index}`}
                                     className="form-label"
                                   >
-                                    Add scope of Working
+                                    Add scope of Work
                                   </label>
                                   <select
                                     className="form-select"
@@ -4371,7 +4371,7 @@ const Estimator = () => {
                         <button
                           type="button"
                           className="btn btn-success"
-                          // onClick={handleAddEntry}
+                          onClick={handleAddEntry}
                         >
                           Add alternate scope of work
                         </button>

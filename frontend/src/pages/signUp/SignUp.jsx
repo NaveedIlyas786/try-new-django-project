@@ -91,17 +91,7 @@ const Signup = () => {
   
       axios
         .post('http://127.0.0.1:8000/api/user/register/', { email })
-        .then((response) => {
-          if (response.status==="Enter a valid email address.") {
-            setError(null);
-          } else if (response.status === 'user with this Email already exists.') {
-            setError(<div className="modal-overlay">
-            <div  className="popuppass">
-              <p>  Email Already Exist</p>
-            </div>
-          </div>);
-          }
-        })
+
         .catch((error) => {
           console.error("Error checking email:", error);
           setError(<div className="modal-overlay">

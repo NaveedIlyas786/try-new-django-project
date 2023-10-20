@@ -176,7 +176,7 @@ const Dashboard = () => {
             </p>
             <h5 className="ps-3 headsett">Won</h5>
             <h4 className="ps-3 headsettNo">
-              {dashData.reduce((acc, e) => acc + (e?.Won?.total || 0), 0)}
+              {dashData.reduce((acc, e) => (e?.summary?.Won?.total || 0), 0)}
             </h4>
           </div>
 
@@ -186,7 +186,7 @@ const Dashboard = () => {
             </p>
             <h5 className="ps-3 headsett">Pending</h5>
             <h4 className="ps-3 headsettNo">
-              {dashData.reduce((acc, e) => acc + (e?.Pending?.total || 0), 0)}
+              {dashData.reduce((acc, e) => (e?.summary?.Pending?.total || 0), 0)}
             </h4>
           </div>
           <div className=" col-md-2   ProjectStatus pendingWorking d-flex justify-content-center align-items-center" >
@@ -195,7 +195,7 @@ const Dashboard = () => {
             </p>
             <h5 className="ps-3 headsett">Working</h5>
             <h4 className="ps-3 headsettNo">
-              {dashData.reduce((acc, e) => acc + (e?.Working?.total || 0), 0)}
+              {dashData.reduce((acc, e) => (e?.summary?.Working?.total || 0), 0)}
             </h4>
             {/* <p>
               <i className="fa-solid fa-square-this-way-up "></i>
@@ -207,7 +207,7 @@ const Dashboard = () => {
             </p>
             <h5 className="ps-3 headsett">Lost</h5>
             <h4 className="ps-3 headsettNo">
-              {dashData.reduce((acc, e) => acc + (e?.Lost?.total || 0), 0)}
+              {dashData.reduce((acc, e) => (e?.summary?.Lost?.total || 0), 0)}
             </h4>
           </div>
         </div>

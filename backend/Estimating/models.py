@@ -56,7 +56,8 @@ class Estimating(models.Model):
         max_length=3,
         choices= [
         ('PDT', 'PDT'),
-        ('CT', 'CT'),],
+        ('CT', 'CT'),
+        ('EST', 'EST'),],
         verbose_name="PST", null=True, blank=True
     )
     prjct_name=models.CharField(verbose_name="Estimate Project Name", max_length=250,null=True,blank=True)

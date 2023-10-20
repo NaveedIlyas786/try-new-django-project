@@ -21,7 +21,11 @@ import "aos/dist/aos.css";
 
 const Dashboard = () => {
   const [dashData, setDashData] = useState([]);
-
+  const [isAlphabetical, setIsAlphabetical] = useState(false);
+  const [originalData, setOriginalData] = useState([]);
+  const [buttonText, setButtonText] = useState("Sort Alphabetically");
+  // Store the original data here
+  const [sortOrder, setSortOrder] = useState("default");
   useEffect(() => {
     // Fetch data from the API
     axios
@@ -155,7 +159,9 @@ const Dashboard = () => {
   useEffect(() => {
     // Fetch data from the API with the selected year
     axios
-      .get(`http://127.0.0.1:8000/api/estimating/api/estimators/summary/?year=${selectedYear}`)
+      .get(
+        `http://127.0.0.1:8000/api/estimating/api/estimators/summary/?year=${selectedYear}`
+      )
       .then((response) => response.data)
       .then((data) => {
         setDashData(data);
@@ -164,106 +170,125 @@ const Dashboard = () => {
         console.error("Error fetching data:", error);
       });
   }, [selectedYear]);
- 
+
+  const sortData = () => {
+    setOriginalData(dashData.slice());
+    if (!isAlphabetical) {
+      const sortedData = dashData.slice().sort((a, b) => {
+        return a.estimator.localeCompare(b.estimator);
+      });
+      setDashData(sortedData);
+      setButtonText("Return to Default"); // Change the button text
+    } else {
+      setDashData(originalData);
+      setButtonText("Sort Alphabetically"); // Change the button text
+    }
+    setIsAlphabetical(!isAlphabetical);
+  };
+  // By doing this, your button will work continuously, toggling between alphabetical sorting and the default order each time you click it. When isAlphabetical is true, the data will be sorted alphabetically; when isAlphabetical is false, the data will appear in the default order.
+
+  // In this modification, we use the spread operator to create a new copy of the original data when reverting to the default order. This will ensure that the originalData is not modified and that you can switch between alphabetical sorting and the default order effectively.
+
+  // ...
+
+  // By storing the original data in both dashData and originalData, you can use originalData to reset your data back to the default order when needed. The sorting button should now work as expected.
 
   return (
     <>
       <div className=" container dashboard ">
-      <div className=" row projectStatus justify-content-around">
+        <div className=" row projectStatus justify-content-around">
           <div className=" col-md-2  ProjectStatus pendinggreen d-flex justify-content-center align-items-center">
-          <p className="mt-2">
+            <p className="mt-2">
               <i className="fa-solid fa-circle-check check "></i>
             </p>
             <h5 className="ps-3 headsett">Won</h5>
             <h4 className="ps-3 headsettNo">
-              {dashData.reduce((acc, e) => (e?.summary?.Won?.total || 0), 0)}
+              {dashData.reduce((acc, e) => acc + (e?.Won?.total || 0), 0)}
             </h4>
           </div>
 
           <div className=" col-md-2   ProjectStatus pendingyellow d-flex justify-content-center align-items-center">
-          <p className="mt-2">
+            <p className="mt-2">
               <i className="fa-solid  fa-question fs-5 pend"></i>
             </p>
             <h5 className="ps-3 headsett">Pending</h5>
             <h4 className="ps-3 headsettNo">
-              {dashData.reduce((acc, e) => (e?.summary?.Pending?.total || 0), 0)}
+              {dashData.reduce((acc, e) => acc + (e?.Pending?.total || 0), 0)}
             </h4>
           </div>
-          <div className=" col-md-2   ProjectStatus pendingWorking d-flex justify-content-center align-items-center" >
-          <p className="mt-2">
+          <div className=" col-md-2   ProjectStatus pendingWorking d-flex justify-content-center align-items-center">
+            <p className="mt-2">
               <i className="fa-solid fa-spinner fs-5 working"></i>
             </p>
             <h5 className="ps-3 headsett">Working</h5>
             <h4 className="ps-3 headsettNo">
-              {dashData.reduce((acc, e) => (e?.summary?.Working?.total || 0), 0)}
+              {dashData.reduce((acc, e) => acc + (e?.Working?.total || 0), 0)}
             </h4>
             {/* <p>
               <i className="fa-solid fa-square-this-way-up "></i>
             </p> */}
           </div>
-          <div className=" col-md-2  ProjectStatus pendingLost d-flex justify-content-center align-items-center" >
-          <p className="mt-3">
+          <div className=" col-md-2  ProjectStatus pendingLost d-flex justify-content-center align-items-center">
+            <p className="mt-3">
               <i className=" mark fa-duotone fa fa-ban"></i>
             </p>
             <h5 className="ps-3 headsett">Lost</h5>
             <h4 className="ps-3 headsettNo">
-              {dashData.reduce((acc, e) => (e?.summary?.Lost?.total || 0), 0)}
+              {dashData.reduce((acc, e) => acc + (e?.Lost?.total || 0), 0)}
             </h4>
           </div>
         </div>
       </div>
       <div className="mt-3">
         <div className=" container mytable ">
-        <div>
-      <div className=" container mytable d-flex mb-2">
-          <Dropdown show={dropdownOpen} onToggle={toggleDropdown}>
-            <Button
-              variant="primary"
-              id="dropdown-basic"
-              onClick={toggleDropdown}
-            >
-              Filter year based
-              <i class="fa-light fa ms-2 fa-angle-down"></i>
-            </Button>
+          <div>
+            <div className=" container mytable d-flex mb-2">
+              <Dropdown show={dropdownOpen} onToggle={toggleDropdown}>
+                <Button
+                  variant="primary"
+                  id="dropdown-basic"
+                  onClick={toggleDropdown}
+                >
+                  Filter year based
+                  <i class="fa-light fa ms-2 fa-angle-down"></i>
+                </Button>
 
-            <Dropdown.Menu>
-              <Dropdown.Item
-                  className="dropdown"
-                onClick={() => {
-                  setSelectedYear(2023);
-                  toggleDropdown();
-                }}
-              >
-                2023
-              </Dropdown.Item>
-              <Dropdown.Item
-                  className="dropdown"
-                onClick={() => {
-                  setSelectedYear(2022);
-                  toggleDropdown();
-                }}
-              >
-                2022
-              </Dropdown.Item>
-              <Dropdown.Item
-                  className="dropdown"
-                onClick={() => {
-                  setSelectedYear(2020);
-                  toggleDropdown();
-                }}
-              >
-                2020
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-          <h4 className="myh4">{selectedYear}</h4>
-        </div>
-      </div>
+                <Dropdown.Menu>
+                  <Dropdown.Item
+                    className="dropdown"
+                    onClick={() => {
+                      setSelectedYear(2023);
+                      toggleDropdown();
+                    }}
+                  >
+                    2023
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    className="dropdown"
+                    onClick={() => {
+                      setSelectedYear(2022);
+                      toggleDropdown();
+                    }}
+                  >
+                    2022
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    className="dropdown"
+                    onClick={() => {
+                      setSelectedYear(2020);
+                      toggleDropdown();
+                    }}
+                  >
+                    2020
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+              <h4 className="myh4">{selectedYear}</h4>
+              <button onClick={sortData}>{buttonText}</button>
+            </div>
+          </div>
 
-
-          <div
-            className=" row table-responsive table-design pk"
-          >
+          <div className=" row table-responsive table-design pk">
             <div className="col-md-12">
               <table className="table table-hover jk">
                 <thead className="thead-dark myhead text-center">
@@ -294,55 +319,66 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody className="jk">
-                  {dashData.map((e, index) => (
-                    <tr key={index}>
-                      <td className="dashtd">{e.estimator}</td>
-                      <td className="dashtd">
-                        {e.summary?.Working?.total || 0}
-                      </td>
-                      {/* <td className="dashtd">{e?.["Grand Total"]?.bid_amount || 0}</td> */}
+                  {dashData
+                    .sort((a, b) => {
+                      return isAlphabetical
+                        ? a.estimator.localeCompare(b.estimator)
+                        : 0;
+                    })
+                    .map((e, index) => (
+                      <tr key={index}>
+                        <td className="dashtd">{e.estimator}</td>
+                        <td className="dashtd">
+                          {e.summary?.Working?.total || 0}
+                        </td>
+                        {/* <td className="dashtd">{e?.["Grand Total"]?.bid_amount || 0}</td> */}
 
-                      <td className="dashtd">
-                        {e.summary?.Pending?.total || 0}
-                      </td>
-                      <td className="dashtd">
-                        {formatPercentage(e.summary?.Pending?.percentage || 0)}
-                      </td>
-                      <td className="dashtd">
-                        $
-                        {formatNumberWithCommas(
-                          e.summary?.Pending?.bid_amount || 0
-                        )}
-                      </td>
-                      <td className="dashtd">{e.summary?.Won?.total || 0}</td>
-                      <td className="dashtd">
-                        {formatPercentage(e.summary?.Won?.percentage || 0)}
-                      </td>
-                      <td className="dashtd">
-                        $
-                        {formatNumberWithCommas(
-                          e.summary?.Won?.bid_amount || 0
-                        )}
-                      </td>
-                      <td className="dashtd">{e.summary?.Lost?.total || 0}</td>
-                      <td className="dashtd">
-                        {formatPercentage(e.summary?.Lost?.percentage || 0)}
-                      </td>
-                      <td className="dashtd">
-                        ${" "}
-                        {formatNumberWithCommas(
-                          e.summary?.Lost?.bid_amount || 0
-                        )}
-                      </td>
-                      <td className="dashtd">{e.ytd_total || 0}</td>
-                      {/* <td className="dashtd">{e?.["Grand Total"]?.bid_amount || 0}</td>
+                        <td className="dashtd">
+                          {e.summary?.Pending?.total || 0}
+                        </td>
+                        <td className="dashtd">
+                          {formatPercentage(
+                            e.summary?.Pending?.percentage || 0
+                          )}
+                        </td>
+                        <td className="dashtd">
+                          $
+                          {formatNumberWithCommas(
+                            e.summary?.Pending?.bid_amount || 0
+                          )}
+                        </td>
+                        <td className="dashtd">{e.summary?.Won?.total || 0}</td>
+                        <td className="dashtd">
+                          {formatPercentage(e.summary?.Won?.percentage || 0)}
+                        </td>
+                        <td className="dashtd">
+                          $
+                          {formatNumberWithCommas(
+                            e.summary?.Won?.bid_amount || 0
+                          )}
+                        </td>
+                        <td className="dashtd">
+                          {e.summary?.Lost?.total || 0}
+                        </td>
+                        <td className="dashtd">
+                          {formatPercentage(e.summary?.Lost?.percentage || 0)}
+                        </td>
+                        <td className="dashtd">
+                          ${" "}
+                          {formatNumberWithCommas(
+                            e.summary?.Lost?.bid_amount || 0
+                          )}
+                        </td>
+                        <td className="dashtd">{e.ytd_total || 0}</td>
+                        {/* <td className="dashtd">{e?.["Grand Total"]?.bid_amount || 0}</td>
                       <td className="dashtd">{e?.["Grand Total"]?.total || 0}</td> */}
 
-                      <td className="dashtd">
-                        $ {formatNumberWithCommas(e.ytd_total_bid_amount || 0)}
-                      </td>
-                    </tr>
-                  ))}
+                        <td className="dashtd">
+                          ${" "}
+                          {formatNumberWithCommas(e.ytd_total_bid_amount || 0)}
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
                 {/* <tfoot className="mytfoot">
                   <tr>
@@ -423,11 +459,8 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="container mt-5">
-       <div className="row mt-5">
-      <div
-              className="ms-2 col text-center graphimg mt-5"
-              
-            >
+          <div className="row mt-5">
+            <div className="ms-2 col text-center graphimg mt-5">
               <BarChart
                 width={1100}
                 height={440}
@@ -465,9 +498,8 @@ const Dashboard = () => {
                 )}
               </div>
             </div>
-       </div>
-
-       </div>
+          </div>
+        </div>
       </div>
     </>
   );

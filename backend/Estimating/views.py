@@ -284,13 +284,13 @@ class EstimatorSummaryView(views.APIView):
 
         # total_data['estimator'] = 'Grand Totals'
         # response_data.append(total_data)
-        grand_totals = {
-            'summary': total_data,  # Modified this line to add all status including Grand Total
-            'ytd_total': total_data['Grand Total']['total'],  # Extracted grand total count
-            'ytd_total_bid_amount': total_data['Grand Total']['bid_amount'], # Extracted grand total bid amount
-            'estimator': 'Grand Totals'
-        }
-        response_data.append(grand_totals)
+        # grand_totals = {
+        #     'summary': total_data,  # Modified this line to add all status including Grand Total
+        #     'ytd_total': total_data['Grand Total']['total'],  # Extracted grand total count
+        #     'ytd_total_bid_amount': total_data['Grand Total']['bid_amount'], # Extracted grand total bid amount
+        #     'estimator': 'Grand Totals'
+        # }
+        # response_data.append(grand_totals)
 
 
         return Response(response_data, status=200)

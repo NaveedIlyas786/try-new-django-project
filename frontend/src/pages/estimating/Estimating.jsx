@@ -303,30 +303,28 @@ const Estimator = () => {
         status: "",
         date: "",
         scop_work_number: "",
-      }
+      },
     ],
     safity: [
       {
         status: "",
         date: "",
         scop_work_number: "",
-        comment_box:""
-      }
-      
+        comment_box: "",
+      },
     ],
     schedule: [
       {
         status: "",
         date: "",
-      }
+      },
     ],
     sub_contractors: [
       {
         status: "",
         date: "",
-        comment_box:""
-      }
-
+        comment_box: "",
+      },
     ],
   });
   const handleFieldChange6 = (field, value, index, category) => {
@@ -339,7 +337,6 @@ const Estimator = () => {
       return updatedData;
     });
   };
-  
 
   // Function to handle form submission
   //TODO: Multistep Form  React Code
@@ -454,16 +451,18 @@ const Estimator = () => {
         comment_box: mysafity.comment_box,
       })),
 
-      sub_contractors: ProjectStep6FormData.sub_contractors.map((mysub_contractors) => ({
-        status: mysub_contractors.status,
-        date: mysub_contractors.date,
-        comment_box: mysub_contractors.comment_box,
-      })),
-      
+      sub_contractors: ProjectStep6FormData.sub_contractors.map(
+        (mysub_contractors) => ({
+          status: mysub_contractors.status,
+          date: mysub_contractors.date,
+          comment_box: mysub_contractors.comment_box,
+        })
+      ),
+
       schedule: ProjectStep6FormData.schedule.map((myschedule) => ({
-          status: myschedule.status,
-          date: myschedule.date,
-        })),
+        status: myschedule.status,
+        date: myschedule.date,
+      })),
     };
 
     console.log("formData to be sent", formData);
@@ -656,8 +655,6 @@ const Estimator = () => {
       // Handle invalid time format here, display an error message or prevent form submission
       console.error("Invalid time format");
       return;
-
-      
     }
 
     // Create a data object with the form values
@@ -712,11 +709,6 @@ const Estimator = () => {
         // Log the response data for more details
         console.log("Response data:", error.response.data);
       });
-      
-    
-
-
-
   };
 
   //************* Define the handleEstimatingEditing function
@@ -1380,6 +1372,9 @@ const Estimator = () => {
           setshowProjectModal(true);
         }
 
+        if (updatedStatus === "Pending") {
+          setPurposalModal(true);
+        }
         // Log a success message to the console
         console.log(`Status updated successfully for item with ID ${itemId}`);
         // You may need to refresh the UI or update the specific row accordingly
@@ -1431,7 +1426,10 @@ const Estimator = () => {
             </div>
             <div className="d-flex mt-5  justify-content-between align-items-center h-70 ">
               <div>
-                <h3 className=" text-primary textestimating  " data-aos="fade-left">
+                <h3
+                  className=" text-primary textestimating  "
+                  data-aos="fade-left"
+                >
                   Estimating Summary
                 </h3>
               </div>
@@ -2484,7 +2482,7 @@ const Estimator = () => {
                           </>
                         )}
 
-{/* {projectactiveStep === 5 && (
+                        {/* {projectactiveStep === 5 && (
   <>
     <div className="mt-3" style={{ width: "100%" }}>
       <label htmlFor="projectName" className="form-label mt-2">
@@ -3394,7 +3392,11 @@ const Estimator = () => {
                       </select>
                     </td>
                     <td className="mytdbidder centered-td">
-                      {item.bidder + " " + item.bidder_address + " " +item.email}
+                      {item.bidder +
+                        " " +
+                        item.bidder_detail +
+                        " " +
+                        item.bidder_mail}
                     </td>
                     <td className="mytd centered-td actionTD">
                       <div className="relative-container loop">
@@ -3431,7 +3433,7 @@ const Estimator = () => {
                               ...step0FormData,
                               estimating: item.id,
                             });
-                            setSelectedEstimatingID(item.id);
+                            setSelectedEstimatingID(item.prjct_name);
                             setPurposalModal(true);
                           }}
                         >
@@ -3482,7 +3484,9 @@ const Estimator = () => {
             showModal ? "show" : ""
           }`}
         >
-          <h4 className="text-center addnewtxt text-primary textestimatinghead">Estimating</h4>
+          <h4 className="text-center addnewtxt text-primary textestimatinghead">
+            Estimating
+          </h4>
           <button className="close-btn" onClick={closeModal}></button>
           <div className="modal-content px-5">
             <form onSubmit={handleSubmit} className="MyForm">
@@ -3597,16 +3601,14 @@ const Estimator = () => {
                   <label htmlFor="dueDate" className="form-label">
                     Due Date:
                   </label>
-                 
+
                   <input
                     type="date"
                     className="form-control"
                     id="dueDate"
-                    
                     value={dueDate}
                     onChange={handleDueDateChange}
                   />
-               
                 </div>
                 <div className="Oneline timefield">
                   <label htmlFor="time" className="form-label">
@@ -3677,12 +3679,14 @@ const Estimator = () => {
                 Add
               </button>
               {showPopup && (
-      <div className="modal-overlay">
-        <div id="popup" className="popup">
-          <p>Congratulations! You Add the Estimating Successfully. </p>
-        </div>
-      </div>
-    )}
+                <div className="modal-overlay">
+                  <div id="popup" className="popup">
+                    <p>
+                      Congratulations! You Add the Estimating Successfully.{" "}
+                    </p>
+                  </div>
+                </div>
+              )}
             </form>
           </div>
         </div>

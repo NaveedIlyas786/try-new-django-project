@@ -8,3 +8,17 @@
 .successgreenColor{
     background-color: #007BFF !important;
 }
+.directoryinputsearch{
+
+    min-width: 327px;
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    transition: all 0.5s ease-in-out;
+    border-radius: 10px;
+  }
+  .directoryinputsearch:focus {
+    border: 1px solid black !important;
+    border-radius: 0 !important;
+    transition: all 0.5s ease-in-out;
+  }

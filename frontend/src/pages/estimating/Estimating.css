@@ -36,7 +36,6 @@ td {
   border-radius: 10px;
 }
 .mysearchinput:focus {
-  /* min-width: 550px; */
   border: 1px solid black !important;
   border-radius: 0 !important;
   transition: all 0.5s ease-in-out;

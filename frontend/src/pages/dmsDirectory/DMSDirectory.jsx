@@ -267,13 +267,23 @@ const DMSDirectory = () => {
         console.log("Response data:", error.response.data);
       });
   };
-
+  const movetoEstimatingPage = () => {
+    navigate("/homepage/estimating/");
+  };
   return (
     <>
+      <div className="container dmsmain">
+        <div className="row">
+          <div className="col">
+          <h3 className="text-primary bg-danger">DMS Directory</h3>
+
+          </div>
+        </div>
+      </div>
       <div className="datatable Parent px-5 table-responsive">
         <div className="custom-data-table">
           <DataTable
-            title="DMS Directory"
+            // title="DMS Directory"
             className="px-2"
             columns={Columns}
             data={filterusers}
@@ -285,8 +295,18 @@ const DMSDirectory = () => {
             paginationPerPage={10} // Set the number of rows per page
             subHeader
             subHeaderComponent={
-              <div className="d-flex mb-3">
-                <input
+              <div className="d-flex mb-3 w-100  justify-content-between">
+            {/* <div className="d-flex  "> */}
+              <div className="my1">
+              <button
+        type="button"
+        onClick={movetoEstimatingPage}
+        className="btn btn-outline-primary backbtn"
+      >
+       <i className="fa-duotone me-2 fa fa-angles-left icons backicon"></i> Back
+      </button>
+              </div>
+              <div className="my2  d-flex justify-content-between">    <input
                   type="text"
                   style={{ width: "400px" }}
                   className="form-control form-control-md"
@@ -299,8 +319,9 @@ const DMSDirectory = () => {
                   onClick={() => setShowModal(true)}
                 >
                   New
-                </button>
-              </div>
+                </button></div>
+            </div>
+              // </div>
             }
           />
         </div>

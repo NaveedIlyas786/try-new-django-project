@@ -284,7 +284,7 @@ const Dashboard = () => {
                 </Dropdown.Menu>
               </Dropdown>
               <h4 className="myh4">{selectedYear}</h4>
-              <button onClick={sortData}>{buttonText}</button>
+            <div className="sortContainer"> <button onClick={sortData} className="btn btn-primary btnsort">{buttonText}</button> </div> 
             </div>
           </div>
 
@@ -396,7 +396,7 @@ const Dashboard = () => {
                       )}
                     </td>
                     <td className="totalsection dashtd"></td>
-                    <td className="totalsection dashtd">
+                    <td className="totalsection dashtd">`
                       {formatNumberWithCommas(
                         dashData.reduce(
                           (acc, e) => acc + (e?.Pending?.bid_amount || 0),

@@ -7,6 +7,50 @@
 .datatable{
   margin-top: 80px !important;
 }
+.headersTitle{
+  /* background-color: aliceblue; */
+  font-weight: bold;
+  font-size: 15px;
+}
+.modal-container.show {
+  opacity: 1; /* Show the modal */
+  pointer-events: auto; /* Enable mouse events */
+  transform: translate(-50%, -50%) scale(1); /* Scale to 1 for the opening transition */
+}
+
+
+
+/* styles.css */
+.custom-data-table .rdt_TableHead {
+  color: #3f3f3f; /* Change text color if needed */
+}
+
+/* To style the table header cells individually, you can use the following selector: */
+.custom-data-table .rdt_TableHead .rdt_TableCol {
+  /* Define styles for individual header cells here */
+  .headersTitle{
+    /* background-color: #007bff; */
+  }
+}
+.companyTD{
+  width: 100px !important;
+  /* background-color: antiquewhite; */
+  margin-top: 10%;
+  text-wrap: wrap;
+  text-overflow: none;
+  text-align: center;
+}
+  .emailTD {
+    /* background-color: #007BFF; */
+    text-align: left !important;
+    margin-right: 70px !important;
+    text-wrap: nowrap;
+     /* white-space: wrap;  */
+     /* overflow: hidden;   */
+     text-align: left;  
+     /* text-overflow:  */
+     width: 300px; 
+}
 .successgreenColor{
     background-color: #007BFF !important;
 }

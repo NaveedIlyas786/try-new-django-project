@@ -1,47 +1,172 @@
-import React, { useState, useEffect } from "react";
-import "./DMSDirectory.css";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import DataTable from "react-data-table-component";
 import axios from "axios";
+import "./DMSDirectory.css";
+import { Link, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const DMSDirectory = () => {
-  const [showModal, setShowModal] = useState(false); // State to control modal visibility
-  const [filter, setFilter] = useState("");
+  const [usersInfo, setUsersInfo] = useState([]);
   const [DMSUserDirectory, setDMSUserDirectory] = useState([]);
+  const [search, setSearch] = useState("");
+  const [filterusers, setFilterUsers] = useState([]);
+
+  const navigate = useNavigate();
+
+  const getUsers = async () => {
+    const result = await axios.get(
+      "http://127.0.0.1:8000/api/estimating/dmsDrectory/"
+    );
+    try {
+      setUsersInfo(result.data);
+      setFilterUsers(result.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+  function formatMobileNumber(mobileNumber) {
+    // Ensure mobileNumber is a string
+    const mobileNumbertoString = mobileNumber + "";
+
+    // Remove all non-numeric characters from the mobile number
+    const numericOnly = mobileNumbertoString.replace(/\D/g, "");
+
+    // Check if the numericOnly string has at least 6 characters
+    if (numericOnly.length >= 6) {
+      // Use regular expression to insert hyphens every 3 digits from the left
+      return numericOnly.replace(/(\d{3})(?=\d{3})/g, "$1-");
+    } else {
+      // If the string is less than 6 characters, return it as is
+      return numericOnly;
+    }
+  }
+
+  const Columns = [
+    {
+      name: (
+        <strong
+          className="headersTitle"
+          style={{ textAlign: "center", width: "80px" }}
+        >
+          Last Name
+        </strong>
+      ),
+      selector: (row) => row.last_name,
+      sortable: true,
+      center: true,
+    },
+    {
+      name: (
+        <strong className="headersTitle" style={{ textAlign: "center" }}>
+          First Name
+        </strong>
+      ),
+      selector: (row) => row.first_name,
+      sortable: true,
+      center: true,
+    },
+    {
+      name: (
+        <strong className="headersTitle" style={{ textAlign: "center" }}>
+          Job Title
+        </strong>
+      ),
+      selector: (row) => row.job_title,
+      sortable: true,
+      center: true,
+    },
+
+    {
+      name: (
+        <strong
+          className="headersTitle"
+          style={{ textAlign: "center", width: "250px" }}
+        >
+          Company
+        </strong>
+      ),
+      selector: (row) => <p className="companyTD">{row.company}</p>,
+      sortable: true,
+      center: true,
+    },
+    {
+      name: (
+        <strong className="headersTitle" style={{ textAlign: "center" }}>
+          Location
+        </strong>
+      ),
+      selector: (row) => row.locaton,
+      sortable: true,
+      center: true,
+    },
+    {
+      name: (
+        <strong className="headersTitle" style={{ textAlign: "center" }}>
+          Department
+        </strong>
+      ),
+      selector: (row) => row.department,
+      sortable: true,
+      center: true,
+    },
+
+    {
+      name: (
+        <strong className="headersTitle" style={{ textAlign: "center" }}>
+          Mobile
+        </strong>
+      ),
+      selector: (row) => formatMobileNumber(row.mobile_number),
+      sortable: true,
+      center: true,
+    },
+    {
+      name: (
+        <strong className="headersTitle" style={{ textAlign: "center" }}>
+          Direct
+        </strong>
+      ),
+      selector: (row) => formatMobileNumber(row.direct_number),
+      sortable: true,
+      center: true,
+    },
+    {
+      name: (
+        <strong
+          className="headersTitle"
+          style={{ textAlign: "center", width: "300px" }}
+        >
+          Email
+        </strong>
+      ),
+      selector: (row) => <p className="emailTD">{row.email}</p>,
+      sortable: true,
+      center: true,
+    },
+  ];
+
+  useEffect(() => {
+    const mysearchresult = usersInfo.filter((user) => {
+      const alldetails = `${user.first_name} ${user.last_name} ${user.locaton} ${user.job_title} ${user.company} ${user.department} ${user.mobile_number} ${user.direct_number} ${user.email}`;
+      return alldetails.toLowerCase().includes(search.toLowerCase());
+    });
+    setFilterUsers(mysearchresult);
+  }, [search]);
+
+  const [showModal, setShowModal] = useState(false); // State to control modal visibility
   const closeModal = () => {
     setShowModal(false);
 
     // Remove the 'modal-active' class when the modal is closed
     document.body.classList.remove("modal-active");
   };
-  useEffect(() => {
-    // Fetch data from the API
-    axios
-      .get("http://127.0.0.1:8000/api/estimating/dmsDrectory/")
-      .then((response) => response.data)
-      .then((data) => {
-        console.log(data);
-        setDMSUserDirectory(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []);
 
-  const navigate = useNavigate();
-
-  const filteredData = DMSUserDirectory.filter((customer) => {
-    return (
-      (customer.first_name &&
-        customer.first_name.toUpperCase().includes(filter.toUpperCase())) ||
-      (customer.email &&
-        customer.email
-          .trim()
-          .toUpperCase()
-          .includes(filter.trim().toUpperCase())) ||
-      (customer.mobile_number &&
-        customer.mobile_number.toUpperCase().includes(filter.toUpperCase()))
-    );
-  });
+  // *******************************For New Entry Creation***************
 
   //************ To show Company Names in dropdown in estimating post field
 
@@ -62,26 +187,8 @@ const DMSDirectory = () => {
       });
   }, []);
 
-  //************ To show locations in dropdown in estimating post field
-
-  const [userLocation, setUserLocation] = useState([]);
-
-  useEffect(() => {
-    // Fetch data from the API
-    axios
-      .get("http://127.0.0.1:8000/api/estimating/location/")
-      .then((response) => response.data)
-      .then((data) => {
-        // console.log(data);
-        setUserLocation(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []);
-
   const [firstname, setFirstName] = useState("");
-  const [jobtitle, setJobTitle] = useState(""); 
+  const [jobtitle, setJobTitle] = useState("");
   const [lastname, setLastName] = useState("");
   const [myemail, setEmail] = useState("");
   const [mycompany, setCompany] = useState("");
@@ -117,7 +224,7 @@ const DMSDirectory = () => {
   const handleMobileNumber = (e) => {
     setMobilenumber(e.target.value);
   };
-  
+
   const handledirectorySubmit = (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
 
@@ -126,10 +233,10 @@ const DMSDirectory = () => {
       first_name: firstname,
       last_name: lastname,
       email: myemail,
-      job_title:[jobtitle], 
-      company: parseInt(mycompany, 10), 
-      locaton: mylocation, 
-      department: parseInt(mydepartment,10), 
+      job_title: [jobtitle],
+      company: parseInt(mycompany, 10),
+      locaton: mylocation,
+      department: parseInt(mydepartment, 10),
       direct_number: directnumber,
       mobile_number: mobilenumber,
     };
@@ -161,72 +268,42 @@ const DMSDirectory = () => {
       });
   };
 
-  const movetoEstimatingPage = () => {
-    navigate("/homepage/estimating/");
-  };
-
   return (
-    <div className="parentDiv px-5">
-      <div className="titleWithSearch">
-        <h3 className="text-primary">DMS Directory</h3>
-        <div className="inputSearchDiv">
-          <input
-            type="text"
-            placeholder="Filter by Project Name, prjct_engnr Name, bim_oprtrs, job_num"
-            value={filter}
-            className="directoryinputsearch p-2"
-            onChange={(e) => setFilter(e.target.value)}
+    <>
+      <div className="datatable Parent px-5 table-responsive">
+        <div className="custom-data-table">
+          <DataTable
+            title="DMS Directory"
+            className="px-2"
+            columns={Columns}
+            data={filterusers}
+            fixedHeader
+            fixedHeaderScrollHeight="365px"
+            selectableRowsHighlight
+            highlightOnHover
+            pagination // Enable pagination
+            paginationPerPage={10} // Set the number of rows per page
+            subHeader
+            subHeaderComponent={
+              <div className="d-flex mb-3">
+                <input
+                  type="text"
+                  style={{ width: "400px" }}
+                  className="form-control form-control-md"
+                  placeholder="Search"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+                <button
+                  className="btn btn-primary ms-2 btn-md"
+                  onClick={() => setShowModal(true)}
+                >
+                  New
+                </button>
+              </div>
+            }
           />
-          <button
-            className="btn ms-2 btn-primary"
-            onClick={() => setShowModal(true)}
-          >
-            New
-          </button>
         </div>
-      </div>
-      <button
-        type="button"
-        onClick={movetoEstimatingPage}
-        className="btn btn-outline-primary backbtn"
-      >
-        Back
-      </button>
-
-      <div className="table-responsive proposalTable mt-2">
-        <table
-          className="table table-striped table-bordered table-hover"
-          style={{ tableLayout: "auto" }}
-        >
-          <thead className="proposalHeader">
-            <tr>
-              <th className="successgreenColor">Last Name</th>
-              <th className="successgreenColor">First Name</th>
-              <th className="successgreenColor">Job Title</th>
-              <th className="successgreenColor">Company</th>
-              <th className="successgreenColor">Location</th>
-              <th className="successgreenColor">Department</th>
-              <th className="successgreenColor">Mobile</th>
-              <th className="successgreenColor">Direct</th>
-              <th className="successgreenColor">Email</th>
-            </tr>
-          </thead>
-          <tbody className="cursor-pointer jktable bg-info jloop">
-            {filteredData.map((item) => (
-              <tr key={item.id}>
-                <td className=" dmsTD centered-td">{item.last_name}</td>
-                <td className=" dmsTD centered-td">{item.first_name}</td>
-                <td className=" dmsTD centered-td">{item.job_title}</td>
-                <td className=" dmsTD  centered-td">{item.company}</td>
-                <td className=" dmsTD centered-td">{item.locaton}</td>
-                <td className=" dmsTD centered-td">{item.department}</td>
-                <td className=" dmsTD centered-td">{item.mobile_number}</td>
-                <td className=" dmsTD centered-td">{item.direct_number}</td>
-                <td className=" dmsTD centered-td">{item.email}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
 
         {showModal && (
           <div
@@ -298,14 +375,27 @@ const DMSDirectory = () => {
                       <option value="Project Manager">Project Manager</option>
                       <option value="Field Management">Field Management</option>
                       <option value="Project Engineer">Project Engineer</option>
-                      <option value="Estimating Manager">Estimating Manager</option>
-                      <option value="General Superintendent">General Superintendent</option>
-                      <option value="Proconstruction Manager">Proconstruction Manager</option>
-                      <option value="No. Cal. General Manager">No. Cal. General Manager</option>
-                      <option value="So. Cal. General Manager">So. Cal. General Manager</option>
-                      <option value="BIM Modeler/Trimble Operator">BIM Modeler/Trimble Operator</option>
-                      <option value="Scheduling Manager / Pre-Construction Engineer">Scheduling Manager / Pre-Construction Engineer</option>
-                     
+                      <option value="Estimating Manager">
+                        Estimating Manager
+                      </option>
+                      <option value="General Superintendent">
+                        General Superintendent
+                      </option>
+                      <option value="Proconstruction Manager">
+                        Proconstruction Manager
+                      </option>
+                      <option value="No. Cal. General Manager">
+                        No. Cal. General Manager
+                      </option>
+                      <option value="So. Cal. General Manager">
+                        So. Cal. General Manager
+                      </option>
+                      <option value="BIM Modeler/Trimble Operator">
+                        BIM Modeler/Trimble Operator
+                      </option>
+                      <option value="Scheduling Manager / Pre-Construction Engineer">
+                        Scheduling Manager / Pre-Construction Engineer
+                      </option>
                     </select>
                   </div>
                   <div className="Oneline">
@@ -352,7 +442,9 @@ const DMSDirectory = () => {
                       <option value="Precon">Precon</option>
                       <option value="Management">Management</option>
                       <option value="Estimating">Estimating</option>
-                      <option value="Project Management">Project Management</option>
+                      <option value="Project Management">
+                        Project Management
+                      </option>
                     </select>
                   </div>
 
@@ -360,25 +452,13 @@ const DMSDirectory = () => {
                     <label htmlFor="location" className="form-label">
                       Location:
                     </label>
-                    <select
-                      className="form-select"
+                    <input
+                      type="text"
+                      className="form-control"
                       id="location"
                       value={mylocation}
                       onChange={handleLocation}
-                    >
-                      <option value="">Select Location</option>
-                      {userLocation && userLocation.length > 0 ? (
-                        userLocation.map((place) => (
-                          <option value={place.id} key={place.id}>
-                            {place.name}
-                          </option>
-                        ))
-                      ) : (
-                        <option value="" disabled>
-                          Loading...
-                        </option>
-                      )}
-                    </select>
+                    />
                   </div>
                 </div>
                 <div className="bothDiv mt-2">
@@ -417,7 +497,8 @@ const DMSDirectory = () => {
           </div>
         )}
       </div>
-    </div>
+      <ToastContainer />
+    </>
   );
 };
 

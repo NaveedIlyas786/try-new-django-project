@@ -45,7 +45,7 @@ const WonProjects = () => {
         <div className="inputSearchDiv">
           <input
             type="text"
-            placeholder="Filter by Project Name, prjct_engnr Name, bim_oprtrs, job_num"
+            placeholder="Filter by Project Name, Area, Estimator, Status, Bidders"
             value={filter}
             className="myinput"
             onChange={(e) => setFilter(e.target.value)}
@@ -62,7 +62,7 @@ const WonProjects = () => {
       </button>
 
       <div className="table-responsive proposalTable mt-2">
-        <table className="table table-striped table-bordered table-hover" style={{ tableLayout: "auto" }}>
+        <table className="table  table-bordered table-hover" style={{ tableLayout: "auto" }}>
           <thead className="proposalHeader">
             <tr>
               <th className="successgreenColor">Due Date</th>

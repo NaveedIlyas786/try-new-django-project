@@ -125,9 +125,9 @@ input:focus {
   display: none;
   transition: opacity 0.3s ease-in-out;
 }
-.urlTH {
+/* .urlTH {
   background-color: #007bff !important;
-}
+} */
 
 .webName {
   text-align: left !important;

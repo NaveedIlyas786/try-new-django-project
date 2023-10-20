@@ -51,7 +51,7 @@ const LostProjects = () => {
         <div className="inputSearchDiv">
           <input
             type="text"
-            placeholder="Filter by Project Name, prjct_engnr Name, bim_oprtrs, job_num"
+            placeholder="Filter by Project Name,Area, Estimator, Status, Bidders"
             value={filter}
             className="myinput"
             onChange={(e) => setFilter(e.target.value)}

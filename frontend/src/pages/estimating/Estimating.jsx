@@ -31,6 +31,7 @@ const Estimator = () => {
   const [location, setLocation] = useState("");
   // const [bidAmount, setBidAmount] = useState("");
   const [company, setCompany] = useState(""); // Updated to store company name as a string
+  const [showPopup, setShowPopup] = useState(false);
 
   // ***********************************
   const dispatch = useDispatch();
@@ -655,6 +656,8 @@ const Estimator = () => {
       // Handle invalid time format here, display an error message or prevent form submission
       console.error("Invalid time format");
       return;
+
+      
     }
 
     // Create a data object with the form values
@@ -680,6 +683,11 @@ const Estimator = () => {
         console.log("Data successfully submitted:", response.data);
 
         dispatch(addEstimating(response.data));
+        setShowPopup(true);
+        setTimeout(() => {
+          setShowPopup(false);
+          // navigate("/")
+        }, 1000);
 
         // You can also reset the form fields here if needed
         setDueDate("");
@@ -696,7 +704,7 @@ const Estimator = () => {
         // Close the modal
         setTimeout(() => {
           setShowModal(false);
-        }, 500);
+        }, 1000);
       })
       .catch((error) => {
         // Handle any errors that occurred during the POST request
@@ -704,6 +712,11 @@ const Estimator = () => {
         // Log the response data for more details
         console.log("Response data:", error.response.data);
       });
+      
+    
+
+
+
   };
 
   //************* Define the handleEstimatingEditing function
@@ -3584,13 +3597,16 @@ const Estimator = () => {
                   <label htmlFor="dueDate" className="form-label">
                     Due Date:
                   </label>
+                 
                   <input
                     type="date"
                     className="form-control"
                     id="dueDate"
+                    
                     value={dueDate}
                     onChange={handleDueDateChange}
                   />
+               
                 </div>
                 <div className="Oneline timefield">
                   <label htmlFor="time" className="form-label">
@@ -3660,6 +3676,13 @@ const Estimator = () => {
               <button type="submit" className="btn btn-submit mt-3 mb-4">
                 Add
               </button>
+              {showPopup && (
+      <div className="modal-overlay">
+        <div id="popup" className="popup">
+          <p>Congratulations! You Add the Estimating Successfully. </p>
+        </div>
+      </div>
+    )}
             </form>
           </div>
         </div>

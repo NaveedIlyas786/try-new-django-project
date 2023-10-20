@@ -798,3 +798,14 @@ td {
     font-size: 30px !important;
   }
 }
+
+.input-container {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 10px; /* Adjust the left value to position the icon */
+  top: 50%; /* Vertically center the icon */
+  transform: translateY(-50%);
+}

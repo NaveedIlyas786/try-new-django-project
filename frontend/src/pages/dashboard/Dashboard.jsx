@@ -265,7 +265,7 @@ const Dashboard = () => {
             className=" row table-responsive table-design pk"
           >
             <div className="col-md-12">
-              <table className="table jk">
+              <table className="table table-hover jk">
                 <thead className="thead-dark myhead text-center">
                   <tr className="pk">
                     <th rowSpan={2} className="align-middle">

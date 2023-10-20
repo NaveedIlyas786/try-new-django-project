@@ -36,6 +36,7 @@ td {
   border-radius: 10px;
 }
 .mysearchinput:focus {
+  /* min-width: 550px; */
   border: 1px solid black !important;
   border-radius: 0 !important;
   transition: all 0.5s ease-in-out;
@@ -787,7 +788,7 @@ td {
  font-family: 'Source Sans Pro';
  /* font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
   text-shadow: 2px 2px 8px rgb(177, 219, 238);
-  font-size: 40px !important;
+  font-size: 35px !important;
   /* font-family: cursive; */
   color: rgb(99, 92, 92) !important;
   text-wrap: nowrap;
@@ -797,14 +798,13 @@ td {
     font-size: 30px !important;
   }
 }
-
-.input-container {
-  position: relative;
+.textestimating{
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+text-shadow: 2px 2px 8px rgb(144, 204, 231);
+font-size: 40px !important
 }
-
-.input-icon {
-  position: absolute;
-  left: 10px; /* Adjust the left value to position the icon */
-  top: 50%; /* Vertically center the icon */
-  transform: translateY(-50%);
+.textestimatinghead{
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  text-shadow: 2px 2px 8px rgb(144, 204, 231);
+  font-size: 35px !important
 }

@@ -1431,7 +1431,7 @@ const Estimator = () => {
             </div>
             <div className="d-flex mt-5  justify-content-between align-items-center h-70 ">
               <div>
-                <h3 className=" estisum  " data-aos="fade-left">
+                <h3 className=" text-primary textestimating  " data-aos="fade-left">
                   Estimating Summary
                 </h3>
               </div>
@@ -3482,7 +3482,7 @@ const Estimator = () => {
             showModal ? "show" : ""
           }`}
         >
-          <h4 className="text-center addnewtxt">Estimating</h4>
+          <h4 className="text-center addnewtxt text-primary textestimatinghead">Estimating</h4>
           <button className="close-btn" onClick={closeModal}></button>
           <div className="modal-content px-5">
             <form onSubmit={handleSubmit} className="MyForm">

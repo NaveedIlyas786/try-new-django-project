@@ -4,7 +4,9 @@
   vertical-align: center;
   text-align: center;
 }
-
+.datatable{
+  margin-top: 80px !important;
+}
 .successgreenColor{
     background-color: #007BFF !important;
 }

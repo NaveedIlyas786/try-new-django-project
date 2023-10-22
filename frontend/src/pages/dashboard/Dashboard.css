@@ -191,3 +191,9 @@ h5 {
     overflow-x: auto;
   }
 }
+.sortContainer{
+  
+  position: absolute;
+  right: 0;
+  margin-right: 130px;
+}

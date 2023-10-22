@@ -17,7 +17,10 @@
   pointer-events: auto; /* Enable mouse events */
   transform: translate(-50%, -50%) scale(1); /* Scale to 1 for the opening transition */
 }
-
+.dmsmain{
+  background-color: red !important;
+  z-index: 10001;
+}
 
 
 /* styles.css */
@@ -40,7 +43,9 @@
   text-overflow: none;
   text-align: center;
 }
-
+.custom-dropdown{
+  width: 390px !important;
+}
   .emailTD {
     /* background-color: #007BFF; */
     text-align: left !important;

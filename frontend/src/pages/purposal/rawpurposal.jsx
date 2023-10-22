@@ -20,14 +20,15 @@ function Rawpurposal() {
         return response.json();
       })
       .then((data) => {
-        const filteredEntries = data.filter(
+        const myfilteredEntries = data.filter(
           (entry) => entry.estimating.id === idNumber
         );
-        console.log(filteredEntries);
-        setFilteredEntries(filteredEntries); // Update the state with filtered data
+        console.log(myfilteredEntries);
+        setFilteredEntries(myfilteredEntries); // Update the state with filtered data
       })
       .catch((error) => console.error("Error fetching proposal data:", error));
   }, [id]);
+  
   const [qualificationData, setQualificationData] = useState([]);
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/estimating/Qualification/")
@@ -128,7 +129,7 @@ function Rawpurposal() {
       <div className="pdfside ">
         <button className="btn" onClick={generatePDF} style={{ width: "70px" }}>
           <i
-            class="fa-solid fa-file-pdf"
+            className="fa-solid fa-file-pdf"
             style={{ fontSize: "38px", color: "#ee1d22", fontWeight: "900" }}
           ></i>
         </button>
@@ -151,17 +152,17 @@ function Rawpurposal() {
                   alt="myimg"
                 />
                 <div className="rightTop">
-                  <p className="topinfo">{proposalData.estimating.company.adress}</p>
+                  <p className="topinfo">{proposalData.estimating.adress}</p>
                   <p className="topinfo">Bakersfield, CA 93307</p>
                   <p className="topinfo">
-                    Office:{" "}
-                    <span>{proposalData.estimating.company.office_phone_number}</span>{" "}
+                    Office:
+                    <span>{proposalData.estimating.office_phone_number}</span>{" "}
                   </p>
                   <p className="topinfo">
-                    Fax: <span>{proposalData.estimating.company.fax_number}</span>{" "}
+                    Fax: <span>{proposalData.estimating.fax_number}</span>{" "}
                   </p>
                   <p className="topinfo">
-                    Email: {proposalData.estimating.company.email}
+                    Email: {proposalData.estimating.bidder_mail}
                   </p>
                 </div>
               </header>
@@ -171,7 +172,7 @@ function Rawpurposal() {
                 <div>
                   <p className="fs-5">January 24, 2023</p>
                   <p className="fs-6 DMS">
-                    <strong>{proposalData.estimating.company.Cmpny_Name}</strong> is
+                    <strong>{proposalData.estimating.company ? proposalData.estimating.company: "No Company Exist"}</strong> is
                     submitting the following bid proposal for the
                     <strong>{proposalData.estimating.name}</strong>. The plans
                     used to formulate the bid proposal are dated XX/XX/20XX,

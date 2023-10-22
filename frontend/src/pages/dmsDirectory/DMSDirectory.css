@@ -40,7 +40,9 @@
   text-overflow: none;
   text-align: center;
 }
-
+.custom-dropdown{
+  width: 390px !important;
+}
   .emailTD {
     /* background-color: #007BFF; */
     text-align: left !important;

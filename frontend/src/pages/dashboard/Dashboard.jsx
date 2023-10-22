@@ -380,7 +380,7 @@ const Dashboard = () => {
                       </tr>
                     ))}
                 </tbody>
-                {/* <tfoot className="mytfoot">
+                <tfoot className="mytfoot">
                   <tr>
                     <td className="totalsection dashtd">Grand Total</td>
                     <td className="totalsection dashtd">
@@ -453,7 +453,7 @@ const Dashboard = () => {
                       )}
                     </td>
                   </tr>
-                </tfoot> */}
+                </tfoot> */
               </table>
             </div>
           </div>

@@ -48,5 +48,6 @@ urlpatterns = [
 
     path('specification/',views.SpecificationViews.as_view(),name='SpecificationDetail'),
 
+    path('jobtitle/',views.job_titleViews.as_view(),name='job-tile'),
 
 ]

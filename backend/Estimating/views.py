@@ -6,8 +6,8 @@ import os
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status,views
-from .models import Company, Estimating,Estimating_detail, Proposal, Qualification,Service,Location,UrlsTable,Addendum,DMS_Dertory,Specification,Spec_detail
-from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer,SpecificationSerializer,ServiceSerializer,LocationSerializer,EstimatingDetailSerializer,ProposalServiceSerializer,CompanySerializer,UrlsSerializers,DMS_DertorySezializers
+from .models import Company, Estimating,Estimating_detail, Proposal, Qualification,Service,Location,UrlsTable,Addendum,DMS_Dertory,Specification,Spec_detail,Role,Dprtmnt
+from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer,SpecificationSerializer,ServiceSerializer,LocationSerializer,EstimatingDetailSerializer,ProposalServiceSerializer,CompanySerializer,UrlsSerializers,DMS_DertorySezializers,job_titleSerializers,DprtmentSerializers
 from accounts.models import User
 
 from .forms import EstimatingDetailAdminForm
@@ -21,6 +21,26 @@ from django.core.files.base import ContentFile
 import base64
 import logging
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
+
+
+
+
+class job_titleViews(APIView):
+    def get(self,request):
+        jobtile=Role.objects.all()
+        serializer=job_titleSerializers(jobtile, many=True)
+        return Response(serializer.data)
+
+
+    def post(self,request):
+        serializer=job_titleSerializers(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
 
 
 
@@ -365,17 +385,20 @@ class CompanyListView(APIView):
 class EstimatingListView(APIView):
 
     def get(self, request, id=None, format=None):
+        current_year = datetime.now().year  # Get the current year
         if id:
             try:
-                estimating = Estimating.objects.get(id=id)
+                estimating = Estimating.objects.get(id=id, start_date__year=current_year)
                 serializer = EstimatingSerializer(estimating)
                 return Response(serializer.data)
             except Estimating.DoesNotExist:
                 return Response({'error': 'Estimating not found'}, status=status.HTTP_404_NOT_FOUND)
         else:
-            estimatings = Estimating.objects.all()
+            estimatings = Estimating.objects.filter(start_date__year=current_year)  # Filter by current year
             serializer = EstimatingSerializer(estimatings, many=True)
             return Response(serializer.data)
+        
+
 
     def post(self, request, format=None):
         serializer = EstimatingSerializer(data=request.data)

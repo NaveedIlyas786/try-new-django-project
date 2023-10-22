@@ -1330,68 +1330,121 @@ const Estimator = () => {
       console.error("Error updating estimator:", error);
     }
   };
+  async function estimatorValueIsValid(itemId) {
+    try {
+      // Fetch the estimator value based on the estimating ID
+      const response = await fetch(`http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`);
+      
+      if (response.ok) {
+        const estimatingData = await response.json();
+        const estimatorValue = estimatingData.estimator; // Replace 'estimator' with the actual field name
+  
+        // Check if the estimator value is valid
+        if (estimatorValue !== null && estimatorValue !== "") {
+          return true; // Valid estimator value
+        } else {
+          return false; // Invalid estimator value (null or empty)
+        }
+      } else {
+        // Handle API response errors here
+        console.error("Failed to fetch estimator data for estimating ID:", itemId);
+        return false; // Consider it as an invalid estimator value
+      }
+    } catch (error) {
+      console.error("Error fetching estimator data:", error);
+      return false; // Consider it as an invalid estimator value
+    }
+  }
 
   const handleStatusChange = async (event, itemId) => {
     const updatedStatus = event.target.value;
     console.log("Updated Status:", updatedStatus);
-
+  
     try {
-      const response = await fetch(
-        `http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            status: updatedStatus, // Update the status
-          }),
-        }
-      );
-
-      console.log("API Response:", response);
-
+      // Fetch the estimator value based on the estimating ID
+      const response = await fetch(`http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`);
+  
       if (response.ok) {
-        // Handle success response here
-        const updatedStatusMap = { ...statusMap };
-        updatedStatusMap[itemId] = updatedStatus;
-        setStatusMap(updatedStatusMap);
-
-        // Fetch the "prjct_name" corresponding to the selected "itemId"
-        const responseEstimating = await fetch(
-          `http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`
-        );
-        if (responseEstimating.ok) {
-          const estimatingData = await responseEstimating.json();
-          // Set the "prjct_name" as the value for the "Estimating/Project Name" field
-          setSelectedEstimatingID(estimatingData.prjct_name);
-        }
-
-        // Check if the updated status is "Won" and open the project modal
-        if (updatedStatus === "Won") {
-          setshowProjectModal(true);
-        }
-
-        if (updatedStatus === "Pending") {
-          setPurposalModal(true);
-        }
-        // Log a success message to the console
-        console.log(`Status updated successfully for item with ID ${itemId}`);
-        // You may need to refresh the UI or update the specific row accordingly
-      } else {
-        if (response.status === 404) {
-          // Handle the case where the resource was not found (404 error)
-          console.error("Resource not found.");
+        const estimatingData = await response.json();
+        const estimatorValue = estimatingData.estimator; // Replace 'estimator' with the actual field name
+  
+        // Check if the estimator value is valid
+        if (estimatorValue === null || estimatorValue === "") {
+          // Handle the case where the estimator is not selected
+          alert("Estimator is not selected. Log will not display");
+          // Status update is prevented by not having it outside the conditional block
+          
         } else {
-          // Handle other non-success responses
-          const responseData = await response.text();
-          console.error("Failed to update! Server response:", responseData);
+          // Continue with the status update
+          const responseStatus = await fetch(
+            `http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                status: updatedStatus, // Update the status
+              }),
+            }
+          );
+  
+          console.log("API Response:", responseStatus);
+  
+          if (responseStatus.ok) {
+            // Handle success response here
+            const updatedStatusMap = { ...statusMap };
+            updatedStatusMap[itemId] = updatedStatus;
+            setStatusMap(updatedStatusMap);
+  
+            // Fetch the "prjct_name" corresponding to the selected "itemId"
+            const responseEstimating = await fetch(
+              `http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`
+            );
+            if (responseEstimating.ok) {
+              const estimatingData = await responseEstimating.json();
+              // Set the "prjct_name" as the value for the "Estimating/Project Name" field
+              setSelectedEstimatingID(estimatingData.prjct_name);
+            }
+  
+            // Check if the updated status is "Won" and open the project modal
+            if (updatedStatus === "Won") {
+              setshowProjectModal(true);
+            }
+  
+            if (updatedStatus === "Pending") {
+              setPurposalModal(true);
+            }
+            // Log a success message to the console
+            console.log(`Status updated successfully for item with ID ${itemId}`);
+            // You may need to refresh the UI or update the specific row accordingly
+          } else {
+            if (responseStatus.status === 404) {
+              // Handle the case where the resource was not found (404 error)
+              console.error("Resource not found.");
+            } else {
+              // Handle other non-success responses
+              const responseData = await responseStatus.text();
+              console.error("Failed to update! Server response:", responseData);
+            }
+          }
         }
+      } else {
+        // Handle API response errors
+        console.error("Failed to fetch estimator data for estimating ID:", itemId);
       }
     } catch (error) {
       console.error("Error updating status:", error);
     }
   };
+  
+  
+  
+  
+  
+  
+  
+  
 
   const MovetoURLpage = () => {
     navigate("/homepage/urlpage");
@@ -1456,6 +1509,207 @@ const Estimator = () => {
             </div>
           </div>
 
+          <ParticlesAnimation numberOfCircles={numberOfCircles} />
+         
+
+          <div
+            className="table-responsive proposalTable mt-2"
+            data-aos="fade-up"
+          >
+            <table
+              className="table table-bordered table-hover"
+              style={{ tableLayout: "auto" }}
+            >
+              <thead className="proposalHeader">
+                <tr>
+                  <th>Due Date</th>
+                  <th>Due Time</th>
+                  <th>Project Name</th>
+                  <th>Area</th>
+                  <th>Estimator</th>
+                  <th>Status</th>
+                  <th>Bidders</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody className="cursor-pointer jktable bg-info jloop">
+                {filteredData.map((item) => (
+                  <tr key={item.id}>
+                    <td
+                      className="mytd centered-td"
+                      style={{ minWidth: "60px" }}
+                    >
+                      {item.due_date ? item.due_date : "No Date"}
+                    </td>
+                    <td
+                      className="mytd centered-td"
+                      style={{ maxWidth: "50px" }}
+                    >
+                      {item.time} <strong>{item.timezone}</strong>
+                    </td>
+                    <td className="mytd myproject centered-td">
+                      {item.prjct_name ? item.prjct_name : "No Project"}
+                    </td>
+                    <td
+                      className="mytd centered-td"
+                      style={{ minWidth: "70px" }}
+                    >
+                      <select
+                        className="dropUpdation"
+                        id="estimatorName"
+                        onChange={(event) => handleAreaChange(event, item.id)}
+                        value={AreaChoice[item.id] || item.location}
+                      >
+                        <option
+                          value={item.location ? item.location : "No Area"}
+                        >
+                          {item.location ? item.location : "No Area"}
+                        </option>
+                        {userLocation && userLocation.length > 0 ? (
+                          userLocation.map((place) => (
+                            <option value={place.id} key={place.id}>
+                              {place.name}
+                            </option>
+                          ))
+                        ) : (
+                          <option value="" disabled>
+                            Loading...
+                          </option>
+                        )}
+                      </select>
+                    </td>
+                    <td
+                      className="mytd centered-td"
+                      style={{ minWidth: "175px" }}
+                    >
+                      <select
+                        className="dropUpdation"
+                        id="estimatorName"
+                        onChange={(event) =>
+                          handleEstimatorChange(event, item.id)
+                        }
+                        value={estimatorchoice[item.id] || item.estimator}
+                      >
+                        <option value="">
+                          {item.estimator ? item.estimator : "No Estimator"}
+                        </option>
+                        {EstimatorName && EstimatorName.length > 0 ? (
+                          EstimatorName.map((user) => (
+                            <option value={user.id} key={user.id}>
+                              {user.full_Name}
+                            </option>
+                          ))
+                        ) : (
+                          <option value="" disabled>
+                            Loading...
+                          </option>
+                        )}
+                      </select>
+                    </td>
+                    <td
+  className="mytd centered-td"
+  style={{ minWidth: "50px" }}
+  onChange={(event) => handleUpdationChange(event, item.id)}
+  value={statusMap[item.id] || item.status}
+>
+  <select
+    className="dropUpdation"
+    id="estimatorName"
+    onChange={(event) => handleStatusChange(event, item.id)}
+    value={statusMap[item.id] || item.status}
+  >
+    <option value={item.status}>{item.status}</option>
+    <option value="Won">Won</option>
+    <option value="Pending">Pending</option>
+    <option value="Working">Working</option>
+    <option value="Lost">Lost</option>
+  </select>
+</td>
+
+                    <td className="mytdbidder centered-td">
+                      {item.bidder +
+                        " " +
+                        item.bidder_detail +
+                        " " +
+                        item.bidder_mail}
+                    </td>
+                    <td className="mytd centered-td actionTD">
+                      <div className="relative-container loop">
+                        <div
+                          type="button"
+                          className="pb-2"
+                          onClick={() => {
+                            setItemId(item.id);
+                            setSelectedEstimatingID(item.prjct_name);
+                            setSelectedEstimator(item.estimator);
+                            setSelectedBidder(item.bidder);
+                            setSelectedCompany(item.company);
+                            setselectedStatus(item.status);
+                            setSelecteddueDate(item.due_date);
+                            setSelectedstart_date(item.start_date);
+                            setSelectedbidder_address(item.bidder_address);
+                            setSelectedTimeforUpdate(item.time);
+                            setSelectedTimeZone(item.timezone);
+                            setSelectedLocation(item.location);
+                            setshowEstimatingEditModal(true);
+                          }}
+                        >
+                          <i class="fa-solid fa-pen-to-square size11 edit "></i>
+                        </div>
+
+                        <div
+                          type="button"
+                          className="pb-2"
+                          onClick={() => {
+                            console.log(item.prjct_name);
+                            setItemId(item.id);
+
+                            setStep0FormData({
+                              ...step0FormData,
+                              estimating: item.id,
+                            });
+                            setSelectedEstimatingID(item.prjct_name);
+                            setPurposalModal(true);
+                          }}
+                        >
+                          <i class="fa-solid fa-square-plus size11"></i>
+                        </div>
+                        {/* <div
+                          className="dropbtns"
+                          onClick={() => {
+                            console.log(item.prjct_name);
+                            setItemId(item.id);
+                            setStep0FormData({
+                              ...step0FormData,
+                              estimating: item.id,
+                            });
+                            setSelectedEstimatingID(item.prjct_name);
+                            setshowProjectModal(true);
+                          }}
+                        >
+                          <i class="fa-solid fa-tarp"></i>
+                        </div> */}
+
+                        <div
+                          type="button"
+                          onClick={() => {
+                            const encodedProjectName = encodeURIComponent(
+                              item.id
+                            );
+                            navigate(
+                              `/homepage/rawproposal/${encodedProjectName}`
+                            );
+                          }}
+                        >
+                          <i class="fa-solid fa-eye size11"></i>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           {showProjectModal && (
             <div
               className={`modal-container pt-5 ps-2 ${
@@ -3276,205 +3530,6 @@ const Estimator = () => {
               </div>
             </div>
           )}
-
-          <ParticlesAnimation numberOfCircles={numberOfCircles} />
-          <div
-            className="table-responsive proposalTable mt-2"
-            data-aos="fade-up"
-          >
-            <table
-              className="table table-bordered table-hover"
-              style={{ tableLayout: "auto" }}
-            >
-              <thead className="proposalHeader">
-                <tr>
-                  <th>Due Date</th>
-                  <th>Due Time</th>
-                  <th>Project Name</th>
-                  <th>Area</th>
-                  <th>Estimator</th>
-                  <th>Status</th>
-                  <th>Bidders</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody className="cursor-pointer jktable bg-info jloop">
-                {filteredData.map((item) => (
-                  <tr key={item.id}>
-                    <td
-                      className="mytd centered-td"
-                      style={{ minWidth: "60px" }}
-                    >
-                      {item.due_date ? item.due_date : "No Date"}
-                    </td>
-                    <td
-                      className="mytd centered-td"
-                      style={{ maxWidth: "50px" }}
-                    >
-                      {item.time} <strong>{item.timezone}</strong>
-                    </td>
-                    <td className="mytd myproject centered-td">
-                      {item.prjct_name ? item.prjct_name : "No Project"}
-                    </td>
-                    <td
-                      className="mytd centered-td"
-                      style={{ minWidth: "70px" }}
-                    >
-                      <select
-                        className="dropUpdation"
-                        id="estimatorName"
-                        onChange={(event) => handleAreaChange(event, item.id)}
-                        value={AreaChoice[item.id] || item.location}
-                      >
-                        <option
-                          value={item.location ? item.location : "No Area"}
-                        >
-                          {item.location ? item.location : "No Area"}
-                        </option>
-                        {userLocation && userLocation.length > 0 ? (
-                          userLocation.map((place) => (
-                            <option value={place.id} key={place.id}>
-                              {place.name}
-                            </option>
-                          ))
-                        ) : (
-                          <option value="" disabled>
-                            Loading...
-                          </option>
-                        )}
-                      </select>
-                    </td>
-                    <td
-                      className="mytd centered-td"
-                      style={{ minWidth: "175px" }}
-                    >
-                      <select
-                        className="dropUpdation"
-                        id="estimatorName"
-                        onChange={(event) =>
-                          handleEstimatorChange(event, item.id)
-                        }
-                        value={estimatorchoice[item.id] || item.estimator}
-                      >
-                        <option value="">
-                          {item.estimator ? item.estimator : "No Estimator"}
-                        </option>
-                        {EstimatorName && EstimatorName.length > 0 ? (
-                          EstimatorName.map((user) => (
-                            <option value={user.id} key={user.id}>
-                              {user.full_Name}
-                            </option>
-                          ))
-                        ) : (
-                          <option value="" disabled>
-                            Loading...
-                          </option>
-                        )}
-                      </select>
-                    </td>
-                    <td
-                      className="mytd centered-td "
-                      style={{ minWidth: "50px" }}
-                      onChange={(event) => handleUpdationChange(event, item.id)}
-                      value={statusMap[item.id] || item.status}
-                    >
-                      <select
-                        className="dropUpdation "
-                        id="estimatorName"
-                        onChange={(event) => handleStatusChange(event, item.id)}
-                        value={statusMap[item.id] || item.status}
-                      >
-                        <option value={item.status}>{item.status}</option>
-                        <option value="Won">Won</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Working">Working</option>
-                        <option value="Lost">Lost</option>
-                      </select>
-                    </td>
-                    <td className="mytdbidder centered-td">
-                      {item.bidder +
-                        " " +
-                        item.bidder_detail +
-                        " " +
-                        item.bidder_mail}
-                    </td>
-                    <td className="mytd centered-td actionTD">
-                      <div className="relative-container loop">
-                        <div
-                          type="button"
-                          className="pb-2"
-                          onClick={() => {
-                            setItemId(item.id);
-                            setSelectedEstimatingID(item.prjct_name);
-                            setSelectedEstimator(item.estimator);
-                            setSelectedBidder(item.bidder);
-                            setSelectedCompany(item.company);
-                            setselectedStatus(item.status);
-                            setSelecteddueDate(item.due_date);
-                            setSelectedstart_date(item.start_date);
-                            setSelectedbidder_address(item.bidder_address);
-                            setSelectedTimeforUpdate(item.time);
-                            setSelectedTimeZone(item.timezone);
-                            setSelectedLocation(item.location);
-                            setshowEstimatingEditModal(true);
-                          }}
-                        >
-                          <i class="fa-solid fa-pen-to-square size11 edit "></i>
-                        </div>
-
-                        <div
-                          type="button"
-                          className="pb-2"
-                          onClick={() => {
-                            console.log(item.prjct_name);
-                            setItemId(item.id);
-
-                            setStep0FormData({
-                              ...step0FormData,
-                              estimating: item.id,
-                            });
-                            setSelectedEstimatingID(item.prjct_name);
-                            setPurposalModal(true);
-                          }}
-                        >
-                          <i class="fa-solid fa-square-plus size11"></i>
-                        </div>
-                        {/* <div
-                          className="dropbtns"
-                          onClick={() => {
-                            console.log(item.prjct_name);
-                            setItemId(item.id);
-                            setStep0FormData({
-                              ...step0FormData,
-                              estimating: item.id,
-                            });
-                            setSelectedEstimatingID(item.prjct_name);
-                            setshowProjectModal(true);
-                          }}
-                        >
-                          <i class="fa-solid fa-tarp"></i>
-                        </div> */}
-
-                        <div
-                          type="button"
-                          onClick={() => {
-                            const encodedProjectName = encodeURIComponent(
-                              item.id
-                            );
-                            navigate(
-                              `/homepage/rawproposal/${encodedProjectName}`
-                            );
-                          }}
-                        >
-                          <i class="fa-solid fa-eye size11"></i>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
         </div>
       </div>
       {/* New Estimating Entry Posting-Code */}

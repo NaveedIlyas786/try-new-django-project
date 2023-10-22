@@ -127,18 +127,20 @@ function Rawpurposal() {
   return (
     <div className="rawk">
       <div className="pdfside ">
-        <button className="btn" onClick={generatePDF} style={{ width: "70px" }}>
+        <div className="btn" onClick={generatePDF} >
           <i
-            className="fa-solid fa-file-pdf"
-            style={{ fontSize: "38px", color: "#ee1d22", fontWeight: "900" }}
+            class="fa-solid fa-file-pdf"
+            style={{ fontSize: "38px", color: "#1976d2", fontWeight: "900" }}
           ></i>
-        </button>
-        <img
-          onClick={sendMyEmail}
-          style={{ width: "100px", cursor: "pointer", height: "60px" }}
-          src="../../../src/assets/emailImg.png"
-          alt="EMail img"
-        />
+        </div>
+       
+        <div className="btn" onClick={sendMyEmail} >
+          <i
+            class="fa-solid fa-envelope"
+            style={{ fontSize: "38px", color: "#1976d2", fontWeight: "900" }}
+          ></i>
+        </div>
+       
       </div>
         {filteredEntries.length > 0 && (
       <div ref={conponentPDF} id="pdf-content" className=" coverdiv">

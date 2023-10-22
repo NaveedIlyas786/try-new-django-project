@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status,views
 from .models import Company, Estimating,Estimating_detail, Proposal, Qualification,Service,Location,UrlsTable,Addendum,DMS_Dertory,Specification,Spec_detail,Role,Dprtmnt
-from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer,SpecificationSerializer,ServiceSerializer,LocationSerializer,EstimatingDetailSerializer,ProposalServiceSerializer,CompanySerializer,UrlsSerializers,DMS_DertorySezializers,job_titleSerializers,DprtmentSerializers
+from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer,SpecificationSerializer,ServiceSerializer,LocationSerializer,EstimatingDetailSerializer,ProposalServiceSerializer,CompanySerializer,UrlsSerializers,DMS_DertorySezializers,Job_titleSerializers,DprtmentSerializers
 from accounts.models import User
 
 from .forms import EstimatingDetailAdminForm
@@ -24,17 +24,32 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 
 
-
-
-class job_titleViews(APIView):
+class DepartmentViews(APIView):
     def get(self,request):
-        jobtile=Role.objects.all()
-        serializer=job_titleSerializers(jobtile, many=True)
+        department=Dprtmnt.objects.all()
+        serializer=DprtmentSerializers(department, many=True)
         return Response(serializer.data)
 
 
     def post(self,request):
-        serializer=job_titleSerializers(data=request.data)
+        serializer=DprtmentSerializers(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class Job_titleViews(APIView):
+    def get(self,request):
+        jobtile=Role.objects.all()
+        serializer=Job_titleSerializers(jobtile, many=True)
+        return Response(serializer.data)
+
+
+    def post(self,request):
+        serializer=Job_titleSerializers(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data,status=status.HTTP_201_CREATED)

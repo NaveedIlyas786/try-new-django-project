@@ -16,7 +16,7 @@ class DprtmentSerializers(serializers.ModelSerializer):
 
 
 
-class job_titleSerializers(serializers.ModelSerializer):
+class Job_titleSerializers(serializers.ModelSerializer):
     class Meta:
         model=Role
         fields=['id','name','description']

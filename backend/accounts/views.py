@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q
-
+from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth import authenticate    
 # For Token 
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -121,17 +121,27 @@ class UserLoginViews(APIView):
         if serializer.is_valid(raise_exception=True):
             email = serializer.validated_data.get('email')
             password = serializer.validated_data.get('password')
+            
+            # Getting the user object without authenticating
+            User = get_user_model()
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                return Response({'error': 'Email or password is not valid'}, status=status.HTTP_401_UNAUTHORIZED)
+
+            # Check if the user is active
+            if not user.is_active:
+                return Response({'error': 'Your request is pending'}, status=status.HTTP_403_FORBIDDEN)
+
+            # Now proceed with authentication
             user = authenticate(email=email, password=password)
-            if user is not None:
-                token = get_tokens_for_user(user)
-                return Response({'token': token, 'msg': 'Login Successfully '}, status=status.HTTP_200_OK)
+            if user:
+                token = get_tokens_for_user(user)  # Make sure to import this function or handle token generation
+                return Response({'token': token, 'msg': 'Login Successfully'}, status=status.HTTP_200_OK)
             else:
                 return Response({'error': 'Email or password is not valid'}, status=status.HTTP_401_UNAUTHORIZED)
-        
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
 
 
 

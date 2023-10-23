@@ -31,7 +31,9 @@ const Dashboard = () => {
       .then((response) => response.data)
       .then((data) => {
         // Filter out objects with "estimator" equal to "Grand Totals"
-        const filteredData = data.filter(item => item.estimator !== "Grand Totals");
+        const filteredData = data.filter(
+          (item) => item.estimator !== "Grand Totals"
+        );
         console.log(filteredData);
         setDashData(filteredData);
       })
@@ -39,8 +41,6 @@ const Dashboard = () => {
         console.error("Error fetching data:", error);
       });
   }, []);
-  
-
 
   const [companyiesData, setcompanyiesData] = useState([]);
 
@@ -167,7 +167,9 @@ const Dashboard = () => {
       )
       .then((response) => response.data)
       .then((data) => {
-        const filteredData = data.filter(item => item.estimator !== "Grand Totals");
+        const filteredData = data.filter(
+          (item) => item.estimator !== "Grand Totals"
+        );
         console.log(filteredData);
         setDashData(filteredData);
       })
@@ -176,8 +178,8 @@ const Dashboard = () => {
       });
   }, [selectedYear]);
 
-// ***********Fetch only that object in which  "estimator" === "Grand Totals"
-const [dashgrandtotal,setDashGrandTotal]=useState([]);
+  // ***********Fetch only that object in which  "estimator" === "Grand Totals"
+  const [dashgrandtotal, setDashGrandTotal] = useState([]);
   useEffect(() => {
     // Fetch data from the API with the selected year
     axios
@@ -186,7 +188,9 @@ const [dashgrandtotal,setDashGrandTotal]=useState([]);
       )
       .then((response) => response.data)
       .then((data) => {
-        const filteredData = data.filter(item => item.estimator === "Grand Totals");
+        const filteredData = data.filter(
+          (item) => item.estimator === "Grand Totals"
+        );
         console.log(filteredData);
         setDashGrandTotal(filteredData);
       })
@@ -220,7 +224,7 @@ const [dashgrandtotal,setDashGrandTotal]=useState([]);
             </p>
             <h5 className="ps-3 headsett">Won</h5>
             <h4 className="ps-3 headsettNo">
-              {dashData.reduce((acc, e) => acc + (e?.Won?.total || 0), 0)}
+            {dashgrandtotal[0]?.summary.Won?.total || 0}
             </h4>
           </div>
 
@@ -230,8 +234,7 @@ const [dashgrandtotal,setDashGrandTotal]=useState([]);
             </p>
             <h5 className="ps-3 headsett">Pending</h5>
             <h4 className="ps-3 headsettNo">
-              {dashData.reduce((acc, e) => acc + (e?.Pending?.total || 0), 0)}
-            </h4>
+            {dashgrandtotal[0]?.summary.Pending?.total || 0}            </h4>
           </div>
           <div className=" col-md-2   ProjectStatus pendingWorking d-flex justify-content-center align-items-center">
             <p className="mt-2">
@@ -239,8 +242,7 @@ const [dashgrandtotal,setDashGrandTotal]=useState([]);
             </p>
             <h5 className="ps-3 headsett">Working</h5>
             <h4 className="ps-3 headsettNo">
-              {dashData.reduce((acc, e) => acc + (e?.Working?.total || 0), 0)}
-            </h4>
+            {dashgrandtotal[0]?.summary.Working?.total || 0}            </h4>
             {/* <p>
               <i className="fa-solid fa-square-this-way-up "></i>
             </p> */}
@@ -251,8 +253,7 @@ const [dashgrandtotal,setDashGrandTotal]=useState([]);
             </p>
             <h5 className="ps-3 headsett">Lost</h5>
             <h4 className="ps-3 headsettNo">
-              {dashData.reduce((acc, e) => acc + (e?.Lost?.total || 0), 0)}
-            </h4>
+            {dashgrandtotal[0]?.summary.Lost?.total || 0}            </h4>
           </div>
         </div>
       </div>
@@ -292,16 +293,20 @@ const [dashgrandtotal,setDashGrandTotal]=useState([]);
                   <Dropdown.Item
                     className="dropdown"
                     onClick={() => {
-                      setSelectedYear(2020);
+                      setSelectedYear(2021);
                       toggleDropdown();
                     }}
                   >
-                    2020
+                    2021
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
               <h4 className="myh4">{selectedYear}</h4>
-            <div className="sortContainer"> <button onClick={sortData} className="btn btn-primary btnsort">{buttonText}</button> </div> 
+              <div className="sortContainer">
+                <button onClick={sortData} className="btn btn-primary btnsort">
+                  {buttonText}
+                </button>{" "}
+              </div>
             </div>
           </div>
 
@@ -398,44 +403,54 @@ const [dashgrandtotal,setDashGrandTotal]=useState([]);
                     ))}
                 </tbody>
                 <tfoot className="mytfoot">
-  <tr>
-    <td className="totalsection dashtd">{dashgrandtotal[0]?.estimator}</td>
-    <td className="totalsection dashtd">
-      {dashgrandtotal[0]?.summary.Working?.total || 0}
-    </td>
-    <td className="totalsection dashtd">
-      {dashgrandtotal[0]?.summary?.Pending?.total || 0}
-    </td>
-    <td className="totalsection dashtd"></td>
-    <td className="totalsection dashtd">
-      {formatNumberWithCommas(dashgrandtotal[0]?.summary.Pending?.bid_amount || 0)}
-    </td>
-    <td className="totalsection dashtd">
-      {dashgrandtotal[0]?.summary.Won?.total || 0}
-    </td>
-    <td className="totalsection dashtd"></td>
-    <td className="totalsection dashtd">
-      ${" "}
-      {formatNumberWithCommas(dashgrandtotal[0]?.summary.Won?.bid_amount || 0)}
-    </td>
-    <td className="totalsection dashtd">
-      {dashgrandtotal[0]?.summary.Lost?.total || 0}
-    </td>
-    <td className="totalsection dashtd"></td>
-    <td className="totalsection dashtd">
-      $
-      {formatNumberWithCommas(dashgrandtotal[0]?.summary.Lost?.bid_amount || 0)}
-    </td>
-    <td className="totalsection dashtd">
-      {dashgrandtotal[0]?.summary?.["Grand Total"]?.total || 0}
-    </td>
-    <td className="totalsection dashtd">
-      $
-      {formatNumberWithCommas(dashgrandtotal[0]?.summary?.["Grand Total"]?.bid_amount || 0)}
-    </td>
-  </tr>
-</tfoot>
-
+                  <tr>
+                    <td className="totalsection dashtd">
+                      {dashgrandtotal[0]?.estimator}
+                    </td>
+                    <td className="totalsection dashtd">
+                      {dashgrandtotal[0]?.summary.Working?.total || 0}
+                    </td>
+                    <td className="totalsection dashtd">
+                      {dashgrandtotal[0]?.summary?.Pending?.total || 0}
+                    </td>
+                    <td className="totalsection dashtd"></td>
+                    <td className="totalsection dashtd">
+                      {formatNumberWithCommas(
+                        dashgrandtotal[0]?.summary.Pending?.bid_amount || 0
+                      )}
+                    </td>
+                    <td className="totalsection dashtd">
+                      {dashgrandtotal[0]?.summary.Won?.total || 0}
+                    </td>
+                    <td className="totalsection dashtd"></td>
+                    <td className="totalsection dashtd">
+                      ${" "}
+                      {formatNumberWithCommas(
+                        dashgrandtotal[0]?.summary.Won?.bid_amount || 0
+                      )}
+                    </td>
+                    <td className="totalsection dashtd">
+                      {dashgrandtotal[0]?.summary.Lost?.total || 0}
+                    </td>
+                    <td className="totalsection dashtd"></td>
+                    <td className="totalsection dashtd">
+                      $
+                      {formatNumberWithCommas(
+                        dashgrandtotal[0]?.summary.Lost?.bid_amount || 0
+                      )}
+                    </td>
+                    <td className="totalsection dashtd">
+                      {dashgrandtotal[0]?.summary?.["Grand Total"]?.total || 0}
+                    </td>
+                    <td className="totalsection dashtd">
+                      $
+                      {formatNumberWithCommas(
+                        dashgrandtotal[0]?.summary?.["Grand Total"]
+                          ?.bid_amount || 0
+                      )}
+                    </td>
+                  </tr>
+                </tfoot>
               </table>
             </div>
           </div>

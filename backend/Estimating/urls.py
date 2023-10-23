@@ -48,5 +48,10 @@ urlpatterns = [
 
     path('specification/',views.SpecificationViews.as_view(),name='SpecificationDetail'),
 
+    path('jobtitle/',views.Job_titleViews.as_view(),name='job-tile'),
+    path('Department/',views.DepartmentViews.as_view(),name='Department'),
+    # path('GrandTotle/', views.Grand_totleSummaryView.as_view(), name='estimators-summary'),
+
+
 
 ]

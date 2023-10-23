@@ -5,6 +5,8 @@ import "./DMSDirectory.css";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Multiselect from "multiselect-react-dropdown";
+import "react-multiple-select-dropdown-lite/dist/index.css";
 
 const DMSDirectory = () => {
   const [usersInfo, setUsersInfo] = useState([]);
@@ -15,36 +17,43 @@ const DMSDirectory = () => {
   const navigate = useNavigate();
 
   const getUsers = async () => {
-    const result = await axios.get(
-      "http://127.0.0.1:8000/api/estimating/dmsDrectory/"
-    );
     try {
+      const result = await axios.get(
+        "http://127.0.0.1:8000/api/estimating/dmsDrectory/"
+      );
       setUsersInfo(result.data);
       setFilterUsers(result.data);
     } catch (err) {
-      console.log(err);
+      console.error("Error fetching data:", err);
     }
   };
+
   useEffect(() => {
     getUsers();
   }, []);
 
   function formatMobileNumber(mobileNumber) {
+    // Check if mobileNumber is null or undefined
+    if (mobileNumber === null || mobileNumber === undefined) {
+        return ""; // or some other default value or behavior
+    }
+
     // Ensure mobileNumber is a string
-    const mobileNumbertoString = mobileNumber + "";
+    const mobileNumberToString = mobileNumber.toString();
 
     // Remove all non-numeric characters from the mobile number
-    const numericOnly = mobileNumbertoString.replace(/\D/g, "");
+    const numericOnly = mobileNumberToString.replace(/\D/g, "");
 
     // Check if the numericOnly string has at least 6 characters
     if (numericOnly.length >= 6) {
-      // Use regular expression to insert hyphens every 3 digits from the left
-      return numericOnly.replace(/(\d{3})(?=\d{3})/g, "$1-");
+        // Use a regular expression to insert hyphens every 3 digits from the left
+        return numericOnly.replace(/(\d{3})(?=\d{3})/g, "$1-");
     } else {
-      // If the string is less than 6 characters, return it as is
-      return numericOnly;
+        // If the string is less than 6 characters, return it as is
+        return numericOnly;
     }
-  }
+}
+
 
   const Columns = [
     {
@@ -80,7 +89,6 @@ const DMSDirectory = () => {
       sortable: true,
       center: true,
     },
-
     {
       name: (
         <strong
@@ -114,7 +122,6 @@ const DMSDirectory = () => {
       sortable: true,
       center: true,
     },
-
     {
       name: (
         <strong className="headersTitle" style={{ textAlign: "center" }}>
@@ -158,18 +165,31 @@ const DMSDirectory = () => {
     setFilterUsers(mysearchresult);
   }, [search]);
 
-  const [showModal, setShowModal] = useState(false); // State to control modal visibility
-  const closeModal = () => {
-    setShowModal(false);
+  // *******************************To show Job Title Names in dropdown***************
 
-    // Remove the 'modal-active' class when the modal is closed
-    document.body.classList.remove("modal-active");
-  };
+  const [JobNames, setJobNames] = useState([]);
 
-  // *******************************For New Entry Creation***************
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "http://127.0.0.1:8000/api/estimating/jobtitle/"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data = await response.json();
+        const jobNames = data.map((item) => item.name);
+        setJobNames(jobNames);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   //************ To show Company Names in dropdown in estimating post field
-
   const [companyName, setCompanyName] = useState([]);
 
   useEffect(() => {
@@ -178,84 +198,131 @@ const DMSDirectory = () => {
       .get("http://127.0.0.1:8000/api/estimating/company/")
       .then((response) => response.data)
       .then((data) => {
-        const activeCompanies = data.filter((company) => company.is_active);
-        // console.log('Active Companies:', activeCompanies);  // Log the filtered companies to the console
-        setCompanyName(activeCompanies);
+        console.log(data);
+        setCompanyName(data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   }, []);
 
+  const alldepartments = [
+    {
+      id: 1,
+      dapartname: "Accounting",
+    },
+    {
+      id: 2,
+      dapartname: "BIM",
+    },
+    {
+      id: 3,
+      dapartname: "Estimating",
+    },
+    {
+      id: 4,
+      dapartname: "Field",
+    },
+    {
+      id: 5,
+      dapartname: "Hotel Reservations",
+    },
+    {
+      id: 6,
+      dapartname: "Management",
+    },
+    {
+      id: 7,
+      dapartname: "Payroll",
+    },
+    {
+      id: 8,
+      dapartname: "Precon",
+    },
+    {
+      id: 9,
+      dapartname: "Project Management",
+    },
+    {
+      id: 10,
+      dapartname: "Scheduling",
+    },
+  ];
+
   const [firstname, setFirstName] = useState("");
-  const [jobtitle, setJobTitle] = useState("");
   const [lastname, setLastName] = useState("");
   const [myemail, setEmail] = useState("");
-  const [mycompany, setCompany] = useState("");
+  const [company, setCompany] = useState("");
   const [mylocation, setLocation] = useState("");
-  const [mydepartment, setDepartment] = useState("");
   const [directnumber, setDirectnumber] = useState("");
   const [mobilenumber, setMobilenumber] = useState("");
+  const [mydepartment, setDepartment] = useState("");
+  const [selectedJobTitles, setSelectedJobTitles] = useState([]);
+
+
+  const handleDepartment = (e) => {
+    setDepartment(e.target.value);
+  };
 
   const handleFirstName = (e) => {
     setFirstName(e.target.value);
   };
+  
   const handleLastName = (e) => {
     setLastName(e.target.value);
   };
+  
   const handleEmail = (e) => {
     setEmail(e.target.value);
   };
-  const handleIJobTitle = (e) => {
-    setJobTitle(e.target.value);
-  };
-  const handleCompany = (e) => {
+
+  const handleCompanyNameChange = (e) => {
     setCompany(e.target.value);
   };
-  const handleDepartment = (e) => {
-    setDepartment(e.target.value);
-  };
+
   const handleLocation = (e) => {
     setLocation(e.target.value);
   };
+
   const handleDirectnumber = (e) => {
     setDirectnumber(e.target.value);
   };
+
   const handleMobileNumber = (e) => {
     setMobilenumber(e.target.value);
   };
 
   const handledirectorySubmit = (event) => {
-    event.preventDefault(); // Prevent the default form submission behavior
-
+    event.preventDefault();
     // Create a data object with the form values
     const formData = {
       first_name: firstname,
       last_name: lastname,
       email: myemail,
-      job_title: [jobtitle],
-      company: parseInt(mycompany, 10),
-      locaton: mylocation,
-      department: parseInt(mydepartment, 10),
+      company: company,
+      department: mydepartment.toString(),
+      location: mylocation,
       direct_number: directnumber,
       mobile_number: mobilenumber,
+      job_title: selectedJobTitles, // Use the selectedJobTitles array
     };
-
+    
     // Send a POST request to the API
     axios
       .post("http://127.0.0.1:8000/api/estimating/dmsDrectory/", formData)
       .then((response) => {
         // Handle the response if needed
         console.log("Data successfully submitted:", response.data);
+    
         // You can also reset the form fields here if needed
-        setFirstName(""),
-          setLastName(""),
-          setCompany(""),
-          setDepartment(""),
-          setDirectnumber(""),
-          setMobilenumber(""),
-          setJobTitle(""),
-          setEmail("");
+        setFirstName("");
+        setLastName("");
+        setCompany("");
+        setDepartment("");
+        setDirectnumber("");
+        setMobilenumber("");
+        setEmail("");
+    
         setTimeout(() => {
           setShowModal(false);
         }, 1000);
@@ -266,7 +333,23 @@ const DMSDirectory = () => {
         // Log the response data for more details
         console.log("Response data:", error.response.data);
       });
+    
   };
+
+  const [showModal, setShowModal] = useState(false); // State to control modal visibility
+  const closeModal = () => {
+    setShowModal(false);
+    setFirstName("");
+    setLastName("");
+    setCompany("");
+    setDepartment("");
+    setDirectnumber("");
+    setMobilenumber("");
+    setEmail("");
+    // Remove the 'modal-active' class when the modal is closed
+    document.body.classList.remove("modal-active");
+  };
+
   const movetoEstimatingPage = () => {
     navigate("/homepage/estimating/");
   };
@@ -275,8 +358,7 @@ const DMSDirectory = () => {
       <div className="container dmsmain">
         <div className="row">
           <div className="col">
-          <h3 className="text-primary bg-danger">DMS Directory</h3>
-
+            <h3 className="text-primary bg-danger">DMS Directory</h3>
           </div>
         </div>
       </div>
@@ -296,31 +378,34 @@ const DMSDirectory = () => {
             subHeader
             subHeaderComponent={
               <div className="d-flex mb-3 w-100  justify-content-between">
-            {/* <div className="d-flex  "> */}
-              <div className="my1">
-              <button
-        type="button"
-        onClick={movetoEstimatingPage}
-        className="btn btn-outline-primary backbtn"
-      >
-       <i className="fa-duotone me-2 fa fa-angles-left icons backicon"></i> Back
-      </button>
+                {/* <div className="d-flex  "> */}
+                <div className="my1">
+                  <button
+                    type="button"
+                    onClick={movetoEstimatingPage}
+                    className="btn btn-outline-primary backbtn"
+                  >
+                    <i className="fa-duotone me-2 fa fa-angles-left icons backicon"></i>{" "}
+                    Back
+                  </button>
+                </div>
+                <div className="my2  d-flex justify-content-between">
+                  <input
+                    type="text"
+                    style={{ width: "400px" }}
+                    className="form-control form-control-md"
+                    placeholder="Search"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                  <button
+                    className="btn btn-primary ms-2 btn-md"
+                    onClick={() => setShowModal(true)}
+                  >
+                    New
+                  </button>
+                </div>
               </div>
-              <div className="my2  d-flex justify-content-between">    <input
-                  type="text"
-                  style={{ width: "400px" }}
-                  className="form-control form-control-md"
-                  placeholder="Search"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-                <button
-                  className="btn btn-primary ms-2 btn-md"
-                  onClick={() => setShowModal(true)}
-                >
-                  New
-                </button></div>
-            </div>
               // </div>
             }
           />
@@ -379,45 +464,43 @@ const DMSDirectory = () => {
                     <label htmlFor="jobname" className="form-label">
                       Job Title
                     </label>
-                    <select
-                      className="form-select"
-                      id="jobname"
-                      value={jobtitle}
-                      onChange={handleIJobTitle}
-                    >
-                      <option value="">Select Job</option>
-                      <option value="BIM">BIM</option>
-                      <option value="Owner">Owner</option>
-                      <option value="Foreman">Foreman</option>
-                      <option value="Estimator">Estimator</option>
-                      <option value="President">President</option>
-                      <option value="Vice President">Vice President</option>
-                      <option value="BIM/Manager PR">BIM/Manager PR</option>
-                      <option value="Project Manager">Project Manager</option>
-                      <option value="Field Management">Field Management</option>
-                      <option value="Project Engineer">Project Engineer</option>
-                      <option value="Estimating Manager">
-                        Estimating Manager
-                      </option>
-                      <option value="General Superintendent">
-                        General Superintendent
-                      </option>
-                      <option value="Proconstruction Manager">
-                        Proconstruction Manager
-                      </option>
-                      <option value="No. Cal. General Manager">
-                        No. Cal. General Manager
-                      </option>
-                      <option value="So. Cal. General Manager">
-                        So. Cal. General Manager
-                      </option>
-                      <option value="BIM Modeler/Trimble Operator">
-                        BIM Modeler/Trimble Operator
-                      </option>
-                      <option value="Scheduling Manager / Pre-Construction Engineer">
-                        Scheduling Manager / Pre-Construction Engineer
-                      </option>
-                    </select>
+                    <div className="custom-dropdown">
+                    <Multiselect
+  options={JobNames.map((job, index) => ({ value: String(index + 1), label: job }))}
+  isObject={false}
+  showCheckbox
+  onRemove={(selected) => {
+    setSelectedJobTitles(selected.map((item) => String(item.value)));
+  }}
+  onSelect={(selected) => {
+    setSelectedJobTitles(selected.map((item) => String(item.value)));
+  }}
+/>
+
+
+
+                      {/* <select name="test" id="test" className="form-control">
+  <option value="--">Select Option</option>
+  <option value="1">Option1</option>
+  <option value="2">Option2</option>
+</select> */}
+
+                      {/* <div className="preview-values">
+                        {JobNames.map((job) => (
+                          <div key={job.id}>{job.name}</div>
+                        ))}
+                      </div> */}
+                      {/* <MultiSelect
+                        onChange={handleJobTitle}
+                        options={JobNames.map((option) => ({
+                          value: option.id,
+                          label: option.name,
+                        }))}
+                        value={jobTitles} // The selected job titles are managed in the jobTitles state
+                        className="w-100"
+                        placeholder="Select Job Title"
+                      /> */}
+                    </div>
                   </div>
                   <div className="Oneline">
                     <label htmlFor="companyName" className="form-label">
@@ -426,10 +509,10 @@ const DMSDirectory = () => {
                     <select
                       className="form-select"
                       id="companyName"
-                      value={mycompany}
-                      onChange={handleCompany}
+                      value={company}
+                      onChange={handleCompanyNameChange}
                     >
-                      <option value="">Select Company Name</option>
+                      <option value="">Select Company</option>
                       {companyName && companyName.length > 0 ? (
                         companyName.map((companyItem) => (
                           <option value={companyItem.id} key={companyItem.id}>
@@ -454,18 +537,15 @@ const DMSDirectory = () => {
                     <select
                       className="form-select"
                       id="email"
-                      value={mydepartment}
+                      value={mydepartment} // Make sure mydepartment is a string
                       onChange={handleDepartment}
                     >
                       <option value="">Select Department</option>
-                      <option value="BIM">BIM</option>
-                      <option value="Field">Field</option>
-                      <option value="Precon">Precon</option>
-                      <option value="Management">Management</option>
-                      <option value="Estimating">Estimating</option>
-                      <option value="Project Management">
-                        Project Management
-                      </option>
+                      {alldepartments.map((department) => (
+                        <option key={department.id} value={department.id}>
+                          {department.dapartname}
+                        </option>
+                      ))}
                     </select>
                   </div>
 

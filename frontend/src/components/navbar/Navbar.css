@@ -51,23 +51,19 @@
     letter-spacing: 1.1px;
   }
 
-  .navbar-nav .nav-item.active a {
-    color: white !important;
-    background-color: #1976d2;
-    transition: all ease-in-out 0.5s;
-  }
-  @media screen and (max-width: 991px){
-    .navTabs {
-      position: absolute;
-      top: 100%; /* This pushes the expanded menu down below the navbar */
-      left: 0;
-      width: 100%; /* Expands the menu to full width */
-      background-color: white; /* Background color for the expanded menu */
-      transform: scaleY(0); /* Initially, scale to 0 to hide it */
-      transform-origin: top;
-      transition: transform 0.3s;
-    }
-    .navTabs.show.expanded {
-      transform: scaleY(1);
-    }
-  }
+.navbar-nav .nav-item.active a {
+  color: white !important;
+  background-color: #1976d2;
+  transition: all ease-in-out 0.5s;
+}
+/* Define the transition duration */
+.transition {
+  transition: all 0.3s;
+}
+
+/* Ensure the navbar takes up the full width of the page when expanded */
+.navbar.expanded {
+  width: 100%;
+}
+
+/* Customize other styles and transitions as needed */

@@ -92,7 +92,7 @@ const WonProjects = () => {
                   {item.status}
                 </td>
                 <td className="mytd centered-td">
-                  {item.bidder + " " + item.bidder_deatil}
+                  {item.bidder + " "  + item.bidder_detail  + " "  + item.bidder_mail}
                 </td>
               </tr>
             ))}

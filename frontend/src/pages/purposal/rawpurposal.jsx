@@ -178,18 +178,24 @@ function Rawpurposal() {
                     alt="myimg"
                   />
                   <div className="rightTop">
-                  <p className="topinfo">{proposalData?.estimating?.company?.adress || ''}</p>
+                    <p className="topinfo">
+                      {proposalData?.estimating?.company?.adress || ""}
+                    </p>
                     <p className="topinfo">
                       Office:
                       <span>
-                        {proposalData?.estimating?.company?.office_phone_number || ''}
+                        {proposalData?.estimating?.company
+                          ?.office_phone_number || ""}
                       </span>
                     </p>
                     <p className="topinfo">
-                      Fax: <span>{proposalData?.estimating?.company?.fax_number || ''}</span>{" "}
+                      Fax:{" "}
+                      <span>
+                        {proposalData?.estimating?.company?.fax_number || ""}
+                      </span>{" "}
                     </p>
                     <p className="topinfo">
-                      Email: {proposalData?.estimating?.company?.email || ''}
+                      Email: {proposalData?.estimating?.company?.email || ""}
                     </p>
                   </div>
                 </header>
@@ -205,12 +211,14 @@ function Rawpurposal() {
                         {proposalData?.estimating?.company?.Cmpny_Name
                           ? proposalData?.estimating?.company?.Cmpny_Name
                           : "No Company Exist"}
-                      </strong> is submitting the following bid proposal for the 
-                      <strong> {proposalData?.estimating?.prjct_name}</strong>. The plans
-                      used to formulate the bid proposal are dated {proposalData?.estimating?.start_date},
-                      drafted by <strong> {proposalData?.architect_firm}</strong> FIRM, and
-                      approved by <strong>{proposalData?.architect_name}</strong>
-                      .
+                      </strong>{" "}
+                      is submitting the following bid proposal for the
+                      <strong> {proposalData?.estimating?.prjct_name}</strong>.
+                      The plans used to formulate the bid proposal are dated{" "}
+                      {proposalData?.estimating?.start_date}, drafted by{" "}
+                      <strong> {proposalData?.architect_firm}</strong> FIRM, and
+                      approved by{" "}
+                      <strong>{proposalData?.architect_name}</strong>.
                     </p>
                   </div>
 
@@ -270,15 +278,14 @@ function Rawpurposal() {
                     <strong className="headd">INCLUSIONS:</strong>
                   </p>
                   <ul>
-  {proposalData.services
-    .filter((a) => a.service_type === "IN")
-    .map((e) => (
-      <li key={e.id} className="DMS ms-5">
-        {e.service}
-      </li>
-    ))}
-</ul>
-
+                    {proposalData.services
+                      .filter((a) => a.service_type === "IN")
+                      .map((e) => (
+                        <li key={e.id} className="DMS ms-5">
+                          {e.service}
+                        </li>
+                      ))}
+                  </ul>
                 </div>
                 <div className="exclusions ms-3 mt-4">
                   <p>
@@ -307,8 +314,8 @@ function Rawpurposal() {
                     ))}
                   </ul>
                 </div>
-<h5>Aurthur Name</h5>
-<p>Phone number</p>
+                <h5>Aurthur Name</h5>
+                <p>Phone number</p>
               </div>
             ))}
           </div>

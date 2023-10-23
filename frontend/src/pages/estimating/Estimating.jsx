@@ -1333,12 +1333,14 @@ const Estimator = () => {
   async function estimatorValueIsValid(itemId) {
     try {
       // Fetch the estimator value based on the estimating ID
-      const response = await fetch(`http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`);
-      
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`
+      );
+
       if (response.ok) {
         const estimatingData = await response.json();
         const estimatorValue = estimatingData.estimator; // Replace 'estimator' with the actual field name
-  
+
         // Check if the estimator value is valid
         if (estimatorValue !== null && estimatorValue !== "") {
           return true; // Valid estimator value
@@ -1347,7 +1349,10 @@ const Estimator = () => {
         }
       } else {
         // Handle API response errors here
-        console.error("Failed to fetch estimator data for estimating ID:", itemId);
+        console.error(
+          "Failed to fetch estimator data for estimating ID:",
+          itemId
+        );
         return false; // Consider it as an invalid estimator value
       }
     } catch (error) {
@@ -1359,21 +1364,22 @@ const Estimator = () => {
   const handleStatusChange = async (event, itemId) => {
     const updatedStatus = event.target.value;
     console.log("Updated Status:", updatedStatus);
-  
+
     try {
       // Fetch the estimator value based on the estimating ID
-      const response = await fetch(`http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`);
-  
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`
+      );
+
       if (response.ok) {
         const estimatingData = await response.json();
         const estimatorValue = estimatingData.estimator; // Replace 'estimator' with the actual field name
-  
+
         // Check if the estimator value is valid
         if (estimatorValue === null || estimatorValue === "") {
           // Handle the case where the estimator is not selected
           alert("Estimator is not selected. Log will not display");
           // Status update is prevented by not having it outside the conditional block
-          
         } else {
           // Continue with the status update
           const responseStatus = await fetch(
@@ -1388,15 +1394,15 @@ const Estimator = () => {
               }),
             }
           );
-  
+
           console.log("API Response:", responseStatus);
-  
+
           if (responseStatus.ok) {
             // Handle success response here
             const updatedStatusMap = { ...statusMap };
             updatedStatusMap[itemId] = updatedStatus;
             setStatusMap(updatedStatusMap);
-  
+
             // Fetch the "prjct_name" corresponding to the selected "itemId"
             const responseEstimating = await fetch(
               `http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`
@@ -1406,17 +1412,19 @@ const Estimator = () => {
               // Set the "prjct_name" as the value for the "Estimating/Project Name" field
               setSelectedEstimatingID(estimatingData.prjct_name);
             }
-  
+
             // Check if the updated status is "Won" and open the project modal
             if (updatedStatus === "Won") {
               setshowProjectModal(true);
             }
-  
+
             if (updatedStatus === "Pending") {
               setPurposalModal(true);
             }
             // Log a success message to the console
-            console.log(`Status updated successfully for item with ID ${itemId}`);
+            console.log(
+              `Status updated successfully for item with ID ${itemId}`
+            );
             // You may need to refresh the UI or update the specific row accordingly
           } else {
             if (responseStatus.status === 404) {
@@ -1431,20 +1439,15 @@ const Estimator = () => {
         }
       } else {
         // Handle API response errors
-        console.error("Failed to fetch estimator data for estimating ID:", itemId);
+        console.error(
+          "Failed to fetch estimator data for estimating ID:",
+          itemId
+        );
       }
     } catch (error) {
       console.error("Error updating status:", error);
     }
   };
-  
-  
-  
-  
-  
-  
-  
-  
 
   const MovetoURLpage = () => {
     navigate("/homepage/urlpage");
@@ -1510,7 +1513,6 @@ const Estimator = () => {
           </div>
 
           <ParticlesAnimation numberOfCircles={numberOfCircles} />
-         
 
           <div
             className="table-responsive proposalTable mt-2"
@@ -1607,24 +1609,24 @@ const Estimator = () => {
                       </select>
                     </td>
                     <td
-  className="mytd centered-td"
-  style={{ minWidth: "50px" }}
-  onChange={(event) => handleUpdationChange(event, item.id)}
-  value={statusMap[item.id] || item.status}
->
-  <select
-    className="dropUpdation"
-    id="estimatorName"
-    onChange={(event) => handleStatusChange(event, item.id)}
-    value={statusMap[item.id] || item.status}
-  >
-    <option value={item.status}>{item.status}</option>
-    <option value="Won">Won</option>
-    <option value="Pending">Pending</option>
-    <option value="Working">Working</option>
-    <option value="Lost">Lost</option>
-  </select>
-</td>
+                      className="mytd centered-td"
+                      style={{ minWidth: "50px" }}
+                      onChange={(event) => handleUpdationChange(event, item.id)}
+                      value={statusMap[item.id] || item.status}
+                    >
+                      <select
+                        className="dropUpdation"
+                        id="estimatorName"
+                        onChange={(event) => handleStatusChange(event, item.id)}
+                        value={statusMap[item.id] || item.status}
+                      >
+                        <option value={item.status}>{item.status}</option>
+                        <option value="Won">Won</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Working">Working</option>
+                        <option value="Lost">Lost</option>
+                      </select>
+                    </td>
 
                     <td className="mytdbidder centered-td">
                       {item.bidder +

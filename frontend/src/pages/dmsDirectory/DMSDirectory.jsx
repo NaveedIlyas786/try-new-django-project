@@ -229,6 +229,50 @@ const DMSDirectory = () => {
                       </option>
                     </select> */
   }
+
+  const alldepartments = [
+    {
+      id: 1,
+      dapartname: "Acounting",
+    },
+    {
+      id: 2,
+      dapartname: "BIM",
+    },
+    {
+      id: 3,
+      dapartname: "Estimating",
+    },
+    {
+      id: 4,
+      dapartname: "Field",
+    },
+    {
+      id: 5,
+      dapartname: "Hotel Reservations",
+    },
+    {
+      id: 6,
+      dapartname: "Management",
+    },
+    {
+      id: 7,
+      dapartname: "Payroll",
+    },
+    {
+      id: 8,
+      dapartname: "Precon",
+    },
+    {
+      id: 9,
+      dapartname: "Project Management",
+    },
+    {
+      id: 10,
+      dapartname: "Scheduling",
+    },
+  ];
+
   const options = [
     { label: "BIM", value: "BIM" },
     { label: "Owner", value: "Owner" },
@@ -262,7 +306,7 @@ const DMSDirectory = () => {
   const [mylocation, setLocation] = useState("");
   const [directnumber, setDirectnumber] = useState("");
   const [mobilenumber, setMobilenumber] = useState("");
-  
+
   const [mydepartment, setDepartment] = useState("");
 
   const handleDepartment = (e) => {
@@ -281,16 +325,18 @@ const DMSDirectory = () => {
   };
 
   const handleJobTitle = (e) => {
-    const selectedOptions = Array.from(jobTitles).map((option) => parseInt(option.value, 10));
+    const selectedOptions = Array.from(jobTitles).map((option) =>
+      parseInt(option.value, 10)
+    );
     setJobTitles(selectedOptions);
-};
+  };
 
-    const handleCompanyNameChange = (e) => {
+  const handleCompanyNameChange = (e) => {
     console.log(e.target.value);
 
     setCompany(e.target.value);
   };
-  
+
   const handleLocation = (e) => {
     setLocation(e.target.value);
   };
@@ -311,12 +357,13 @@ const DMSDirectory = () => {
       last_name: lastname,
       email: myemail,
       company: company,
-      department: parseInt(mydepartment,10), 
+      // department: parseInt(mydepartment,10),
+      department: mydepartment.toString(),
       locaton: mylocation,
       direct_number: directnumber,
       mobile_number: mobilenumber,
     };
-    
+
     console.log("formData before sending the POST request:", formData);
 
     // Send a POST request to the API
@@ -353,8 +400,7 @@ const DMSDirectory = () => {
       <div className="container dmsmain">
         <div className="row">
           <div className="col">
-          <h3 className="text-primary bg-danger">DMS Directory</h3>
-
+            <h3 className="text-primary bg-danger">DMS Directory</h3>
           </div>
         </div>
       </div>
@@ -374,31 +420,35 @@ const DMSDirectory = () => {
             subHeader
             subHeaderComponent={
               <div className="d-flex mb-3 w-100  justify-content-between">
-            {/* <div className="d-flex  "> */}
-              <div className="my1">
-              <button
-        type="button"
-        onClick={movetoEstimatingPage}
-        className="btn btn-outline-primary backbtn"
-      >
-       <i className="fa-duotone me-2 fa fa-angles-left icons backicon"></i> Back
-      </button>
+                {/* <div className="d-flex  "> */}
+                <div className="my1">
+                  <button
+                    type="button"
+                    onClick={movetoEstimatingPage}
+                    className="btn btn-outline-primary backbtn"
+                  >
+                    <i className="fa-duotone me-2 fa fa-angles-left icons backicon"></i>{" "}
+                    Back
+                  </button>
+                </div>
+                <div className="my2  d-flex justify-content-between">
+                  {" "}
+                  <input
+                    type="text"
+                    style={{ width: "400px" }}
+                    className="form-control form-control-md"
+                    placeholder="Search"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                  <button
+                    className="btn btn-primary ms-2 btn-md"
+                    onClick={() => setShowModal(true)}
+                  >
+                    New
+                  </button>
+                </div>
               </div>
-              <div className="my2  d-flex justify-content-between">    <input
-                  type="text"
-                  style={{ width: "400px" }}
-                  className="form-control form-control-md"
-                  placeholder="Search"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-                <button
-                  className="btn btn-primary ms-2 btn-md"
-                  onClick={() => setShowModal(true)}
-                >
-                  New
-                </button></div>
-            </div>
               // </div>
             }
           />
@@ -453,45 +503,49 @@ const DMSDirectory = () => {
                   </div>
                 </div>
                 <div className="bothDiv gap-2 mt-2">
-                  <div className="Oneline">
+                  {/* <div className="Oneline">
                     <label htmlFor="jobname" className="form-label">
                       Job Title
                     </label>
                     <div className="custom-dropdown">
-    <div className="preview-values">{jobTitles}</div>
-    <MultiSelect
-        onChange={handleJobTitle}
-        options={options.map(option => ({ value: parseInt(option.value, 10), label: option.label }))}
-        className="w-100"
-        placeholder="Select Job Title"
-    />
-</div>
-
-                  </div>
+                      <div className="preview-values">{jobTitles}</div>
+                      <MultiSelect
+                        onChange={handleJobTitle}
+                        options={options.map((option) => ({
+                          value: parseInt(option.value, 10),
+                          label: option.label,
+                        }))}
+                        className="w-100"
+                        placeholder="Select Job Title"
+                      />
+                    </div>
+                  </div> */}
                   <div className="Oneline">
-                  <label htmlFor="companyName" className="form-label">
-                    Company
-                  </label>
-                  <select
-                    className="form-select"
-                    id="companyName"
-                    value={company}
-                    onChange={handleCompanyNameChange}
-                  >
-                    <option value="">Select Company</option>
-                    {companyName && companyName.length > 0 ? (
-                      companyName.map((companyItem) => (
-                        <option value={companyItem.id} key={companyItem.id}>
-                          {companyItem.Cmpny_Name}
+                    <label htmlFor="companyName" className="form-label">
+                      Company
+                    </label>
+                    <select
+                      className="form-select"
+                      id="companyName"
+                      value={company}
+                      onChange={handleCompanyNameChange}
+                    >
+                      <option value="">Select Company</option>
+                      {companyName && companyName.length > 0 ? (
+                        companyName.map((companyItem) => (
+                          <option value={companyItem.id} key={companyItem.id}>
+                            {companyItem.Cmpny_Name}
+                          </option>
+                        ))
+                      ) : (
+                        <option value="" disabled>
+                          {companyName
+                            ? "No companies available"
+                            : "Loading..."}
                         </option>
-                      ))
-                    ) : (
-                      <option value="" disabled>
-                        {companyName ? "No companies available" : "Loading..."}
-                      </option>
-                    )}
-                  </select>
-                </div>
+                      )}
+                    </select>
+                  </div>
                 </div>
                 <div className="bothDiv mt-2">
                   <div className="Oneline">
@@ -501,24 +555,15 @@ const DMSDirectory = () => {
                     <select
                       className="form-select"
                       id="email"
-                      value={parseInt(mydepartment,10)}
+                      value={mydepartment} // Make sure mydepartment is a string
                       onChange={handleDepartment}
                     >
                       <option value="">Select Department</option>
-                      <option value="Acounting">Acounting</option>
-                      <option value="BIM">BIM</option>
-                      <option value="Estimating">Estimating</option>
-                      <option value="Field">Field</option>
-                      <option value="Hotel Reservations">Hotel Reservations</option>
-                      <option value="Management">Management</option>
-                      <option value="Payroll">Payroll</option>
-                      <option value="Precon">Precon</option>
-                      <option value="Project Management">
-                        Project Management
-                      </option>
-                      <option value="Scheduling">
-                        Scheduling
-                      </option>
+                      {alldepartments.map((department) => (
+                        <option key={department.id} value={department.id}>
+                          {department.dapartname}
+                        </option>
+                      ))}
                     </select>
                   </div>
 

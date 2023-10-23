@@ -659,7 +659,7 @@ const Estimator = () => {
       time: formattedTime,
       timezone: timezone,
       prjct_name: projectName,
-      company: companyName,
+      company_id: companyName,
       estimator: estimatorName,
       location: location,
       bidder: bidderName,

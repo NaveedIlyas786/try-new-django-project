@@ -1668,7 +1668,7 @@ const Estimator = () => {
                         <option value="Lost">Lost</option>
                       </select>
                     </td>
-
+ 
                     <td className="mytdbidder centered-td">
                     {item.bidder + " "  + item.bidder_detail  + " "  + item.bidder_mail}
                     </td>

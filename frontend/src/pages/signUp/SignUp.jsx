@@ -31,7 +31,7 @@ const Signup = () => {
     setSuccessMessage("");
     setSubmitbtnClicked(true);
 
-// Check if the email already exists before proceeding
+    // Check if the email already exists before proceeding
 
     // Check for empty fields
     if (!full_Name || !email || !password || !password2) {
@@ -40,7 +40,8 @@ const Signup = () => {
         <>
           <div className="modal-overlay">
             <div className="popuppass">
-              <p>All Fields are required</p>
+              {/* <p>All Fields are required</p> */}
+              {alert("All Fields are required")}
             </div>
           </div>
         </>
@@ -61,7 +62,8 @@ const Signup = () => {
         <>
           <div className="modal-overlay">
             <div className="popuppass">
-              <p>Invalid Email</p>
+              {/* <p>Invalid Email</p> */}
+              {alert("Your Email is Invalid")}
             </div>
           </div>
         </>
@@ -107,7 +109,8 @@ const Signup = () => {
         <>
           <div className="modal-overlay">
             <div className="popuppass">
-              <p> Password do not match</p>
+              {/* <p> Password do not match</p> */}
+              {alert("Password do not match")}
             </div>
           </div>
         </>
@@ -147,7 +150,8 @@ const Signup = () => {
         <>
           <div className="modal-overlay">
             <div className="popuppass">
-              <p>Invalid Password</p>
+              {/* <p>Invalid Password</p> */}
+              {alert("Password is not Matched")}
             </div>
           </div>
         </>
@@ -178,13 +182,14 @@ const Signup = () => {
             <div className="modal-overlay">
               <div className="popupsuccess">
                 <p>Registration Successfull</p>
+                {alert("Registration Successfull")}
               </div>
             </div>
           );
-          setTimeout(() => {
-            navigate("/waitingPage");
-            // navigate("/");
-          }, 1000);
+          // setTimeout(() => {
+          //   navigate("/waitingPage");
+          //   // navigate("/");
+          // }, 1000);
           // Redirect the user to a success page or do something else
         })
         .catch((error) => {
@@ -276,12 +281,12 @@ const Signup = () => {
             )}
           </span>
         </div>
-        <div className="password-validation">
-          Password Should include at least First Capital letter, Number and
-          Special Character
+        <div className="password-validation ">
+          <p className="format">First capital letter,At least one number and 
+          special character</p>
         </div>
 
-        <div className="passfield">
+        <div className="passfield pass2">
           <input
             placeholder="Confirm-Password"
             className="SignUpInput"

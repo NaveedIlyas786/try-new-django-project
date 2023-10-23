@@ -5,8 +5,9 @@ import "./DMSDirectory.css";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import MultiSelect from "react-multiple-select-dropdown-lite";
+import Multiselect from 'multiselect-react-dropdown';
 import "react-multiple-select-dropdown-lite/dist/index.css";
+// import { MultiSelect } from 'react-multiple-select-dropdown-lite';
 
 const DMSDirectory = () => {
   const [usersInfo, setUsersInfo] = useState([]);
@@ -167,17 +168,21 @@ const DMSDirectory = () => {
   const [JobNames, setJobNames] = useState([]);
 
   useEffect(() => {
-    // Fetch data from the API
-    axios
-      .get("http://127.0.0.1:8000/api/estimating/jobtitle/")
-      .then((response) => response.data)
-      .then((data) => {
-        console.log(data);
-        setJobNames(data);
-      })
-      .catch((error) => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/api/estimating/jobtitle/");
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data = await response.json();
+        const jobNames = data.map((item) => item.name);
+        setJobNames(jobNames);
+      } catch (error) {
         console.error("Error fetching data:", error);
-      });
+      }
+    };
+
+    fetchData();
   }, []);
   //************ To show Company Names in dropdown in estimating post field
   const [companyName, setCompanyName] = useState([]);
@@ -196,11 +201,6 @@ const DMSDirectory = () => {
       });
   }, []);
 
-  const [value, setvalue] = useState("");
-
-  const handleOnchange = (val) => {
-    setvalue(val);
-  };
 
   const alldepartments = [
     {
@@ -245,34 +245,7 @@ const DMSDirectory = () => {
     },
   ];
 
-  // const options = [
-  //   { label: "BIM", value: "BIM" },
-  //   { label: "Owner", value: "Owner" },
-  //   { label: "Foreman", value: "Foreman" },
-  //   { label: "Estimator", value: "Estimator" },
-
-  //   { label: "President", value: "President" },
-  //   { label: "Vice President", value: "Vice President" },
-  //   { label: "BIM/Manager PR", value: "BIM/Manager PR" },
-  //   { label: "Project Manager", value: "Project Manager" },
-  //   { label: "Field Management", value: "Field Management" },
-  //   { label: "Project Engineer", value: "Project Engineer" },
-  //   { label: "Estimating Manager", value: "Estimating Manager" },
-  //   { label: "General Superintendent", value: "General Superintendent" },
-  //   { label: "Proconstruction Manager", value: "Proconstruction Manager" },
-  //   { label: "No. Cal. General Manager", value: "No. Cal. General Manager" },
-  //   { label: "So. Cal. General Manager", value: "So. Cal. General Manager" },
-  //   {
-  //     label: "BIM Modeler/Trimble Operator",
-  //     value: "BIM Modeler/Trimble Operator",
-  //   },
-  //   {
-  //     label: "Scheduling Manager / Pre-Construction Engineer",
-  //     value: "Scheduling Manager / Pre-Construction Engineer",
-  //   },
-  // ];
   const [firstname, setFirstName] = useState("");
-  // const [jobTitles, setJobTitles] = useState([]);
   const [lastname, setLastName] = useState("");
   const [myemail, setEmail] = useState("");
   const [company, setCompany] = useState("");
@@ -297,28 +270,6 @@ const DMSDirectory = () => {
     setEmail(e.target.value);
   };
 
-  // const handleJobTitle = (e) => {
-  //   const selectedOptions = Array.from(jobTitles).map((option) =>
-  //     parseInt(option.value, 10)
-  //   );
-  //   setJobTitles(selectedOptions);
-  // };
-
-  // const handleJobTitle = (selectedJobTitle) => {
-  //   // Check if the selected job title is already in jobTitles
-  //   const isSelected = jobTitles.some((job) => job.id === selectedJobTitle.id);
-  
-  //   if (isSelected) {
-  //     // If selected job title is already in jobTitles, remove it
-  //     const updatedJobTitles = jobTitles.filter((job) => job.id !== selectedJobTitle.id);
-  //     setJobTitles(updatedJobTitles);
-  //   } else {
-  //     // If selected job title is not in jobTitles, add it
-  //     setJobTitles([...jobTitles, selectedJobTitle]);
-  //   }
-  // };
-
-  
 
   const handleCompanyNameChange = (e) => {
     console.log(e.target.value);
@@ -336,51 +287,35 @@ const DMSDirectory = () => {
     setMobilenumber(e.target.value);
   };
   
-  const [jobTitles, setJobTitles] = useState([]);
+ 
 
-  const handleJobTitle = (selectedJobTitle) => {
-    const isSelected = jobTitles.some((job) => job.id === selectedJobTitle.id);
-  
-    if (isSelected) {
-      const updatedJobTitles = jobTitles.filter((job) => job.id !== selectedJobTitle.id);
-      setJobTitles(updatedJobTitles);
-    } else {
-      setJobTitles([...jobTitles, selectedJobTitle]);
-    }
-  };
-  
-  
-  
-  
+  console.log(JobNames);
+  // console.log(JobNames.map((jobTitle) => jobTitle.id));
   
   const handledirectorySubmit = (event) => {
     event.preventDefault();
-    
-// Create a data object with the form values
-const formData = {
-  first_name: firstname,
-  last_name: lastname,
-  email: myemail,
-  company: company,
-  department: mydepartment.toString(),
-  locaton: mylocation,
-  direct_number: directnumber,
-  mobile_number: mobilenumber,
-};
+    // Create a data object with the form values
+    const formData = {
+      first_name: firstname,
+      last_name: lastname,
+      email: myemail,
+      company: company,
+      department: mydepartment.toString(),
+      location: mylocation,
+      direct_number: directnumber,
+      mobile_number: mobilenumber,
+      job_title: parseInt(JobNames,10), // Include selected job titles
+    };
 
-// Map the selected job titles to get their IDs
-const selectedJobTitleIDs = jobTitles.map((jobTitle) => jobTitle.id);
-
-// Set the job_title field in formData with the selected job title IDs
-formData.job_title = selectedJobTitleIDs;
-  
     console.log("formData before sending the POST request:", formData);
+
     // Send a POST request to the API
     axios
       .post("http://127.0.0.1:8000/api/estimating/dmsDrectory/", formData)
       .then((response) => {
         // Handle the response if needed
         console.log("Data successfully submitted:", response.data);
+
         // You can also reset the form fields here if needed
         setFirstName("");
         setLastName("");
@@ -388,8 +323,8 @@ formData.job_title = selectedJobTitleIDs;
         setDepartment("");
         setDirectnumber("");
         setMobilenumber("");
-        setJobTitles([]);
         setEmail("");
+
         setTimeout(() => {
           setShowModal(false);
         }, 1000);
@@ -411,15 +346,15 @@ formData.job_title = selectedJobTitleIDs;
     setDepartment("");
     setDirectnumber("");
     setMobilenumber("");
-    setJobTitles([]);
     setEmail("");
     // Remove the 'modal-active' class when the modal is closed
     document.body.classList.remove("modal-active");
   };
-  
+
   const movetoEstimatingPage = () => {
     navigate("/homepage/estimating/");
   };
+  // const [options, setOptions]=useState(["Naveed","Ali","Akbar"])
   return (
     <>
       <div className="container dmsmain">
@@ -457,7 +392,6 @@ formData.job_title = selectedJobTitleIDs;
                   </button>
                 </div>
                 <div className="my2  d-flex justify-content-between">
-                  {" "}
                   <input
                     type="text"
                     style={{ width: "400px" }}
@@ -533,12 +467,28 @@ formData.job_title = selectedJobTitleIDs;
                       Job Title
                     </label>
                     <div className="custom-dropdown">
+
+<Multiselect
+options={JobNames}
+isObject={false}
+showCheckbox
+onRemove={(e)=>{console.log(e);}}
+onSelect={(e)=>{console.log(e);}}
+
+/>
+
+{/* <select name="test" id="test" className="form-control">
+  <option value="--">Select Option</option>
+  <option value="1">Option1</option>
+  <option value="2">Option2</option>
+</select> */}
+
                       {/* <div className="preview-values">
                         {JobNames.map((job) => (
                           <div key={job.id}>{job.name}</div>
                         ))}
                       </div> */}
-                      <MultiSelect
+                      {/* <MultiSelect
                         onChange={handleJobTitle}
                         options={JobNames.map((option) => ({
                           value: option.id,
@@ -547,7 +497,7 @@ formData.job_title = selectedJobTitleIDs;
                         value={jobTitles} // The selected job titles are managed in the jobTitles state
                         className="w-100"
                         placeholder="Select Job Title"
-                      />
+                      /> */}
                     </div>
                   </div>
                   <div className="Oneline">

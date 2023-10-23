@@ -52,3 +52,14 @@
   background-color: #1976d2;
   transition: all ease-in-out 0.5s;
 }
+/* Define the transition duration */
+.transition {
+  transition: all 0.3s;
+}
+
+/* Ensure the navbar takes up the full width of the page when expanded */
+.navbar.expanded {
+  width: 100%;
+}
+
+/* Customize other styles and transitions as needed */

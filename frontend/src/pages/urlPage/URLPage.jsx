@@ -98,6 +98,10 @@ const URLPage = () => {
   };
   const closeModal = () => {
     setShowModal(false);
+    setWebName("");
+    setTerritoryName("");
+    setURLlink("");
+    setPS("");
     // Remove the 'modal-active' class when the modal is closed
     document.body.classList.remove("modal-active");
   };

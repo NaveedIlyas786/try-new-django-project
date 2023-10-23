@@ -35,32 +35,47 @@ const Login = () => {
     }
 
     try {
-      // Send a request to the server to authenticate the user
       const response = await dispatch(loginUser({ email, password }));
-
+  
       if (loginUser.fulfilled.match(response)) {
         // Successful login, you can redirect the user or perform other actions here
         setError(""); // Clear any previous errors
-        setSuccessMessage(<div className="modal-overlay">
-        <div className="popupsuccess">
-          <p>Login Successfull</p>
-        </div>
-      </div>);
+        setSuccessMessage(
+          <div className="modal-overlay">
+            <div className="popupsuccess">
+              <p>Login Successful</p>
+            </div>
+          </div>
+        );
         setTimeout(() => {
           navigate("/homepage/dashboard");
         }, 1700);
       } else {
-        // Handle authentication failure, display an error messagae
-        setError(<div className="modal-overlay">
-        <div className="popupred">
-          <p>Invalid Email OR Password</p>
-        </div>
-      </div>);
+        console.log('Error Response: ', response);
+        if (response.payload.error === 'Your request is pending') {
+          console.log('Your request is pending'); 
+          setError(
+            <div className="modal-overlay">
+              <div className="popupred">
+                <p>Your request is pending</p>
+              </div>
+            </div>
+          );
+        } else {
+          // Handle authentication failure, display an error message
+          console.log('Invalid Email OR Password');
+          setError(
+            <div className="modal-overlay">
+              <div className="popupred">
+                <p>Invalid Email OR Password</p>
+              </div>
+            </div>
+          );
+        }
+        setTimeout(() => {
+          setError(null); // Remove the error message
+        }, 3000);
       }
-      setTimeout(() => {
-        setError(null); // Remove the error message
-      }, 1000);
-    
     } catch (error) {
       console.error("An error occurred during login: ", error);
       setError("An error occurred during login.");

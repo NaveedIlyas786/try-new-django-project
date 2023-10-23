@@ -168,52 +168,6 @@ class UrlsListViews(APIView):
 
 class CompanyWonEstimates(APIView):
 
-
-    # def get(self, request):
-    #     # Getting all active companies
-    #     companies = Company.objects.filter(is_active=True)
-
-    #     data = []
-
-    #     # Variables to store total counts and sums
-    #     grand_total_won_estimates = 0
-    #     grand_total_bid_amount = 0
-
-    #     for company in companies:
-    #         # Counting 'Won' estimating records for each active company
-    #         total_won_estimates = Estimating.objects.filter(
-    #             company=company, 
-    #             status='Won'
-    #         ).count()
-
-    #         # Summing bid amounts of 'Won' estimating records for each active company
-    #         total_bid_amount = Estimating.objects.filter(
-    #             company=company, 
-    #             status='Won'
-    #         ).aggregate(sum=Sum('bid_amount'))['sum'] or 0
-
-    #         # Adding the individual company's counts and sums to the grand totals
-    #         grand_total_won_estimates += total_won_estimates
-    #         grand_total_bid_amount += total_bid_amount
-
-    #         # Adding data to the response list
-    #         data.append({
-    #             "company_name": company.Cmpny_Name,
-    #             "total_won": total_won_estimates,
-    #             "total_won_bid_amount": total_bid_amount
-    #         })
-
-    #     # Adding the grand totals to the response data
-    #     data.append({
-    #         "company_name": "Grand Total",
-    #         "total_won": grand_total_won_estimates,
-    #         "total_won_bid_amount": grand_total_bid_amount
-    #     })
-
-    #     return Response(data)
-
-
-
     def get(self, request):
         # Getting the year from the query parameters or using the current year if not provided
         year = int(request.query_params.get('year', datetime.now().year))
@@ -319,13 +273,13 @@ class EstimatorSummaryView(views.APIView):
 
         # total_data['estimator'] = 'Grand Totals'
         # response_data.append(total_data)
-        # grand_totals = {
-        #     'summary': total_data,  # Modified this line to add all status including Grand Total
-        #     'ytd_total': total_data['Grand Total']['total'],  # Extracted grand total count
-        #     'ytd_total_bid_amount': total_data['Grand Total']['bid_amount'], # Extracted grand total bid amount
-        #     'estimator': 'Grand Totals'
-        # }
-        # response_data.append(grand_totals)
+        grand_totals = {
+            'summary': total_data,  # Modified this line to add all status including Grand Total
+            'ytd_total': total_data['Grand Total']['total'],  # Extracted grand total count
+            'ytd_total_bid_amount': total_data['Grand Total']['bid_amount'], # Extracted grand total bid amount
+            'estimator': 'Grand Totals'
+        }
+        response_data.append(grand_totals)
 
 
         return Response(response_data, status=200)
@@ -352,6 +306,100 @@ def calculate_summary(estimates, only_working=False):
         'ytd_total': grand_total,
         'ytd_total_bid_amount': grand_total_bid_amount
     }
+
+
+
+
+
+# class Grand_totleSummaryView(views.APIView):
+
+#     def get(self, request, format=None):
+#         response_data = []
+#         total_data = {
+#             'Working': {'total': 0, 'bid_amount': 0},
+#             'Pending': {'total': 0, 'bid_amount': 0},
+#             'Won': {'total': 0, 'bid_amount': 0},
+#             'Lost': {'total': 0, 'bid_amount': 0},
+#             'Grand Total': {'total': 0, 'bid_amount': 0}
+#         }
+
+#         year = int(request.query_params.get('year', datetime.now().year))
+
+#         # Handling the estimators
+#         estimators = User.objects.filter(roles__name='Estimator')
+#         for estimator in estimators:
+#             estimates = Estimating.objects.filter(
+#                 estimator=estimator,
+#                 start_date__year=year  
+#             )
+
+#             if estimates.count() == 0:
+#                 continue
+            
+#             estimator_data = calculate_summary(estimates)
+#             estimator_data['estimator'] = estimator.full_Name  
+            
+#             response_data.append(estimator_data)
+
+#         #     for status in ['Working', 'Pending', 'Won', 'Lost']:
+#         #         total_data[status]['total'] += estimator_data['summary'][status]['total']
+#         #         total_data[status]['bid_amount'] += estimator_data['summary'][status]['bid_amount']
+#         #         total_data['Grand Total']['total'] += estimator_data['summary'][status]['total']
+#         #         total_data['Grand Total']['bid_amount'] += estimator_data['summary'][status]['bid_amount']
+
+#         # unassigned_estimations = Estimating.objects.filter(
+#         #     estimator__isnull=True,
+#         #     status='Working',
+#         #     start_date__year=year  
+#         # )
+
+#         # unassigned_data = calculate_summary(unassigned_estimations, only_working=True)
+#         # unassigned_data['estimator'] = 'Unassigned'
+
+#         # total_data['Working']['total'] += unassigned_data['summary']['Working']['total']
+#         # total_data['Working']['bid_amount'] += unassigned_data['summary']['Working']['bid_amount']
+#         # total_data['Grand Total']['total'] += unassigned_data['summary']['Working']['total']
+#         # total_data['Grand Total']['bid_amount'] += unassigned_data['summary']['Working']['bid_amount']
+
+#         # response_data.append(unassigned_data)
+
+#         total_data['estimator'] = 'Grand Totals'
+#         response_data.append(total_data)
+#         grand_totals = {
+#             'summary': total_data,  # Modified this line to add all status including Grand Total
+#             'ytd_total': total_data['Grand Total']['total'],  # Extracted grand total count
+#             'ytd_total_bid_amount': total_data['Grand Total']['bid_amount'], # Extracted grand total bid amount
+#             'estimator': 'Grand Totals'
+#         }
+#         response_data.append(grand_totals)
+
+
+#         return Response(response_data, status=200)
+
+# def calculate_summary(estimates, only_working=False):
+#     grand_total = estimates.count()
+#     grand_total_bid_amount = estimates.aggregate(Sum('bid_amount'))['bid_amount__sum'] or 0
+#     statuses = ['Working'] if only_working else ['Working', 'Pending', 'Won', 'Lost']
+
+#     summary = {}
+#     for status in statuses:
+#         total = estimates.filter(status=status).count()
+#         bid_amount = estimates.filter(status=status).aggregate(bid_amount=Sum('bid_amount'))['bid_amount'] or 0
+#         percentage = (total / grand_total * 100) if grand_total > 0 else 0
+
+#         summary[status] = {
+#             'total': total,
+#             'percentage': percentage,
+#             'bid_amount': bid_amount
+#         }
+
+#     return {
+#         'summary': summary,
+#         'ytd_total': grand_total,
+#         'ytd_total_bid_amount': grand_total_bid_amount
+#     }
+
+
 
 #dfhdjhfjdhf
 class CompanyListView(APIView):

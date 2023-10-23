@@ -6,6 +6,7 @@ from rest_framework import status
 
 from Estimating.models import Company,Estimating, Estimating_detail, Proposal, Addendum, Qualification, Spec_detail, Specification, ProposalService, Service, Location,UrlsTable,DMS_Dertory,Dprtmnt,Role
 
+from rest_framework.exceptions import ValidationError
 
 
 class DprtmentSerializers(serializers.ModelSerializer):
@@ -90,6 +91,7 @@ class Time12HourField(serializers.TimeField):
         return value.strftime(self.format)
 
     
+    
 class EstimatingSerializer(serializers.ModelSerializer):
 
     time = Time12HourField(format='%I:%M %p', input_formats=['%I:%M %p'], required=False, allow_null=True)
@@ -99,6 +101,8 @@ class EstimatingSerializer(serializers.ModelSerializer):
  
     start_date = serializers.DateField(
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+    company_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Company.objects.all(), source='company')
+
     company=CompanySerializer(read_only=True)
 
     class Meta:
@@ -112,6 +116,7 @@ class EstimatingSerializer(serializers.ModelSerializer):
             'status',
             'start_date',
             'bid_amount',
+            'company_id',
             'company',
             'location',
             'estimator',

@@ -8,6 +8,20 @@ from Estimating.models import Company,Estimating, Estimating_detail, Proposal, A
 
 
 
+class DprtmentSerializers(serializers.ModelSerializer):
+    class Meta:
+        model=Dprtmnt
+        fields=['id','dprtmnt_name']
+
+
+
+
+class Job_titleSerializers(serializers.ModelSerializer):
+    class Meta:
+        model=Role
+        fields=['id','name','description']
+
+
 
 
 

@@ -19,7 +19,6 @@ import { createSelector } from "reselect";
 // import { margin } from "@mui/system";
 
 const Estimator = () => {
-  // const [data, setData] = useState([]);
   const [filter, setFilter] = useState("");
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
   const [showEstimatingEditModal, setshowEstimatingEditModal] = useState(false); // State to control modal visibility
@@ -28,9 +27,10 @@ const Estimator = () => {
   const [dueDate, setDueDate] = useState("");
   const [projectName, setProjectName] = useState("");
   const [estimatorName, setEstimatorName] = useState("");
+  const [companyName, setCompanyName] = useState("");
   const [location, setLocation] = useState("");
   // const [bidAmount, setBidAmount] = useState("");
-  const [company, setCompany] = useState(""); // Updated to store company name as a string
+  const [mycompany, setMyCompany] = useState(""); // Updated to store company name as a string
   const [showPopup, setShowPopup] = useState(false);
 
   // ***********************************
@@ -137,8 +137,7 @@ const Estimator = () => {
 
   //************ To show Company Names in dropdown in estimating post field
 
-  const [companyName, setCompanyName] = useState([]);
-  // const [SelectedTimeZone, setSelectedTimeZone] = useState([]);
+  const [fetchcompanyName, setFetchedCompanyName] = useState([]);
 
   useEffect(() => {
     // Fetch data from the API
@@ -147,17 +146,15 @@ const Estimator = () => {
       .then((response) => response.data)
       .then((data) => {
         const activeCompanies = data.filter((company) => company.is_active);
-        // console.log('Active Companies:', activeCompanies);  // Log the filtered companies to the console
-        setCompanyName(activeCompanies);
+        console.log(activeCompanies);
+        setFetchedCompanyName(activeCompanies);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   }, []);
 
-  const main = () => {
-    <h1 className="bg-danger">NO here</h1>;
-  };
+
   // ****************************Getting Services Entries from Api End
   const [EstimatorName, setestimatorName] = useState([]);
 
@@ -605,6 +602,7 @@ const Estimator = () => {
 
   //************ To show bidder Names in dropdown in estimating post field
   const [bidderName, setbidderName] = useState("");
+  const [bidderEmail, setBidderEmail] = useState("");
   const [bidder_detail, setBidder_detail] = useState("");
 
   //************* Define the handleSubmit function below
@@ -645,8 +643,6 @@ const Estimator = () => {
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
 
-    // Function to validate and format the time input
-
     // Validate and format the selectedTime
     const formattedTime = validateAndFormatTime(selectedTime);
     console.log("Formatted Time: ", formattedTime);
@@ -657,29 +653,29 @@ const Estimator = () => {
       return;
     }
 
-    // Create a data object with the form values
     const formData = {
       due_date: dueDate,
       start_date: startDate,
       time: formattedTime,
       timezone: timezone,
       prjct_name: projectName,
-      company: company, // Use the company state directly
+      company: companyName,
       estimator: estimatorName,
       location: location,
-      // bid_amount: bidAmount,
-      bidder: bidderName, // Use BidderName here, not bidder
+      bidder: bidderName,
+      bidder_mail: bidderEmail,
       bidder_deatil: bidder_detail,
     };
 
+    console.log("Data is sending before the posting", formData); // Create a data object with the form values
     // Send a POST request to the API
     axios
       .post("http://127.0.0.1:8000/api/estimating/estimating/", formData)
       .then((response) => {
-        // Handle the response if needed
-        console.log("Data successfully submitted:", response.data);
+        console.log("Data After successfully  Posting:", response.data);
 
         dispatch(addEstimating(response.data));
+        
         setShowPopup(true);
         setTimeout(() => {
           setShowPopup(false);
@@ -692,12 +688,12 @@ const Estimator = () => {
         setStartDate("");
         settimezone("");
         setProjectName("");
-        setCompany(""); // Reset companyName here
+        setCompanyName("");        
         setEstimatorName("");
         setLocation("");
-        // setBidAmount("");
         setbidderName("");
         setBidder_detail("");
+        setBidderEmail("");
         // Close the modal
         setTimeout(() => {
           setShowModal(false);
@@ -714,9 +710,9 @@ const Estimator = () => {
   //************* Define the handleEstimatingEditing function
 
   const [selectedEstimator, setSelectedEstimator] = useState("");
+  const [selectedCompany, setSelectedCompany] = useState("");
   const [selectedBidder, setSelectedBidder] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
-  const [selectedCompany, setSelectedCompany] = useState("");
   const [selectedStatus, setselectedStatus] = useState("");
   const [selecteddueDate, setSelecteddueDate] = useState("");
   const [SelectedTimeforUpdate, setSelectedTimeforUpdate] = useState("");
@@ -906,7 +902,6 @@ const Estimator = () => {
   };
   // Define a function to handle modal close
 
-
   const handleEntryChange = (index, field, value) => {
     setStep2FormData((prevData) => {
       const updatedData = [...prevData];
@@ -1018,7 +1013,7 @@ const Estimator = () => {
     setPurposalModal(false);
     setshowProjectModal(false);
     setshowEstimatingEditModal(false);
-// **********purposalModal
+    // **********purposalModal
     setStep0FormData({
       date: getCurrentDate(),
       estimating: "",
@@ -1038,17 +1033,17 @@ const Estimator = () => {
 
     // **************ShowModal Estimating
 
-     setDueDate("");
-        setSelectedTime("");
-        setStartDate("");
-        settimezone("");
-        setProjectName("");
-        setCompany(""); // Reset companyName here
-        setEstimatorName("");
-        setLocation("");
-        // setBidAmount("");
-        setbidderName("");
-        setBidder_detail("");
+    setDueDate("");
+    setSelectedTime("");
+    setStartDate("");
+    settimezone("");
+    setProjectName("");
+    setCompanyName("");
+    setEstimatorName("");
+    setLocation("");
+    // setBidAmount("");
+    setbidderName("");
+    setBidder_detail("");
     // Remove the 'modal-active' class when the modal is closed
     document.body.classList.remove("modal-active");
   };
@@ -1122,6 +1117,11 @@ const Estimator = () => {
     setEstimatorName(e.target.value);
   };
 
+  const handleCompanyNameChange = (e) => {
+    setCompanyName(e.target.value);
+    console.log(e.target.value);
+  };
+
   const handleLocationChange = (e) => {
     setLocation(e.target.value);
   };
@@ -1129,14 +1129,19 @@ const Estimator = () => {
   const handleBidderChange = (e) => {
     setbidderName(e.target.value);
   };
+  const handleBidderEmailChange = (e) => {
+    setBidderEmail(e.target.value);
+  };
 
   const handleBidderDetailChange = (e) => {
     setBidder_detail(e.target.value);
   };
 
-  const handleCompanyNameChange = (e) => {
-    setCompany(e.target.value);
-  };
+  // const handleCompanyNameChange = (e) => {
+  //   console.log(e.target.value);
+  //   setCompanyName(e.target.value);
+  //   console.log("My Company value is:",mycompany);
+  // };
   // ********************************
   // Function to format the integer value with commas
   const formatNumberWithCommas = (value) => {
@@ -1592,7 +1597,11 @@ const Estimator = () => {
                         className="dropUpdation"
                         id="estimatorName"
                         onChange={(event) => handleAreaChange(event, item.id)}
-                        value={AreaChoice[item.id] || item.location ? AreaChoice[item.id] || item.location : "No aArea"}
+                        value={
+                          AreaChoice[item.id] || item.location
+                            ? AreaChoice[item.id] || item.location
+                            : "No aArea"
+                        }
                       >
                         <option
                           value={item.location ? item.location : "No Area"}
@@ -1659,13 +1668,9 @@ const Estimator = () => {
                         <option value="Lost">Lost</option>
                       </select>
                     </td>
-
+ 
                     <td className="mytdbidder centered-td">
-                      {item.bidder +
-                        " " +
-                        item.bidder_detail +
-                        " " +
-                        item.bidder_mail}
+                    {item.bidder + " "  + item.bidder_detail  + " "  + item.bidder_mail}
                     </td>
                     <td className="mytd centered-td actionTD">
                       <div className="relative-container loop">
@@ -1708,21 +1713,7 @@ const Estimator = () => {
                         >
                           <i class="fa-solid fa-square-plus size11"></i>
                         </div>
-                        {/* <div
-                          className="dropbtns"
-                          onClick={() => {
-                            console.log(item.prjct_name);
-                            setItemId(item.id);
-                            setStep0FormData({
-                              ...step0FormData,
-                              estimating: item.id,
-                            });
-                            setSelectedEstimatingID(item.prjct_name);
-                            setshowProjectModal(true);
-                          }}
-                        >
-                          <i class="fa-solid fa-tarp"></i>
-                        </div> */}
+                        
 
                         <div
                           type="button"
@@ -3600,12 +3591,12 @@ const Estimator = () => {
                   <select
                     className="form-select"
                     id="companyName"
-                    value={company}
+                    value={companyName}
                     onChange={handleCompanyNameChange}
                   >
                     <option value="">Select Company</option>
-                    {companyName && companyName.length > 0 ? (
-                      companyName.map((companyItem) => (
+                    {fetchcompanyName && fetchcompanyName.length > 0 ? (
+                      fetchcompanyName.map((companyItem) => (
                         <option value={companyItem.id} key={companyItem.id}>
                           {companyItem.Cmpny_Name}
                         </option>
@@ -3723,32 +3714,32 @@ const Estimator = () => {
                   </div>
                 </div>
               </div>
-              {/* <div className="bothDiv"> */}
-              {/* <div className="Oneline">
-                  <label htmlFor="bidAmount" className="form-label">
-                    Bid Amount:
+              <div className="bothDiv">
+                <div>
+                  <label htmlFor="bidderName" className="Oneline form-label">
+                    Bidder Name:
                   </label>
                   <input
-                    type="number"
+                    type="text"
                     className="form-control"
-                    id="bidAmount"
-                    value={bidAmount}
-                    onChange={handleBidAmountChange}
+                    id="bidderName"
+                    value={bidderName}
+                    onChange={handleBidderChange}
                   />
-                </div> */}
-              <div>
-                <label htmlFor="bidderName" className="form-label">
-                  Bidder Name:
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="bidderName"
-                  value={bidderName}
-                  onChange={handleBidderChange}
-                />
+                </div>
+                <div>
+                  <label htmlFor="bidderName" className="Oneline form-label">
+                    Bidder Email:
+                  </label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    id="bidderName"
+                    value={bidderEmail}
+                    onChange={handleBidderEmailChange}
+                  />
+                </div>
               </div>
-              {/* </div> */}
               <div>
                 <label htmlFor="bidderDetails" className="form-label">
                   Bidder Details:

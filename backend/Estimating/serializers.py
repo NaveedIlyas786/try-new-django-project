@@ -101,7 +101,7 @@ class EstimatingSerializer(serializers.ModelSerializer):
  
     start_date = serializers.DateField(
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
-    company_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Company.objects.all(), source='company')
+    company_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Company.objects.all(), source='company',required=False, allow_null=True)
 
     company=CompanySerializer(read_only=True)
 
@@ -239,11 +239,13 @@ class ProposalSerializer(serializers.ModelSerializer):
     services = ProposalServiceSerializer(many=True, read_only=True)
     Addendums=AddendumSerializer(many=True,read_only=True)
     spcifc=SpecificationSerializer(many=True,read_only=True)
+    estimating_id = serializers.PrimaryKeyRelatedField(write_only=True,queryset=Estimating.objects.all(), source='estimating')
+
     estimating=EstimatingSerializer(read_only=True)
     
     class Meta:
         model = Proposal
-        fields = ['id','estimating', 'date', 'architect_name', 'architect_firm','Addendums', 'services','spcifc'] 
+        fields = ['id','estimating', 'estimating_id', 'date','architect_name', 'architect_firm','Addendums', 'services','spcifc'] 
 
     # def to_representation(self, instance):
     #     representation = super().to_representation(instance)

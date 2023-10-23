@@ -196,8 +196,8 @@ const Dashboard = () => {
   return (
     <>
       <div className=" container dashboard ">
-        <div className=" row projectStatus justify-content-around">
-          <div className=" col-md-2  ProjectStatus pendinggreen d-flex justify-content-center align-items-center">
+        <div className=" row projectmargin  justify-content-around">
+          <div className=" col-md-2  ProjectStatus pendinggreen ">
             <p className="mt-2">
               <i className="fa-solid fa-circle-check check "></i>
             </p>
@@ -207,7 +207,7 @@ const Dashboard = () => {
             </h4>
           </div>
 
-          <div className=" col-md-2   ProjectStatus pendingyellow d-flex justify-content-center align-items-center">
+          <div className=" col-md-2   ProjectStatus pendingyellow ">
             <p className="mt-2">
               <i className="fa-solid  fa-question fs-5 pend"></i>
             </p>
@@ -216,7 +216,7 @@ const Dashboard = () => {
               {dashData.reduce((acc, e) => acc + (e?.Pending?.total || 0), 0)}
             </h4>
           </div>
-          <div className=" col-md-2   ProjectStatus pendingWorking d-flex justify-content-center align-items-center">
+          <div className=" col-md-2   ProjectStatus pendingWorking">
             <p className="mt-2">
               <i className="fa-solid fa-spinner fs-5 working"></i>
             </p>
@@ -224,11 +224,8 @@ const Dashboard = () => {
             <h4 className="ps-3 headsettNo">
               {dashData.reduce((acc, e) => acc + (e?.Working?.total || 0), 0)}
             </h4>
-            {/* <p>
-              <i className="fa-solid fa-square-this-way-up "></i>
-            </p> */}
           </div>
-          <div className=" col-md-2  ProjectStatus pendingLost d-flex justify-content-center align-items-center">
+          <div className=" col-md-2  ProjectStatus pendingLost">
             <p className="mt-3">
               <i className=" mark fa-duotone fa fa-ban"></i>
             </p>
@@ -240,9 +237,9 @@ const Dashboard = () => {
         </div>
       </div>
       <div className="mt-3">
-        <div className=" container mytable ">
+        <div className="container mytable">
           <div>
-            <div className=" container mytable d-flex mb-2">
+            <div className="container mytable d-flex mb-2">
               <Dropdown show={dropdownOpen} onToggle={toggleDropdown}>
                 <Button
                   variant="primary"
@@ -461,7 +458,7 @@ const Dashboard = () => {
         <div className="container mt-5">
           <div className="row mt-5">
             <div className="ms-2 col text-center graphimg mt-5">
-              <BarChart
+              <BarChart className="graphimage"
                 width={1100}
                 height={440}
                 data={companyiesData}

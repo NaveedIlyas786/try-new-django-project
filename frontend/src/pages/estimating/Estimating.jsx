@@ -905,14 +905,7 @@ const Estimator = () => {
     setServices(updatedServices);
   };
   // Define a function to handle modal close
-  const closeModal = () => {
-    setShowModal(false);
-    setPurposalModal(false);
-    setshowProjectModal(false);
-    setshowEstimatingEditModal(false);
-    // Remove the 'modal-active' class when the modal is closed
-    document.body.classList.remove("modal-active");
-  };
+
 
   const handleEntryChange = (index, field, value) => {
     setStep2FormData((prevData) => {
@@ -1020,6 +1013,45 @@ const Estimator = () => {
     }
   };
 
+  const closeModal = () => {
+    setShowModal(false);
+    setPurposalModal(false);
+    setshowProjectModal(false);
+    setshowEstimatingEditModal(false);
+// **********purposalModal
+    setStep0FormData({
+      date: getCurrentDate(),
+      estimating: "",
+      architect_name: "",
+      architect_firm: "",
+    });
+
+    setStep1FormData({
+      Addendums: [],
+    });
+
+    setStep2FormData({
+      specific_name: "",
+      budget: "",
+      sefic: [],
+    });
+
+    // **************ShowModal Estimating
+
+     setDueDate("");
+        setSelectedTime("");
+        setStartDate("");
+        settimezone("");
+        setProjectName("");
+        setCompany(""); // Reset companyName here
+        setEstimatorName("");
+        setLocation("");
+        // setBidAmount("");
+        setbidderName("");
+        setBidder_detail("");
+    // Remove the 'modal-active' class when the modal is closed
+    document.body.classList.remove("modal-active");
+  };
   // ****************Get Estimating data From Store
   const selectEstimatingData = (state) => state.estimating.data;
 

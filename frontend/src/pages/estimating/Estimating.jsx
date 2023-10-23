@@ -1592,7 +1592,7 @@ const Estimator = () => {
                         className="dropUpdation"
                         id="estimatorName"
                         onChange={(event) => handleAreaChange(event, item.id)}
-                        value={AreaChoice[item.id] || item.location}
+                        value={AreaChoice[item.id] || item.location ? AreaChoice[item.id] || item.location : "No aArea"}
                       >
                         <option
                           value={item.location ? item.location : "No Area"}

@@ -5,9 +5,8 @@ import "./DMSDirectory.css";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Multiselect from 'multiselect-react-dropdown';
+import Multiselect from "multiselect-react-dropdown";
 import "react-multiple-select-dropdown-lite/dist/index.css";
-// import { MultiSelect } from 'react-multiple-select-dropdown-lite';
 
 const DMSDirectory = () => {
   const [usersInfo, setUsersInfo] = useState([]);
@@ -18,36 +17,43 @@ const DMSDirectory = () => {
   const navigate = useNavigate();
 
   const getUsers = async () => {
-    const result = await axios.get(
-      "http://127.0.0.1:8000/api/estimating/dmsDrectory/"
-    );
     try {
+      const result = await axios.get(
+        "http://127.0.0.1:8000/api/estimating/dmsDrectory/"
+      );
       setUsersInfo(result.data);
       setFilterUsers(result.data);
     } catch (err) {
-      console.log(err);
+      console.error("Error fetching data:", err);
     }
   };
+
   useEffect(() => {
     getUsers();
   }, []);
 
   function formatMobileNumber(mobileNumber) {
+    // Check if mobileNumber is null or undefined
+    if (mobileNumber === null || mobileNumber === undefined) {
+        return ""; // or some other default value or behavior
+    }
+
     // Ensure mobileNumber is a string
-    const mobileNumbertoString = mobileNumber + "";
+    const mobileNumberToString = mobileNumber.toString();
 
     // Remove all non-numeric characters from the mobile number
-    const numericOnly = mobileNumbertoString.replace(/\D/g, "");
+    const numericOnly = mobileNumberToString.replace(/\D/g, "");
 
     // Check if the numericOnly string has at least 6 characters
     if (numericOnly.length >= 6) {
-      // Use regular expression to insert hyphens every 3 digits from the left
-      return numericOnly.replace(/(\d{3})(?=\d{3})/g, "$1-");
+        // Use a regular expression to insert hyphens every 3 digits from the left
+        return numericOnly.replace(/(\d{3})(?=\d{3})/g, "$1-");
     } else {
-      // If the string is less than 6 characters, return it as is
-      return numericOnly;
+        // If the string is less than 6 characters, return it as is
+        return numericOnly;
     }
-  }
+}
+
 
   const Columns = [
     {
@@ -83,7 +89,6 @@ const DMSDirectory = () => {
       sortable: true,
       center: true,
     },
-
     {
       name: (
         <strong
@@ -117,7 +122,6 @@ const DMSDirectory = () => {
       sortable: true,
       center: true,
     },
-
     {
       name: (
         <strong className="headersTitle" style={{ textAlign: "center" }}>
@@ -161,8 +165,6 @@ const DMSDirectory = () => {
     setFilterUsers(mysearchresult);
   }, [search]);
 
-
-
   // *******************************To show Job Title Names in dropdown***************
 
   const [JobNames, setJobNames] = useState([]);
@@ -170,7 +172,9 @@ const DMSDirectory = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:8000/api/estimating/jobtitle/");
+        const response = await fetch(
+          "http://127.0.0.1:8000/api/estimating/jobtitle/"
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -184,6 +188,7 @@ const DMSDirectory = () => {
 
     fetchData();
   }, []);
+
   //************ To show Company Names in dropdown in estimating post field
   const [companyName, setCompanyName] = useState([]);
 
@@ -201,11 +206,10 @@ const DMSDirectory = () => {
       });
   }, []);
 
-
   const alldepartments = [
     {
       id: 1,
-      dapartname: "Acounting",
+      dapartname: "Accounting",
     },
     {
       id: 2,
@@ -252,46 +256,42 @@ const DMSDirectory = () => {
   const [mylocation, setLocation] = useState("");
   const [directnumber, setDirectnumber] = useState("");
   const [mobilenumber, setMobilenumber] = useState("");
-
   const [mydepartment, setDepartment] = useState("");
+  const [selectedJobTitles, setSelectedJobTitles] = useState([]);
+
 
   const handleDepartment = (e) => {
-    console.log(e.target.value);
     setDepartment(e.target.value);
   };
 
   const handleFirstName = (e) => {
     setFirstName(e.target.value);
   };
+  
   const handleLastName = (e) => {
     setLastName(e.target.value);
   };
+  
   const handleEmail = (e) => {
     setEmail(e.target.value);
   };
 
-
   const handleCompanyNameChange = (e) => {
-    console.log(e.target.value);
-
     setCompany(e.target.value);
   };
 
   const handleLocation = (e) => {
     setLocation(e.target.value);
   };
+
   const handleDirectnumber = (e) => {
     setDirectnumber(e.target.value);
   };
+
   const handleMobileNumber = (e) => {
     setMobilenumber(e.target.value);
   };
-  
- 
 
-  console.log(JobNames);
-  // console.log(JobNames.map((jobTitle) => jobTitle.id));
-  
   const handledirectorySubmit = (event) => {
     event.preventDefault();
     // Create a data object with the form values
@@ -304,18 +304,16 @@ const DMSDirectory = () => {
       location: mylocation,
       direct_number: directnumber,
       mobile_number: mobilenumber,
-      job_title: parseInt(JobNames,10), // Include selected job titles
+      job_title: selectedJobTitles, // Use the selectedJobTitles array
     };
-
-    console.log("formData before sending the POST request:", formData);
-
+    
     // Send a POST request to the API
     axios
       .post("http://127.0.0.1:8000/api/estimating/dmsDrectory/", formData)
       .then((response) => {
         // Handle the response if needed
         console.log("Data successfully submitted:", response.data);
-
+    
         // You can also reset the form fields here if needed
         setFirstName("");
         setLastName("");
@@ -324,7 +322,7 @@ const DMSDirectory = () => {
         setDirectnumber("");
         setMobilenumber("");
         setEmail("");
-
+    
         setTimeout(() => {
           setShowModal(false);
         }, 1000);
@@ -335,6 +333,7 @@ const DMSDirectory = () => {
         // Log the response data for more details
         console.log("Response data:", error.response.data);
       });
+    
   };
 
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
@@ -354,7 +353,6 @@ const DMSDirectory = () => {
   const movetoEstimatingPage = () => {
     navigate("/homepage/estimating/");
   };
-  // const [options, setOptions]=useState(["Naveed","Ali","Akbar"])
   return (
     <>
       <div className="container dmsmain">
@@ -467,17 +465,21 @@ const DMSDirectory = () => {
                       Job Title
                     </label>
                     <div className="custom-dropdown">
-
-<Multiselect
-options={JobNames}
-isObject={false}
-showCheckbox
-onRemove={(e)=>{console.log(e);}}
-onSelect={(e)=>{console.log(e);}}
-
+                    <Multiselect
+  options={JobNames.map((job, index) => ({ value: String(index + 1), label: job }))}
+  isObject={false}
+  showCheckbox
+  onRemove={(selected) => {
+    setSelectedJobTitles(selected.map((item) => String(item.value)));
+  }}
+  onSelect={(selected) => {
+    setSelectedJobTitles(selected.map((item) => String(item.value)));
+  }}
 />
 
-{/* <select name="test" id="test" className="form-control">
+
+
+                      {/* <select name="test" id="test" className="form-control">
   <option value="--">Select Option</option>
   <option value="1">Option1</option>
   <option value="2">Option2</option>

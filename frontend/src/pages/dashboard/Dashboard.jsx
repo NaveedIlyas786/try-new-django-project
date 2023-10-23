@@ -20,25 +20,28 @@ import "aos/dist/aos.css";
 // import ApexCharts from 'apexcharts'
 
 const Dashboard = () => {
-  const [dashData, setDashData] = useState([]);
   const [isAlphabetical, setIsAlphabetical] = useState(false);
   const [originalData, setOriginalData] = useState([]);
   const [buttonText, setButtonText] = useState("Sort Alphabetically");
-  // Store the original data here
-  const [sortOrder, setSortOrder] = useState("default");
+  const [dashData, setDashData] = useState([]);
   useEffect(() => {
     // Fetch data from the API
     axios
       .get("http://127.0.0.1:8000/api/estimating/api/estimators/summary/")
       .then((response) => response.data)
       .then((data) => {
-        console.log(data);
-        setDashData(data);
+        // Filter out objects with "estimator" equal to "Grand Totals"
+        const filteredData = data.filter(item => item.estimator !== "Grand Totals");
+        console.log(filteredData);
+        setDashData(filteredData);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   }, []);
+  
+
+
   const [companyiesData, setcompanyiesData] = useState([]);
 
   useEffect(() => {
@@ -164,7 +167,28 @@ const Dashboard = () => {
       )
       .then((response) => response.data)
       .then((data) => {
-        setDashData(data);
+        const filteredData = data.filter(item => item.estimator !== "Grand Totals");
+        console.log(filteredData);
+        setDashData(filteredData);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, [selectedYear]);
+
+// ***********Fetch only that object in which  "estimator" === "Grand Totals"
+const [dashgrandtotal,setDashGrandTotal]=useState([]);
+  useEffect(() => {
+    // Fetch data from the API with the selected year
+    axios
+      .get(
+        `http://127.0.0.1:8000/api/estimating/api/estimators/summary/?year=${selectedYear}`
+      )
+      .then((response) => response.data)
+      .then((data) => {
+        const filteredData = data.filter(item => item.estimator === "Grand Totals");
+        console.log(filteredData);
+        setDashGrandTotal(filteredData);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -185,13 +209,6 @@ const Dashboard = () => {
     }
     setIsAlphabetical(!isAlphabetical);
   };
-  // By doing this, your button will work continuously, toggling between alphabetical sorting and the default order each time you click it. When isAlphabetical is true, the data will be sorted alphabetically; when isAlphabetical is false, the data will appear in the default order.
-
-  // In this modification, we use the spread operator to create a new copy of the original data when reverting to the default order. This will ensure that the originalData is not modified and that you can switch between alphabetical sorting and the default order effectively.
-
-  // ...
-
-  // By storing the original data in both dashData and originalData, you can use originalData to reset your data back to the default order when needed. The sorting button should now work as expected.
 
   return (
     <>
@@ -364,7 +381,7 @@ const Dashboard = () => {
                           {formatPercentage(e.summary?.Lost?.percentage || 0)}
                         </td>
                         <td className="dashtd">
-                          ${" "}
+                          $
                           {formatNumberWithCommas(
                             e.summary?.Lost?.bid_amount || 0
                           )}
@@ -381,79 +398,44 @@ const Dashboard = () => {
                     ))}
                 </tbody>
                 <tfoot className="mytfoot">
-                  <tr>
-                    <td className="totalsection dashtd">Grand Total</td>
-                    <td className="totalsection dashtd">
-                      {dashData.reduce(
-                        (acc, e) => acc + (e?.Working?.total || 0),
-                        0
-                      )}
-                    </td>
-                    <td className="totalsection dashtd">
-                      {dashData.reduce(
-                        (acc, e) => acc + (e?.Pending?.total || 0),
-                        0
-                      )}
-                    </td>
-                    <td className="totalsection dashtd"></td>
-                    <td className="totalsection dashtd">`
-                      {formatNumberWithCommas(
-                        dashData.reduce(
-                          (acc, e) => acc + (e?.Pending?.bid_amount || 0),
-                          0
-                        )
-                      )}
-                    </td>
-                    <td className="totalsection dashtd">
-                      {dashData.reduce(
-                        (acc, e) => acc + (e?.Won?.total || 0),
-                        0
-                      )}
-                    </td>
-                    <td className="totalsection dashtd"></td>
-                    <td className="totalsection dashtd">
-                      ${" "}
-                      {formatNumberWithCommas(
-                        dashData.reduce(
-                          (acc, e) => acc + (e?.Won?.bid_amount || 0),
-                          0
-                        )
-                      )}
-                    </td>
-                    <td className="totalsection dashtd">
-                      {dashData.reduce(
-                        (acc, e) => acc + (e?.Lost?.total || 0),
-                        0
-                      )}
-                    </td>
-                    <td className="totalsection dashtd"></td>
-                    <td className="totalsection dashtd">
-                      $
-                      {formatNumberWithCommas(
-                        dashData.reduce(
-                          (acc, e) => acc + (e?.Lost?.bid_amount || 0),
-                          0
-                        )
-                      )}
-                    </td>
-                    <td className="totalsection dashtd">
-                      {dashData.reduce(
-                        (acc, e) => acc + (e?.["Grand Total"]?.total || 0),
-                        0
-                      )}
-                    </td>
-                    <td className="totalsection dashtd">
-                      $
-                      {formatNumberWithCommas(
-                        dashData.reduce(
-                          (acc, e) =>
-                            acc + (e?.["Grand Total"]?.bid_amount || 0),
-                          0
-                        )
-                      )}
-                    </td>
-                  </tr>
-                </tfoot> */
+  <tr>
+    <td className="totalsection dashtd">{dashgrandtotal[0]?.estimator}</td>
+    <td className="totalsection dashtd">
+      {dashgrandtotal[0]?.summary.Working?.total || 0}
+    </td>
+    <td className="totalsection dashtd">
+      {dashgrandtotal[0]?.summary?.Pending?.total || 0}
+    </td>
+    <td className="totalsection dashtd"></td>
+    <td className="totalsection dashtd">
+      {formatNumberWithCommas(dashgrandtotal[0]?.summary.Pending?.bid_amount || 0)}
+    </td>
+    <td className="totalsection dashtd">
+      {dashgrandtotal[0]?.summary.Won?.total || 0}
+    </td>
+    <td className="totalsection dashtd"></td>
+    <td className="totalsection dashtd">
+      ${" "}
+      {formatNumberWithCommas(dashgrandtotal[0]?.summary.Won?.bid_amount || 0)}
+    </td>
+    <td className="totalsection dashtd">
+      {dashgrandtotal[0]?.summary.Lost?.total || 0}
+    </td>
+    <td className="totalsection dashtd"></td>
+    <td className="totalsection dashtd">
+      $
+      {formatNumberWithCommas(dashgrandtotal[0]?.summary.Lost?.bid_amount || 0)}
+    </td>
+    <td className="totalsection dashtd">
+      {dashgrandtotal[0]?.summary?.["Grand Total"]?.total || 0}
+    </td>
+    <td className="totalsection dashtd">
+      $
+      {formatNumberWithCommas(dashgrandtotal[0]?.summary?.["Grand Total"]?.bid_amount || 0)}
+    </td>
+  </tr>
+</tfoot>
+
               </table>
             </div>
           </div>

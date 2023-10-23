@@ -659,7 +659,7 @@ const Estimator = () => {
       time: formattedTime,
       timezone: timezone,
       prjct_name: projectName,
-      company: companyName,
+      company_id: companyName,
       estimator: estimatorName,
       location: location,
       bidder: bidderName,
@@ -706,7 +706,7 @@ const Estimator = () => {
         console.log("Response data:", error.response.data);
       });
   };
-
+ 
   //************* Define the handleEstimatingEditing function
 
   const [selectedEstimator, setSelectedEstimator] = useState("");

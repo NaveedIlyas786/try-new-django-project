@@ -18,7 +18,8 @@ const Navbar = () => {
   };
 
   return (
-    <nav className={`navbar navbar-expand-lg  ${isNavOpen ? 'expanded' : ''}`}>
+   
+   <nav className={`navbar navbar-expand-lg navbar-inverse ${isNavOpen ? 'expanded' : ''}`}>
       <div className="container-fluid px-5">
         <Link
           className="navbar-brand"
@@ -32,17 +33,18 @@ const Navbar = () => {
           />
         </Link>
         <button
-          className={`navbar-toggler ${isNavOpen ? "collapsed" : ""}`}
+          className="navbar-toggler"
           type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#mynavbar"
+          
           onClick={handleToggleClick}
+          
           
         >
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className={`collapse navTabs navbar-collapse ${isNavOpen ? 'show expanded' : ''}`} id="mynavbar">
-          <ul className="navbar-nav ms-auto gap-2">
+       
+        <ul className={`navbar-nav ms-auto gap-2 navTabs ${isNavOpen ? 'show expanded' : ''}`}>
             <Link
               className={`nav-item ${activeLink === "Dashboard" ? "active" : ""}`}
               to="dashboard"
@@ -96,6 +98,8 @@ const Navbar = () => {
         </div>
       </div>
     </nav>
+
+
   );
 };
 

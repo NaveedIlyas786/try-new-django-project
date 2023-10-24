@@ -44,6 +44,7 @@ const Login = () => {
           <div className="modal-overlay">
             <div className="popupsuccess">
               <p>Login Successful</p>
+              {alert("Login Successful")}
             </div>
           </div>
         );

@@ -28,7 +28,7 @@ const Forgot = () => {
   return (
     <div className="parent">
       <div className="sub_Parentforgot">
-        <h1>Reset Your Password</h1>
+        <h1 className="text-dark">Reset Your Password</h1>
         <p>Enter your email address you signed up with</p>
         <input
           placeholder="Enter your email"

@@ -167,6 +167,91 @@ const DMSDirectory = () => {
 
   // *******************************To show Job Title Names in dropdown***************
 
+  // 0
+  // : 
+  // "Estimator"
+  // 1
+  // : 
+  // "Project Engineer"
+  // 2
+  // : 
+  // "Project Manager"
+  // 3
+  // : 
+  // "Foreman"
+  // 4
+  // : 
+  // "Estimating Manager"
+  // 5
+  // : 
+  // "Manager PR"
+  // 6
+  // : 
+  // "Scheduling Manager / Pre-Construction Engineer"
+  // 7
+  // : 
+  // "So. Cal. General Manager"
+  // 8
+  // : 
+  // "Taping FM"
+  // 9
+  // : 
+  // "Driver"
+  // 10
+  // : 
+  // "No. Cal. General Manager"
+  // 11
+  // : 
+  // "Vice President"
+  // 12
+  // : 
+  // "HR & Payroll Manager"
+  // 13
+  // : 
+  // "Field Management"
+  // 14
+  // : 
+  // "Proconstruction Manager"
+  // 15
+  // : 
+  // "Scheduler"
+  // 16
+  // : 
+  // "Foreman (Assistant)"
+  // 17
+  // : 
+  // "General Superintendent"
+  // 18
+  // : 
+  // "BIM/Manager PR"
+  // 19
+  // : 
+  // "BIM Modeler/Trimble Operator"
+  // 20
+  // : 
+  // "Taping Foreman"
+  // 21
+  // : 
+  // "Journeyman"
+  // 22
+  // : 
+  // "CFO"
+  // 23
+  // : 
+  // "Owner"
+  // 24
+  // : 
+  // "Hotel Reservations"
+  // 25
+  // : 
+  // "President"
+  // 26
+  // : 
+  // "Payroll Assistant"
+  // 27
+  // : 
+  // "BIM"
+
   const [JobNames, setJobNames] = useState([]);
 
   useEffect(() => {
@@ -180,6 +265,7 @@ const DMSDirectory = () => {
         }
         const data = await response.json();
         const jobNames = data.map((item) => item.name);
+        console.log(jobNames);
         setJobNames(jobNames);
       } catch (error) {
         console.error("Error fetching data:", error);

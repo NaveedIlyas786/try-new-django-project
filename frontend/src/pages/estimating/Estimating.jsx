@@ -741,25 +741,26 @@ const Estimator = () => {
   // *******************************************************
   const [itemId, setItemId] = useState();
 
-  const convertToIsoTime = (formattedTime) => {
-    // Convert "hh:mm AM/PM" to "hh:mm"
-    const timeParts = formattedTime.split(" ");
-    if (timeParts.length === 2) {
-      const [time, ampm] = timeParts;
-      const [hours, minutes] = time.split(":");
-      const isPM = ampm === "PM" || ampm === "pm";
-      let isoHours = parseInt(hours, 10);
-      if (isPM && isoHours !== 12) {
-        isoHours += 12;
-      } else if (!isPM && isoHours === 12) {
-        isoHours = 0;
-      }
-      return `${String(isoHours).padStart(2, "0")}:${minutes}`;
-    }
-    return formattedTime;
-  };
+  // const convertToIsoTime = (formattedTime) => {
+  //   // Convert "hh:mm AM/PM" to "hh:mm"
+  //   const timeParts = formattedTime.split(" ");
+  //   if (timeParts.length === 2) {
+  //     const [time, ampm] = timeParts;
+  //     const [hours, minutes] = time.split(":");
+  //     const isPM = ampm === "PM" || ampm === "pm";
+  //     let isoHours = parseInt(hours, 10);
+  //     if (isPM && isoHours !== 12) {
+  //       isoHours += 12;
+  //     } else if (!isPM && isoHours === 12) {
+  //       isoHours = 0;
+  //     }
+  //     return `${String(isoHours).padStart(2, "0")}:${minutes}`;
+  //   }
+  //   return formattedTime;
+  // };
 
-  const formattedTimeEdit = convertToIsoTime(SelectedTimeforUpdate);
+  // const formattedTimeEdit = convertToIsoTime(SelectedTimeforUpdate);
+
   // console.log("formattedTimeEdit:", formattedTimeEdit);
 
   const handleEstimatingEditing = async (event) => {
@@ -3929,13 +3930,13 @@ const Estimator = () => {
                   <div className="d-flex bg-white">
                     <input
                       type="time"
-                      value={formattedTimeEdit}
-                      onChange={(e) => setSelectedTimeforUpdate(e.target.value)}
+                      // value={formattedTimeEdit}
+                      // onChange={(e) => setSelectedTimeforUpdate(e.target.value)}
                     />
 
                     <select
                       value={SelectedTimeZone} // Update timezone or define it in your state
-                      onChange={(e) => setSelectedTimeZone(e.target.value)}
+                      // onChange={(e) => setSelectedTimeZone(e.target.value)}
                       className="selectpicker"
                     >
                       <option value={SelectedTimeZone}>
@@ -3948,7 +3949,8 @@ const Estimator = () => {
                 </div>
               </div>
 
-              <div>
+             <div className="bothDiv">
+             <div className="Oneline">
                 <label htmlFor="bidderName" className="form-label">
                   Bidder Name:
                 </label>
@@ -3961,6 +3963,20 @@ const Estimator = () => {
                   onChange={(e) => setSelectedBidder(e.target.value)}
                 />
               </div>
+             <div className="Oneline">
+                <label htmlFor="bidderName" className="form-label">
+                  Bidder Email:
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Bidder Email !"
+                  id="bidderName"
+                  // value={selectedBidder} // Update selectedBidder
+                  // onChange={(e) => setSelectedBidder(e.target.value)}
+                />
+              </div>
+             </div>
               <div>
                 <label htmlFor="bidderDetails" className="form-label">
                   Bidder Details:
@@ -4059,7 +4075,7 @@ const Estimator = () => {
                             onChange={(e) =>
                               setStep0FormData({
                                 ...step0FormData,
-                                estimating: e.target.value,
+                                estimating_id: e.target.value,
                               })
                             }
                             readOnly

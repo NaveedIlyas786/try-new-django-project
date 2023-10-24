@@ -500,7 +500,17 @@ const Estimator = () => {
       });
   };
 
-  // ************************projectManager Role Seleted **********
+  // ************************projectManager positions Roles Seleted **********
+  // Custom function to check if a role is a manager role
+  function isManagerRole(roles) {
+    const allowedRoles = ["Proconstruction Manager", "Project Manager", "Vice President", "No. Cal. General Manager"];
+    for (const role of roles) {
+      if (allowedRoles.includes(role)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   const [projectManager, setProjectManager] = useState([]);
 
@@ -510,16 +520,19 @@ const Estimator = () => {
       .get("http://127.0.0.1:8000/api/user/register/")
       .then((response) => response.data)
       .then((data) => {
-        const managerUser = data.filter((user) =>
-          user.roles.includes("Project Manager")
+        const managerUsers = data.filter((user) =>
+          isManagerRole(user.roles)
         );
-        // console.log(managerUser);
-        setProjectManager(managerUser);
+        console.log(managerUsers);
+        setProjectManager(managerUsers);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   }, []);
+  
+
+  
   // ************************General Superintendent Role Seleted **********
 
   const [GeneralSuperintendent, setGeneralSuperintendent] = useState([]);
@@ -563,17 +576,28 @@ const Estimator = () => {
 
   // ************************BimOperator Role Seleted **********
 
+  function isBimOperatorRole(roles) {
+    const allowedRoles = ["BIM Modeler/Trimble Operator", "BIM/Manager PR", "BIM"];
+    for (const role of roles) {
+      if (allowedRoles.includes(role)) {
+        return true;
+      }
+    }
+    return false;
+  }
   const [BimOperator, setBimOperator] = useState([]);
-  useEffect(() => {
+
+    useEffect(() => {
     // Fetch data from the API
     axios
       .get("http://127.0.0.1:8000/api/user/register/")
       .then((response) => response.data)
       .then((data) => {
-        const bimOperatorUser = data.filter((user) =>
-          user.roles.includes("BIM/Manager PR")
+        const bimUsers = data.filter((user) =>
+        isBimOperatorRole(user.roles)
         );
-        setBimOperator(bimOperatorUser);
+        console.log(bimUsers);
+        setBimOperator(bimUsers);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -2326,11 +2350,11 @@ const Estimator = () => {
                                   }
                                 >
                                   <option value="">Select Bid</option>
-                                  <option value="C">C</option>
-                                  <option value="P">P</option>
-                                  <option value="Q">Q</option>
-                                  <option value="V">V</option>
-                                  <option value="X">X</option>
+                                  <option value="Construction Phase">Construction Phase</option>
+                                  <option value="Pre-Construction">Pre-Construction</option>
+                                  <option value="Close out phase">Close out phase</option>
+                                  <option value="Upcoming/Estimating phase">Upcoming/Estimating phase</option>
+                                  <option value="Complete">Complete</option>
                                 </select>
                               </div>
                               <div className="Oneline">

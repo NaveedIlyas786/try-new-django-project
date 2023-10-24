@@ -2,7 +2,8 @@
 from rest_framework import serializers
 from .models import Project, Contract, Schedule_of_Value, Insurance, Bond, Zlien, Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, Billing, Sov, HDS_system, OnBuild, Buget,Project_detail
 
-
+from Estimating.models import Proposal
+from Estimating.serializers import ProposalSerializer
 
 
 
@@ -226,9 +227,15 @@ class ProjectSerializer(serializers.ModelSerializer):
     hds_system= HDSSystemSerializer(source='hds_system_set', many=True, read_only=True)
     onbuild = OnBuildSerializer(source='onbuild_set', many=True, read_only=True)
     buget = BugetSerializer(source='buget_set', many=True, read_only=True)
+
+
+    proposal_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Proposal.objects.all(), source='proposal', required=True)
+    
+
+    proposal=ProposalSerializer(read_only=True)
     class Meta:
         model = Project
-        fields = ['id','status', 'job_num', 'start_date', 'scope','prjct_engnr','bim_oprtr','Forman','prjct_mngr','estimating','start_date','general_superintendent',
+        fields = ['id','status', 'job_num', 'start_date', 'proposal_id','proposal','prjct_engnr','bim_oprtr','Forman','prjct_mngr','start_date','general_superintendent',
                     'project_address','addendums','bid','Spec','contacts','drywell','finish','wall_type','progress','ro_door','ro_window','substitution',
                     'contracts','schedule_of_values','insurancs','bond','zliens','submittals','shopdrawing','safity','schedule','sub_contractors','laborrate',
                     'billing','sov','hds_system','onbuild','buget']
@@ -237,7 +244,6 @@ class ProjectSerializer(serializers.ModelSerializer):
         
         # Handle job_title ManyToMany field
         
-        representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None
         representation['prjct_engnr'] = instance.prjct_engnr.full_Name if instance.prjct_engnr else None
         representation['bim_oprtr'] = instance.bim_oprtr.full_Name if instance.bim_oprtr else None
         representation['Forman'] = instance.Forman.full_Name if instance.Forman else None

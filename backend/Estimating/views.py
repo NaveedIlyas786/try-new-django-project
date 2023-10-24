@@ -1,4 +1,3 @@
-# views.py in the "Estimating" app
 
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
@@ -12,8 +11,6 @@ from accounts.models import User
 
 from .forms import EstimatingDetailAdminForm
 
-from django.db.models import Sum, Count,Case, When, IntegerField
-from django.utils import timezone
 from datetime import datetime
 from rest_framework.permissions import IsAuthenticated
 from django.core.mail import EmailMessage
@@ -22,7 +19,7 @@ import base64
 import logging
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-
+from django.db.models import Sum
 
 class DepartmentViews(APIView):
     def get(self,request):
@@ -122,9 +119,9 @@ class SendEmailView(APIView):
             message = f"""
             Hello,
 
-            Thank you for allowing {estimating.company.Cmpny_Name} the opportunity to bid on the {estimating.prjct_name}.
+            Thank you for allowing <strong>{estimating.company.Cmpny_Name}</strong> the opportunity to bid on the <strong>{estimating.prjct_name}</strong>.
 
-            The plans used to formulate the bid proposal are dated {estimating.due_date}, drafted by HPA, inc, and approved by Yong Nam.
+            The plans used to formulate the bid proposal are dated <strong> {estimating.plane_date.strftime('%m-%d-%Y')}</strong>, drafted by HPA, inc, and approved by Yong Nam.
 
             Thank you,
             """
@@ -135,6 +132,7 @@ class SendEmailView(APIView):
                 email_from,
                 [estimating.bidder_mail],
             )
+            email.content_subtype = 'html'
 
             email.attach(pdf_file.name, pdf_file.read(), 'application/pdf')
             email.send()
@@ -448,20 +446,17 @@ class CompanyListView(APIView):
 class EstimatingListView(APIView):
 
     def get(self, request, id=None, format=None):
-        current_year = datetime.now().year  # Get the current year
         if id:
             try:
-                estimating = Estimating.objects.get(id=id, start_date__year=current_year)
+                estimating = Estimating.objects.get(id=id)
                 serializer = EstimatingSerializer(estimating)
                 return Response(serializer.data)
             except Estimating.DoesNotExist:
                 return Response({'error': 'Estimating not found'}, status=status.HTTP_404_NOT_FOUND)
         else:
-            estimatings = Estimating.objects.filter(start_date__year=current_year)  # Filter by current year
+            estimatings = Estimating.objects.all() 
             serializer = EstimatingSerializer(estimatings, many=True)
             return Response(serializer.data)
-        
-
 
     def post(self, request, format=None):
         serializer = EstimatingSerializer(data=request.data)
@@ -625,14 +620,17 @@ class LocationViews(APIView):
 def create_proposal(request, proposal_id=None):
     if request.method == 'POST':
         data = request.data
+        if 'estimating_id' not in data:
+            return Response({"error": "estimating_id is required"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            estimating_instance = Estimating.objects.get(id=data['estimating'])
+            estimating_instance = Estimating.objects.get(id=data['estimating_id'])
+
         except Estimating.DoesNotExist:
             return Response({"error": "Estimating instance not found"}, status=status.HTTP_400_BAD_REQUEST)
 
         proposal_data = {
-            "estimating": estimating_instance.id,
+            "estimating_id": estimating_instance.id,
             "date": data['date'],
             "architect_name": data['architect_name'],
             "architect_firm": data['architect_firm'],
@@ -656,7 +654,7 @@ def create_proposal(request, proposal_id=None):
                 proposal_service_data = {
                     "proposal": proposal.id,
                     "service": service.id,
-                    "service_type": service_data['type']
+                    "service_type": service_data['service_type']
                 }
                 proposal_service_serializer = ProposalServiceSerializer(data=proposal_service_data)
                 if proposal_service_serializer.is_valid():
@@ -678,7 +676,7 @@ def create_proposal(request, proposal_id=None):
                 proposal_addendum_data = {
                     "proposal": proposal.id,
                     "date": addendum_data['date'],
-                    "addendum_Number": addendum_data['addendum_Number']
+                    "addendum_Number": addendum_data['addendum_number']
                 }
                 proposal_addendum_serializer = AddendumSerializer(data=proposal_addendum_data)
                 if proposal_addendum_serializer.is_valid():
@@ -689,7 +687,7 @@ def create_proposal(request, proposal_id=None):
             return Response({"error": "No Addendums data provided"}, status=status.HTTP_400_BAD_REQUEST)
         
 
-
+        total_budget = 0
         
 
         if 'spcifc' in data:
@@ -703,6 +701,7 @@ def create_proposal(request, proposal_id=None):
                 specification_serializer = SpecificationSerializer(data=specification_data)
                 if specification_serializer.is_valid():
                     specification = specification_serializer.save()
+                    total_budget += specification_data['budget']
                 else:
                     return Response(specification_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -719,9 +718,16 @@ def create_proposal(request, proposal_id=None):
                     else:
                         return Response(spec_detail_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({"error": "No Specification data provided"}, status=status.HTTP_400_BAD_REQUEST)       
+            return Response({"error": "No Specification data provided"}, status=status.HTTP_400_BAD_REQUEST)  
+        
+        if estimating_instance.bid_amount is None:
+            estimating_instance.bid_amount = 0
 
-
+            estimating_instance.bid_amount = total_budget
+        else:
+            estimating_instance.bid_amount = 0
+            estimating_instance.bid_amount += total_budget
+        estimating_instance.save()
 
 
 

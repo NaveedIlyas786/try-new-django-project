@@ -1,7 +1,7 @@
 from django.shortcuts import render
 #123456
 # from rest_framework
-
+import logging
 from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework import status
@@ -113,7 +113,7 @@ class UserRegistrationView(APIView):
 
 
 
-
+logger = logging.getLogger(__name__)
 
 class UserLoginViews(APIView):
     def post(self, request, format=None):
@@ -121,31 +121,31 @@ class UserLoginViews(APIView):
         if serializer.is_valid(raise_exception=True):
             email = serializer.validated_data.get('email')
             password = serializer.validated_data.get('password')
-            
-            # Getting the user object without authenticating
+            logger.info('Email and password extracted from request.')
+
             User = get_user_model()
             try:
                 user = User.objects.get(email=email)
+                logger.info('User object retrieved.')
             except User.DoesNotExist:
+                logger.error('User with given email does not exist.')
                 return Response({'error': 'Email or password is not valid'}, status=status.HTTP_401_UNAUTHORIZED)
 
-            # Check if the user is active
             if not user.is_active:
+                logger.warning('User is not active.')
                 return Response({'error': 'Your request is pending'}, status=status.HTTP_403_FORBIDDEN)
 
-            # Now proceed with authentication
             user = authenticate(email=email, password=password)
             if user:
-                token = get_tokens_for_user(user)  # Make sure to import this function or handle token generation
+                token = get_tokens_for_user(user)
+                logger.info('User authenticated successfully.')
                 return Response({'token': token, 'msg': 'Login Successfully'}, status=status.HTTP_200_OK)
             else:
+                logger.error('Authentication failed.')
                 return Response({'error': 'Email or password is not valid'}, status=status.HTTP_401_UNAUTHORIZED)
 
+        logger.error('Serializer is not valid.')
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
 
 
 

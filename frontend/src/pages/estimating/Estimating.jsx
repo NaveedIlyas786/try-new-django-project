@@ -500,7 +500,17 @@ const Estimator = () => {
       });
   };
 
-  // ************************projectManager Role Seleted **********
+  // ************************projectManager positions Roles Seleted **********
+  // Custom function to check if a role is a manager role
+  function isManagerRole(roles) {
+    const allowedRoles = ["Proconstruction Manager", "Project Manager", "Vice President", "No. Cal. General Manager"];
+    for (const role of roles) {
+      if (allowedRoles.includes(role)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   const [projectManager, setProjectManager] = useState([]);
 
@@ -510,16 +520,19 @@ const Estimator = () => {
       .get("http://127.0.0.1:8000/api/user/register/")
       .then((response) => response.data)
       .then((data) => {
-        const managerUser = data.filter((user) =>
-          user.roles.includes("Project Manager")
+        const managerUsers = data.filter((user) =>
+          isManagerRole(user.roles)
         );
-        // console.log(managerUser);
-        setProjectManager(managerUser);
+        console.log(managerUsers);
+        setProjectManager(managerUsers);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   }, []);
+  
+
+  
   // ************************General Superintendent Role Seleted **********
 
   const [GeneralSuperintendent, setGeneralSuperintendent] = useState([]);
@@ -563,17 +576,28 @@ const Estimator = () => {
 
   // ************************BimOperator Role Seleted **********
 
+  function isBimOperatorRole(roles) {
+    const allowedRoles = ["BIM Modeler/Trimble Operator", "BIM/Manager PR", "BIM"];
+    for (const role of roles) {
+      if (allowedRoles.includes(role)) {
+        return true;
+      }
+    }
+    return false;
+  }
   const [BimOperator, setBimOperator] = useState([]);
-  useEffect(() => {
+
+    useEffect(() => {
     // Fetch data from the API
     axios
       .get("http://127.0.0.1:8000/api/user/register/")
       .then((response) => response.data)
       .then((data) => {
-        const bimOperatorUser = data.filter((user) =>
-          user.roles.includes("BIM/Manager PR")
+        const bimUsers = data.filter((user) =>
+        isBimOperatorRole(user.roles)
         );
-        setBimOperator(bimOperatorUser);
+        console.log(bimUsers);
+        setBimOperator(bimUsers);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -659,7 +683,7 @@ const Estimator = () => {
       time: formattedTime,
       timezone: timezone,
       prjct_name: projectName,
-      company: companyName,
+      company_id: companyName,
       estimator: estimatorName,
       location: location,
       bidder: bidderName,
@@ -706,7 +730,7 @@ const Estimator = () => {
         console.log("Response data:", error.response.data);
       });
   };
-
+ 
   //************* Define the handleEstimatingEditing function
 
   const [selectedEstimator, setSelectedEstimator] = useState("");
@@ -741,25 +765,26 @@ const Estimator = () => {
   // *******************************************************
   const [itemId, setItemId] = useState();
 
-  const convertToIsoTime = (formattedTime) => {
-    // Convert "hh:mm AM/PM" to "hh:mm"
-    const timeParts = formattedTime.split(" ");
-    if (timeParts.length === 2) {
-      const [time, ampm] = timeParts;
-      const [hours, minutes] = time.split(":");
-      const isPM = ampm === "PM" || ampm === "pm";
-      let isoHours = parseInt(hours, 10);
-      if (isPM && isoHours !== 12) {
-        isoHours += 12;
-      } else if (!isPM && isoHours === 12) {
-        isoHours = 0;
-      }
-      return `${String(isoHours).padStart(2, "0")}:${minutes}`;
-    }
-    return formattedTime;
-  };
+  // const convertToIsoTime = (formattedTime) => {
+  //   // Convert "hh:mm AM/PM" to "hh:mm"
+  //   const timeParts = formattedTime.split(" ");
+  //   if (timeParts.length === 2) {
+  //     const [time, ampm] = timeParts;
+  //     const [hours, minutes] = time.split(":");
+  //     const isPM = ampm === "PM" || ampm === "pm";
+  //     let isoHours = parseInt(hours, 10);
+  //     if (isPM && isoHours !== 12) {
+  //       isoHours += 12;
+  //     } else if (!isPM && isoHours === 12) {
+  //       isoHours = 0;
+  //     }
+  //     return `${String(isoHours).padStart(2, "0")}:${minutes}`;
+  //   }
+  //   return formattedTime;
+  // };
 
-  const formattedTimeEdit = convertToIsoTime(SelectedTimeforUpdate);
+  // const formattedTimeEdit = convertToIsoTime(SelectedTimeforUpdate);
+
   // console.log("formattedTimeEdit:", formattedTimeEdit);
 
   const handleEstimatingEditing = async (event) => {
@@ -947,13 +972,14 @@ const Estimator = () => {
           },
           body: JSON.stringify({
             date: step0FormData.date,
-            estimating: step0FormData.estimating,
+            estimating_id: step0FormData.estimating,
             architect_name: step0FormData.architect_name,
             architect_firm: step0FormData.architect_firm,
             Addendums: step1FormData.Addendums.map((addendum) => ({
-              addendum_Number: addendum.addendum_Number,
+              addendum_number: addendum.addendum_number,
               date: addendum.date,
-            })),
+          })),
+          
             spcifc: step2FormData.map((entry) => ({
               specific_name: entry.specific_name,
               budget: entry.budget,
@@ -967,11 +993,12 @@ const Estimator = () => {
             services: services.map((service) => ({
               proposal: service.proposal,
               service: service.service,
-              type: service.type === "IN" ? "IN" : "EX",
+              service_type: service.service_type === "IN" ? "IN" : "EX",
             })),
           }),
         }
       );
+      console.log("Data For Posting ",response);
       if (response.ok) {
         const responseData = await response.json();
         // console.log("Response data:", responseData);
@@ -980,7 +1007,7 @@ const Estimator = () => {
         // Clear form fields after successful submission
         setStep0FormData({
           date: getCurrentDate(),
-          estimating: "",
+          estimating_id: "",
           architect_name: "",
           architect_firm: "",
         });
@@ -1016,7 +1043,7 @@ const Estimator = () => {
     // **********purposalModal
     setStep0FormData({
       date: getCurrentDate(),
-      estimating: "",
+      estimating_id: "",
       architect_name: "",
       architect_firm: "",
     });
@@ -2347,11 +2374,11 @@ const Estimator = () => {
                                   }
                                 >
                                   <option value="">Select Bid</option>
-                                  <option value="C">C</option>
-                                  <option value="P">P</option>
-                                  <option value="Q">Q</option>
-                                  <option value="V">V</option>
-                                  <option value="X">X</option>
+                                  <option value="Construction Phase">Construction Phase</option>
+                                  <option value="Pre-Construction">Pre-Construction</option>
+                                  <option value="Close out phase">Close out phase</option>
+                                  <option value="Upcoming/Estimating phase">Upcoming/Estimating phase</option>
+                                  <option value="Complete">Complete</option>
                                 </select>
                               </div>
                               <div className="Oneline">
@@ -3953,13 +3980,13 @@ const Estimator = () => {
                   <div className="d-flex bg-white">
                     <input
                       type="time"
-                      value={formattedTimeEdit}
-                      onChange={(e) => setSelectedTimeforUpdate(e.target.value)}
+                      // value={formattedTimeEdit}
+                      // onChange={(e) => setSelectedTimeforUpdate(e.target.value)}
                     />
 
                     <select
                       value={SelectedTimeZone} // Update timezone or define it in your state
-                      onChange={(e) => setSelectedTimeZone(e.target.value)}
+                      // onChange={(e) => setSelectedTimeZone(e.target.value)}
                       className="selectpicker"
                     >
                       <option value={SelectedTimeZone}>
@@ -3972,7 +3999,8 @@ const Estimator = () => {
                 </div>
               </div>
 
-              <div>
+             <div className="bothDiv">
+             <div className="Oneline">
                 <label htmlFor="bidderName" className="form-label">
                   Bidder Name:
                 </label>
@@ -3985,6 +4013,20 @@ const Estimator = () => {
                   onChange={(e) => setSelectedBidder(e.target.value)}
                 />
               </div>
+             <div className="Oneline">
+                <label htmlFor="bidderName" className="form-label">
+                  Bidder Email:
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Bidder Email !"
+                  id="bidderName"
+                  // value={selectedBidder} // Update selectedBidder
+                  // onChange={(e) => setSelectedBidder(e.target.value)}
+                />
+              </div>
+             </div>
               <div>
                 <label htmlFor="bidderDetails" className="form-label">
                   Bidder Details:
@@ -4083,7 +4125,7 @@ const Estimator = () => {
                             onChange={(e) =>
                               setStep0FormData({
                                 ...step0FormData,
-                                estimating: e.target.value,
+                                estimating_id: e.target.value,
                               })
                             }
                             readOnly
@@ -4139,15 +4181,15 @@ const Estimator = () => {
                             <div
                               id={"proposalAddendumDiv" + index}
                               className="input-group"
-                            >
+                            > 
                               <input
                                 id={"proposalAddendumNumber" + index}
                                 type="number"
-                                name="addendum_Number" // Set the name attribute to differentiate
+                                name="addendum_number" // Set the name attribute to differentiate
                                 className="form-control"
                                 value={
                                   step1FormData.Addendums?.[index]
-                                    ?.addendum_Number || ""
+                                    ?.addendum_number || ""
                                 }
                                 onChange={(e) => {
                                   const { name, value } = e.target;
@@ -4157,7 +4199,7 @@ const Estimator = () => {
                                     ];
                                     const updatedAddendum = {
                                       ...(newAddendumEntries[index] || {}), // Get the existing Addendum or an empty object
-                                      [name]: value, // Dynamically set the field (addendum_Number)
+                                      [name]: value, // Dynamically set the field (addendum_number)
                                     };
                                     newAddendumEntries[index] = updatedAddendum;
                                     return {

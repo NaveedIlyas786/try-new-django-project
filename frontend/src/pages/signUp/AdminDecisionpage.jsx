@@ -46,6 +46,7 @@ const AdminDecisionpage = () => {
                   // Handle success, e.g., show a success message
                   console.log(response);
                   console.log("Approved From Admin");
+                  {alert("User request has been Approved! ")}
                   // navigate("/");
                 })
                 .catch((error) => {
@@ -69,6 +70,8 @@ const AdminDecisionpage = () => {
                   // Handle success, e.g., show a success message
                   console.log(response);
                   console.log("Rejected From Admin");
+                  {alert("User request has been Rejected! ")}
+
                   // navigate("/rejectionPage");
                 })
                 .catch((error) => {

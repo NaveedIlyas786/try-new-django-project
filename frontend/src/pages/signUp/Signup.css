@@ -71,10 +71,13 @@ h1{
 .signnn{
     color: gray;
 }
-.password-validation{
+.format{
     margin-top: -20px;
-    font-size: 10px;
-    color: red;
+    font-size: 14px;
+    color: rgb(104, 102, 102) !important;
+}
+.pass2{
+    margin-top: -25px !important;
 }
 .modal-overlay {
     position: fixed;

@@ -80,6 +80,13 @@ class Estimating(models.Model):
     bidder = models.CharField(verbose_name="Bidder Name",max_length=1500, null=True,blank=True)
     bidder_detail=models.CharField(verbose_name="Bidder Detail",max_length=5000,null=True,blank=True)
     bidder_mail=models.EmailField(verbose_name="add the bidder Mail", max_length=254,null=True,blank=True)
+    plane_date= models.DateField(
+        verbose_name="Plane Date(YYYY-MM-DD)",
+        blank=False,
+        null=True)
+
+
+
     def save(self, *args, **kwargs):
         from accounts.models import User
         # Check if this is a new instance (i.e., being created and not updated)
@@ -181,7 +188,7 @@ class Service(models.Model):
 class Proposal(models.Model):
     estimating=models.ForeignKey(
         Estimating,
-        on_delete=models.CASCADE)
+        on_delete=models.CASCADE,blank=True,null=True)
     date = models.DateField(
         verbose_name="Proposel Date(YYYY-MM-DD)",
         blank=False,
@@ -192,6 +199,8 @@ class Proposal(models.Model):
     architect_firm=models.CharField(
         verbose_name="Architect Firm",
         max_length=50)
+    
+
     def __str__(self):
         return f"Proposal {self.id} by {self.architect_name}"
     
@@ -272,7 +281,7 @@ class DMS_Dertory(models.Model):
     first_name=models.CharField(verbose_name="First Name", max_length=255,null=True,blank=True)
     last_name=models.CharField(verbose_name="Last Name", max_length=50)
     email = models.EmailField(verbose_name="Email",max_length=255,unique=True,null=True,blank=True)
-    job_title = models.ManyToManyField(Role,verbose_name="Role",blank=True)
+    job_title = models.ForeignKey(Role,verbose_name="Role",blank=True, on_delete=models.CASCADE,null=True)
     company = models.ForeignKey(Company, verbose_name="company", blank=True, on_delete=models.CASCADE,null=True)
     department=models.ForeignKey(Dprtmnt, verbose_name="Department ", on_delete=models.CASCADE,null=True,blank=True)
     direct_number=models.IntegerField(verbose_name="Direct",null=True,blank=True)

@@ -2,12 +2,17 @@
 from rest_framework import serializers
 from .models import Project, Contract, Schedule_of_Value, Insurance, Bond, Zlien, Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, Billing, Sov, HDS_system, OnBuild, Buget,Project_detail
 
-
+from Estimating.models import Proposal
+from Estimating.serializers import ProposalSerializer
 
 
 
 
 class ContractSerializer(serializers.ModelSerializer):
+    
+    contract_date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+
     class Meta:
         model = Contract
         fields = '__all__'
@@ -21,6 +26,9 @@ class ContractSerializer(serializers.ModelSerializer):
         return representation
 
 class ScheduleOfValueSerializer(serializers.ModelSerializer):
+    schedule_date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+
     class Meta:
         model = Schedule_of_Value
         fields = '__all__'
@@ -34,6 +42,10 @@ class ScheduleOfValueSerializer(serializers.ModelSerializer):
         return representation
 
 class InsuranceSerializer(serializers.ModelSerializer):
+
+    date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+
     class Meta:
         model = Insurance
         fields = '__all__'
@@ -47,6 +59,9 @@ class InsuranceSerializer(serializers.ModelSerializer):
         return representation
 
 class BondSerializer(serializers.ModelSerializer):
+    date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+
     class Meta:
         model = Bond
         fields = '__all__'
@@ -60,6 +75,10 @@ class BondSerializer(serializers.ModelSerializer):
         return representation
 
 class ZlienSerializer(serializers.ModelSerializer):
+
+    date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+
     class Meta:
         model = Zlien
         fields = '__all__'
@@ -73,6 +92,9 @@ class ZlienSerializer(serializers.ModelSerializer):
         return representation
 
 class SubmittalsSerializer(serializers.ModelSerializer):
+    date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+
     class Meta:
         model = Submittals
         fields = '__all__'
@@ -86,6 +108,9 @@ class SubmittalsSerializer(serializers.ModelSerializer):
         return representation
 
 class ShopDrawingSerializer(serializers.ModelSerializer):
+    date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+
     class Meta:
         model = ShopDrawing
         fields = '__all__'
@@ -99,12 +124,18 @@ class ShopDrawingSerializer(serializers.ModelSerializer):
         return representation
 
 class SafitySerializer(serializers.ModelSerializer):
+    date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+
     class Meta:
         model = Safity
         fields = '__all__'
 
 
 class ScheduleSerializer(serializers.ModelSerializer):
+    date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+
     class Meta:
         model = Schedule
         fields = '__all__'
@@ -118,6 +149,9 @@ class ScheduleSerializer(serializers.ModelSerializer):
         return representation
 
 class SubContractorsSerializer(serializers.ModelSerializer):
+    date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+
     class Meta:
         model = Sub_Contractors
         fields = '__all__'
@@ -131,6 +165,8 @@ class SubContractorsSerializer(serializers.ModelSerializer):
 
         return representation
 class LaborRateSerializer(serializers.ModelSerializer):
+    date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
     class Meta:
         model = LaborRate
         fields = '__all__'
@@ -144,6 +180,9 @@ class LaborRateSerializer(serializers.ModelSerializer):
         return representation
 
 class BillingSerializer(serializers.ModelSerializer):
+    due_date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+
     class Meta:
         model = Billing
         fields = '__all__'
@@ -157,6 +196,9 @@ class BillingSerializer(serializers.ModelSerializer):
         return representation
 
 class SovSerializer(serializers.ModelSerializer):
+    date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+
     class Meta:
         model = Sov
         fields = '__all__'
@@ -170,6 +212,9 @@ class SovSerializer(serializers.ModelSerializer):
         return representation
 
 class HDSSystemSerializer(serializers.ModelSerializer):
+    date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+
     class Meta:
         model = HDS_system
         fields = '__all__'
@@ -183,6 +228,7 @@ class HDSSystemSerializer(serializers.ModelSerializer):
         return representation
 
 class OnBuildSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = OnBuild
         fields = '__all__'
@@ -196,6 +242,9 @@ class OnBuildSerializer(serializers.ModelSerializer):
         return representation
 
 class BugetSerializer(serializers.ModelSerializer):
+    contract_date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+
     class Meta:
         model = Buget
         fields = '__all__'
@@ -226,9 +275,16 @@ class ProjectSerializer(serializers.ModelSerializer):
     hds_system= HDSSystemSerializer(source='hds_system_set', many=True, read_only=True)
     onbuild = OnBuildSerializer(source='onbuild_set', many=True, read_only=True)
     buget = BugetSerializer(source='buget_set', many=True, read_only=True)
+    start_date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+
+    proposal_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Proposal.objects.all(), source='proposal', required=True)
+    
+
+    proposal=ProposalSerializer(read_only=True)
     class Meta:
         model = Project
-        fields = ['id','status', 'job_num', 'start_date', 'scope','prjct_engnr','bim_oprtr','Forman','prjct_mngr','estimating','start_date','general_superintendent',
+        fields = ['id','status', 'job_num', 'start_date', 'proposal_id','proposal','prjct_engnr','bim_oprtr','Forman','prjct_mngr','start_date','general_superintendent',
                     'project_address','addendums','bid','Spec','contacts','drywell','finish','wall_type','progress','ro_door','ro_window','substitution',
                     'contracts','schedule_of_values','insurancs','bond','zliens','submittals','shopdrawing','safity','schedule','sub_contractors','laborrate',
                     'billing','sov','hds_system','onbuild','buget']
@@ -237,7 +293,6 @@ class ProjectSerializer(serializers.ModelSerializer):
         
         # Handle job_title ManyToMany field
         
-        representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None
         representation['prjct_engnr'] = instance.prjct_engnr.full_Name if instance.prjct_engnr else None
         representation['bim_oprtr'] = instance.bim_oprtr.full_Name if instance.bim_oprtr else None
         representation['Forman'] = instance.Forman.full_Name if instance.Forman else None

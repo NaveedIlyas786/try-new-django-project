@@ -314,7 +314,9 @@ function Rawpurposal() {
                     ))}
                   </ol>
                 </div>
-                <h5>Aurthur Name</h5>
+                {/* <h5>Aurthur Name</h5> */}
+                <h5>{proposalData?.estimating?.estimator}</h5>
+
                 <p>Phone number</p>
               </div>
             ))}

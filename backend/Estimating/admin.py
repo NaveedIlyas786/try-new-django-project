@@ -20,12 +20,9 @@ class DprtmntAdmin(admin.ModelAdmin):
 
 
 class DMS_DertoryAdmin(admin.ModelAdmin):
-    def get_job_title(self, obj):
-        return ", ".join([str(role) for role in obj.job_title.all()])
-    get_job_title.short_description = 'job_title'
 
 
-    list_display=('id', 'first_name','last_name','email','get_job_title','company','department','direct_number','locaton','mobile_number')
+    list_display=('id', 'first_name','last_name','email','job_title','company','department','direct_number','locaton','mobile_number')
     add_fieldsets = [
         (
             None,
@@ -35,7 +32,6 @@ class DMS_DertoryAdmin(admin.ModelAdmin):
             },
         ),
     ]
-    filter_horizontal = ['job_title',] 
 
 
 # Register your models here
@@ -62,7 +58,7 @@ class EstimatingAdmin(admin.ModelAdmin):
     list_display = ['id', 'start_date', 'prjct_name','time','timezone',
                     'due_date', 'status','company',
                     'bid_amount', 'location', 'estimator',
-                    'bidder','bidder_mail','bidder_detail']
+                    'bidder','bidder_mail','bidder_detail','plane_date']
     list_filter = ['estimator']  # Use 'username' or another field that exists in the 'User' model
 
     def get_queryset(self, request):

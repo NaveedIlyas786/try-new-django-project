@@ -1,5 +1,6 @@
 .parent{
     height: 100vh;
+
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -9,6 +10,8 @@
     color: #b9b8b8;
 }
 .sub_Parentforgot{
+    /* background-color: #d6d3d3; */
+    width: 450px;
     display: flex;
     padding: 30px;
     gap: 15px;
@@ -25,7 +28,7 @@ h1{
 
 .ForgotInput{
     height: 35px;
-    width: 450px;
+    width: 100%;
     border-radius: 5px;
     background-color: #F6F2F2;
     box-shadow: 0 4px 4px 0 rgb(187, 186, 186);
@@ -41,7 +44,7 @@ h1{
 
 
 .submitbtn{
-    width: 100%;
+    width: 100% !important;
     height: 30px;
     border-radius: 5px;
     border: none;

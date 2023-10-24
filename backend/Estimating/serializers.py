@@ -6,6 +6,7 @@ from rest_framework import status
 
 from Estimating.models import Company,Estimating, Estimating_detail, Proposal, Addendum, Qualification, Spec_detail, Specification, ProposalService, Service, Location,UrlsTable,DMS_Dertory,Dprtmnt,Role
 
+from rest_framework.exceptions import ValidationError
 
 
 class DprtmentSerializers(serializers.ModelSerializer):
@@ -34,8 +35,7 @@ class DMS_DertorySezializers(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         
         # Handle job_title ManyToMany field
-        job_titles = instance.job_title.all()
-        representation['job_title'] = [job.name for job in job_titles] if job_titles else None
+        representation['job_title'] = instance.job_title.name if instance.job_title else None
         
         representation['company'] = instance.company.Cmpny_Name if instance.company else None
         representation['department'] = instance.department.dprtmnt_name if instance.department else None
@@ -90,6 +90,7 @@ class Time12HourField(serializers.TimeField):
         return value.strftime(self.format)
 
     
+    
 class EstimatingSerializer(serializers.ModelSerializer):
 
     time = Time12HourField(format='%I:%M %p', input_formats=['%I:%M %p'], required=False, allow_null=True)
@@ -99,6 +100,10 @@ class EstimatingSerializer(serializers.ModelSerializer):
  
     start_date = serializers.DateField(
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+    plane_date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+    company_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Company.objects.all(), source='company',required=False, allow_null=True)
+
     company=CompanySerializer(read_only=True)
 
     class Meta:
@@ -112,12 +117,14 @@ class EstimatingSerializer(serializers.ModelSerializer):
             'status',
             'start_date',
             'bid_amount',
+            'company_id',
             'company',
             'location',
             'estimator',
             'bidder',
             'bidder_mail',
             'bidder_detail',
+            'plane_date',
     
         ]
 
@@ -202,6 +209,7 @@ class ServiceSerializer(serializers.ModelSerializer):
 
 
 class AddendumSerializer(serializers.ModelSerializer):
+    date = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
 
     class Meta:
         model = Addendum
@@ -234,11 +242,13 @@ class ProposalSerializer(serializers.ModelSerializer):
     services = ProposalServiceSerializer(many=True, read_only=True)
     Addendums=AddendumSerializer(many=True,read_only=True)
     spcifc=SpecificationSerializer(many=True,read_only=True)
+    estimating_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Estimating.objects.all(), source='estimating', required=True)
+    date = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
     estimating=EstimatingSerializer(read_only=True)
     
     class Meta:
         model = Proposal
-        fields = ['id','estimating', 'date', 'architect_name', 'architect_firm','Addendums', 'services','spcifc'] 
+        fields = ['id','estimating', 'estimating_id', 'date','architect_name', 'architect_firm','Addendums', 'services','spcifc'] 
 
     # def to_representation(self, instance):
     #     representation = super().to_representation(instance)

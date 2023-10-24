@@ -38,18 +38,19 @@ const Signup = () => {
       // setError("All fields are required");
       setError(
         <>
-          <div className="modal-overlay">
+          {/* <div className="modal-overlay">
             <div className="popuppass">
               <p>All Fields are required</p>
             </div>
-          </div>
+          </div> */}
+          {alert("All Fields are required")}
         </>
       );
 
       // Use setTimeout to remove the error message after 1 second
       setTimeout(() => {
         setError(null); // Remove the error message
-      }, 1000);
+      },);
       return;
     }
     //if email is invalid
@@ -59,18 +60,19 @@ const Signup = () => {
     if (!isValidEmail) {
       setError(
         <>
-          <div className="modal-overlay">
+          {/* <div className="modal-overlay">
             <div className="popuppass">
               <p>Invalid Email</p>
             </div>
-          </div>
+          </div> */}
+          {alert("Invalid Email")}
         </>
       );
 
       // Use setTimeout to remove the error message after 1 second
       setTimeout(() => {
         setError(null); // Remove the error message
-      }, 1000); // 1000 milliseconds = 1 second
+      },); // 1000 milliseconds = 1 second
 
       useEffect(() => {
         // Effect to handle the response from the server
@@ -105,18 +107,20 @@ const Signup = () => {
       // setError("Passwords do not match");
       setError(
         <>
-          <div className="modal-overlay">
+          {/* <div className="modal-overlay">
             <div className="popuppass">
               <p> Password do not match</p>
             </div>
-          </div>
+          </div> */}
+          {alert("Password do not match")}
+
         </>
       );
 
       // Use setTimeout to remove the error message after 1 second
       setTimeout(() => {
         setError(null); // Remove the error message
-      }, 1000);
+      }, );
       return;
     }
 
@@ -128,38 +132,43 @@ const Signup = () => {
       // setError("Password length should be equal or greater than 8");
       setError(
         <>
-          <div className="modal-overlay">
+          {/* <div className="modal-overlay">
             <div className="popuppass">
               <p>Password length should be Equal or greater than8</p>
             </div>
-          </div>
+          </div> */}
+          {alert("Password length should be Equal or greater than 8")}
+
         </>
       );
 
       // Use setTimeout to remove the error message after 1 second
       setTimeout(() => {
         setError(null); // Remove the error message
-      }, 1000);
+      }, );
       return;
     }
     if (!isValidPassword) {
       setError(
         <>
-          <div className="modal-overlay">
+          {/* <div className="modal-overlay">
             <div className="popuppass">
               <p>Invalid Password</p>
             </div>
-          </div>
+          </div> */}
+          {alert("Invalid Password")}
+
         </>
       );
 
       // Use setTimeout to remove the error message after 1 second
       setTimeout(() => {
         setError(null); // Remove the error message
-      }, 1000); // 1000 milliseconds = 1 second
+      }, ); // 1000 milliseconds = 1 second
 
       return;
     }
+   
     try {
       const userData = {
         full_Name: full_Name,
@@ -180,6 +189,7 @@ const Signup = () => {
                 <p>Registration Successfull</p>
               </div>
             </div>
+
           );
           setTimeout(() => {
             navigate("/waitingPage");
@@ -190,7 +200,7 @@ const Signup = () => {
         .catch((error) => {
           // Handle error response from the backend
           console.error("User registration failed:", error);
-
+        
           // Adjust this to fit the actual error structure you’re receiving
           if (
             error &&
@@ -199,13 +209,15 @@ const Signup = () => {
           ) {
             setError(
               <>
-                <div className="modal-overlay">
+                {/* <div className="modal-overlay">
                   <div className="popuppass">
                     <p>User with this Email already exists.</p>
                   </div>
-                </div>
+                </div> */}
+                {alert("User this Email is already exists")}
               </>
             );
+            
           } else {
             setError("Registration failed. Please try again.");
           }

@@ -177,8 +177,8 @@ function Rawpurposal() {
                     src="../../../src/assets/purposal_logo-top.png"
                     alt="myimg"
                   />
-                  <div className="rightTop">
-                    <p className="topinfo">
+                  <div className="rightTop topinfo">
+                    <p className="  ">
                       {proposalData?.estimating?.company?.adress || ""}
                     </p>
                     <p className="topinfo">
@@ -277,42 +277,42 @@ function Rawpurposal() {
                   <p>
                     <strong className="headd">INCLUSIONS:</strong>
                   </p>
-                  <ul>
+                  <ol>
                     {proposalData.services
                       .filter((a) => a.service_type === "IN")
                       .map((e) => (
-                        <li key={e.id} className="DMS ms-5">
+                        <li key={e.id} className="DMS ps-3">
                           {e.service}
                         </li>
                       ))}
-                  </ul>
+                  </ol>
                 </div>
                 <div className="exclusions ms-3 mt-4">
                   <p>
                     <strong className="headd">EXCLUSIONS:</strong>
                   </p>
-                  <ul>
+                  <ol>
                     {proposalData.services
                       .filter((a) => a.service_type === "EX")
                       .map((e) => (
-                        <li key={e.id} className="DMS ms-5 ">
+                        <li key={e.id} className="DMS ps-3 ">
                           {e.service}
                         </li>
                       ))}
-                  </ul>
+                  </ol>
                 </div>
 
                 <div className="qualifications ms-3 mt-4">
                   <p>
                     <strong className="headd">QUALIFICATIONS:</strong>
                   </p>
-                  <ul>
+                  <ol>
                     {qualificationData.map((e) => (
-                      <li key={e.id} className="DMS ms-5">
+                      <li key={e.id} className="DMS ps-3">
                         {e.detail}
                       </li>
                     ))}
-                  </ul>
+                  </ol>
                 </div>
                 <h5>Aurthur Name</h5>
                 <p>Phone number</p>

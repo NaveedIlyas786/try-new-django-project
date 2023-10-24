@@ -948,7 +948,7 @@ const Estimator = () => {
           },
           body: JSON.stringify({
             date: step0FormData.date,
-            estimating: step0FormData.estimating,
+            estimating_id: step0FormData.estimating,
             architect_name: step0FormData.architect_name,
             architect_firm: step0FormData.architect_firm,
             Addendums: step1FormData.Addendums.map((addendum) => ({
@@ -981,7 +981,7 @@ const Estimator = () => {
         // Clear form fields after successful submission
         setStep0FormData({
           date: getCurrentDate(),
-          estimating: "",
+          estimating_id: "",
           architect_name: "",
           architect_firm: "",
         });
@@ -1017,7 +1017,7 @@ const Estimator = () => {
     // **********purposalModal
     setStep0FormData({
       date: getCurrentDate(),
-      estimating: "",
+      estimating_id: "",
       architect_name: "",
       architect_firm: "",
     });

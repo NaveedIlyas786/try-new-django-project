@@ -4133,7 +4133,7 @@ const Estimator = () => {
                             <div
                               id={"proposalAddendumDiv" + index}
                               className="input-group"
-                            >
+                            > 
                               <input
                                 id={"proposalAddendumNumber" + index}
                                 type="number"

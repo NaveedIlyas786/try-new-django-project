@@ -80,6 +80,13 @@ class Estimating(models.Model):
     bidder = models.CharField(verbose_name="Bidder Name",max_length=1500, null=True,blank=True)
     bidder_detail=models.CharField(verbose_name="Bidder Detail",max_length=5000,null=True,blank=True)
     bidder_mail=models.EmailField(verbose_name="add the bidder Mail", max_length=254,null=True,blank=True)
+    plane_date= models.DateField(
+        verbose_name="Plane Date(YYYY-MM-DD)",
+        blank=False,
+        null=True)
+
+
+
     def save(self, *args, **kwargs):
         from accounts.models import User
         # Check if this is a new instance (i.e., being created and not updated)
@@ -193,10 +200,7 @@ class Proposal(models.Model):
         verbose_name="Architect Firm",
         max_length=50)
     
-    plane_date= models.DateField(
-        verbose_name="Plane Date(YYYY-MM-DD)",
-        blank=False,
-        null=True)
+
     def __str__(self):
         return f"Proposal {self.id} by {self.architect_name}"
     

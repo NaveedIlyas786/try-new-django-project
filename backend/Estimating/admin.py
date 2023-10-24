@@ -58,7 +58,7 @@ class EstimatingAdmin(admin.ModelAdmin):
     list_display = ['id', 'start_date', 'prjct_name','time','timezone',
                     'due_date', 'status','company',
                     'bid_amount', 'location', 'estimator',
-                    'bidder','bidder_mail','bidder_detail']
+                    'bidder','bidder_mail','bidder_detail','plane_date']
     list_filter = ['estimator']  # Use 'username' or another field that exists in the 'User' model
 
     def get_queryset(self, request):
@@ -131,7 +131,7 @@ class SpecificationInline(NestedStackedInline):
 
 class ProposalAdmin(NestedModelAdmin):
     inlines = [AddendumInline, ProposalServiceInline, SpecificationInline]
-    list_display = ['id', 'estimating', 'date','plane_date', 'architect_name', 'architect_firm']
+    list_display = ['id', 'estimating', 'date', 'architect_name', 'architect_firm']
     search_fields = ['architect_name', 'architect_firm']
 
 

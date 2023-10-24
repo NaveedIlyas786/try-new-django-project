@@ -7,7 +7,6 @@ from .models import (
 )
 from Estimating.models import Spec_detail
 
-
 class ContractInline(admin.StackedInline):
     model = Contract
     extra = 1  
@@ -103,8 +102,9 @@ class ProjectAdmin(admin.ModelAdmin):
         ScheduleInline, SubContractorsInline, LaborRateInline, BillingInline,
         SovInline, HDSSystemInline, OnBuildInline, BugetInline
     ]
+
     
-    list_display = ('id','status', 'job_num', 'start_date', 'scope','prjct_engnr','bim_oprtr','Forman','prjct_mngr','estimating','start_date','general_superintendent',
+    list_display = ('id','status', 'job_num', 'start_date', 'proposal','prjct_engnr','bim_oprtr','Forman','prjct_mngr','start_date','general_superintendent',
                     'project_address','addendums','bid','Spec','contacts','drywell','finish','wall_type','progress','ro_door','ro_window','substitution')  
     search_fields = ['status', 'job_num'] 
 

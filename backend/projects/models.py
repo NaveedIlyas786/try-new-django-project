@@ -12,7 +12,7 @@ class Project(models.Model):
         'Upcoming/Estimating pahse', 'Upcoming/Estimating pahse'), ('Complete', 'Complete'),], default='Pre-Construction', max_length=50, null=True, blank=True)
     job_num = models.PositiveIntegerField(
         verbose_name="Add Job #", unique=True, null=True, blank=True)
-    scope=models.ForeignKey(Proposal, verbose_name="Add Proposal", on_delete=models.CASCADE, null=True, blank=True)
+    proposal=models.ForeignKey(Proposal, verbose_name="Add Proposal", on_delete=models.CASCADE, null=True, blank=True)
 
     prjct_engnr = models.ForeignKey(User, verbose_name="Project Engineer", related_name='Project_Engineer', limit_choices_to=models.Q(
         roles__name='Project Engineer'), on_delete=models.SET_NULL, null=True, blank=True)
@@ -29,8 +29,7 @@ class Project(models.Model):
         models.Q(roles__name='Vice President') |
         models.Q(roles__name='No. Cal. General Manager'),
           on_delete=models.SET_NULL, null=True, blank=True)
-    estimating = models.ForeignKey(Estimating, verbose_name="estimating",
-                                   related_name='projects_start_date', on_delete=models.CASCADE, null=True, blank=True)
+
     start_date = models.DateField(
         verbose_name="start Date(YYYY-MM-DD)", null=True, blank=True)
     general_superintendent = models.ForeignKey(User, verbose_name="Genral_superintendent",
@@ -323,7 +322,7 @@ class Project(models.Model):
     #             create_directory(item['name'], item['parent'])
 
     def __str__(self):
-        return str(self.estimating)
+        return str(self.proposal)
 
 
 

@@ -25,9 +25,16 @@ const ProjectDirectory = () => {
     {
       id: 5,
       name: "Estimating",
-      children: ["Addendums", "Bid", "Plans","Pre Bid RFIs","Quotes","Specs"],
+      children: [
+        "Addendums",
+        "Bid",
+        "Plans",
+        "Pre Bid RFIs",
+        "Quotes",
+        "Specs",
+      ],
     },
-    
+
     {
       id: 6,
       name: "Insurance",
@@ -47,7 +54,6 @@ const ProjectDirectory = () => {
   const handleFolderClick = (folderId) => {
     setOpenFolderId(folderId === openFolderId ? null : folderId);
   };
-
 
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState("");
@@ -95,81 +101,479 @@ const ProjectDirectory = () => {
           <div className="asideData ">
             <h6 className="Projtitle">CCC Applied Technology Bldg</h6>
             <div className="folders mt-4">
-            <ul>
-        {AllFolders.map((folder) => (
-          <li className="mylist" key={folder.id}>
-            <span className="spanParent" onClick={() => handleFolderClick(folder.id)}>{folder.name}<i className="fa-light fa  fa-angle-down"></i></span>
-            {folder.id === openFolderId && folder.children && (
-              <ul className="mt-2 subSection">
-                {folder.children.map((child, index) => (
-                  <li className="sublist" key={index}>{child}</li>
+              <ul>
+                {AllFolders.map((folder) => (
+                  <li className="mylist" key={folder.id}>
+                    <span
+                      className="spanParent"
+                      onClick={() => handleFolderClick(folder.id)}
+                    >
+                      {folder.name}
+                      <i className="fa-light fa  fa-angle-down"></i>
+                    </span>
+                    {folder.id === openFolderId && folder.children && (
+                      <ul className="mt-2 subSection">
+                        {folder.children.map((child, index) => (
+                          <li className="sublist" key={index}>
+                            {child}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
                 ))}
               </ul>
-            )}
-          </li>
-        ))}
-      </ul>
             </div>
           </div>
         </aside>
-        <main className="main">
-          
-          {/* <img
-            className="mainimg"
-            src="../../../src/assets/logo1.avif"
-            alt=""
-          /> */}
+
+        <main className="projectdirectorymain">
           <div className="parentDiv px-5">
-      <div className="titleWithSearch">
-        <h3 className="text-black">Projects Summary</h3>
-        <div className="inputSearchDiv">
-          <input
-            type="text"
-            placeholder="Filter by Project Name, prjct_engnr Name, bim_oprtrs, job_num"
-            value={filter}
-            className="myinput"
-            onChange={(e) => setFilter(e.target.value)}
-          />
-          <button className="btn btn-primary searchbtn">Search</button>
-        </div>
-      </div>
+            <div className="titleWithSearch">
+              <h3 className=" heading-summary text-primary">
+                Projects Summary
+              </h3>
+            </div>
+          </div>
+          <div className=" projectfiledshow mt-4">
+            {filteredData.map((item) => {
+              return (
+                <>
+                  <div className="container px-5" key={item.id}>
+                    <div className="ms-3 row">
+                      <div className="col-md-3 borderleft">
+                        <div className="d-flex">
+                          <p className="phead">Status:</p>
+                          <p className="borderdown ms-3">{item.status}</p>
+                        </div>
 
-      <div className="table-responsive projectTable mt-4">
-        <table className="table table-striped   table-bordered table-hover text-center">
-          <thead className="projectHeader">
-            <tr>
-              <th>Start Date</th>
-              <th>Project Name</th>
-              <th>Job Number</th>
-              <th>Project Manager</th>
-              <th>Project Engineer</th>
-              <th>Bim Operator</th>
-              <th>Foreman</th>
-            </tr>
-          </thead>
-          <tbody className="bg-info jloop">
-            {filteredData.map((item) => (
-              <tr
-                key={item.id}
-                className="mytr"
-                onClick={() => navigateToLink(item.id)}
-                value={item.Prjct_Name}
-              >
-                <td className="mytd">{item.start_date}</td>
-                <td className="mytd">{item.estimating}</td>
-                <td className="mytd">{item.job_num}</td>
+                        <div className="d-flex">
+                          <p className="phead">Scope:</p>
+                          <p className="borderdown ms-3">{item.scope}</p>
+                        </div>
 
-                <td className="mytd">{item.prjct_mngr}</td>
+                        <div className="d-flex">
+                          <p className="phead">Addendums:</p>
+                          <p className="borderdown ms-3">{item.addendums}</p>
+                        </div>
+                        <div className="d-flex">
+                          <p className="phead">Specification:</p>
+                          <p className="borderdown ms-3">{item.Spec}</p>
+                        </div>
+                        <div className="d-flex">
+                          <p className="phead">Contacts:</p>
+                          <p className="borderdown ms-3">{item.contacts}</p>
+                        </div>
+                        <div className="d-flex">
+                          <p className="phead">Drywell:</p>
+                          <p className="borderdown ms-3">{item.drywell}</p>
+                        </div>
+                        <div className="d-flex">
+                          <p className="phead">Wall-Type:</p>
+                          <p className="borderdown ms-3">{item.wall_type}</p>
+                        </div>
+                        <div className="d-flex">
+                          <p className="phead">progress:</p>
+                          <p className="borderdown ms-3">{item.progress}</p>
+                        </div>
+                        <div className="d-flex">
+                          <p className="phead">ro_door:</p>
+                          <p className="borderdown ms-3">{item.ro_door}</p>
+                        </div>
+                        <div className="d-flex">
+                          <p className="phead">ro_window:</p>
+                          <p className="borderdown ms-3">{item.ro_window}</p>
+                        </div>
 
-                <td className="mytd">{item.prjct_engnr}</td>
-                <td className="mytd">{item.bim_oprtr}</td>
-                <td className="mytd">{item.Forman}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+                        <div className="d-flex">
+                          <p className="phead">substitution:</p>
+                          <p className="borderdown ms-3">{item.substitution}</p>
+                        </div>
+                      </div>
+                      <div className="col-md-9">
+                        <div className="ms-3 row">
+                          <div className="col-md-5">
+                            <div className="d-flex">
+                              <p className="phead">Contracts:</p>
+                              <p className="borderdown ms-3">
+                                {item.contracts[0].contract}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="col-md-5">
+                            <div className="d-flex">
+                              <p className="phead">Contract_Date:</p>
+                              <p className="borderdown ms-3">
+                                {item.contracts[0].contract_date}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="ms-3 row">
+                          <div className="col-md-5">
+                            <div className="d-flex">
+                              <p className="phead">Schedule_of_values:</p>
+                              <p className="borderdown ms-3">
+                                {item.schedule_of_values[0].schedule}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="col-md-5">
+                            <div className="d-flex">
+                              <p className="phead">Schedule_Date:</p>
+                              <p className="borderdown ms-3">
+                                {item.schedule_of_values[0].schedule_date}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="ms-3 row">
+                          <div className="col-md-5">
+                            <div className="d-flex">
+                              <p className="phead">Insurance:</p>
+                              <p className="borderdown ms-3">
+                                {item.insurancs[0].insurance}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="col-md-5">
+                            <div className="d-flex">
+                              <p className="phead">Insurance_Date:</p>
+                              <p className="borderdown ms-3">
+                                {item.insurancs[0].date}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="ms-3 row">
+                          <div className="col-md-5">
+                            <div className="d-flex">
+                              <p className="phead">Bond:</p>
+                              <p className="borderdown ms-3">
+                                {item.bond[0].bond}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="col-md-5">
+                            <div className="d-flex">
+                              <p className="phead">Bond_Date:</p>
+                              <p className="borderdown ms-3">
+                                {item.bond[0].date}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="ms-3 row">
+                          <div className="col-md-5">
+                            <div className="d-flex">
+                              <p className="phead">Zliens:</p>
+                              <p className="borderdown ms-3">
+                                {item.zliens[0].zlien}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="col-md-5">
+                            <div className="d-flex">
+                              <p className="phead">Zliens_Date:</p>
+                              <p className="borderdown ms-3">
+                                {item.zliens[0].date}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="ms-3 row">
+                          <div className="col-md-5">
+                            <div className="d-flex">
+                              <p className="phead">Schedule_Status</p>
+                              <p className="borderdown ms-3">
+                                {item.schedule[0].status}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="col-md-5">
+                            <div className="d-flex">
+                              <p className="phead">Schedule_Date:</p>
+                              <p className="borderdown ms-3">
+                                {item.schedule[0].date}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="ms-3 row">
+                          <div className="col-md-5">
+                            <div className="d-flex">
+                              <p className="phead">Billing_Reduction:</p>
+                              <p className="borderdown ms-3">
+                                {item.billing[0].reduction}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="col-md-5">
+                            <div className="d-flex">
+                              <p className="phead">Billing_Date:</p>
+                              <p className="borderdown ms-3">
+                                {item.billing[0].due_date}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="ms-3 row">
+                          <div className="col-md-5">
+                            <div className="d-flex">
+                              <p className="phead">Sov_Status:</p>
+                              <p className="borderdown ms-3">
+                                {item.sov[0].status}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="col-md-5">
+                            <div className="d-flex">
+                              <p className="phead">Sov_Date:</p>
+                              <p className="borderdown ms-3">
+                                {item.sov[0].date}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="ms-3 row">
+                          <div className="col-md-5">
+                            <div className="d-flex">
+                              <p className="phead">Onbuild_filed:</p>
+                              <p className="borderdown ms-3">
+                                {item.onbuild[0].field}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="col-md-5">
+                            <div className="d-flex">
+                              <p className="phead">Onbuild_status:</p>
+                              <p className="borderdown ms-3">
+                                {item.onbuild[0].status}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="ms-3 row">
+                          <div className="col-md-5">
+                            <div className="d-flex">
+                              <p className="phead">Buget_Status:</p>
+                              <p className="borderdown ms-3">
+                                {item.buget[0].status}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="col-md-5">
+                            <div className="d-flex">
+                              <p className="phead">Buget_Comment:</p>
+                              <p className="borderdown budgethide ms-3">
+                                {item.buget[0].comment_box}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className="container px-5">
+                    <div className="ms-3 row">
+                      <div className="col-md-4 ">
+                        <div className="d-flex">
+                          <p className="phead">Hds_system Status:</p>
+                          <p className="borderdown ms-3">
+                            {item.hds_system[0].status}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="col-md-4 ">
+                        <div className="d-flex">
+                          <p className="phead">Date:</p>
+                          <p className="borderdown ms-3">
+                            {item.hds_system[0].date}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="col-md-4 ">
+                        <div className="d-flex">
+                          <p className="phead">Comment:</p>
+                          <p className="borderdown ms-3">
+                            {item.hds_system[0].comment_box}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="ms-3 row">
+                      <div className="col-md-4 ">
+                        <div className="d-flex">
+                          <p className="phead">Laborrate_Status:</p>
+                          <p className="borderdown ms-3">
+                            {item.laborrate[0].status}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="col-md-4 ">
+                        <div className="d-flex">
+                          <p className="phead">Date:</p>
+                          <p className="borderdown ms-3">
+                            {item.laborrate[0].date}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="col-md-4 ">
+                        <div className="d-flex">
+                          <p className="phead">Comment:</p>
+                          <p className="borderdown ms-3">
+                            {item.laborrate[0].comment_box}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="ms-3 row">
+                      <div className="col-md-4 ">
+                        <div className="d-flex">
+                          <p className="phead">Sub_Contractors Status:</p>
+                          <p className="borderdown ms-3">
+                            {item.sub_contractors[0].status}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="col-md-4 ">
+                        <div className="d-flex">
+                          <p className="phead">Date:</p>
+                          <p className="borderdown ms-3">
+                            {item.sub_contractors[0].date}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="col-md-4 ">
+                        <div className="d-flex">
+                          <p className="phead">Comment:</p>
+                          <p className="borderdown ms-3">
+                            {item.sub_contractors[0].comment_box}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  <div
+                    className="container px-5"
+                    
+                  >
+                    <div className="ms-3 row">
+                      <div className="col-md-3 ">
+                        <div className="d-flex">
+                          <p className="phead">Submittals:</p>
+                          <p className="borderdown ms-3">
+                            {item.submittals[0].status}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="col-md-3 ">
+                        <div className="d-flex">
+                          <p className="phead">Date:</p>
+                          <p className="borderdown ms-3">
+                            {item.submittals[0].date}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="col-md-3 ">
+                        <div className="d-flex">
+                          <p className="phead">Proposal:</p>
+                          <p className="borderdown ms-3">
+                            {item.submittals[0].proposal}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="col-md-3 ">
+                        <div className="d-flex">
+                          <p className="phead">Scope Work No.:</p>
+                          <p className="borderdown ms-3">
+                            {item.submittals[0].scop_work_number}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="ms-3 row">
+                      <div className="col-md-3 ">
+                        <div className="d-flex">
+                          <p className="phead">shopdrawing:</p>
+                          <p className="borderdown ms-3">
+                            {item.shopdrawing[0].status}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="col-md-3 ">
+                        <div className="d-flex">
+                          <p className="phead">Date:</p>
+                          <p className="borderdown ms-3">
+                            {item.shopdrawing[0].date}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="col-md-3 ">
+                        <div className="d-flex">
+                          <p className="phead">Propsal:</p>
+                          <p className="borderdown ms-3">
+                            {item.shopdrawing[0].proposal}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="col-md-3 ">
+                        <div className="d-flex">
+                          <p className="phead">Scope Work No.:</p>
+                          <p className="borderdown ms-3">
+                            {item.shopdrawing[0].scop_work_number}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="ms-3 row">
+                      <div className="col-md-3 ">
+                        <div className="d-flex">
+                          <p className="phead">Safity:</p>
+                          <p className="borderdown ms-3">
+                            {item.safity[0].status}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="col-md-3 ">
+                        <div className="d-flex">
+                          <p className="phead">Date:</p>
+                          <p className="borderdown ms-3">
+                            {item.safity[0].date}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="col-md-3 ">
+                        <div className="d-flex">
+                          <p className="phead">Proposal:</p>
+                          <p className="borderdown ms-3">
+                            {item.safity[0].proposal}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="col-md-3 ">
+                        <div className="d-flex">
+                          <p className="phead">Scope Work No.:</p>
+                          <p className="borderdown ms-3">
+                            {item.safity[0].scop_work_number}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              );
+            })}
+          </div>
         </main>
       </div>
     </div>

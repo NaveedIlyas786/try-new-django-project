@@ -28,12 +28,15 @@
   page-break-before: always; /* Force a page break before this element */
 }
 .rightTop{
-  color: #014db1;
+  /* color: #014db1; */
+  color: black;
   font-family: 'Poppins', sans-serif;
 }
 .topinfo{
-  font-size: 20px !important;
+  font-size: 18px !important;
   font-weight: 400;
+  text-align: right;
+
 }
 .DMS{
   font-family: 'Poppins', sans-serif;
@@ -67,7 +70,8 @@
   margin: 0 100px;
 }
 .baseh4{
-  font-size: 18px;
+  font-size: 19px !important;
+  font-weight: 700 !important;
 }
 .baseh5{
   font-size: 21px;

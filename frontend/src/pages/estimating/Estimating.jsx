@@ -1516,6 +1516,29 @@ const Estimator = () => {
   const MovetoURLpage = () => {
     navigate("/homepage/urlpage");
   };
+
+  filteredData.sort((a, b) => {
+    if (a.due_date && b.due_date) {
+      const dateA = new Date(a.due_date);
+      const dateB = new Date(b.due_date);
+  
+      // Compare due dates in descending order (newest to oldest)
+      if (dateA > dateB) {
+        return -1; // b comes before a
+      } else if (dateA < dateB) {
+        return 1; // a comes before b
+      }
+      return 0; // Due dates are equal
+    } else if (a.due_date && !b.due_date) {
+      return -1; // a comes before b
+    } else if (!a.due_date && b.due_date) {
+      return 1; // b comes before a
+    }
+    return 0; // No change in order if both have no due date
+  });
+  
+
+
   return (
     <div className="ParentAllDiv">
       <div className={`estimator ${showModal ? "modal-active" : ""}`}>
@@ -1599,6 +1622,7 @@ const Estimator = () => {
                 </tr>
               </thead>
               <tbody className="cursor-pointer jktable bg-info jloop">
+              
                 {filteredData.map((item) => (
                   <tr key={item.id}>
                     <td

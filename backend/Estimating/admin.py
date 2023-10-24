@@ -20,12 +20,9 @@ class DprtmntAdmin(admin.ModelAdmin):
 
 
 class DMS_DertoryAdmin(admin.ModelAdmin):
-    def get_job_title(self, obj):
-        return ", ".join([str(role) for role in obj.job_title.all()])
-    get_job_title.short_description = 'job_title'
 
 
-    list_display=('id', 'first_name','last_name','email','get_job_title','company','department','direct_number','locaton','mobile_number')
+    list_display=('id', 'first_name','last_name','email','job_title','company','department','direct_number','locaton','mobile_number')
     add_fieldsets = [
         (
             None,
@@ -35,7 +32,6 @@ class DMS_DertoryAdmin(admin.ModelAdmin):
             },
         ),
     ]
-    filter_horizontal = ['job_title',] 
 
 
 # Register your models here
@@ -135,7 +131,7 @@ class SpecificationInline(NestedStackedInline):
 
 class ProposalAdmin(NestedModelAdmin):
     inlines = [AddendumInline, ProposalServiceInline, SpecificationInline]
-    list_display = ['id', 'estimating', 'date', 'architect_name', 'architect_firm']
+    list_display = ['id', 'estimating', 'date','plane_date', 'architect_name', 'architect_firm']
     search_fields = ['architect_name', 'architect_firm']
 
 

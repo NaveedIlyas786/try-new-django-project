@@ -948,13 +948,14 @@ const Estimator = () => {
           },
           body: JSON.stringify({
             date: step0FormData.date,
-            estimating: step0FormData.estimating,
+            estimating_id: step0FormData.estimating,
             architect_name: step0FormData.architect_name,
             architect_firm: step0FormData.architect_firm,
             Addendums: step1FormData.Addendums.map((addendum) => ({
-              addendum_Number: addendum.addendum_Number,
+              addendum_number: addendum.addendum_number,
               date: addendum.date,
-            })),
+          })),
+          
             spcifc: step2FormData.map((entry) => ({
               specific_name: entry.specific_name,
               budget: entry.budget,
@@ -968,11 +969,12 @@ const Estimator = () => {
             services: services.map((service) => ({
               proposal: service.proposal,
               service: service.service,
-              type: service.type === "IN" ? "IN" : "EX",
+              service_type: service.service_type === "IN" ? "IN" : "EX",
             })),
           }),
         }
       );
+      console.log("Data For Posting ",response);
       if (response.ok) {
         const responseData = await response.json();
         // console.log("Response data:", responseData);
@@ -981,7 +983,7 @@ const Estimator = () => {
         // Clear form fields after successful submission
         setStep0FormData({
           date: getCurrentDate(),
-          estimating: "",
+          estimating_id: "",
           architect_name: "",
           architect_firm: "",
         });
@@ -1017,7 +1019,7 @@ const Estimator = () => {
     // **********purposalModal
     setStep0FormData({
       date: getCurrentDate(),
-      estimating: "",
+      estimating_id: "",
       architect_name: "",
       architect_firm: "",
     });
@@ -4131,15 +4133,15 @@ const Estimator = () => {
                             <div
                               id={"proposalAddendumDiv" + index}
                               className="input-group"
-                            >
+                            > 
                               <input
                                 id={"proposalAddendumNumber" + index}
                                 type="number"
-                                name="addendum_Number" // Set the name attribute to differentiate
+                                name="addendum_number" // Set the name attribute to differentiate
                                 className="form-control"
                                 value={
                                   step1FormData.Addendums?.[index]
-                                    ?.addendum_Number || ""
+                                    ?.addendum_number || ""
                                 }
                                 onChange={(e) => {
                                   const { name, value } = e.target;
@@ -4149,7 +4151,7 @@ const Estimator = () => {
                                     ];
                                     const updatedAddendum = {
                                       ...(newAddendumEntries[index] || {}), // Get the existing Addendum or an empty object
-                                      [name]: value, // Dynamically set the field (addendum_Number)
+                                      [name]: value, // Dynamically set the field (addendum_number)
                                     };
                                     newAddendumEntries[index] = updatedAddendum;
                                     return {

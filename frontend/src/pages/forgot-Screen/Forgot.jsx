@@ -27,17 +27,17 @@ const Forgot = () => {
 
   return (
     <div className="parent">
-      <div className="sub_Parentforgot">
+      <div className="sub_Parentforgot ">
         <h1 className="text-dark">Reset Your Password</h1>
         <p>Enter your email address you signed up with</p>
         <input
           placeholder="Enter your email"
-          className="ForgotInput"
+          className="ForgotInput mb-3"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <button type="submit" className="submitbtn" onClick={handleSubmit}>
+        <button type="button" className="submitbtn w-100 mt-2" onClick={handleSubmit}>
           Submit
         </button>
         {showMessage && <p className="message">{message}</p>}

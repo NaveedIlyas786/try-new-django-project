@@ -625,14 +625,17 @@ class LocationViews(APIView):
 def create_proposal(request, proposal_id=None):
     if request.method == 'POST':
         data = request.data
+        if 'estimating_id' not in data:
+            return Response({"error": "estimating_id is required"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            estimating_instance = Estimating.objects.get(id=data['estimating'])
+            estimating_instance = Estimating.objects.get(id=data['estimating_id'])
+
         except Estimating.DoesNotExist:
             return Response({"error": "Estimating instance not found"}, status=status.HTTP_400_BAD_REQUEST)
 
         proposal_data = {
-            "estimating": estimating_instance.id,
+            "estimating_id": estimating_instance.id,
             "date": data['date'],
             "architect_name": data['architect_name'],
             "architect_firm": data['architect_firm'],
@@ -656,7 +659,7 @@ def create_proposal(request, proposal_id=None):
                 proposal_service_data = {
                     "proposal": proposal.id,
                     "service": service.id,
-                    "service_type": service_data['type']
+                    "service_type": service_data['service_type']
                 }
                 proposal_service_serializer = ProposalServiceSerializer(data=proposal_service_data)
                 if proposal_service_serializer.is_valid():
@@ -678,7 +681,7 @@ def create_proposal(request, proposal_id=None):
                 proposal_addendum_data = {
                     "proposal": proposal.id,
                     "date": addendum_data['date'],
-                    "addendum_Number": addendum_data['addendum_Number']
+                    "addendum_Number": addendum_data['addendum_number']
                 }
                 proposal_addendum_serializer = AddendumSerializer(data=proposal_addendum_data)
                 if proposal_addendum_serializer.is_valid():

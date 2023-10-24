@@ -8,8 +8,8 @@ from Estimating.models import Estimating, Estimating_detail, Proposal,Specificat
 
 
 class Project(models.Model):
-    status = models.CharField(choices=[('C', 'C'), ('P', 'P'), ('Q', 'Q'), (
-        'V', 'V'), ('X', 'X'),], default='P', max_length=50, null=True, blank=True)
+    status = models.CharField(choices=[('Construction Phase', 'Construction Phase'), ('Pre-Construction', 'Pre-Construction'), ('Close out phase', 'Close out phase'), (
+        'Upcoming/Estimating pahse', 'Upcoming/Estimating pahse'), ('Complete', 'Complete'),], default='Pre-Construction', max_length=50, null=True, blank=True)
     job_num = models.PositiveIntegerField(
         verbose_name="Add Job #", unique=True, null=True, blank=True)
     scope=models.ForeignKey(Proposal, verbose_name="Add Proposal", on_delete=models.CASCADE, null=True, blank=True)

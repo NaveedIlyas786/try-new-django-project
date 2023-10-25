@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import "./Signup.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -135,6 +135,7 @@ const Signup = () => {
         .catch((error) => {
           // Handle error response from the backend
           console.error("User registration failed:", error);
+
 
           // Adjust this to fit the actual error structure you’re receiving
           if (

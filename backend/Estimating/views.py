@@ -701,7 +701,7 @@ def create_proposal(request, proposal_id=None):
                 specification_serializer = SpecificationSerializer(data=specification_data)
                 if specification_serializer.is_valid():
                     specification = specification_serializer.save()
-                    total_budget += specification_data['budget']
+                    total_budget += float(specification_data['budget'])
                 else:
                     return Response(specification_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

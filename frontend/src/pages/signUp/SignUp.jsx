@@ -302,7 +302,7 @@ const Signup = () => {
             )}
           </span>
         </div>
-        <button className="submitbtn" onClick={handleRegister}>
+        <button type="button" className="submitbtn" onClick={handleRegister}>
           Send Request
         </button>
         {/* <p className="signuplink">

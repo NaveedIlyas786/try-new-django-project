@@ -40,10 +40,10 @@ const Signup = () => {
         <>
           {/* <div className="modal-overlay">
             <div className="popuppass">
-              {/* <p>All Fields are required</p> */}
+              <p>All Fields are required</p>
               {alert("All Fields are required")}
             </div>
-          </div> */}
+          </div>  */}
           {alert("All Fields are required")}
         </>
       );
@@ -63,7 +63,7 @@ const Signup = () => {
         <>
           {/* <div className="modal-overlay">
             <div className="popuppass">
-              {/* <p>Invalid Email</p> */}
+              <p>Invalid Email</p>
               {alert("Your Email is Invalid")}
             </div>
           </div> */}
@@ -111,7 +111,7 @@ const Signup = () => {
         <>
           {/* <div className="modal-overlay">
             <div className="popuppass">
-              {/* <p> Password do not match</p> */}
+              <p> Password do not match</p>
               {alert("Password do not match")}
             </div>
           </div> */}
@@ -156,10 +156,10 @@ const Signup = () => {
         <>
           {/* <div className="modal-overlay">
             <div className="popuppass">
-              {/* <p>Invalid Password</p> */}
+              <p>Invalid Password</p>
               {alert("Password is not Matched")}
             </div>
-          </div> */}
+          </div>  */}
           {alert("Invalid Password")}
 
         </>

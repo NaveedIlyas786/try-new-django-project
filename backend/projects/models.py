@@ -8,7 +8,7 @@ from Estimating.models import Estimating, Estimating_detail, Proposal,Specificat
 
 
 class Project(models.Model):
-    status = models.CharField(choices=[('Construction Phase', 'Construction Phase'), ('Pre-Construction', 'Pre-Construction'), ('Close out phase', 'Close out phase'), (
+    status = models.CharField(choices=[ ('Pre-Construction', 'Pre-Construction'),('Construction Phase', 'Construction Phase'), ('Close out phase', 'Close out phase'), (
         'Upcoming/Estimating pahse', 'Upcoming/Estimating pahse'), ('Complete', 'Complete'),], default='Pre-Construction', max_length=50, null=True, blank=True)
     job_num = models.PositiveIntegerField(
         verbose_name="Add Job #", unique=True, null=True, blank=True)
@@ -371,7 +371,6 @@ class  Zlien(models.Model):
 
 
 class Submittals(models.Model):
-    proposal=models.ForeignKey(Proposal, verbose_name="Add Proposal", on_delete=models.CASCADE, null=True, blank=True)
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     scop_work_number=models.ForeignKey(Specification, verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
     status=models.CharField(verbose_name="Submittals", max_length=50,choices=[
@@ -380,7 +379,6 @@ class Submittals(models.Model):
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
 
 class ShopDrawing(models.Model):
-    proposal=models.ForeignKey(Proposal, verbose_name="Add Proposal", on_delete=models.CASCADE, null=True, blank=True)
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     scop_work_number=models.ForeignKey(Specification, verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
     status=models.CharField(verbose_name="Shop Drawing", max_length=50,choices=[
@@ -389,7 +387,6 @@ class ShopDrawing(models.Model):
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
 
 class Safity(models.Model):
-    proposal=models.ForeignKey(Proposal, verbose_name="Add Proposal", on_delete=models.CASCADE, null=True, blank=True)
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     scop_work_number=models.ForeignKey(Specification, verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
     status=models.CharField(verbose_name="Safity", max_length=50,choices=[
@@ -416,7 +413,7 @@ class Sub_Contractors(models.Model):
 class LaborRate(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     status=models.CharField(verbose_name="Labor Rate", max_length=50,choices=[
-        ('Aproved','Aproved'),('Pending','Pending'),('Custom','Custom'),
+        ('Approved','Approved'),('Pending','Pending'),('Custom','Custom'),
         ],default='Pending', null=True, blank=True)
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
     comment_box=models.CharField(verbose_name="comment", max_length=5000, null=True, blank=True)
@@ -429,7 +426,7 @@ class Billing(models.Model):
 class Sov(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     status=models.CharField(verbose_name="Labor Rate", max_length=50,choices=[
-        ('Aproved','Aproved'),('Pending','Pending'),
+        ('Approved','Approved'),('Pending','Pending'),
         ],default='Pending', null=True, blank=True)
     date=models.DateField(verbose_name="add date if Status Approved (YYYY-MM-DD)", null=True, blank=True)
 
@@ -437,7 +434,7 @@ class Sov(models.Model):
 class HDS_system(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     status=models.CharField(verbose_name="HDS System", max_length=50,choices=[
-        ('Not Required','Not Required'),('Aproved','Aproved'),('Pending','Pending'),('Custom','Custom'),
+        ('Not Required','Not Required'),('Approved','Approved'),('Pending','Pending'),('Custom','Custom'),
         ],default='Pending', null=True, blank=True)
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
     comment_box=models.CharField(verbose_name="comment", max_length=5000, null=True, blank=True)

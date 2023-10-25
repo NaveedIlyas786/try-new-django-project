@@ -1,12 +1,21 @@
 
-
-import React, { useState } from "react";
+import { useLocation,NavLink } from "react-router-dom";
+import React, { useState , useEffect } from "react";
 import "./Navbar.css"; // Make sure to import your CSS file
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [activeLink, setActiveLink] = useState("Dashboard");
+  const location = useLocation();
+
+
+  useEffect(() => {
+    setActiveLink(location.pathname.replace("/", "")); // Remove the leading slash
+  }, [location.pathname]);
+
+ 
+  
 
   const handleToggleClick = () => {
     setIsNavOpen(!isNavOpen);
@@ -21,7 +30,7 @@ const Navbar = () => {
    
    <nav className={`navbar navbar-expand-lg navbar-inverse ${isNavOpen ? 'expanded' : ''}`}>
       <div className="container-fluid px-5">
-        <Link
+        <NavLink
           className="navbar-brand"
           to="/homepage/dashboard"
           onClick={() => handleLinkClick("Dashboard")}
@@ -31,7 +40,7 @@ const Navbar = () => {
             style={{ height: 35 }}
             alt=""
           />
-        </Link>
+        </NavLink>
         <button
           className="navbar-toggler"
           type="button"
@@ -45,55 +54,55 @@ const Navbar = () => {
         <div className={`collapse navTabs navbar-collapse ${isNavOpen ? 'show expanded' : ''}`} id="mynavbar">
        
         <ul className={`navbar-nav ms-auto gap-2 navTabs ${isNavOpen ? 'show expanded' : ''}`}>
-            <Link
+            <NavLink
               className={`nav-item ${activeLink === "Dashboard" ? "active" : ""}`}
               to="dashboard"
               onClick={() => handleLinkClick("Dashboard")}
             >
               <li>Dashboard</li>
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               className={`nav-item ${activeLink === "Estimating" ? "active" : ""}`}
               to="estimating"
               onClick={() => handleLinkClick("Estimating")}
             >
               <li>Estimating</li>
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               className={`nav-item ${activeLink === "Projects" ? "active" : ""}`}
               to="projects"
               onClick={() => handleLinkClick("Projects")}
             >
               <li>Projects</li>
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               className={`nav-item ${activeLink === "BIM" ? "active" : ""}`}
               to="bim"
               onClick={() => handleLinkClick("BIM")}
             >
               <li>BIM</li>
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               className={`nav-item ${activeLink === "Reports" ? "active" : ""}`}
               to="reports"
               onClick={() => handleLinkClick("Reports")}
             >
               <li>Reports</li>
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               className={`nav-item ${activeLink === "HrPayRoll" ? "active" : ""}`}
               to="hrPayroll"
               onClick={() => handleLinkClick("HrPayRoll")}
             >
               <li>HR/Payroll</li>
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               className={`nav-item ${activeLink === "DMSDirectory" ? "active" : ""} dmsDirectory`}
               to="dmsDirectory"
               onClick={() => handleLinkClick("DMSDirectory")}
             >
               <li>DMS Directory</li>
-            </Link>
+            </NavLink>
           </ul>
         </div>
       </div>

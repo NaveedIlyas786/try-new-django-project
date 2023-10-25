@@ -209,6 +209,7 @@ class ServiceSerializer(serializers.ModelSerializer):
 
 
 class AddendumSerializer(serializers.ModelSerializer):
+    date = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
 
     class Meta:
         model = Addendum
@@ -242,7 +243,7 @@ class ProposalSerializer(serializers.ModelSerializer):
     Addendums=AddendumSerializer(many=True,read_only=True)
     spcifc=SpecificationSerializer(many=True,read_only=True)
     estimating_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Estimating.objects.all(), source='estimating', required=True)
-
+    date = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
     estimating=EstimatingSerializer(read_only=True)
     
     class Meta:

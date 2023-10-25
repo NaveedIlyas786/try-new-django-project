@@ -719,9 +719,13 @@ def create_proposal(request, proposal_id=None):
                         return Response(spec_detail_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({"error": "No Specification data provided"}, status=status.HTTP_400_BAD_REQUEST)  
+        
         if estimating_instance.bid_amount is None:
+            estimating_instance.bid_amount = 0
+
             estimating_instance.bid_amount = total_budget
         else:
+            estimating_instance.bid_amount = 0
             estimating_instance.bid_amount += total_budget
         estimating_instance.save()
 

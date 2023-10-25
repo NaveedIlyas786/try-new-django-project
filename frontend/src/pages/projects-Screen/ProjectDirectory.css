@@ -28,9 +28,9 @@ ul {
   padding: 0 10px;
   /* background-color: #c74040; */
 }
-.folders {
-  /* background-color: aqua; */
-}
+/* .folders {
+  background-color: aqua;
+} */
 .mylist {
   /* padding: 5px 20px !important; */
   text-decoration: none;
@@ -78,23 +78,55 @@ ul {
   text-decoration: underline;
 }
 .main {
-  /* background-color: #007bff; */
+
   min-height: 92.5vh;
   flex-grow: 1; /* Allow main section to grow and fill the available space */
-  padding: 20px;
+  /* padding: 20px; */
   box-sizing: border-box; /* Include padding in the width */
-  display: grid;
-  align-items: center;
-  justify-content: center;
-}
-.mainimg {
-  border-radius: 50%;
-  height: 500px;
-  width: 500px;
+  
 }
 
-/* Additional styles for h1 and h3 elements */
 h1,
 h3 {
   color: #fff;
+}
+.projectdirectorymain{
+  margin-top: -90px !important;
+}
+.projectfiledshow{
+  width: 78vw !important;
+  display: flex;
+  flex-direction: column;
+}
+.heading-summary{
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+  margin-left: 300px;
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  text-shadow: 2px 2px 8px rgb(144, 204, 231);
+  font-size: 40px !important
+}
+.borderdealing{
+  border-right: 3px dotted black;
+}
+.borderdown{
+  border-bottom: 1px dotted rgb(110, 102, 102);
+}
+.phead{
+    /* font-weight: 600 !important; */
+    font-size: 16px !important;
+    color: rgb(85, 84, 84);
+}
+.borderleft{
+  border-right: 1px dotted rgb(70, 68, 68);
+}
+.borderbtttn{
+  border-bottom: 2px solid black;
+}
+.budgethide{
+  white-space: nowrap;         /* Prevent text from wrapping to the next line */
+  overflow: hidden;           /* Hide text that overflows its container */
+  text-overflow: ellipsis;    /* Display an ellipsis (...) when text is hidden */
+  max-width: 100%;
 }

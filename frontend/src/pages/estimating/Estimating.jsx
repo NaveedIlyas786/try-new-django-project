@@ -1037,13 +1037,16 @@ useEffect(() => {
         setTimeout(() => {
           closeModal();
         }, 500);
+        return;
+
       } else {
         console.error("Error submitting proposal data");
         const errorResponse = await response.text();
         console.error("Error response:", errorResponse);
-      }
-    } catch (error) {
+        return;
+      } } catch (error) {
       console.error("An error occurred:", error.message);
+   
     }
   };
 

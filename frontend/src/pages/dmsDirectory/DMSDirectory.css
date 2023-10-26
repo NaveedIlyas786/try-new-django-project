@@ -74,3 +74,12 @@
     border-radius: 0 !important;
     transition: all 0.5s ease-in-out;
   }
+  .rdt_TableCell {
+    padding: -100px !important;
+    
+  }
+  
+  /* Reduce padding for the table headers */
+  .rdt_TableHeader {
+    padding: -20px !important;
+  }

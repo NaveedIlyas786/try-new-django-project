@@ -117,7 +117,7 @@ function Rawpurposal() {
         console.log("Sending Base64 Data:", base64data.slice(0, 100)); // Log the first 100 chars
 
         return axios.post(
-          `http://127.0.0.1:8000/api/estimating/sendEmail/${id}/`,
+          "http://127.0.0.1:8000/api/estimating/sendEmail/${id}/",
           { pdf: base64data },
           { headers: { "Content-Type": "application/json" } } // Added headers
         );
@@ -214,8 +214,8 @@ function Rawpurposal() {
                       </strong>{" "}
                       is submitting the following bid proposal for the
                       <strong> {proposalData?.estimating?.prjct_name}</strong>.
-                      The plans used to formulate the bid proposal are dated{" "}
-                      {proposalData?.estimating?.start_date}, drafted by{" "}
+                      The plans used to formulate the bid proposal are dated
+                      <strong> {proposalData?.estimating?.start_date}</strong>, drafted by{" "}
                       <strong> {proposalData?.architect_firm}</strong> FIRM, and
                       approved by{" "}
                       <strong>{proposalData?.architect_name}</strong>.
@@ -256,8 +256,8 @@ function Rawpurposal() {
                         {e.sefic.map((a) => (
                           <li className="li ms-4 fwww" key={a.id}>
                             <h5 key={`${e.id}-${a.id}`}>
-                              {a.number}{" "}
-                              <span className="ms-2 fwww  ">{a.sefic}</span>
+                              {a.number}
+                              <span className="ms-2 fwww  ">{a.name}</span>
                             </h5>
                           </li>
                         ))}

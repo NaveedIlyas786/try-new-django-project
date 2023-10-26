@@ -1,507 +1,294 @@
-import React, { useEffect, useState } from "react";
-import DataTable from "react-data-table-component";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import "./DMSDirectory.css";
-import { Link, useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import Multiselect from "multiselect-react-dropdown";
-// import "react-multiple-select-dropdown-lite/dist/index.css";
-import "react-multiple-select-dropdown-lite/dist/index.css";
-
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const DMSDirectory = () => {
-  const [usersInfo, setUsersInfo] = useState([]);
+  const [showModal, setShowModal] = useState(false); // State to control modal visibility
+  const [filter, setFilter] = useState("");
   const [DMSUserDirectory, setDMSUserDirectory] = useState([]);
-  const [search, setSearch] = useState("");
-  const [filterusers, setFilterUsers] = useState([]);
-
-  const navigate = useNavigate();
-
-  const getUsers = async () => {
-    try {
-      const result = await axios.get(
-        "http://127.0.0.1:8000/api/estimating/dmsDrectory/"
-      );
-      setUsersInfo(result.data);
-      setFilterUsers(result.data);
-    } catch (err) {
-      console.error("Error fetching data:", err);
-    }
-  };
-
-  useEffect(() => {
-    getUsers();
-  }, []);
-
-  function formatMobileNumber(mobileNumber) {
-    // Check if mobileNumber is null or undefined
-    if (mobileNumber === null || mobileNumber === undefined) {
-        return ""; // or some other default value or behavior
-    }
-
-    // Ensure mobileNumber is a string
-    const mobileNumberToString = mobileNumber.toString();
-
-    // Remove all non-numeric characters from the mobile number
-    const numericOnly = mobileNumberToString.replace(/\D/g, "");
-
-    // Check if the numericOnly string has at least 6 characters
-    if (numericOnly.length >= 6) {
-        // Use a regular expression to insert hyphens every 3 digits from the left
-        return numericOnly.replace(/(\d{3})(?=\d{3})/g, "$1-");
-    } else {
-        // If the string is less than 6 characters, return it as is
-        return numericOnly;
-    }
-}
-
-
-  const Columns = [
-    {
-      name: (
-        <strong
-          className="headersTitle"
-          style={{ textAlign: "center", width: "80px" }}
-        >
-          Last Name
-        </strong>
-      ),
-      selector: (row) => row.last_name,
-      sortable: true,
-      center: true,
-    },
-    {
-      name: (
-        <strong className="headersTitle" style={{ textAlign: "center" }}>
-          First Name
-        </strong>
-      ),
-      selector: (row) => row.first_name,
-      sortable: true,
-      center: true,
-    },
-    {
-      name: (
-        <strong className="headersTitle" style={{ textAlign: "center" }}>
-          Job Title
-        </strong>
-      ),
-      selector: (row) => row.job_title,
-      sortable: true,
-      center: true,
-    },
-    {
-      name: (
-        <strong
-          className="headersTitle"
-          style={{ textAlign: "center", width: "250px" }}
-        >
-          Company
-        </strong>
-      ),
-      selector: (row) => <p className="companyTD">{row.company}</p>,
-      sortable: true,
-      center: true,
-    },
-    {
-      name: (
-        <strong className="headersTitle" style={{ textAlign: "center" }}>
-          Location
-        </strong>
-      ),
-      selector: (row) => row.locaton,
-      sortable: true,
-      center: true,
-    },
-    {
-      name: (
-        <strong className="headersTitle" style={{ textAlign: "center" }}>
-          Department
-        </strong>
-      ),
-      selector: (row) => row.department,
-      sortable: true,
-      center: true,
-    },
-    {
-      name: (
-        <strong className="headersTitle" style={{ textAlign: "center" }}>
-          Mobile
-        </strong>
-      ),
-      selector: (row) => formatMobileNumber(row.mobile_number),
-      sortable: true,
-      center: true,
-    },
-    {
-      name: (
-        <strong className="headersTitle" style={{ textAlign: "center" }}>
-          Direct
-        </strong>
-      ),
-      selector: (row) => formatMobileNumber(row.direct_number),
-      sortable: true,
-      center: true,
-    },
-    {
-      name: (
-        <strong
-          className="headersTitle"
-          style={{ textAlign: "center", width: "300px" }}
-        >
-          Email
-        </strong>
-      ),
-      selector: (row) => <p className="emailTD">{row.email}</p>,
-      sortable: true,
-      center: true,
-    },
-  ];
-
-  useEffect(() => {
-    const mysearchresult = usersInfo.filter((user) => {
-      const alldetails = `${user.first_name} ${user.last_name} ${user.locaton} ${user.job_title} ${user.company} ${user.department} ${user.mobile_number} ${user.direct_number} ${user.email}`;
-      return alldetails.toLowerCase().includes(search.toLowerCase());
-    });
-    setFilterUsers(mysearchresult);
-  }, [search]);
-
-  // *******************************To show Job Title Names in dropdown***************
-
-  const allJobTitles=[
-{
-      id:1,
-  jobName:"Estimator"
-},
-{
-  id:2,
-  jobName:"Project Engineer"
-},
-{
-  id:4,
-  jobName:"Project Manager"
-},
-{
-  id:5,
-  jobName:"Foreman"
-},
-{
-  id:6,
-  jobName:"Estimating Manager"
-},
-{
-  id:7,
-  jobName:"Manager PR"
-},
-{
-  id:8,
-  jobName:"Scheduling Manager / Pre-Construction Engineer"
-},
-{
-  id:9,
-  jobName:"So. Cal. General Manager"
-},
-{
-  id:10,
-  jobName:"Taping FM"
-},
-{
-  id:11,
-  jobName:"Driver"
-},
-{
-  id:12,
-  jobName:"No. Cal. General Manager"
-},
-{
-  id:13,
-  jobName:"Vice President"
-},
-{
-  id:14,
-  jobName:"HR & Payroll Manager"
-},
-{
-  id:15,
-  jobName:"Field Management"
-},
-{
-  id:16,
-  jobName:"Proconstruction Manager"
-},
-{
-  id:17,
-  jobName:"Scheduler"
-},
-{
-  id:18,
-  jobName:"Foreman (Assistant)"
-},
-{
-  id:19,
-  jobName:"General Superintendent"
-},
-{
-  id:20,
-  jobName:"BIM/Manager PR"
-},
-{
-  id:21,
-  jobName:"BIM Modeler/Trimble Operator"
-},
-{
-  id:22,
-  jobName:"Taping Foreman"
-},
-{
-  id:23,
-  jobName:"Journeyman"
-},
-{
-  id:24,
-  jobName:"CFO"
-},
-{
-  id:25,
-  jobName:"Owner"
-},
-{
-  id:26,
-  jobName:"Hotel Reservations"
-},
-{
-  id:27,
-  jobName:"President"
-},
-{
-  id:28,
-  jobName:"Payroll Assistant"
-},
-{
-  id:29,
-  jobName:"BIM"
-},
-  ]
-
-  //  0
-  //  : 
-  //  "Estimator"
-  //  1
-  //  : 
-  //  "Project Engineer"
-  //  2
-  //  : 
-  //  "Project Manager"
-  //  3
-  //  : 
-  //  "Foreman"
-  //  4
-  //  : 
-  //  "Estimating Manager"
-  //  5
-  //  : 
-  //  "Manager PR"
-  //  6
-  //  : 
-  //  "Scheduling Manager / Pre-Construction Engineer"
-  //  7
-  //  : 
-  //  "So. Cal. General Manager"
-  //  8
-  //  : 
-  //  "Taping FM"
-  //  9
-  //  : 
-  //  "Driver"
-  //  10
-  //  : 
-  //  "No. Cal. General Manager"
-  //  11
-  //  : 
-  //  "Vice President"
-  //  12
-  //  : 
-  //  "HR & Payroll Manager"
-  //  13
-  //  : 
-  //  "Field Management"
-  //  14
-  //  : 
-  //  "Proconstruction Manager"
-  //  15
-  //  : 
-  //  "Scheduler"
-  //  16
-  //  : 
-  //  "Foreman (Assistant)"
-  //  17
-  //  : 
-  //  "General Superintendent"
-  //  18
-  //  : 
-  //  "BIM/Manager PR"
-  //  19
-  //  : 
-  //  "BIM Modeler/Trimble Operator"
-  //  20
-  //  : 
-  //  "Taping Foreman"
-  //  21
-  //  : 
-  //  "Journeyman"
-  //  22
-  //  : 
-  //  "CFO"
-  //  23
-  //  : 
-  //  "Owner"
-  //  24
-  //  : 
-  //  "Hotel Reservations"
-  //  25
-  //  : 
-  //  "President"
-  //  26
-  //  : 
-  //  "Payroll Assistant"
-  //  27
-  //  : 
-  //  "BIM"
-
-
-
-  //************ To show Company Names in dropdown in estimating post field
-  const [companyName, setCompanyName] = useState([]);
 
   useEffect(() => {
     // Fetch data from the API
     axios
-      .get("http://127.0.0.1:8000/api/estimating/company/")
+      .get("http://127.0.0.1:8000/api/estimating/dmsDrectory/")
       .then((response) => response.data)
       .then((data) => {
         console.log(data);
-        setCompanyName(data);
+        setDMSUserDirectory(data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   }, []);
 
-  const alldepartments = [
+  const navigate = useNavigate();
+
+  const filteredData = DMSUserDirectory.filter((customer) => {
+    return (
+      (customer.first_name &&
+        customer.first_name.toUpperCase().includes(filter.toUpperCase())) ||
+      (customer.email &&
+        customer.email
+          .trim()
+          .toUpperCase()
+          .includes(filter.trim().toUpperCase())) ||
+      (customer.mobile_number &&
+        customer.mobile_number.toUpperCase().includes(filter.toUpperCase()))
+    );
+  });
+
+  // *******************************To show Job Title Names in dropdown***************
+  const allJobTitles=[
     {
-      id: 1,
-      dapartname: "Accounting",
+          id:1,
+      jobName:"Estimator"
     },
     {
-      id: 2,
-      dapartname: "BIM",
+      id:2,
+      jobName:"Project Engineer"
     },
     {
-      id: 3,
-      dapartname: "Estimating",
+      id:4,
+      jobName:"Project Manager"
     },
     {
-      id: 4,
-      dapartname: "Field",
+      id:5,
+      jobName:"Foreman"
     },
     {
-      id: 5,
-      dapartname: "Hotel Reservations",
+      id:6,
+      jobName:"Estimating Manager"
     },
     {
-      id: 6,
-      dapartname: "Management",
+      id:7,
+      jobName:"Manager PR"
     },
     {
-      id: 7,
-      dapartname: "Payroll",
+      id:8,
+      jobName:"Scheduling Manager / Pre-Construction Engineer"
     },
     {
-      id: 8,
-      dapartname: "Precon",
+      id:9,
+      jobName:"So. Cal. General Manager"
     },
     {
-      id: 9,
-      dapartname: "Project Management",
+      id:10,
+      jobName:"Taping FM"
     },
     {
-      id: 10,
-      dapartname: "Scheduling",
+      id:11,
+      jobName:"Driver"
     },
-  ];
-
-  const [firstname, setFirstName] = useState("");
-  const [lastname, setLastName] = useState("");
-  const [myemail, setEmail] = useState("");
-  const [myjobTitle, setjobTitle] = useState("");
-  const [company, setCompany] = useState("");
-  const [mylocation, setLocation] = useState("");
-  const [directnumber, setDirectnumber] = useState("");
-  const [mobilenumber, setMobilenumber] = useState("");
-  const [mydepartment, setDepartment] = useState("");
-
-
-  const handleDepartment = (e) => {
-    setDepartment(e.target.value);
-  };
-
-  const handleFirstName = (e) => {
-    setFirstName(e.target.value);
-  };
-  
-  const handleLastName = (e) => {
-    setLastName(e.target.value);
-  };
-  
-  const handleEmail = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handleCompanyNameChange = (e) => {
-    setCompany(e.target.value);
-  };
-
-   const handlejobTitleChange = (e) => {
-     setjobTitle(e.target.value);
-   };
-
-  const handleLocation = (e) => {
-    setLocation(e.target.value);
-  };
-
-  const handleDirectnumber = (e) => {
-    setDirectnumber(e.target.value);
-  };
-
-  const handleMobileNumber = (e) => {
-    setMobilenumber(e.target.value);
-  };
-
-  const handledirectorySubmit = (event) => {
-    event.preventDefault();
-    // Create a data object with the form values
-     
-    const formData = {
-      first_name: firstname,
-      last_name: lastname,
-      email: myemail,
-      job_title: parseInt(myjobTitle,10),
-      company: company,
-      department: mydepartment.toString(),
-      location: mylocation,
-      direct_number: directnumber,
-      mobile_number: mobilenumber,
-    };
-    
-    // Send a POST request to the API
-    axios
-      .post("http://127.0.0.1:8000/api/estimating/dmsDrectory/", formData)
-      .then((response) => {
-        // Handle the response if needed
-        console.log("Data successfully submitted:", response.data);
-    
-        // You can also reset the form fields here if needed
+    {
+      id:12,
+      jobName:"No. Cal. General Manager"
+    },
+    {
+      id:13,
+      jobName:"Vice President"
+    },
+    {
+      id:14,
+      jobName:"HR & Payroll Manager"
+    },
+    {
+      id:15,
+      jobName:"Field Management"
+    },
+    {
+      id:16,
+      jobName:"Proconstruction Manager"
+    },
+    {
+      id:17,
+      jobName:"Scheduler"
+    },
+    {
+      id:18,
+      jobName:"Foreman (Assistant)"
+    },
+    {
+      id:19,
+      jobName:"General Superintendent"
+    },
+    {
+      id:20,
+      jobName:"BIM/Manager PR"
+    },
+    {
+      id:21,
+      jobName:"BIM Modeler/Trimble Operator"
+    },
+    {
+      id:22,
+      jobName:"Taping Foreman"
+    },
+    {
+      id:23,
+      jobName:"Journeyman"
+    },
+    {
+      id:24,
+      jobName:"CFO"
+    },
+    {
+      id:25,
+      jobName:"Owner"
+    },
+    {
+      id:26,
+      jobName:"Hotel Reservations"
+    },
+    {
+      id:27,
+      jobName:"President"
+    },
+    {
+      id:28,
+      jobName:"Payroll Assistant"
+    },
+    {
+      id:29,
+      jobName:"BIM"
+    },
+      ]
+      //************ To show Company Names in dropdown in estimating post field
+      const [companyName, setCompanyName] = useState([]);
+      useEffect(() => {
+        // Fetch data from the API
+        axios
+          .get("http://127.0.0.1:8000/api/estimating/company/")
+          .then((response) => response.data)
+          .then((data) => {
+            console.log(data);
+            setCompanyName(data);
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+          });
+      }, []);
+      const alldepartments = [
+        {
+          id: 1,
+          dapartname: "Accounting",
+        },
+        {
+          id: 2,
+          dapartname: "BIM",
+        },
+        {
+          id: 3,
+          dapartname: "Estimating",
+        },
+        {
+          id: 4,
+          dapartname: "Field",
+        },
+        {
+          id: 5,
+          dapartname: "Hotel Reservations",
+        },
+        {
+          id: 6,
+          dapartname: "Management",
+        },
+        {
+          id: 7,
+          dapartname: "Payroll",
+        },
+        {
+          id: 8,
+          dapartname: "Precon",
+        },
+        {
+          id: 9,
+          dapartname: "Project Management",
+        },
+        {
+          id: 10,
+          dapartname: "Scheduling",
+        },
+      ];
+      const [firstname, setFirstName] = useState("");
+      const [lastname, setLastName] = useState("");
+      const [myemail, setEmail] = useState("");
+      const [myjobTitle, setjobTitle] = useState("");
+      const [company, setCompany] = useState("");
+      const [mylocation, setLocation] = useState("");
+      const [directnumber, setDirectnumber] = useState("");
+      const [mobilenumber, setMobilenumber] = useState("");
+      const [mydepartment, setDepartment] = useState("");
+      const handleDepartment = (e) => {
+        setDepartment(e.target.value);
+      };
+      const handleFirstName = (e) => {
+        setFirstName(e.target.value);
+      };
+      const handleLastName = (e) => {
+        setLastName(e.target.value);
+      };
+      const handleEmail = (e) => {
+        setEmail(e.target.value);
+      };
+      const handleCompanyNameChange = (e) => {
+        setCompany(e.target.value);
+      };
+       const handlejobTitleChange = (e) => {
+         setjobTitle(e.target.value);
+       };
+      const handleLocation = (e) => {
+        setLocation(e.target.value);
+      };
+      const handleDirectnumber = (e) => {
+        setDirectnumber(e.target.value);
+      };
+      const handleMobileNumber = (e) => {
+        setMobilenumber(e.target.value);
+      };
+      const handledirectorySubmit = (event) => {
+        event.preventDefault();
+        // Create a data object with the form values
+        const formData = {
+          first_name: firstname,
+          last_name: lastname,
+          email: myemail,
+          job_title: parseInt(myjobTitle,10),
+          company: company,
+          department: mydepartment.toString(),
+          location: mylocation,
+          direct_number: directnumber,
+          mobile_number: mobilenumber,
+        };
+        // Send a POST request to the API
+        axios
+          .post("http://127.0.0.1:8000/api/estimating/dmsDrectory/", formData)
+          .then((response) => {
+            // Handle the response if needed
+            console.log("Data successfully submitted:", response.data);
+            // You can also reset the form fields here if needed
+            setFirstName("");
+            setLastName("");
+            setCompany("");
+            setDepartment("");
+            setDirectnumber("");
+            setMobilenumber("");
+            setEmail("");
+            setLocation("");
+            setTimeout(() => {
+              setShowModal(false);
+            }, 1000);
+          })
+          .catch((error) => {
+            // Handle any errors that occurred during the POST request
+            console.error("Error submitting data:", error);
+            // Log the response data for more details
+            console.log("Response data:", error.response.data);
+          });
+      };
+      // const [showModal, setShowModal] = useState(false); // State to control modal visibility
+      const closeModal = () => {
+        setShowModal(false);
         setFirstName("");
         setLastName("");
         setCompany("");
@@ -509,94 +296,74 @@ const DMSDirectory = () => {
         setDirectnumber("");
         setMobilenumber("");
         setEmail("");
-        setLocation("");
-        setTimeout(() => {
-          setShowModal(false);
-        }, 1000);
-      })
-      .catch((error) => {
-        // Handle any errors that occurred during the POST request
-        console.error("Error submitting data:", error);
-        // Log the response data for more details
-        console.log("Response data:", error.response.data);
-      });
-    
-  };
-
-  const [showModal, setShowModal] = useState(false); // State to control modal visibility
-  const closeModal = () => {
-    setShowModal(false);
-    setFirstName("");
-    setLastName("");
-    setCompany("");
-    setDepartment("");
-    setDirectnumber("");
-    setMobilenumber("");
-    setEmail("");
-    // Remove the 'modal-active' class when the modal is closed
-    document.body.classList.remove("modal-active");
-  };
-
+        // Remove the 'modal-active' class when the modal is closed
+        document.body.classList.remove("modal-active");
+      };
   const movetoEstimatingPage = () => {
     navigate("/homepage/estimating/");
   };
+
   return (
-    <>
-      <div className="container dmsmain">
-        <div className="row">
-          <div className="col">
-            <h3 className="text-primary bg-danger">DMS Directory</h3>
-          </div>
+    <div className="parentDiv px-5">
+      <div className="titleWithSearch">
+        <h3 className="text-primary">DMS Directory</h3>
+        <div className="inputSearchDiv">
+          <input
+            type="text"
+            placeholder="Search"
+            style={{ width: "400px" }}
+                    className="form-control form-control-md"
+            // value={search}
+            //         onChange={(e) => setSearch(e.target.value)}
+          />
+          <button className="btn btn-primary ms-2  btn-md" onClick={(e)=>{
+            setShowModal(true)
+          }}>New</button>
         </div>
       </div>
-      <div className="datatable Parent px-5 table-responsive">
-        <div className="custom-data-table">
-          <DataTable
-            // title="DMS Directory"
-            className="px-2"
-            columns={Columns}
-            data={filterusers}
-            fixedHeader
-            fixedHeaderScrollHeight="365px"
-            selectableRowsHighlight
-            highlightOnHover
-            pagination // Enable pagination
-            paginationPerPage={10} // Set the number of rows per page
-            subHeader
-            subHeaderComponent={
-              <div className="d-flex mb-3 w-100  justify-content-between">
-                {/* <div className="d-flex  "> */}
-                <div className="my1">
-                  <button
-                    type="button"
-                    onClick={movetoEstimatingPage}
-                    className="btn btn-outline-primary backbtn"
-                  >
-                    <i className="fa-duotone me-2 fa fa-angles-left icons backicon"></i>{" "}
-                    Back
-                  </button>
-                </div>
-                <div className="my2  d-flex justify-content-between">
-                  <input
-                    type="text"
-                    style={{ width: "400px" }}
-                    className="form-control form-control-md"
-                    placeholder="Search"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                  />
-                  <button
-                    className="btn btn-primary ms-2 btn-md"
-                    onClick={() => setShowModal(true)}
-                  >
-                    New
-                  </button>
-                </div>
-              </div>
-              // </div>
-            }
-          />
-        </div>
+      <button
+        type="button"
+        onClick={movetoEstimatingPage}
+        className="btn btn-outline-primary backbtn"
+      >
+        <i className="fa-duotone me-2 fa fa-angles-left icons backicon"></i>
+        Back
+      </button>
+
+      <div className="table-responsive proposalTable mt-2">
+        <table
+          className="table table-striped table-bordered table-hover"
+          style={{ tableLayout: "auto" }}
+        >
+          <thead className="proposalHeader">
+            <tr>
+              <th className="successgreenColor">Last Name</th>
+              <th className="successgreenColor">First Name</th>
+              <th className="successgreenColor">Job Title</th>
+              <th className="successgreenColor">Company</th>
+              <th className="successgreenColor">Location</th>
+              <th className="successgreenColor">Department</th>
+              <th className="successgreenColor">Mobile</th>
+              <th className="successgreenColor">Direct</th>
+              <th className="successgreenColor">Email</th>
+            </tr>
+          </thead>
+          <tbody className="cursor-pointer jktable bg-info jloop">
+            {filteredData.map((item) => (
+              <tr key={item.id}>
+                <td className=" dmsTD centered-td">{item.last_name}</td>
+                <td className=" dmsTD centered-td">{item.first_name}</td>
+                <td className=" dmsTD centered-td">{item.job_title}</td>
+                <td className=" dmsTD  centered-td">{item.company}</td>
+                <td className=" dmsTD centered-td">{item.locaton}</td>
+                <td className=" dmsTD centered-td">{item.department}</td>
+                <td className=" dmsTD centered-td">{item.mobile_number}</td>
+                <td className=" dmsTD centered-td">{item.direct_number}</td>
+                <td className=" dmsTD centered-td">{item.email}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
         {showModal && (
           <div
@@ -664,7 +431,6 @@ const DMSDirectory = () => {
                           {myjobs.jobName}
                         </option>
                       ))}
-
                       {/* <option value="">Select Job Title</option>
                       <option value="Estimator">Estimator</option>
                       <option value="Project Engineer">Project Engineer</option>
@@ -694,12 +460,7 @@ const DMSDirectory = () => {
                       <option value="President ">President</option>
                       <option value="Payroll Assistant "> Payroll Assistant </option>
                       <option value="BIM"> BIM </option> */}
-                      
                     </select>
-
-
-
-                      
                     </div>
                   </div>
                   <div className="Oneline">
@@ -748,7 +509,6 @@ const DMSDirectory = () => {
                       ))}
                     </select>
                   </div>
-
                   <div className="Oneline">
                     <label htmlFor="location" className="form-label">
                       Location:
@@ -775,7 +535,6 @@ const DMSDirectory = () => {
                       onChange={handleDirectnumber}
                     />
                   </div>
-
                   <div className="Oneline">
                     <label htmlFor="location" className="form-label">
                       Mobile:
@@ -789,7 +548,6 @@ const DMSDirectory = () => {
                     />
                   </div>
                 </div>
-
                 <button type="submit" className="btn btn-submit mt-3 mb-4">
                   Add
                 </button>
@@ -797,9 +555,9 @@ const DMSDirectory = () => {
             </div>
           </div>
         )}
+
       </div>
-      <ToastContainer />
-    </>
+    </div>
   );
 };
 

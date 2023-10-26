@@ -2083,7 +2083,7 @@ const handleBudgetChange = (index, field, value) => {
                     </td>
                     <td className="mytd centered-td actionTD">
                       <div className="relative-container loop">
-                        <button
+                        {/* <button
                           onClick={() => {
                             setshowProjectModal(true);
                             setSelectedEstimatingID(item.prjct_name);
@@ -2091,7 +2091,7 @@ const handleBudgetChange = (index, field, value) => {
                           }}
                         >
                           Project
-                        </button>
+                        </button> */}
                         <div
                           type="button"
                           className="pb-2"

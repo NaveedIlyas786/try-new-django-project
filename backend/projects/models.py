@@ -372,7 +372,7 @@ class  Zlien(models.Model):
 
 class Submittals(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
-    scop_work_number=models.ForeignKey(Spec_detail, verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
+    scop_work_number=models.ForeignKey(Spec_detail,related_name='scop_work_number', verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
     status=models.CharField(verbose_name="Submittals", max_length=50,choices=[
         ('Approved','Approved'),('Pending','Pending'),
         ],default='Pending', null=True, blank=True)
@@ -380,7 +380,7 @@ class Submittals(models.Model):
 
 class ShopDrawing(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
-    scop_work_number=models.ForeignKey(Specification, verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
+    scop_work_number=models.ForeignKey(Spec_detail,related_name='scop_work_number_shpdrg', verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
     status=models.CharField(verbose_name="Shop Drawing", max_length=50,choices=[
         ('Approved','Approved'),('Pending','Pending'),
         ],default='Pending', null=True, blank=True)
@@ -388,7 +388,7 @@ class ShopDrawing(models.Model):
 
 class Safity(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
-    scop_work_number=models.ForeignKey(Specification, verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
+    scop_work_number=models.ForeignKey(Spec_detail,related_name='scop_work_number_sfty', verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
     status=models.CharField(verbose_name="Safity", max_length=50,choices=[
         ('Approved','Approved'),('Pending','Pending'),
         ],default='Pending', null=True, blank=True)

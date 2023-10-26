@@ -4,7 +4,7 @@ from .validation import validate_file_extension
 import os
 
 from accounts.models import User
-from Estimating.models import Estimating, Estimating_detail, Proposal,Specification
+from Estimating.models import Estimating, Estimating_detail, Proposal,Specification,Spec_detail
 
 
 class Project(models.Model):
@@ -372,7 +372,7 @@ class  Zlien(models.Model):
 
 class Submittals(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
-    scop_work_number=models.ForeignKey(Specification, verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
+    scop_work_number=models.ForeignKey(Spec_detail,related_name='scop_work_number', verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
     status=models.CharField(verbose_name="Submittals", max_length=50,choices=[
         ('Approved','Approved'),('Pending','Pending'),
         ],default='Pending', null=True, blank=True)
@@ -380,7 +380,7 @@ class Submittals(models.Model):
 
 class ShopDrawing(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
-    scop_work_number=models.ForeignKey(Specification, verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
+    scop_work_number=models.ForeignKey(Spec_detail,related_name='scop_work_number_shpdrg', verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
     status=models.CharField(verbose_name="Shop Drawing", max_length=50,choices=[
         ('Approved','Approved'),('Pending','Pending'),
         ],default='Pending', null=True, blank=True)
@@ -388,12 +388,12 @@ class ShopDrawing(models.Model):
 
 class Safity(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
-    scop_work_number=models.ForeignKey(Specification, verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
+    scop_work_number=models.ForeignKey(Spec_detail,related_name='scop_work_number_sfty', verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
     status=models.CharField(verbose_name="Safity", max_length=50,choices=[
         ('Approved','Approved'),('Pending','Pending'),
         ],default='Pending', null=True, blank=True)
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
-    comment_box=models.CharField(verbose_name="comment", max_length=5000)
+    comment_box=models.CharField(verbose_name="comment", max_length=5000, null=True, blank=True)
 
 class Schedule(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)

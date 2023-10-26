@@ -169,113 +169,207 @@ const DMSDirectory = () => {
 
   // *******************************To show Job Title Names in dropdown***************
 
-  // 0
-  // : 
-  // "Estimator"
-  // 1
-  // : 
-  // "Project Engineer"
-  // 2
-  // : 
-  // "Project Manager"
-  // 3
-  // : 
-  // "Foreman"
-  // 4
-  // : 
-  // "Estimating Manager"
-  // 5
-  // : 
-  // "Manager PR"
-  // 6
-  // : 
-  // "Scheduling Manager / Pre-Construction Engineer"
-  // 7
-  // : 
-  // "So. Cal. General Manager"
-  // 8
-  // : 
-  // "Taping FM"
-  // 9
-  // : 
-  // "Driver"
-  // 10
-  // : 
-  // "No. Cal. General Manager"
-  // 11
-  // : 
-  // "Vice President"
-  // 12
-  // : 
-  // "HR & Payroll Manager"
-  // 13
-  // : 
-  // "Field Management"
-  // 14
-  // : 
-  // "Proconstruction Manager"
-  // 15
-  // : 
-  // "Scheduler"
-  // 16
-  // : 
-  // "Foreman (Assistant)"
-  // 17
-  // : 
-  // "General Superintendent"
-  // 18
-  // : 
-  // "BIM/Manager PR"
-  // 19
-  // : 
-  // "BIM Modeler/Trimble Operator"
-  // 20
-  // : 
-  // "Taping Foreman"
-  // 21
-  // : 
-  // "Journeyman"
-  // 22
-  // : 
-  // "CFO"
-  // 23
-  // : 
-  // "Owner"
-  // 24
-  // : 
-  // "Hotel Reservations"
-  // 25
-  // : 
-  // "President"
-  // 26
-  // : 
-  // "Payroll Assistant"
-  // 27
-  // : 
-  // "BIM"
+  const allJobTitles=[
+{
+      id:1,
+  jobName:"Estimator"
+},
+{
+  id:2,
+  jobName:"Project Engineer"
+},
+{
+  id:4,
+  jobName:"Project Manager"
+},
+{
+  id:5,
+  jobName:"Foreman"
+},
+{
+  id:6,
+  jobName:"Estimating Manager"
+},
+{
+  id:7,
+  jobName:"Manager PR"
+},
+{
+  id:8,
+  jobName:"Scheduling Manager / Pre-Construction Engineer"
+},
+{
+  id:9,
+  jobName:"So. Cal. General Manager"
+},
+{
+  id:10,
+  jobName:"Taping FM"
+},
+{
+  id:11,
+  jobName:"Driver"
+},
+{
+  id:12,
+  jobName:"No. Cal. General Manager"
+},
+{
+  id:13,
+  jobName:"Vice President"
+},
+{
+  id:14,
+  jobName:"HR & Payroll Manager"
+},
+{
+  id:15,
+  jobName:"Field Management"
+},
+{
+  id:16,
+  jobName:"Proconstruction Manager"
+},
+{
+  id:17,
+  jobName:"Scheduler"
+},
+{
+  id:18,
+  jobName:"Foreman (Assistant)"
+},
+{
+  id:19,
+  jobName:"General Superintendent"
+},
+{
+  id:20,
+  jobName:"BIM/Manager PR"
+},
+{
+  id:21,
+  jobName:"BIM Modeler/Trimble Operator"
+},
+{
+  id:22,
+  jobName:"Taping Foreman"
+},
+{
+  id:23,
+  jobName:"Journeyman"
+},
+{
+  id:24,
+  jobName:"CFO"
+},
+{
+  id:25,
+  jobName:"Owner"
+},
+{
+  id:26,
+  jobName:"Hotel Reservations"
+},
+{
+  id:27,
+  jobName:"President"
+},
+{
+  id:28,
+  jobName:"Payroll Assistant"
+},
+{
+  id:29,
+  jobName:"BIM"
+},
+  ]
 
-  const [JobNames, setJobNames] = useState([]);
+  //  0
+  //  : 
+  //  "Estimator"
+  //  1
+  //  : 
+  //  "Project Engineer"
+  //  2
+  //  : 
+  //  "Project Manager"
+  //  3
+  //  : 
+  //  "Foreman"
+  //  4
+  //  : 
+  //  "Estimating Manager"
+  //  5
+  //  : 
+  //  "Manager PR"
+  //  6
+  //  : 
+  //  "Scheduling Manager / Pre-Construction Engineer"
+  //  7
+  //  : 
+  //  "So. Cal. General Manager"
+  //  8
+  //  : 
+  //  "Taping FM"
+  //  9
+  //  : 
+  //  "Driver"
+  //  10
+  //  : 
+  //  "No. Cal. General Manager"
+  //  11
+  //  : 
+  //  "Vice President"
+  //  12
+  //  : 
+  //  "HR & Payroll Manager"
+  //  13
+  //  : 
+  //  "Field Management"
+  //  14
+  //  : 
+  //  "Proconstruction Manager"
+  //  15
+  //  : 
+  //  "Scheduler"
+  //  16
+  //  : 
+  //  "Foreman (Assistant)"
+  //  17
+  //  : 
+  //  "General Superintendent"
+  //  18
+  //  : 
+  //  "BIM/Manager PR"
+  //  19
+  //  : 
+  //  "BIM Modeler/Trimble Operator"
+  //  20
+  //  : 
+  //  "Taping Foreman"
+  //  21
+  //  : 
+  //  "Journeyman"
+  //  22
+  //  : 
+  //  "CFO"
+  //  23
+  //  : 
+  //  "Owner"
+  //  24
+  //  : 
+  //  "Hotel Reservations"
+  //  25
+  //  : 
+  //  "President"
+  //  26
+  //  : 
+  //  "Payroll Assistant"
+  //  27
+  //  : 
+  //  "BIM"
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          "http://127.0.0.1:8000/api/estimating/jobtitle/"
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        const data = await response.json();
-        const jobNames = data.map((item) => item.name);
-        console.log(jobNames);
-        setJobNames(jobNames);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
 
-    fetchData();
-  }, []);
 
   //************ To show Company Names in dropdown in estimating post field
   const [companyName, setCompanyName] = useState([]);
@@ -340,12 +434,12 @@ const DMSDirectory = () => {
   const [firstname, setFirstName] = useState("");
   const [lastname, setLastName] = useState("");
   const [myemail, setEmail] = useState("");
+  const [myjobTitle, setjobTitle] = useState("");
   const [company, setCompany] = useState("");
   const [mylocation, setLocation] = useState("");
   const [directnumber, setDirectnumber] = useState("");
   const [mobilenumber, setMobilenumber] = useState("");
   const [mydepartment, setDepartment] = useState("");
-  const [selectedJobTitles, setSelectedJobTitles] = useState([]);
 
 
   const handleDepartment = (e) => {
@@ -368,6 +462,10 @@ const DMSDirectory = () => {
     setCompany(e.target.value);
   };
 
+   const handlejobTitleChange = (e) => {
+     setjobTitle(e.target.value);
+   };
+
   const handleLocation = (e) => {
     setLocation(e.target.value);
   };
@@ -383,16 +481,17 @@ const DMSDirectory = () => {
   const handledirectorySubmit = (event) => {
     event.preventDefault();
     // Create a data object with the form values
+     
     const formData = {
       first_name: firstname,
       last_name: lastname,
       email: myemail,
+      job_title: parseInt(myjobTitle,10),
       company: company,
       department: mydepartment.toString(),
       location: mylocation,
       direct_number: directnumber,
       mobile_number: mobilenumber,
-      job_title: selectedJobTitles, // Use the selectedJobTitles array
     };
     
     // Send a POST request to the API
@@ -410,7 +509,7 @@ const DMSDirectory = () => {
         setDirectnumber("");
         setMobilenumber("");
         setEmail("");
-    
+        setLocation("");
         setTimeout(() => {
           setShowModal(false);
         }, 1000);
@@ -553,41 +652,54 @@ const DMSDirectory = () => {
                       Job Title
                     </label>
                     <div className="custom-dropdown">
-                    <Multiselect
-  options={JobNames.map((job, index) => ({ value: String(index + 1), label: job }))}
-  isObject={false}
-  showCheckbox
-  onRemove={(selected) => {
-    setSelectedJobTitles(selected.map((item) => String(item.value)));
-  }}
-  onSelect={(selected) => {
-    setSelectedJobTitles(selected.map((item) => String(item.value)));
-  }}
-/>
+                    <select
+                      className="form-select"
+                      id="companyName"
+                      value={myjobTitle}
+                      onChange={handlejobTitleChange}
+                    >
+                      <option value="">Select Job</option>
+                      {allJobTitles.map((myjobs) => (
+                        <option key={myjobs.id} value={myjobs.id}>
+                          {myjobs.jobName}
+                        </option>
+                      ))}
+
+                      {/* <option value="">Select Job Title</option>
+                      <option value="Estimator">Estimator</option>
+                      <option value="Project Engineer">Project Engineer</option>
+                      <option value="Project Manager "> Project Manager  </option>
+                      <option value="Foreman "> Foreman  </option>
+                      <option value="Estimating Manager "> Estimating Manager  </option>
+                      <option value="Manager PR "> Manager PR </option>
+                      <option value="Scheduling Manager / Pre-Construction Engineer ">Scheduling Manager / Pre-Construction Engineer   </option>
+                      <option value="So. Cal. General Manager "> So. Cal. General Manager  </option>
+                      <option value="Taping FM "> Taping FM  </option>
+                      <option value="Driver "> Driver  </option>
+                      <option value="No. Cal. General Manager "> No. Cal. General Manager  </option>
+                      <option value="Vice President ">Vice President   </option>
+                      <option value="HR & Payroll Manager "> HR & Payroll Manager  </option>
+                      <option value="Field Management "> Field Management  </option>
+                      <option value="Proconstruction Manager ">Proconstruction Manager   </option>
+                      <option value="Scheduler "> Scheduler  </option>
+                      <option value="Foreman (Assistant) "> Foreman (Assistant)  </option>
+                      <option value="General Superintendent "> General Superintendent  </option>
+                      <option value=" BIM/Manager PR"> BIM/Manager PR  </option>
+                      <option value="BIM Modeler/Trimble Operator "> BIM Modeler/Trimble Operator  </option>
+                      <option value="Taping Foreman "> Taping Foreman  </option>
+                      <option value="Journeyman "> Journeyman  </option>
+                      <option value="CFO "> CFO  </option>
+                      <option value="Owner "> Owner  </option>
+                      <option value="Hotel Reservations "> Hotel Reservations  </option>
+                      <option value="President ">President</option>
+                      <option value="Payroll Assistant "> Payroll Assistant </option>
+                      <option value="BIM"> BIM </option> */}
+                      
+                    </select>
 
 
 
-                      {/* <select name="test" id="test" className="form-control">
-  <option value="--">Select Option</option>
-  <option value="1">Option1</option>
-  <option value="2">Option2</option>
-</select> */}
-
-                      {/* <div className="preview-values">
-                        {JobNames.map((job) => (
-                          <div key={job.id}>{job.name}</div>
-                        ))}
-                      </div> */}
-                      {/* <MultiSelect
-                        onChange={handleJobTitle}
-                        options={JobNames.map((option) => ({
-                          value: option.id,
-                          label: option.name,
-                        }))}
-                        value={jobTitles} // The selected job titles are managed in the jobTitles state
-                        className="w-100"
-                        placeholder="Select Job Title"
-                      /> */}
+                      
                     </div>
                   </div>
                   <div className="Oneline">

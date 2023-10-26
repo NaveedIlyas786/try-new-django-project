@@ -30,38 +30,22 @@ class ZlienInline(admin.StackedInline):
 class SubmittalsInline(admin.StackedInline):
     model = Submittals
     extra = 1
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == 'scop_work_number':
-            proposal_id = request.GET.get('proposal')
-            if proposal_id:
-                kwargs['queryset'] = Spec_detail.objects.filter(sefic__proposal_id=proposal_id)
-            else:
-                kwargs['queryset'] = Spec_detail.objects.none()
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    # def formfield_for_foreignkey(self, db_field, request, **kwargs):
+    #     if db_field.name == 'scop_work_number':
+    #         proposal_id = request.GET.get('proposal')
+    #         if proposal_id:
+    #             kwargs['queryset'] = Spec_detail.objects.filter(sefic__proposal_id=proposal_id)
+    #         else:
+    #             kwargs['queryset'] = Spec_detail.objects.none()
+    #     return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 class ShopDrawingInline(admin.StackedInline):
     model = ShopDrawing
     extra = 1
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == 'scop_work_number':
-            proposal_id = request.GET.get('proposal')
-            if proposal_id:
-                kwargs['queryset'] = Spec_detail.objects.filter(sefic__proposal_id=proposal_id)
-            else:
-                kwargs['queryset'] = Spec_detail.objects.none()
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 class SafityInline(admin.StackedInline):
     model = Safity
     extra = 1
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == 'scop_work_number':
-            proposal_id = request.GET.get('proposal')
-            if proposal_id:
-                kwargs['queryset'] = Spec_detail.objects.filter(sefic__proposal_id=proposal_id)
-            else:
-                kwargs['queryset'] = Spec_detail.objects.none()
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 class ScheduleInline(admin.StackedInline):
     model = Schedule

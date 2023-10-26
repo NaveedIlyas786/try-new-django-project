@@ -173,7 +173,6 @@ class LaborRateSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         
-        
         representation['project'] = instance.project.job_num if instance.project else None
 
 

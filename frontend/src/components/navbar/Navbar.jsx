@@ -14,7 +14,12 @@ const Navbar = () => {
     setActiveLink(location.pathname.replace("/", "")); // Remove the leading slash
   }, [location.pathname]);
 
- 
+  useEffect(() => {
+    // Check if the URL includes specific keywords
+    if (location.pathname.includes("wonProjectspage") || location.pathname.includes("lostProjectspage") || location.pathname.includes("urlpage")) {
+      setActiveLink("Estimating");
+    }
+  }, [location.pathname]);
   
 
   const handleToggleClick = () => {

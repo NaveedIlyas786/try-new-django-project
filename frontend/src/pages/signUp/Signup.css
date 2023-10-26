@@ -109,7 +109,6 @@ h1{
   /* Optional styles to center the text within the pop-up */
   .popuppass p {
     text-align: center;
-  
     color: rgb(185, 21, 21) !important;
   }
   .popupsuccess{

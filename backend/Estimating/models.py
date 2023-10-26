@@ -244,7 +244,7 @@ class Spec_detail(models.Model):
     number=models.CharField(verbose_name="Add Number",max_length=8)
     name=models.CharField(verbose_name="Name", max_length=250)
     def __str__(self) :
-        return self.name
+        return self.number
     
 
 

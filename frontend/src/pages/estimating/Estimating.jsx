@@ -2752,7 +2752,7 @@ const handleBudgetChange = (index, field, value) => {
                                     })
                                   }
                                 >
-                                  <option value="Pre-Construction">
+                                  <option  value="Pre-Construction">
                                     Pre-Construction
                                   </option>
                                   <option value="Construction Phase">

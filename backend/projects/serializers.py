@@ -98,6 +98,24 @@ class SubmittalsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Submittals
         fields = '__all__'
+
+    def validate(self, data):
+        """
+        Check that scop_work_number belongs to the same proposal as project.
+        """
+        scop_work_number = data.get('scop_work_number')
+        project = data.get('project')
+
+        if scop_work_number and project:
+            if scop_work_number.sefic.proposal != project.proposal:
+                raise serializers.ValidationError({
+                    'scop_work_number': 'Invalid scop_work_number. It does not belong to the same proposal as project.'
+                })
+
+        return data
+
+
+
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         

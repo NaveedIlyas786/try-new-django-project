@@ -62,7 +62,7 @@ const DMSDirectory = () => {
       name: (
         <strong
           className="headersTitle"
-          style={{ textAlign: "center", width: "80px" }}
+          style={{ textAlign: "center", width: "80px" , padding:"5px" }}
         >
           Last Name
         </strong>
@@ -454,7 +454,7 @@ const DMSDirectory = () => {
         <div className="custom-data-table">
           <DataTable
             // title="DMS Directory"
-            className="px-2"
+            className="custom-data-table px-2"
             columns={Columns}
             data={filterusers}
             fixedHeader

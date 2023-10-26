@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import "./ProjectDirectory.css";
 import axios from "axios";
 const ProjectDirectory = () => {
-  const { Prjct_Name } = useParams();
+  const { id } = useParams();
   const AllFolders = [
     {
       id: 1,
@@ -61,7 +61,7 @@ const ProjectDirectory = () => {
   // Fetch data from the API
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/project/Project/")
+      .get(`http://127.0.0.1:8000/api/project/Project/${id}`)
       .then((response) => response.data)
       .then((data) => {
         setData(data);
@@ -70,30 +70,30 @@ const ProjectDirectory = () => {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, []);
+  }, [id]);
 
-  const filteredData = data.filter((customer) => {
-    return (
-      (customer.estimating &&
-        customer.estimating.toUpperCase().includes(filter.toUpperCase())) ||
-      (customer.job_num &&
-        customer.job_num
-          .toString()
-          .toUpperCase()
-          .includes(filter.toUpperCase())) ||
-      (customer.prjct_engnr &&
-        customer.prjct_engnr.toUpperCase().includes(filter.toUpperCase())) ||
-      (customer.bim_oprtr &&
-        customer.bim_oprtr.toUpperCase().includes(filter.toUpperCase())) ||
-      (customer.Forman &&
-        customer.Forman.toUpperCase().includes(filter.toUpperCase()))
-    );
-  });
+  // const filteredData = data.filter((customer) => {
+  //   return (
+  //     (customer.estimating &&
+  //       customer.estimating.toUpperCase().includes(filter.toUpperCase())) ||
+  //     (customer.job_num &&
+  //       customer.job_num
+  //         .toString()
+  //         .toUpperCase()
+  //         .includes(filter.toUpperCase())) ||
+  //     (customer.prjct_engnr &&
+  //       customer.prjct_engnr.toUpperCase().includes(filter.toUpperCase())) ||
+  //     (customer.bim_oprtr &&
+  //       customer.bim_oprtr.toUpperCase().includes(filter.toUpperCase())) ||
+  //     (customer.Forman &&
+  //       customer.Forman.toUpperCase().includes(filter.toUpperCase()))
+  //   );
+  // });
 
-  const formatBidAmount = (amount) => {
-    if (amount === null) return ""; // Return an empty string if the amount is null
-    return amount.toLocaleString("en-US");
-  };
+  // const formatBidAmount = (amount) => {
+  //   if (amount === null) return ""; // Return an empty string if the amount is null
+  //   return amount.toLocaleString("en-US");
+  // };
   return (
     <div>
       <div className="projectDirectoryParent">
@@ -136,7 +136,7 @@ const ProjectDirectory = () => {
             </div>
           </div>
           <div className=" projectfiledshow mt-4">
-            {filteredData.map((item) => {
+            {data.map((item) => {
               return (
                 <>
                   <div className="container px-5" key={item.id}>

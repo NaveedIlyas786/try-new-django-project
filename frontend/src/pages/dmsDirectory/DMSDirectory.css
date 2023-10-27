@@ -59,6 +59,9 @@
 }
 .successgreenColor{
     background-color: #007BFF !important;
+    /* min-width: 327px; */
+    width: 15px;
+  
 }
 .directoryinputsearch{
 
@@ -83,3 +86,5 @@
   .rdt_TableHeader {
     padding: -20px !important;
   }
+
+

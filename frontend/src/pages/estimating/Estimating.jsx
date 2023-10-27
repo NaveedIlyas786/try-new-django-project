@@ -196,58 +196,68 @@ const Estimator = () => {
 
   const [selectedEstimatingID, setSelectedEstimatingID] = useState(null);
 
-  const [filteredProposals, setFilteredProposals] = useState([]);
+  const [selectedProposalID, setSelectedProposalID] = useState(null);
 
-  // Function to fetch and filter proposals
-  const fetchAndFilterProposals = async () => {
-    if (selectedEstimatingID === null) {
-      // If the selected ID is not set, do nothing
-      console.log("Estimating id null");
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        "http://127.0.0.1:8000/api/estimating/proposals"
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch proposals");
-      }
-
-      const proposals = await response.json();
-      console.log(proposals);
-      // Filter proposals based on selectedEstimatingID
-      const myfilteredProposals = proposals.filter(
-        (proposal) => proposal.estimating.id === selectedEstimatingID
-      );
-
-      // Set the filtered proposals in your state
-      console.log(myfilteredProposals);
-      setFilteredProposals(myfilteredProposals);
-    } catch (error) {
-      console.error("Error fetching or filtering proposals:", error);
-    }
-  };
   useEffect(() => {
+    const fetchAndFilterProposals = async () => {
+      if (selectedEstimatingID === null) {
+        console.log("Estimating id null");
+        return;
+      }
+      try {
+        const response = await fetch("http://127.0.0.1:8000/api/estimating/proposals");
+        if (!response.ok) {
+          throw new Error("Failed to fetch proposals");
+        }
+        const proposals = await response.json();
+        
+        const filteredProposals = proposals.filter(
+          (proposal) => proposal.estimating.id === selectedEstimatingID
+        );
+  
+        // Check if filteredProposals is not empty
+        if (filteredProposals.length > 0) {
+          const proposalID = filteredProposals[0].id;
+          console.log(proposalID);
+          setSelectedProposalID(proposalID);
+          console.log(proposalID);
+        } else {
+          console.log("No matching proposal found.");
+        }
+      } catch (error) {
+        console.error("Error fetching or filtering proposals:", error);
+      }
+    };
+    
     fetchAndFilterProposals();
   }, [selectedEstimatingID]);
 
-  // Call the fetchAndFilterProposals function whenever selectedEstimatingID changes
-  // useEffect(() => {
-  // fetchAndFilterProposals();
-  // }, [selectedEstimatingID]);
-
   // ****************** Smart way to handle Nested Fields with multistep Project SUbmit form  **********
+console.log(selectedProposalID);
+
   const [ProjectStep1FormData, setProjectStep1FormData] = useState({
+    proposal_id: null,
     start_date: getCurrentDate(),
-    estimating: selectedEstimatingID,
-    // proposal_id:  ,
     job_num: "",
     prjct_mngr: "",
     Forman: "",
     bim_oprtr: "",
     prjct_engnr: "",
   });
+
+
+  useEffect(() => {
+    if (selectedProposalID !== null) {
+      setProjectStep1FormData(prevState => ({
+        ...prevState,
+        proposal_id: selectedProposalID
+      }));
+    }
+  }, [selectedProposalID]);
+
+  console.log(ProjectStep1FormData.proposal_id);
+
+  // ****************
   const [ProjectStep2FormData, setProjectStep2FormData] = useState({
     general_superintendent: "",
     addendums: "",
@@ -269,37 +279,38 @@ const Estimator = () => {
   const [ProjectStep4FormData, setProjectStep4FormData] = useState({
     contract: [
       {
-        contract:"",
-        contract_date:"",
-      }
+        contract: "",
+        contract_date: "",
+      },
     ],
-    schedule_of_values: [
+    schedule_of_value: [
       {
         schedule: "",
-        schedule_date: ""
-    }
+        schedule_date: "",
+      },
     ],
     insurance: [
       {
         insurance: "",
-        date: ""
-    }
-  ],
-  bond: [
+        date: "",
+      },
+    ],
+    bond: [
       {
         bond: "",
-        date: ""
-    }
-      
+        date: "",
+      },
     ],
   });
+  
   const [ProjectStep5FormData, setProjectStep5FormData] = useState({
-    zliens: [
+    zlien: [
       {
         zlien: "",
         date: "",
       },
     ],
+
     submittals: [
       {
         status: "",
@@ -606,7 +617,6 @@ const handleBudgetChange = (index, field, value) => {
     "Step 8",
   ];
 
-  // *********************Fetch Purposal Addendum Scope of Work Number Start*************************
 
   // *********************Fetch Purposal Addendum Scope of Work Number End*************************
 
@@ -627,16 +637,7 @@ const handleBudgetChange = (index, field, value) => {
     });
   };
 
-  const handleFieldChange = (field, value, index, category) => {
-    setProjectStep5FormData((prevData) => {
-      const updatedData = { ...prevData };
-      updatedData[category][index] = {
-        ...updatedData[category][index],
-        [field]: value,
-      };
-      return updatedData;
-    });
-  };
+
 
   // Function to update the SAFETY section of the form data
   const handleSafetyChange = (index, field, value) => {
@@ -649,14 +650,46 @@ const handleBudgetChange = (index, field, value) => {
   };
 
   // Function to update the SCHEDULES section of the form data
+
   const handleScheduleChange = (index, field, value) => {
-    const updatedSchedule = [...ProjectStep6FormData.schedule];
-    updatedSchedule[index][field] = value;
-    setProjectStep6FormData({
-      ...ProjectStep6FormData,
-      schedule: updatedSchedule,
-    });
+    // Create a copy of the current state
+    const updatedFormData = { ...ProjectStep6FormData };
+  
+    // Find the schedule object at the specified index
+    const scheduleToUpdate = updatedFormData.schedule[index];
+  
+    // Update the specified field with the new value
+    scheduleToUpdate[field] = value;
+  
+    // Update the state with the modified data
+    setProjectStep6FormData(updatedFormData);
   };
+  
+  const handleRemoveSchedule = (index) => {
+    // Create a copy of the current state
+    const updatedFormData = { ...ProjectStep6FormData };
+  
+    // Remove the schedule object at the specified index
+    updatedFormData.schedule.splice(index, 1);
+  
+    // Update the state with the modified data
+    setProjectStep6FormData(updatedFormData);
+  };
+  
+  const handleAddSchedule = () => {
+    // Create a copy of the current state
+    const updatedFormData = { ...ProjectStep6FormData };
+  
+    // Add a new schedule object with default values
+    updatedFormData.schedule.push({
+      status: "",
+      date: "",
+    });
+  
+    // Update the state with the modified data
+    setProjectStep6FormData(updatedFormData);
+  };
+  
 
   // Function to update the SUB_CONTRACTORSS section of the form data
   const handleSubContractorChange = (index, field, value) => {
@@ -668,14 +701,30 @@ const handleBudgetChange = (index, field, value) => {
     });
   };
 
+
+  const handleSubmittalsChange = (index, field, value) => {
+  // Create a copy of the current state
+  const updatedFormData = { ...ProjectStep5FormData };
+
+  // Find the submittals object at the specified index
+  const submittalsToUpdate = updatedFormData.submittals[index];
+
+  // Update the specified field with the new value
+  submittalsToUpdate[field] = value;
+
+  // Update the state with the modified data
+  setProjectStep5FormData(updatedFormData);
+};
+
+
   const handleProjectFormSubmit = (e) => {
     e.preventDefault();
-
+console.log(ProjectStep1FormData.proposal_id);
     const formData = {
       // *****step 01
       start_date: ProjectStep1FormData.start_date,
       job_num: ProjectStep1FormData.job_num,
-      estimating: ProjectStep1FormData.estimating,
+      proposal_id: ProjectStep1FormData.proposal_id,
       prjct_mngr: ProjectStep1FormData.prjct_mngr,
       Forman: ProjectStep1FormData.Forman,
       bim_oprtr: ProjectStep1FormData.bim_oprtr,
@@ -707,7 +756,7 @@ const handleBudgetChange = (index, field, value) => {
         contract: mycontract.contract,
         contract_date: mycontract.contract_date,
       })),
-      schedule_of_values: ProjectStep4FormData.schedule_of_values.map(
+      schedule_of_value: ProjectStep4FormData.schedule_of_value.map(
         (myschedule) => ({
           schedule: myschedule.schedule,
           schedule_date: myschedule.schedule_date,
@@ -724,7 +773,7 @@ const handleBudgetChange = (index, field, value) => {
 
       // *****step 05
 
-      zliens: ProjectStep5FormData.zliens.map((myzliens) => ({
+      zlien: ProjectStep5FormData.zlien.map((myzliens) => ({
         zlien: myzliens.zlien,
         date: myzliens.date,
       })),
@@ -794,6 +843,7 @@ const handleBudgetChange = (index, field, value) => {
         comment_box: mybuget.comment_box,
       })),
     };
+    // console.log(proposal_id);
 
     console.log("formData to be sent", formData);
 
@@ -806,12 +856,8 @@ const handleBudgetChange = (index, field, value) => {
       })
       .then((response) => {
         console.log("Data successfully submitted", response.data);
-        const updatedEstimatingData = estimatingData.filter(
-          (entry) => entry.id !== formData.estimating // Replace 'id' with your actual identifier field
-        );
 
         setshowProjectModal(false);
-        setEstimatingData(updatedEstimatingData);
 
         // Clear the form fields by resetting the state variables
         setStartDate("");
@@ -1904,7 +1950,7 @@ const handleBudgetChange = (index, field, value) => {
             <div className="inputbtn d-flex gap-2 px-5 " data-aos="fade-down">
               <input
                 type="text"
-                placeholder="Filter by Project Name, Estimator Name, Bidders, Bid Amount, Status"
+                placeholder="Search"
                 value={filter}
                 className="mysearchinput p-2"
                 onChange={(e) => setFilter(e.target.value)}
@@ -1952,7 +1998,7 @@ const handleBudgetChange = (index, field, value) => {
           </div>
 
           <ParticlesAnimation numberOfCircles={numberOfCircles} />
-
+{/* //here was project Modal before */}
           <div
             className="table-responsive proposalTable mt-2"
             data-aos="fade-up"
@@ -2082,9 +2128,12 @@ const handleBudgetChange = (index, field, value) => {
                       <div className="relative-container loop">
                         <button
                           onClick={() => {
+                            // console.log(item.prjct_name);
+                            const test= typeof(item.id);
+                            console.log(test);
+
                             setshowProjectModal(true);
-                            setSelectedEstimatingID(item.prjct_name);
-                            setFilteredProposals(item.id);
+                            setSelectedEstimatingID(item.id);
                           }}
                         >
                           Project
@@ -2149,6 +2198,8 @@ const handleBudgetChange = (index, field, value) => {
               </tbody>
             </table>
           </div>
+        </div>
+      </div>
           {showProjectModal && (
             <div
               className={`modal-container pt-5 ps-2 ${
@@ -2216,16 +2267,11 @@ const handleBudgetChange = (index, field, value) => {
                                 Proposal ID:
                               </label>
                               <input
-                                type="text"
+                                type="number"
                                 className="form-control"
                                 id="projectName"
                                 name="projectName"
-                                value={
-                                  filteredProposals.length > 0
-                                    ? filteredProposals[0].id
-                                    : ""
-                                }
-                                placeholder="AutoPopulate not shown on frontend"
+                                value={selectedProposalID || ''}                                placeholder="ID should be shown here"
                                 readOnly
                               />
                             </div>
@@ -2828,36 +2874,47 @@ const handleBudgetChange = (index, field, value) => {
           <span>Contract</span>
         </label>
         <div id="" className="input-group">
-          <select
-            className="form-select"
-            placeholder="Contract"
-            id="contract"
-            value={ProjectStep4FormData.contract[0].contract}
-            onChange={(e) =>
-              setProjectStep4FormData({
-                ...ProjectStep4FormData,
-                contract: [{ ...ProjectStep4FormData.contract[0], contract: e.target.value }]
-              })
-            }
-          >
-            <option value="">Select Choice</option>
-            <option value="Fully Executed">Fully Executed</option>
-            <option value="Pending">Pending</option>
-          </select>
-          <input
-            id=""
-            type="date"
-            name="contract_date"
-            className="form-control"
-            value={ProjectStep4FormData.contract[0].contract_date}
-            onChange={(e) =>
-              setProjectStep4FormData({
-                ...ProjectStep4FormData,
-                contract: [{ ...ProjectStep4FormData.contract[0], contract_date: e.target.value }]
-              })
-            }
-          />
-        </div>
+  <select
+    className="form-select"
+    placeholder="Contract"
+    id="contract"
+    value={ProjectStep4FormData.contract[0].contract}
+    onChange={(e) =>
+      setProjectStep4FormData({
+        ...ProjectStep4FormData,
+        contract: [
+          {
+            ...ProjectStep4FormData.contract[0],
+            contract: e.target.value
+          }
+        ]
+      })
+    }
+  >
+    <option value="">Select Choice</option>
+    <option value="Fully Executed">Fully Executed</option>
+    <option value="Pending">Pending</option>
+  </select>
+  <input
+    id=""
+    type="date"
+    name="contract_date"
+    className="form-control"
+    value={ProjectStep4FormData.contract[0].contract_date}
+    onChange={(e) =>
+      setProjectStep4FormData({
+        ...ProjectStep4FormData,
+        contract: [
+          {
+            ...ProjectStep4FormData.contract[0],
+            contract_date: e.target.value
+          }
+        ]
+      })
+    }
+  />
+</div>
+
       </div>
     </div>
     <div style={{ width: "100%" }}>
@@ -2870,16 +2927,16 @@ const handleBudgetChange = (index, field, value) => {
             className="form-select"
             placeholder="Schedule"
             id="schedule"
-            value={ProjectStep4FormData.schedule_of_values[0].schedule}
+            value={ProjectStep4FormData.schedule_of_value[0].schedule}
             onChange={(e) =>
               setProjectStep4FormData({
                 ...ProjectStep4FormData,
-                schedule_of_values: [{ ...ProjectStep4FormData.schedule_of_values[0], schedule: e.target.value }]
+                schedule_of_value: [{ ...ProjectStep4FormData.schedule_of_value[0], schedule: e.target.value }]
               })
             }
           >
             <option value="">Select Choice</option>
-            <option value="Fully Executed">Fully Executed</option>
+            <option value="Approved">Approved</option>
             <option value="Pending">Pending</option>
           </select>
           <input
@@ -2887,11 +2944,11 @@ const handleBudgetChange = (index, field, value) => {
             type="date"
             name="schedule_date"
             className="form-control"
-            value={ProjectStep4FormData.schedule_of_values[0].schedule_date}
+            value={ProjectStep4FormData.schedule_of_value[0].schedule_date}
             onChange={(e) =>
               setProjectStep4FormData({
                 ...ProjectStep4FormData,
-                schedule_of_values: [{ ...ProjectStep4FormData.schedule_of_values[0], schedule_date: e.target.value }]
+                schedule_of_value: [{ ...ProjectStep4FormData.schedule_of_value[0], schedule_date: e.target.value }]
               })
             }
           />
@@ -2917,8 +2974,10 @@ const handleBudgetChange = (index, field, value) => {
             }
           >
             <option value="">Select Choice</option>
-            <option value="Fully Executed">Fully Executed</option>
-            <option value="Pending">Pending</option>
+            <option value="CCIP">CCIP</option>
+            <option value="Sent">Sent</option>
+            <option value="Received">Received</option>
+            <option value="Complete">Complete</option>
           </select>
           <input
             id=""
@@ -2955,8 +3014,9 @@ const handleBudgetChange = (index, field, value) => {
             }
           >
             <option value="">Select Choice</option>
-            <option value="Fully Executed">Fully Executed</option>
-            <option value="Pending">Pending</option>
+            <option value="Sent">Sent</option>
+            <option value="Received">Received</option>
+            <option value="Complete">Complete</option>
           </select>
           <input
             id=""
@@ -2980,185 +3040,143 @@ const handleBudgetChange = (index, field, value) => {
 
                         {projectactiveStep === 4 && (
                           <>
-                            {ProjectStep5FormData.zliens.map(
-                              (zlienData, index) => (
-                                <div key={index}>
+                          <div style={{ width: "100%" }}>
+      <div>
+        <label className="form-label">
+          <span>ZLIENS:</span>
+        </label>
+        <div id="" className="input-group">
+          <select
+            className="form-select"
+            placeholder="zlien"
+            id="zlien"
+            value={ProjectStep5FormData.zlien[0].zlien}
+            onChange={(e) =>
+              setProjectStep5FormData({
+                ...ProjectStep5FormData,
+                zlien: [{ ...ProjectStep5FormData.zlien[0], zlien: e.target.value }]
+              })
+            }
+          >
+            <option value="">Select Choice</option>
+            <option value="Submitted">Submitted</option>
+            <option value="Pending">Pending</option>
+          </select>
+          <input
+            id=""
+            type="date"
+            name="date"
+            className="form-control"
+            value={ProjectStep5FormData.zlien[0].date}
+            onChange={(e) =>
+              setProjectStep5FormData({
+                ...ProjectStep5FormData,
+                zlien: [{ ...ProjectStep5FormData.zlien[0], date: e.target.value }]
+              })
+            }
+          />
+        </div>
+      </div>
+    </div>
+                        <div className="mt-3" style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>SUBMITTALSS</span>
+                              </label>
+                              {ProjectStep5FormData.submittals.map(
+                                (mysubmittals, index) => (
                                   <div
-                                    className="mt-4"
-                                    style={{ width: "100%" }}
+                                    key={index}
+                                    className="wholespecificationEntry"
                                   >
-                                    <div>
+                                    <div className="ScopofWorkSectionRemove">
+                                      <button
+                                        type="button"
+                                        className="btn btn-danger"
+                                      >
+                                        <i className="far">X</i>
+                                      </button>
+                                    </div>
+
+                                    <div className="mb-2 mt-4">
                                       <label className="form-label">
-                                        <span>ZLIENS:</span>
+                                        Add scope of Work
                                       </label>
-                                      <div id="" className="input-group">
+                                      <select
+  className="form-select"
+  aria-label="Select Specification"
+  value={mysubmittals.scop_work_number}
+  onChange={(e) =>
+    handleSubmittalsChange(index, "scop_work_number", e.target.value)
+  }
+>
+
+                                        <option value="Base Bid Drywall/Framing">
+                                          All scope numbers will here
+                                        </option>
+                                      </select>
+                                    </div>
+                                    <div className="bothDiv gap-3">
+                                      <div className="Oneline mb-4">
+                                        <label
+                                          htmlFor="location"
+                                          className="form-label"
+                                        >
+                                          Status:
+                                        </label>
                                         <select
                                           className="form-select"
-                                          placeholder="Contract"
-                                          id="ProjectEngineerID"
-                                          value={
-                                            ProjectStep5FormData.zliens[index]
-                                              .zlien
-                                          }
+                                          value={mysubmittals.status}
                                           onChange={(e) =>
-                                            handleFieldChange(
-                                              "zlien",
-                                              e.target.value,
+                                            handleSubmittalsChange(
                                               index,
-                                              "zliens"
+                                              "status",
+                                              e.target.value
                                             )
                                           }
                                         >
                                           <option value="">
                                             Select Choice
                                           </option>
-                                          <option value="On build">
-                                            Fully Executed
+                                          <option value="Approved">
+                                            Approved
                                           </option>
                                           <option value="Pending">
                                             Pending
                                           </option>
                                         </select>
+                                      </div>
+
+                                      <div className="Oneline">
+                                        <label
+                                          htmlFor="location"
+                                          className="form-label"
+                                        >
+                                          Date:
+                                        </label>
                                         <input
-                                          id=""
                                           type="date"
-                                          name="date" // Set the name attribute to differentiate
                                           className="form-control"
-                                          value={
-                                            ProjectStep5FormData.zliens.date
+                                          value={mysubmittals.date}
+                                          onChange={(e) =>
+                                            handleSubmittalsChange(
+                                              index,
+                                              "date",
+                                              e.target.value
+                                            )
                                           }
-                                          onChange={(e) => {
-                                            setProjectStep5FormData({
-                                              ...ProjectStep5FormData,
-                                              date: { date: e.target.value },
-                                            });
-                                          }}
                                         />
                                       </div>
                                     </div>
                                   </div>
-
-                                  <div style={{ width: "100%" }}>
-                                    <label
-                                      htmlFor="projectName"
-                                      className="form-label mt-2"
-                                    >
-                                      <span>SUBMITTALSS</span>
-                                    </label>
-                                    <div
-                                      className="wholespecificationEntry"
-                                      // key={index}
-                                    >
-                                      <div className="ScopofWorkSectionRemove">
-                                        <button
-                                          type="button"
-                                          className="btn btn-danger"
-                                          onClick={() => {}}
-                                        >
-                                          <i className="far">X</i>
-                                        </button>
-                                      </div>
-
-                                      <div className="mb-2 mt-4">
-                                        <label className="form-label">
-                                          Add Scop Work Number
-                                        </label>
-                                        <select
-                                          className="form-select"
-                                          aria-label="Select Specification"
-                                          value={
-                                            ProjectStep5FormData.submittals[
-                                              index
-                                            ].scop_work_number
-                                          }
-                                          onChange={(e) =>
-                                            handleFieldChange(
-                                              "scop_work_number",
-                                              e.target.value,
-                                              index,
-                                              "submittals"
-                                            )
-                                          }
-                                        >
-                                          <option value="Base Bid Drywall/Framing">
-                                            All scope numbers will here
-                                          </option>
-                                        </select>
-                                      </div>
-                                      <div className="bothDiv  gap-3">
-                                        <div className="Oneline mb-4">
-                                          <label
-                                            htmlFor="location"
-                                            className="form-label"
-                                          >
-                                            Status
-                                          </label>
-                                          <select
-                                            className="form-select"
-                                            id="ProjectEngineerID"
-                                            value={
-                                              ProjectStep5FormData.submittals
-                                                .status
-                                            }
-                                            onChange={(e) => {
-                                              setProjectStep5FormData({
-                                                ...ProjectStep5FormData,
-                                                status: {
-                                                  status: e.target.value,
-                                                },
-                                              });
-                                            }}
-                                          >
-                                            <option value="">
-                                              Select Choice
-                                            </option>
-                                            <option value="On build">
-                                              Aproved
-                                            </option>
-                                            <option value="Pending">
-                                              Pending
-                                            </option>
-                                          </select>
-                                        </div>
-
-                                        <div className="Oneline">
-                                          <label
-                                            htmlFor="location"
-                                            className="form-label"
-                                          >
-                                            Date:
-                                          </label>
-                                          <input
-                                            type="date"
-                                            className="form-control"
-                                            id="dueDate"
-                                            value={
-                                              ProjectStep5FormData.submittals
-                                                .date
-                                            }
-                                            onChange={(e) => {
-                                              setProjectStep5FormData({
-                                                ...ProjectStep5FormData,
-                                                date: { date: e.target.value },
-                                              });
-                                            }}
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                    {/* ))} */}
-
-                                    <button
-                                      type="button"
-                                      className="btn btn-success"
-                                      // onClick={handleAddEntry}
-                                    >
-                                      Add SUBMITTALSS
-                                    </button>
-                                  </div>
-                                </div>
-                              )
-                            )}
+                                )
+                              )}
+                              <button type="button" className="btn btn-success">
+                                Add Submittals
+                              </button>
+                            </div>
                           </>
                         )}
 
@@ -3390,67 +3408,72 @@ const handleBudgetChange = (index, field, value) => {
                             </div>
 
                             <div style={{ width: "100%" }}>
-                              <label
-                                htmlFor="projectName"
-                                className="form-label mt-2"
-                              >
-                                <span>SCHEDULES</span>
-                              </label>
-                              {ProjectStep6FormData.schedule.map(
-                                (schedule, index) => (
-                                  <div
-                                    key={index}
-                                    className="wholespecificationEntry"
-                                  >
-                                    <div className="mb-2 mt-3">
-                                      <label className="form-label">
-                                        Scope of work divisions
-                                      </label>
-                                      <div className="input-group myrowInputgroup">
-                                        <input
-                                          type="text"
-                                          className="form-control"
-                                          placeholder="Scope Of Work Number"
-                                          value={schedule.scop_work_number} // Set the value
-                                          onChange={(e) =>
-                                            handleScheduleChange(
-                                              index,
-                                              "scop_work_number",
-                                              e.target.value
-                                            )
-                                          }
-                                        />
-                                        <input
-                                          type="text"
-                                          className="form-control"
-                                          placeholder="Scope Of Work Description"
-                                          value={schedule.description} // Set the value
-                                          onChange={(e) =>
-                                            handleScheduleChange(
-                                              index,
-                                              "description",
-                                              e.target.value
-                                            )
-                                          }
-                                        />
-                                        <button
-                                          type="button"
-                                          className="btn btn-danger"
-                                        >
-                                          <i className="far">X</i>
-                                        </button>
+                                <label
+                                  htmlFor="projectName"
+                                  className="form-label mt-2"
+                                >
+                                  <span>SCHEDULES</span>
+                                </label>
+                                {ProjectStep6FormData.schedule.map(
+                                  (myschedule, index) => (
+                                    <div
+                                      key={index}
+                                      className="wholespecificationEntry"
+                                    >
+                                      <div className="mb-2 mt-3">
+                                        <div className="input-group myrowInputgrouup">
+<select
+  className="form-select"
+  aria-label="Select Specification"
+  value={myschedule.status}
+  onChange={(e) =>
+    handleScheduleChange(index, "status", e.target.value)
+  }
+>                                            <option value="">
+                                              Select Choice
+                                            </option>
+                                            <option value="Available">
+                                              Available
+                                            </option>
+                                            <option value="Not Available">
+                                              Not Available
+                                            </option>
+                                          </select>
+                                          <input
+                                            type="date"
+                                            className="form-control"
+                                            placeholder="Due Date"
+                                            value={myschedule.date}
+                                            onChange={(e) =>
+                                              handleScheduleChange(
+                                                index,
+                                                "date",
+                                                e.target.value
+                                              )
+                                            }
+                                          />
+                                          <button
+                                            type="button"
+                                            className="btn btn-danger"
+                                            onClick={() =>
+                                              handleRemoveSchedule(index)
+                                            }
+                                          >
+                                            <i className="far">X</i>
+                                          </button>
+                                        </div>
                                       </div>
+                                      <button
+                                        type="button"
+                                        className="btn btn-success bk"
+                                        onClick={handleAddSchedule}
+                                      >
+                                        <i className="fa-regular icon fa-plus"></i>
+                                      </button>
                                     </div>
-                                  </div>
-                                )
-                              )}
-                              <button
-                                type="button"
-                                className="btn btn-success bk"
-                              >
-                                <i className="fa-regular icon fa-plus"></i>
-                              </button>
-                            </div>
+                                  )
+                                )}
+                              </div>
 
                             <div style={{ width: "100%" }}>
                               <label
@@ -4051,8 +4074,6 @@ const handleBudgetChange = (index, field, value) => {
               </div>
             </div>
           )}
-        </div>
-      </div>
       {/* New Estimating Entry Posting-Code */}
       {showModal && (
         <div

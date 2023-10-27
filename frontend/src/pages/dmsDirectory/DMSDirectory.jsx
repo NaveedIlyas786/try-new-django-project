@@ -159,6 +159,7 @@ const DMSDirectory = () => {
     },
   ];
 
+  // const [search, setSearch] = useState("");
   useEffect(() => {
     const mysearchresult = usersInfo.filter((user) => {
       const alldetails = `${user.first_name} ${user.last_name} ${user.locaton} ${user.job_title} ${user.company} ${user.department} ${user.mobile_number} ${user.direct_number} ${user.email}`;
@@ -283,93 +284,6 @@ const DMSDirectory = () => {
   jobName:"BIM"
 },
   ]
-
-  //  0
-  //  : 
-  //  "Estimator"
-  //  1
-  //  : 
-  //  "Project Engineer"
-  //  2
-  //  : 
-  //  "Project Manager"
-  //  3
-  //  : 
-  //  "Foreman"
-  //  4
-  //  : 
-  //  "Estimating Manager"
-  //  5
-  //  : 
-  //  "Manager PR"
-  //  6
-  //  : 
-  //  "Scheduling Manager / Pre-Construction Engineer"
-  //  7
-  //  : 
-  //  "So. Cal. General Manager"
-  //  8
-  //  : 
-  //  "Taping FM"
-  //  9
-  //  : 
-  //  "Driver"
-  //  10
-  //  : 
-  //  "No. Cal. General Manager"
-  //  11
-  //  : 
-  //  "Vice President"
-  //  12
-  //  : 
-  //  "HR & Payroll Manager"
-  //  13
-  //  : 
-  //  "Field Management"
-  //  14
-  //  : 
-  //  "Proconstruction Manager"
-  //  15
-  //  : 
-  //  "Scheduler"
-  //  16
-  //  : 
-  //  "Foreman (Assistant)"
-  //  17
-  //  : 
-  //  "General Superintendent"
-  //  18
-  //  : 
-  //  "BIM/Manager PR"
-  //  19
-  //  : 
-  //  "BIM Modeler/Trimble Operator"
-  //  20
-  //  : 
-  //  "Taping Foreman"
-  //  21
-  //  : 
-  //  "Journeyman"
-  //  22
-  //  : 
-  //  "CFO"
-  //  23
-  //  : 
-  //  "Owner"
-  //  24
-  //  : 
-  //  "Hotel Reservations"
-  //  25
-  //  : 
-  //  "President"
-  //  26
-  //  : 
-  //  "Payroll Assistant"
-  //  27
-  //  : 
-  //  "BIM"
-
-
 
   //************ To show Company Names in dropdown in estimating post field
   const [companyName, setCompanyName] = useState([]);

@@ -414,6 +414,13 @@ input[type="text"].serviceInput.focused {
   padding: 10px !important;
   position: relative;
 }
+.scheduleClass {
+  border-radius: 5px !important;
+  background-color: #e9e6e6;
+  margin-bottom: 10px !important;
+  padding: 10px !important;
+  position: relative;
+}
 .ScopofWorkSectionRemove{
   position: absolute;
   right: 20px;

@@ -88,7 +88,7 @@ const Projects = () => {
                 value={item.Prjct_Name}
               >
                 <td className="mytd">{item.start_date}</td>
-                <td className="mytd">{item.estimating}</td>
+                <td className="mytd">{item.proposal.estimating.prjct_name}</td>
                 <td className="mytd">{item.job_num}</td>
 
                 <td className="mytd">{item.prjct_mngr}</td>

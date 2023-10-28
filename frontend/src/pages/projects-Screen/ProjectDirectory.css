@@ -28,6 +28,12 @@ ul {
   padding: 0 10px;
   /* background-color: #c74040; */
 }
+.projectdetailscreen{
+  background-color: blueviolet;
+  margin-top: 100px !important;
+  height: auto;
+  width: 100%;
+}
 /* .folders {
   background-color: aqua;
 } */
@@ -85,6 +91,17 @@ ul {
   box-sizing: border-box; /* Include padding in the width */
   
 }
+.sidebar li{ 
+  background-color: rgb(168, 165, 164);
+}
+/* .sidebar li .submenu{ 
+	list-style: none; 
+  background-color: burlywood;
+	margin: 0; 
+	padding: 0; 
+	padding-left: 1rem; 
+	padding-right: 1rem;
+} */
 
 h1,
 h3 {

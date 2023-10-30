@@ -29,17 +29,21 @@
 }
 .rightTop{
   width: 300px !important;
-  color: black;
+  color: rgb(97, 95, 95);
   font-family: 'Poppins', sans-serif;
 }
 .topinfo{
-  font-size: 18px !important;
-  font-weight: 400;
+  font-size: 16px !important;
+  font-weight: 600;
   text-align: right;
+  line-height: 17px;
 
 }
 .logoimg{
-  width: 300px;
+  width: 200px;
+}
+.pdfPage{
+  padding: 40px 30px 20px 30px;
 }
 DMS{
   font-family: 'Poppins', sans-serif;

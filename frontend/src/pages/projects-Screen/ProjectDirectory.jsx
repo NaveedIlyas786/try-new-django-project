@@ -42,16 +42,15 @@ const ProjectDirectory = () => {
   return (
     <div id="main">
       <div className="sidebar ">
-        <h6 className="text-white p-2 bg-danger">
-          {/* {sidebarData?.proposal?.estimating?.prjct_name} */}
-          B-21 Fuel System Maintenance Dock (Fuel Dock)
+        <h6 className="bg-primary text-white p-2">
+          {data?.proposal?.estimating?.prjct_name}
         </h6>
         {sidebarData.map((item,index)=><ProjectDetailSidebar item={item} key={index} {...item}/>)}
       </div>
       <div className="container">
         <h2>{data.projectName}</h2>
         <p>Project Engineer: {data.prjct_engnr}</p>
-        <p>Project Name: {data.proposal_id}</p>
+        <p>Project Name: {data.proposal?.estimating?.prjct_name}</p>
       </div>
     </div>
   );

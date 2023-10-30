@@ -205,16 +205,18 @@ const Estimator = () => {
         return;
       }
       try {
-        const response = await fetch("http://127.0.0.1:8000/api/estimating/proposals");
+        const response = await fetch(
+          "http://127.0.0.1:8000/api/estimating/proposals"
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch proposals");
         }
         const proposals = await response.json();
-        
+
         const filteredProposals = proposals.filter(
           (proposal) => proposal.estimating.id === selectedEstimatingID
         );
-  
+
         // Check if filteredProposals is not empty
         if (filteredProposals.length > 0) {
           const proposalID = filteredProposals[0].id;
@@ -228,12 +230,12 @@ const Estimator = () => {
         console.error("Error fetching or filtering proposals:", error);
       }
     };
-    
+
     fetchAndFilterProposals();
   }, [selectedEstimatingID]);
 
   // ****************** Smart way to handle Nested Fields with multistep Project SUbmit form  **********
-console.log(selectedProposalID);
+  // console.log(selectedProposalID);
 
   const [ProjectStep1FormData, setProjectStep1FormData] = useState({
     proposal_id: null,
@@ -245,17 +247,16 @@ console.log(selectedProposalID);
     prjct_engnr: "",
   });
 
-
   useEffect(() => {
     if (selectedProposalID !== null) {
-      setProjectStep1FormData(prevState => ({
+      setProjectStep1FormData((prevState) => ({
         ...prevState,
-        proposal_id: selectedProposalID
+        proposal_id: selectedProposalID,
       }));
     }
   }, [selectedProposalID]);
 
-  console.log(ProjectStep1FormData.proposal_id);
+  // console.log(ProjectStep1FormData.proposal_id);
 
   // ****************
   const [ProjectStep2FormData, setProjectStep2FormData] = useState({
@@ -302,7 +303,7 @@ console.log(selectedProposalID);
       },
     ],
   });
-  
+
   const [ProjectStep5FormData, setProjectStep5FormData] = useState({
     zlien: [
       {
@@ -416,7 +417,87 @@ console.log(selectedProposalID);
       labor_rate: [...ProjectStep7FormData.labor_rate, newLaborRate],
     });
   };
+  const handleAddSafety = () => {
+    const newSafety = {
+      status: "",
+      date: "",
+      scop_work_number: "",
+      comment_box:""
+    };
+    setProjectStep6FormData({
+      ...ProjectStep6FormData,
+      safity: [...ProjectStep6FormData.safity, newSafety],
+    });
+  };
+  const handleRemoveSafety = (index) => {
+    const updatedsafty = [...ProjectStep6FormData.safity];
+    updatedsafty.splice(index, 1);
+    setProjectStep6FormData({
+      ...ProjectStep6FormData,
+      safity: updatedsafty,
+    });
+  };
 
+  const handleAddSubmittal = () => {
+    const newSUbmittal = {
+      status: "",
+      date: "",
+      scop_work_number: "",
+    };
+    setProjectStep5FormData({
+      ...ProjectStep5FormData,
+      submittals: [...ProjectStep5FormData.submittals, newSUbmittal],
+    });
+  };
+
+  const handleRemoveSubmittal=(index)=>{
+    const updateSubmittals=[...ProjectStep5FormData.submittals];
+    updateSubmittals.splice(index,1);
+    setProjectStep5FormData({
+      ...ProjectStep5FormData,
+      submittals:updateSubmittals
+    })
+  }
+
+  const handleAddShopDrawing = () => {
+    const newShopDrawing = {
+      status: "",
+      date: "",
+      scop_work_number: "",
+    };
+    setProjectStep6FormData({
+      ...ProjectStep6FormData,
+      shop_drawing: [...ProjectStep6FormData.shop_drawing, newShopDrawing],
+    });
+  };
+  const handleRemoveShopDrawing = (index) => {
+    const updatedshop_drawing = [...ProjectStep6FormData.shop_drawing];
+    updatedshop_drawing.splice(index, 1);
+    setProjectStep6FormData({
+      ...ProjectStep6FormData,
+      shop_drawing: updatedshop_drawing,
+    });
+  };
+  const handleAddSubContractors = () => {
+    const newSubContractor = {
+      status: "",
+      date: "",
+      comment_box: "",
+    };
+    setProjectStep6FormData({
+      ...ProjectStep6FormData,
+      sub_contractors: [...ProjectStep6FormData.sub_contractors, newSubContractor],
+    });
+  };
+
+  const handleRemoveSubContractors = (index) => {
+    const updatedSubContractors = [...ProjectStep6FormData.sub_contractors];
+    updatedSubContractors.splice(index, 1);
+    setProjectStep6FormData({
+      ...ProjectStep6FormData,
+      sub_contractors: updatedSubContractors,
+    });
+  };
   const handleRemoveLaborRate = (index) => {
     const updatedLaborRates = [...ProjectStep7FormData.labor_rate];
     updatedLaborRates.splice(index, 1);
@@ -436,8 +517,6 @@ console.log(selectedProposalID);
   };
 
   // ******************
-
-
 
   const handleAddBilling = () => {
     const newBilling = {
@@ -503,105 +582,102 @@ console.log(selectedProposalID);
 
   // *******************
 
-// Function to add a new "HD S_SYSTEMS" entry
-const handleAddHDSSystem = () => {
-  const newHDSSystem = {
-    status: "Pending", // You can set default values here
-    date: "",
-    comment_box: "",
-  };
-
-  setProjectStep8FormData((prevData) => ({
-    ...prevData,
-    hds_system: [...prevData.hds_system, newHDSSystem],
-  }));
-};
-
-// Function to remove an existing "HD S_SYSTEMS" entry by index
-const handleRemoveHDSSystem = (index) => {
-  setProjectStep8FormData((prevData) => ({
-    ...prevData,
-    hds_system: prevData.hds_system.filter((_, i) => i !== index),
-  }));
-};
-
-const handleHDSChange = (index, field, value) => {
-  setProjectStep8FormData((prevData) => {
-    const updatedHDS = [...prevData.hds_system];
-    updatedHDS[index] = {
-      ...updatedHDS[index],
-      [field]: value,
+  // Function to add a new "HD S_SYSTEMS" entry
+  const handleAddHDSSystem = () => {
+    const newHDSSystem = {
+      status: "Pending", // You can set default values here
+      date: "",
+      comment_box: "",
     };
-    return { ...prevData, hds_system: updatedHDS };
-  });
-};
 
-
-const handleAddOnBuild = () => {
-  const newOnBuild = {
-    field: "",
-    status: "",
+    setProjectStep8FormData((prevData) => ({
+      ...prevData,
+      hds_system: [...prevData.hds_system, newHDSSystem],
+    }));
   };
-  setProjectStep7FormData({
-    ...ProjectStep8FormData,
-    on_build: [...ProjectStep8FormData.on_build, newOnBuild],
-  });
-};
 
-const handleRemoveOnBuild = (index) => {
-  const updatedOnBuild = [...ProjectStep8FormData.on_build];
-  updatedOnBuild.splice(index, 1);
-  setProjectStep8FormData({
-    ...ProjectStep8FormData,
-    on_build: updatedOnBuild,
-  });
-};
-
-// Function to handle changes for the "ON UPLOADED" section
-const handleOnBuildChange = (index, field, value) => {
-  const updatedOnBuild = [...ProjectStep8FormData.on_build];
-  updatedOnBuild[index][field] = value;
-  setProjectStep8FormData({
-    ...ProjectStep8FormData,
-    on_build: updatedOnBuild,
-  });
-};
-
-// ***************
-
-
-const handleAddBudget = () => {
-  const newBudget = {
-    status: "",
-    comment_box: "",
+  // Function to remove an existing "HD S_SYSTEMS" entry by index
+  const handleRemoveHDSSystem = (index) => {
+    setProjectStep8FormData((prevData) => ({
+      ...prevData,
+      hds_system: prevData.hds_system.filter((_, i) => i !== index),
+    }));
   };
-  setProjectStep8FormData({
-    ...ProjectStep8FormData,
-    buget: [...ProjectStep8FormData.buget, newBudget],
-  });
-};
 
-const handleRemoveBudget = (index) => {
-  const updatedBudget = [...ProjectStep8FormData.buget];
-  updatedBudget.splice(index, 1);
-  setProjectStep8FormData({
-    ...ProjectStep8FormData,
-    buget: updatedBudget,
-  });
-};
+  const handleHDSChange = (index, field, value) => {
+    setProjectStep8FormData((prevData) => {
+      const updatedHDS = [...prevData.hds_system];
+      updatedHDS[index] = {
+        ...updatedHDS[index],
+        [field]: value,
+      };
+      return { ...prevData, hds_system: updatedHDS };
+    });
+  };
 
-// Function to handle changes for the "BUGETS" section
-const handleBudgetChange = (index, field, value) => {
-  const updatedBudget = [...ProjectStep8FormData.buget];
-  updatedBudget[index][field] = value;
-  setProjectStep8FormData({
-    ...ProjectStep8FormData,
-    buget: updatedBudget,
-  });
-};
+  const handleAddOnBuild = () => {
+    const newOnBuild = {
+      field: "",
+      status: "",
+    };
+    setProjectStep8FormData({
+      ...ProjectStep8FormData,
+      on_build: [...ProjectStep8FormData.on_build, newOnBuild],
+    });
+  };
 
-// *****************
+  const handleRemoveOnBuild = (index) => {
+    const updatedOnBuild = [...ProjectStep8FormData.on_build];
+    updatedOnBuild.splice(index, 1);
+    setProjectStep8FormData({
+      ...ProjectStep8FormData,
+      on_build: updatedOnBuild,
+    });
+  };
 
+  // Function to handle changes for the "ON UPLOADED" section
+  const handleOnBuildChange = (index, field, value) => {
+    const updatedOnBuild = [...ProjectStep8FormData.on_build];
+    updatedOnBuild[index][field] = value;
+    setProjectStep8FormData({
+      ...ProjectStep8FormData,
+      on_build: updatedOnBuild,
+    });
+  };
+
+  // ***************
+
+  const handleAddBudget = () => {
+    const newBudget = {
+      status: "",
+      comment_box: "",
+    };
+    setProjectStep8FormData({
+      ...ProjectStep8FormData,
+      buget: [...ProjectStep8FormData.buget, newBudget],
+    });
+  };
+
+  const handleRemoveBudget = (index) => {
+    const updatedBudget = [...ProjectStep8FormData.buget];
+    updatedBudget.splice(index, 1);
+    setProjectStep8FormData({
+      ...ProjectStep8FormData,
+      buget: updatedBudget,
+    });
+  };
+
+  // Function to handle changes for the "BUGETS" section
+  const handleBudgetChange = (index, field, value) => {
+    const updatedBudget = [...ProjectStep8FormData.buget];
+    updatedBudget[index][field] = value;
+    setProjectStep8FormData({
+      ...ProjectStep8FormData,
+      buget: updatedBudget,
+    });
+  };
+
+  // *****************
 
   // Function to handle form submission
   //TODO: Multistep Form  React Code
@@ -616,7 +692,6 @@ const handleBudgetChange = (index, field, value) => {
     "Step 7",
     "Step 8",
   ];
-
 
   // *********************Fetch Purposal Addendum Scope of Work Number End*************************
 
@@ -637,8 +712,6 @@ const handleBudgetChange = (index, field, value) => {
     });
   };
 
-
-
   // Function to update the SAFETY section of the form data
   const handleSafetyChange = (index, field, value) => {
     const updatedSafety = [...ProjectStep6FormData.safity];
@@ -654,42 +727,41 @@ const handleBudgetChange = (index, field, value) => {
   const handleScheduleChange = (index, field, value) => {
     // Create a copy of the current state
     const updatedFormData = { ...ProjectStep6FormData };
-  
+
     // Find the schedule object at the specified index
     const scheduleToUpdate = updatedFormData.schedule[index];
-  
+
     // Update the specified field with the new value
     scheduleToUpdate[field] = value;
-  
+
     // Update the state with the modified data
     setProjectStep6FormData(updatedFormData);
   };
-  
+
   const handleRemoveSchedule = (index) => {
     // Create a copy of the current state
     const updatedFormData = { ...ProjectStep6FormData };
-  
+
     // Remove the schedule object at the specified index
     updatedFormData.schedule.splice(index, 1);
-  
+
     // Update the state with the modified data
     setProjectStep6FormData(updatedFormData);
   };
-  
+
   const handleAddSchedule = () => {
     // Create a copy of the current state
     const updatedFormData = { ...ProjectStep6FormData };
-  
+
     // Add a new schedule object with default values
     updatedFormData.schedule.push({
       status: "",
       date: "",
     });
-  
+
     // Update the state with the modified data
     setProjectStep6FormData(updatedFormData);
   };
-  
 
   // Function to update the SUB_CONTRACTORSS section of the form data
   const handleSubContractorChange = (index, field, value) => {
@@ -701,25 +773,23 @@ const handleBudgetChange = (index, field, value) => {
     });
   };
 
-
   const handleSubmittalsChange = (index, field, value) => {
-  // Create a copy of the current state
-  const updatedFormData = { ...ProjectStep5FormData };
+    // Create a copy of the current state
+    const updatedFormData = { ...ProjectStep5FormData };
 
-  // Find the submittals object at the specified index
-  const submittalsToUpdate = updatedFormData.submittals[index];
+    // Find the submittals object at the specified index
+    const submittalsToUpdate = updatedFormData.submittals[index];
 
-  // Update the specified field with the new value
-  submittalsToUpdate[field] = value;
+    // Update the specified field with the new value
+    submittalsToUpdate[field] = value;
 
-  // Update the state with the modified data
-  setProjectStep5FormData(updatedFormData);
-};
-
+    // Update the state with the modified data
+    setProjectStep5FormData(updatedFormData);
+  };
 
   const handleProjectFormSubmit = (e) => {
     e.preventDefault();
-console.log(ProjectStep1FormData.proposal_id);
+    console.log(ProjectStep1FormData.proposal_id);
     const formData = {
       // *****step 01
       start_date: ProjectStep1FormData.start_date,
@@ -1132,14 +1202,18 @@ console.log(ProjectStep1FormData.proposal_id);
 
   const [selectedEstimator, setSelectedEstimator] = useState("");
   const [selectedCompany, setSelectedCompany] = useState("");
-  const [selectedBidder, setSelectedBidder] = useState("");
+  console.log(selectedCompany);
+  const [selectedBidder, setSelectedBidder] = useState();
   const [selectedLocation, setSelectedLocation] = useState("");
+  console.log(selectedLocation);
   const [selectedStatus, setselectedStatus] = useState("");
   const [selecteddueDate, setSelecteddueDate] = useState("");
   const [SelectedTimeforUpdate, setSelectedTimeforUpdate] = useState("");
   const [SelectedTimeZone, setSelectedTimeZone] = useState("");
   const [selectedstart_date, setSelectedstart_date] = useState("");
   const [selectedbidder_address, setSelectedbidder_address] = useState("");
+  const [selectedbidder_detail, setSelectedbidder_detail] = useState("");
+  const [selectedbidder_email, setSelectedbidder_email] = useState("");
   const selectedStartDate = new Date(selectedstart_date);
   const selectedmydueDate = new Date(selecteddueDate);
   const formattedStartDate = `${selectedStartDate.getFullYear()}-${(
@@ -1199,6 +1273,8 @@ console.log(ProjectStep1FormData.proposal_id);
       estimator: parseInt(selectedEstimator, 10),
       bidder: selectedBidder,
       bidder_address: selectedbidder_address,
+      bidder_detail: selectedbidder_detail,
+      bidder_mail: selectedbidder_email,
     };
 
     try {
@@ -1998,7 +2074,7 @@ console.log(ProjectStep1FormData.proposal_id);
           </div>
 
           <ParticlesAnimation numberOfCircles={numberOfCircles} />
-{/* //here was project Modal before */}
+          {/* //here was project Modal before */}
           <div
             className="table-responsive proposalTable mt-2"
             data-aos="fade-up"
@@ -2129,7 +2205,7 @@ console.log(ProjectStep1FormData.proposal_id);
                         <button
                           onClick={() => {
                             // console.log(item.prjct_name);
-                            const test= typeof(item.id);
+                            const test = typeof item.id;
                             console.log(test);
 
                             setshowProjectModal(true);
@@ -2146,11 +2222,13 @@ console.log(ProjectStep1FormData.proposal_id);
                             setSelectedEstimatingID(item.prjct_name);
                             setSelectedEstimator(item.estimator);
                             setSelectedBidder(item.bidder);
-                            setSelectedCompany(item.company);
+                            setSelectedCompany(item.company?.Cmpny_Name);
                             setselectedStatus(item.status);
                             setSelecteddueDate(item.due_date);
                             setSelectedstart_date(item.start_date);
                             setSelectedbidder_address(item.bidder_address);
+                            setSelectedbidder_email(item.bidder_mail);
+                            setSelectedbidder_detail(item.bidder_detail);
                             setSelectedTimeforUpdate(item.time);
                             setSelectedTimeZone(item.timezone);
                             setSelectedLocation(item.location);
@@ -2200,1880 +2278,1914 @@ console.log(ProjectStep1FormData.proposal_id);
           </div>
         </div>
       </div>
-          {showProjectModal && (
-            <div
-              className={`modal-container pt-5 ps-2 ${
-                showProjectModal ? "show" : ""
-              }`}
+      {showProjectModal && (
+        <div
+          className={`modal-container pt-5 ps-2 ${
+            showProjectModal ? "show" : ""
+          }`}
+        >
+          <h4 className="text-center addnewtxt">Add Project Entries</h4>
+          <button className="close-btn" onClick={closeModal}></button>
+          <div className="purposal-content px-5">
+            {/* ************* Implementation of Multistep-Form using Material UI */}
+            Project
+            <Modal
+              open={showProjectModal}
+              onClose={closeModal}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
             >
-              <h4 className="text-center addnewtxt">Add Project Entries</h4>
-              <button className="close-btn" onClick={closeModal}></button>
-              <div className="purposal-content px-5">
-                {/* ************* Implementation of Multistep-Form using Material UI */}
-                Project
-                <Modal
-                  open={showProjectModal}
-                  onClose={closeModal}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
-                  <div
-                    className={`modal-container pt-5 ps-2 ${
-                      showProjectModal ? "show" : ""
-                    }`}
-                  >
-                    <h4 className="text-center addnewtxt">
-                      Add Project Entries
-                    </h4>{" "}
-                    <button className="close-btn" onClick={closeModal}></button>
-                    <div className="purposal-content pt-4 px-5">
-                      <Stepper activeStep={projectactiveStep} alternativeLabel>
-                        {projectSteps.map((label) => (
-                          <Step key={label}>
-                            <StepLabel>{label}</StepLabel>
-                          </Step>
-                        ))}
-                      </Stepper>
-                      <form className="d-flex mt-4 gap-3 flex-column">
-                        {projectactiveStep === 0 && (
-                          <>
-                            <div
-                              className="projName mt-3"
-                              style={{ width: "100%" }}
+              <div
+                className={`modal-container pt-5 ps-2 ${
+                  showProjectModal ? "show" : ""
+                }`}
+              >
+                <h4 className="text-center addnewtxt">Add Project Entries</h4>{" "}
+                <button className="close-btn" onClick={closeModal}></button>
+                <div className="purposal-content pt-4 px-5">
+                  <Stepper activeStep={projectactiveStep} alternativeLabel>
+                    {projectSteps.map((label) => (
+                      <Step key={label}>
+                        <StepLabel>{label}</StepLabel>
+                      </Step>
+                    ))}
+                  </Stepper>
+                  <form className="d-flex mt-4 gap-3 flex-column">
+                    {projectactiveStep === 0 && (
+                      <>
+                        <div
+                          className="projName mt-3"
+                          style={{ width: "100%" }}
+                        >
+                          <label htmlFor="projectName" className="form-label">
+                            Estimating/Project Name:
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="projectName"
+                            name="projectName"
+                            placeholder="AutoPopulate not shown on frontend"
+                            defaultValue={selectedEstimatingID}
+                          />
+                        </div>
+                        <div
+                          className="projName mt-3"
+                          style={{ width: "100%" }}
+                        >
+                          <label htmlFor="projectName" className="form-label">
+                            Proposal ID:
+                          </label>
+                          <input
+                            type="number"
+                            className="form-control"
+                            id="projectName"
+                            name="projectName"
+                            value={selectedProposalID || ""}
+                            placeholder="ID should be shown here"
+                            readOnly
+                          />
+                        </div>
+
+                        <div className="bothDiv gap-3">
+                          <div className="projName Oneline">
+                            <label htmlFor="projectName" className="form-label">
+                              Start Date:
+                            </label>
+                            <input
+                              type="date"
+                              className="form-control"
+                              id="dateId"
+                              name="dateID"
+                              value={ProjectStep1FormData.start_date}
+                              onChange={(e) =>
+                                setProjectStep1FormData({
+                                  ...ProjectStep1FormData,
+                                  start_date: e.target.value,
+                                })
+                              }
+                            />
+                          </div>
+                          <div className="projName Oneline">
+                            <label htmlFor="projectName" className="form-label">
+                              Job Number:
+                            </label>
+                            <input
+                              type="text"
+                              name="jobNumber"
+                              id="jobNumber"
+                              className="form-control"
+                              value={ProjectStep1FormData.job_num}
+                              onChange={(e) =>
+                                setProjectStep1FormData({
+                                  ...ProjectStep1FormData,
+                                  job_num: e.target.value,
+                                })
+                              }
+                            />
+                          </div>
+                        </div>
+                        <div className="bothDiv gap-3">
+                          <div className="Oneline">
+                            <label
+                              htmlFor="estimatorName"
+                              className="form-label"
                             >
-                              <label
-                                htmlFor="projectName"
-                                className="form-label"
-                              >
-                                Estimating/Project Name:
-                              </label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                id="projectName"
-                                name="projectName"
-                                placeholder="AutoPopulate not shown on frontend"
-                                defaultValue={selectedEstimatingID}
-                              />
-                            </div>
-                            <div
-                              className="projName mt-3"
-                              style={{ width: "100%" }}
+                              Project Manager:
+                            </label>
+                            <select
+                              className="form-select"
+                              id="projectManagerID"
+                              name="dateID"
+                              value={ProjectStep1FormData.prjct_mngr}
+                              onChange={(e) =>
+                                setProjectStep1FormData({
+                                  ...ProjectStep1FormData,
+                                  prjct_mngr: e.target.value,
+                                })
+                              }
                             >
-                              <label
-                                htmlFor="projectName"
-                                className="form-label"
-                              >
-                                Proposal ID:
-                              </label>
-                              <input
-                                type="number"
-                                className="form-control"
-                                id="projectName"
-                                name="projectName"
-                                value={selectedProposalID || ''}                                placeholder="ID should be shown here"
-                                readOnly
-                              />
-                            </div>
+                              <option value="">Select Project Manager</option>
+                              {projectManager && projectManager.length > 0 ? (
+                                projectManager.map((user) => (
+                                  <option value={user.id} key={user.id}>
+                                    {user.full_Name}
+                                  </option>
+                                ))
+                              ) : (
+                                <option value="" disabled>
+                                  Loading...
+                                </option>
+                              )}
+                            </select>
+                          </div>
+                          <div className="Oneline">
+                            <label htmlFor="location" className="form-label">
+                              Foreman:
+                            </label>
+                            <select
+                              className="form-select"
+                              id="formanID"
+                              name="formanID"
+                              value={ProjectStep1FormData.Forman}
+                              onChange={(e) =>
+                                setProjectStep1FormData({
+                                  ...ProjectStep1FormData,
+                                  Forman: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="">Select Forman</option>
+                              {formanName.length > 0 ? (
+                                formanName.map((user) => (
+                                  <option value={user.id} key={user.id}>
+                                    {user.full_Name}
+                                  </option>
+                                ))
+                              ) : (
+                                <option value="" disabled>
+                                  Loading...
+                                </option>
+                              )}
+                            </select>
+                          </div>
+                        </div>
+                        <div className="bothDiv gap-3">
+                          <div className="Oneline">
+                            <label
+                              htmlFor="estimatorName"
+                              className="form-label"
+                            >
+                              BIM Modeler:
+                            </label>
+                            <select
+                              className="form-select"
+                              id="bimOperatorID"
+                              name="bimOperatorID"
+                              value={ProjectStep1FormData.bim_oprtr}
+                              onChange={(e) =>
+                                setProjectStep1FormData({
+                                  ...ProjectStep1FormData,
+                                  bim_oprtr: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="">Select Bim Modeler</option>
+                              {BimOperator && BimOperator.length > 0 ? (
+                                BimOperator.map((user) => (
+                                  <option value={user.id} key={user.id}>
+                                    {user.full_Name}
+                                  </option>
+                                ))
+                              ) : (
+                                <option value="" disabled>
+                                  Loading...
+                                </option>
+                              )}
+                            </select>
+                          </div>
+                          <div className="Oneline">
+                            <label htmlFor="location" className="form-label">
+                              Project Engineer:
+                            </label>
+                            <select
+                              className="form-select"
+                              id="ProjectEngineerID"
+                              name="ProjectEngineerID"
+                              value={ProjectStep1FormData.prjct_engnr}
+                              onChange={(e) =>
+                                setProjectStep1FormData({
+                                  ...ProjectStep1FormData,
+                                  prjct_engnr: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="">Select Project Engineer</option>
 
-                            <div className="bothDiv gap-3">
-                              <div className="projName Oneline">
-                                <label
-                                  htmlFor="projectName"
-                                  className="form-label"
-                                >
-                                  Start Date:
-                                </label>
-                                <input
-                                  type="date"
-                                  className="form-control"
-                                  id="dateId"
-                                  name="dateID"
-                                  value={ProjectStep1FormData.start_date}
-                                  onChange={(e) =>
-                                    setProjectStep1FormData({
-                                      ...ProjectStep1FormData,
-                                      start_date: e.target.value,
-                                    })
-                                  }
-                                />
-                              </div>
-                              <div className="projName Oneline">
-                                <label
-                                  htmlFor="projectName"
-                                  className="form-label"
-                                >
-                                  Job Number:
-                                </label>
-                                <input
-                                  type="text"
-                                  name="jobNumber"
-                                  id="jobNumber"
-                                  className="form-control"
-                                  value={ProjectStep1FormData.job_num}
-                                  onChange={(e) =>
-                                    setProjectStep1FormData({
-                                      ...ProjectStep1FormData,
-                                      job_num: e.target.value,
-                                    })
-                                  }
-                                />
-                              </div>
-                            </div>
-                            <div className="bothDiv gap-3">
-                              <div className="Oneline">
-                                <label
-                                  htmlFor="estimatorName"
-                                  className="form-label"
-                                >
-                                  Project Manager:
-                                </label>
-                                <select
-                                  className="form-select"
-                                  id="projectManagerID"
-                                  name="dateID"
-                                  value={ProjectStep1FormData.prjct_mngr}
-                                  onChange={(e) =>
-                                    setProjectStep1FormData({
-                                      ...ProjectStep1FormData,
-                                      prjct_mngr: e.target.value,
-                                    })
-                                  }
-                                >
-                                  <option value="">
-                                    Select Project Manager
+                              {ProjEnger && ProjEnger.length > 0 ? (
+                                ProjEnger.map((user) => (
+                                  <option value={user.id} key={user.id}>
+                                    {user.full_Name}
                                   </option>
-                                  {projectManager &&
-                                  projectManager.length > 0 ? (
-                                    projectManager.map((user) => (
-                                      <option value={user.id} key={user.id}>
-                                        {user.full_Name}
-                                      </option>
-                                    ))
-                                  ) : (
-                                    <option value="" disabled>
-                                      Loading...
-                                    </option>
-                                  )}
-                                </select>
-                              </div>
-                              <div className="Oneline">
-                                <label
-                                  htmlFor="location"
-                                  className="form-label"
-                                >
-                                  Foreman:
-                                </label>
-                                <select
-                                  className="form-select"
-                                  id="formanID"
-                                  name="formanID"
-                                  value={ProjectStep1FormData.Forman}
-                                  onChange={(e) =>
-                                    setProjectStep1FormData({
-                                      ...ProjectStep1FormData,
-                                      Forman: e.target.value,
-                                    })
-                                  }
-                                >
-                                  <option value="">Select Forman</option>
-                                  {formanName.length > 0 ? (
-                                    formanName.map((user) => (
-                                      <option value={user.id} key={user.id}>
-                                        {user.full_Name}
-                                      </option>
-                                    ))
-                                  ) : (
-                                    <option value="" disabled>
-                                      Loading...
-                                    </option>
-                                  )}
-                                </select>
-                              </div>
-                            </div>
-                            <div className="bothDiv gap-3">
-                              <div className="Oneline">
-                                <label
-                                  htmlFor="estimatorName"
-                                  className="form-label"
-                                >
-                                  BIM Modeler:
-                                </label>
-                                <select
-                                  className="form-select"
-                                  id="bimOperatorID"
-                                  name="bimOperatorID"
-                                  value={ProjectStep1FormData.bim_oprtr}
-                                  onChange={(e) =>
-                                    setProjectStep1FormData({
-                                      ...ProjectStep1FormData,
-                                      bim_oprtr: e.target.value,
-                                    })
-                                  }
-                                >
-                                  <option value="">Select Bim Modeler</option>
-                                  {BimOperator && BimOperator.length > 0 ? (
-                                    BimOperator.map((user) => (
-                                      <option value={user.id} key={user.id}>
-                                        {user.full_Name}
-                                      </option>
-                                    ))
-                                  ) : (
-                                    <option value="" disabled>
-                                      Loading...
-                                    </option>
-                                  )}
-                                </select>
-                              </div>
-                              <div className="Oneline">
-                                <label
-                                  htmlFor="location"
-                                  className="form-label"
-                                >
-                                  Project Engineer:
-                                </label>
-                                <select
-                                  className="form-select"
-                                  id="ProjectEngineerID"
-                                  name="ProjectEngineerID"
-                                  value={ProjectStep1FormData.prjct_engnr}
-                                  onChange={(e) =>
-                                    setProjectStep1FormData({
-                                      ...ProjectStep1FormData,
-                                      prjct_engnr: e.target.value,
-                                    })
-                                  }
-                                >
-                                  <option value="">
-                                    Select Project Engineer
-                                  </option>
+                                ))
+                              ) : (
+                                <option value="" disabled>
+                                  Loading...
+                                </option>
+                              )}
+                            </select>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    {projectactiveStep === 1 && (
+                      <>
+                        <div className="bothDiv gap-3 mt-4">
+                          <div className="Oneline">
+                            <label htmlFor="location" className="form-label">
+                              Genral_superintendent:
+                            </label>
+                            <select
+                              className="form-select"
+                              id="general_superintendent"
+                              name="general_superintendent"
+                              value={
+                                ProjectStep2FormData.general_superintendent
+                              }
+                              onChange={(e) =>
+                                setProjectStep2FormData({
+                                  ...ProjectStep2FormData,
+                                  general_superintendent: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="">
+                                Select General Superintendent
+                              </option>
 
-                                  {ProjEnger && ProjEnger.length > 0 ? (
-                                    ProjEnger.map((user) => (
-                                      <option value={user.id} key={user.id}>
-                                        {user.full_Name}
-                                      </option>
-                                    ))
-                                  ) : (
-                                    <option value="" disabled>
-                                      Loading...
-                                    </option>
-                                  )}
-                                </select>
-                              </div>
-                            </div>
-                          </>
-                        )}
-                        {projectactiveStep === 1 && (
-                          <>
-                            <div className="bothDiv gap-3 mt-4">
-                              <div className="Oneline">
-                                <label
-                                  htmlFor="location"
-                                  className="form-label"
-                                >
-                                  Genral_superintendent:
-                                </label>
-                                <select
-                                  className="form-select"
-                                  id="general_superintendent"
-                                  name="general_superintendent"
-                                  value={
-                                    ProjectStep2FormData.general_superintendent
-                                  }
-                                  onChange={(e) =>
-                                    setProjectStep2FormData({
-                                      ...ProjectStep2FormData,
-                                      general_superintendent: e.target.value,
-                                    })
-                                  }
-                                >
-                                  <option value="">
-                                    Select General Superintendent
+                              {GeneralSuperintendent &&
+                              GeneralSuperintendent.length > 0 ? (
+                                GeneralSuperintendent.map((user) => (
+                                  <option value={user.id} key={user.id}>
+                                    {user.full_Name}
                                   </option>
-
-                                  {GeneralSuperintendent &&
-                                  GeneralSuperintendent.length > 0 ? (
-                                    GeneralSuperintendent.map((user) => (
-                                      <option value={user.id} key={user.id}>
-                                        {user.full_Name}
-                                      </option>
-                                    ))
-                                  ) : (
-                                    <option value="" disabled>
-                                      Loading...
-                                    </option>
-                                  )}
-                                </select>
-                              </div>
-                              <div className="Oneline">
-                                <label
-                                  htmlFor="estimatorName"
-                                  className="form-label"
-                                >
-                                  Addendum:
-                                </label>
-                                <select
-                                  className="form-select"
-                                  id="addundumID"
-                                  name="addundumID"
-                                  value={ProjectStep2FormData.addendums}
-                                  onChange={(e) =>
-                                    setProjectStep2FormData({
-                                      ...ProjectStep2FormData,
-                                      addendums: e.target.value,
-                                    })
-                                  }
-                                >
-                                  <option value="">Select Addendum</option>
-                                  <option value="Available">Available</option>
-                                  <option value="Not Available">
-                                    Not Available
-                                  </option>
-                                </select>
-                              </div>
-                            </div>
-                            <div style={{ width: "100%" }}>
-                              <label
-                                htmlFor="projectName"
-                                className="form-label"
-                              >
-                                Add project address::
-                              </label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                id="projectaddress"
-                                name="projectaddress"
-                                placeholder="Your project address!"
-                                value={ProjectStep2FormData.project_address}
+                                ))
+                              ) : (
+                                <option value="" disabled>
+                                  Loading...
+                                </option>
+                              )}
+                            </select>
+                          </div>
+                          <div className="Oneline">
+                            <label
+                              htmlFor="estimatorName"
+                              className="form-label"
+                            >
+                              Addendum:
+                            </label>
+                            <select
+                              className="form-select"
+                              id="addundumID"
+                              name="addundumID"
+                              value={ProjectStep2FormData.addendums}
+                              onChange={(e) =>
+                                setProjectStep2FormData({
+                                  ...ProjectStep2FormData,
+                                  addendums: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="">Select Addendum</option>
+                              <option value="Available">Available</option>
+                              <option value="Not Available">
+                                Not Available
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                        <div style={{ width: "100%" }}>
+                          <label htmlFor="projectName" className="form-label">
+                            Add project address::
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="projectaddress"
+                            name="projectaddress"
+                            placeholder="Your project address!"
+                            value={ProjectStep2FormData.project_address}
+                            onChange={(e) =>
+                              setProjectStep2FormData({
+                                ...ProjectStep2FormData,
+                                project_address: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="bothDiv gap-3">
+                          <div className="Oneline">
+                            <label
+                              htmlFor="estimatorName"
+                              className="form-label"
+                            >
+                              Spec's per our Scope:
+                            </label>
+                            <select
+                              className="form-select"
+                              id="SpecID"
+                              name="SpecID"
+                              value={ProjectStep2FormData.Spec}
+                              onChange={(e) =>
+                                setProjectStep2FormData({
+                                  ...ProjectStep2FormData,
+                                  Spec: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="">Select Spec's</option>
+                              <option value="Available">Available</option>
+                              <option value="Not Available">
+                                Not Available
+                              </option>
+                            </select>
+                          </div>
+                          <div className="Oneline">
+                            <label htmlFor="location" className="form-label">
+                              Bid:
+                            </label>
+                            <select
+                              className="form-select"
+                              id="ProjectBid"
+                              name="ProjectBid"
+                              value={ProjectStep2FormData.bid}
+                              onChange={(e) =>
+                                setProjectStep2FormData({
+                                  ...ProjectStep2FormData,
+                                  bid: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="">Select Bid</option>
+                              <option value="Available">Available</option>
+                              <option value="Not Available">
+                                Not Available
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="bothDiv gap-3">
+                          <div className="Oneline">
+                            <label htmlFor="location" className="form-label">
+                              Drywell Conttrol Joins:
+                            </label>
+                            <select
+                              className="form-select"
+                              id="Projectdrywell"
+                              name="Projectdrywell"
+                              value={ProjectStep2FormData.drywell}
+                              onChange={(e) =>
+                                setProjectStep2FormData({
+                                  ...ProjectStep2FormData,
+                                  drywell: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="">Select Choice</option>
+                              <option value="Submited">Submited</option>
+                              <option value="Working">Working</option>
+                              <option value="Pending">Pending</option>
+                            </select>
+                          </div>
+                          <div className="Oneline">
+                            <label htmlFor="location" className="form-label">
+                              WALL TYPE MAPPING:
+                            </label>
+                            <select
+                              className="form-select"
+                              id="Projectwall_type"
+                              name="Projectwall_type"
+                              value={ProjectStep2FormData.wall_type}
+                              onChange={(e) =>
+                                setProjectStep2FormData({
+                                  ...ProjectStep2FormData,
+                                  wall_type: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="">Select Choice</option>
+                              <option value="Completed">Completed</option>
+                              <option value="Working">Working</option>
+                              <option value="Pending">Pending</option>
+                            </select>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    {projectactiveStep === 2 && (
+                      <>
+                        <div className="bothDiv gap-3 mt-4">
+                          <div className="Oneline">
+                            <label htmlFor="location" className="form-label">
+                              FINISH LEVEL MARKUPS:
+                            </label>
+                            <select
+                              className="form-select"
+                              id="Projectfinish"
+                              name="Projectfinish"
+                              value={ProjectStep3FormData.finish}
+                              onChange={(e) =>
+                                setProjectStep3FormData({
+                                  ...ProjectStep3FormData,
+                                  finish: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="">Select Choice</option>
+                              <option value="Completed">Completed</option>
+                              <option value="Working">Working</option>
+                              <option value="Pending">Pending</option>
+                            </select>
+                          </div>
+                          <div className="Oneline">
+                            <label htmlFor="location" className="form-label">
+                              PROGRESS TRACKING:
+                            </label>
+                            <select
+                              className="form-select"
+                              id="Projectprogress"
+                              name="Projectprogress"
+                              // value={selectedPROGRESSTRACKING}
+                              // onChange={handlePROGRESSTRACKINGChange}
+                              value={ProjectStep3FormData.progress}
+                              onChange={(e) =>
+                                setProjectStep3FormData({
+                                  ...ProjectStep3FormData,
+                                  progress: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="">Select Choice</option>
+                              <option value="Completed">Completed</option>
+                              <option value="Working">Working</option>
+                              <option value="Pending">Pending</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="bothDiv gap-3">
+                          <div className="Oneline">
+                            <label htmlFor="location" className="form-label">
+                              RO-Door:
+                            </label>
+                            <select
+                              className="form-select"
+                              id="ProjectRo_door"
+                              name="ProjectRo_door"
+                              // value={selectedRO_Door}
+                              // onChange={handleRO_DoorChange}
+                              value={ProjectStep3FormData.ro_door}
+                              onChange={(e) =>
+                                setProjectStep3FormData({
+                                  ...ProjectStep3FormData,
+                                  ro_door: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="">Select Choice</option>
+                              <option value="Working">Working</option>
+                              <option value="Submited">Submited</option>
+                              <option value="Pending">Pending</option>
+                              <option value="Done">Done</option>
+                            </select>
+                          </div>
+                          <div className="Oneline">
+                            <label htmlFor="location" className="form-label">
+                              RO-Window:
+                            </label>
+                            <select
+                              className="form-select"
+                              id="ProjectRO-Window"
+                              name="ProjectRO-Window"
+                              // value={selectedRO_Window}
+                              // onChange={handleRO_WindowChange}
+                              value={ProjectStep3FormData.ro_window}
+                              onChange={(e) =>
+                                setProjectStep3FormData({
+                                  ...ProjectStep3FormData,
+                                  ro_window: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="">Select Choice</option>
+                              <option value="Working">Working</option>
+                              <option value="Submited">Submited</option>
+                              <option value="Pending">Pending</option>
+                              <option value="Done">Done</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="bothDiv  gap-3">
+                          <div className="Oneline">
+                            <label htmlFor="location" className="form-label">
+                              Status:
+                            </label>
+                            <select
+                              className="form-select"
+                              id="ProjectEngineerID"
+                              // value={selectedProjectStatus}
+                              // onChange={handleProjectStatusChange}
+                              value={ProjectStep3FormData.status}
+                              onChange={(e) =>
+                                setProjectStep3FormData({
+                                  ...ProjectStep3FormData,
+                                  status: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="Pre-Construction">
+                                Pre-Construction
+                              </option>
+                              <option value="Construction Phase">
+                                Construction Phase
+                              </option>
+                              <option value="Close out phase">
+                                Close out phase
+                              </option>
+                              <option value="Upcoming/Estimating phase">
+                                Upcoming/Estimating phase
+                              </option>
+                              <option value="Complete">Complete</option>
+                            </select>
+                          </div>
+                          <div className="Oneline">
+                            <label htmlFor="location" className="form-label">
+                              Contacts:
+                            </label>
+                            <select
+                              className="form-select"
+                              id="Projectcontacts"
+                              name="Projectcontacts"
+                              // value={selectedContacts}
+                              // onChange={handleContactsChange}
+                              value={ProjectStep3FormData.contacts}
+                              onChange={(e) =>
+                                setProjectStep3FormData({
+                                  ...ProjectStep3FormData,
+                                  contacts: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="">Select Contacts</option>
+                              <option value="On build">On build</option>
+                              <option value="Pending">Pending</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div style={{ width: "100%" }}>
+                          <label htmlFor="projectName" className="form-label">
+                            Substitution:
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="projectsubstitution"
+                            name="projectsubstitution"
+                            placeholder="Write here!"
+                            // value={selectedSubstitution}
+                            // onChange={handleSubstitutionChange}
+                            value={ProjectStep3FormData.substitution}
+                            onChange={(e) =>
+                              setProjectStep3FormData({
+                                ...ProjectStep3FormData,
+                                substitution: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+                      </>
+                    )}
+                    {projectactiveStep === 3 && (
+                      <>
+                        <div className="mt-4" style={{ width: "100%" }}>
+                          <div>
+                            <label className="form-label">
+                              <span>Contract</span>
+                            </label>
+                            <div id="" className="input-group">
+                              <select
+                                className="form-select"
+                                placeholder="Contract"
+                                id="contract"
+                                value={
+                                  ProjectStep4FormData.contract[0].contract
+                                }
                                 onChange={(e) =>
-                                  setProjectStep2FormData({
-                                    ...ProjectStep2FormData,
-                                    project_address: e.target.value,
+                                  setProjectStep4FormData({
+                                    ...ProjectStep4FormData,
+                                    contract: [
+                                      {
+                                        ...ProjectStep4FormData.contract[0],
+                                        contract: e.target.value,
+                                      },
+                                    ],
+                                  })
+                                }
+                              >
+                                <option value="">Select Choice</option>
+                                <option value="Fully Executed">
+                                  Fully Executed
+                                </option>
+                                <option value="Pending">Pending</option>
+                              </select>
+                              <input
+                                id=""
+                                type="date"
+                                name="contract_date"
+                                className="form-control"
+                                value={
+                                  ProjectStep4FormData.contract[0].contract_date
+                                }
+                                onChange={(e) =>
+                                  setProjectStep4FormData({
+                                    ...ProjectStep4FormData,
+                                    contract: [
+                                      {
+                                        ...ProjectStep4FormData.contract[0],
+                                        contract_date: e.target.value,
+                                      },
+                                    ],
                                   })
                                 }
                               />
                             </div>
-                            <div className="bothDiv gap-3">
-                              <div className="Oneline">
-                                <label
-                                  htmlFor="estimatorName"
-                                  className="form-label"
-                                >
-                                  Spec's per our Scope:
-                                </label>
-                                <select
-                                  className="form-select"
-                                  id="SpecID"
-                                  name="SpecID"
-                                  value={ProjectStep2FormData.Spec}
-                                  onChange={(e) =>
-                                    setProjectStep2FormData({
-                                      ...ProjectStep2FormData,
-                                      Spec: e.target.value,
-                                    })
-                                  }
-                                >
-                                  <option value="">Select Spec's</option>
-                                  <option value="Available">Available</option>
-                                  <option value="Not Available">
-                                    Not Available
-                                  </option>
-                                </select>
-                              </div>
-                              <div className="Oneline">
-                                <label
-                                  htmlFor="location"
-                                  className="form-label"
-                                >
-                                  Bid:
-                                </label>
-                                <select
-                                  className="form-select"
-                                  id="ProjectBid"
-                                  name="ProjectBid"
-                                  value={ProjectStep2FormData.bid}
-                                  onChange={(e) =>
-                                    setProjectStep2FormData({
-                                      ...ProjectStep2FormData,
-                                      bid: e.target.value,
-                                    })
-                                  }
-                                >
-                                  <option value="">Select Bid</option>
-                                  <option value="Available">Available</option>
-                                  <option value="Not Available">
-                                    Not Available
-                                  </option>
-                                </select>
-                              </div>
-                            </div>
-                            <div className="bothDiv gap-3">
-                              <div className="Oneline">
-                                <label
-                                  htmlFor="location"
-                                  className="form-label"
-                                >
-                                  Drywell Conttrol Joins:
-                                </label>
-                                <select
-                                  className="form-select"
-                                  id="Projectdrywell"
-                                  name="Projectdrywell"
-                                  value={ProjectStep2FormData.drywell}
-                                  onChange={(e) =>
-                                    setProjectStep2FormData({
-                                      ...ProjectStep2FormData,
-                                      drywell: e.target.value,
-                                    })
-                                  }
-                                >
-                                  <option value="">Select Choice</option>
-                                  <option value="Submited">Submited</option>
-                                  <option value="Working">Working</option>
-                                  <option value="Pending">Pending</option>
-                                </select>
-                              </div>
-                              <div className="Oneline">
-                                <label
-                                  htmlFor="location"
-                                  className="form-label"
-                                >
-                                  WALL TYPE MAPPING:
-                                </label>
-                                <select
-                                  className="form-select"
-                                  id="Projectwall_type"
-                                  name="Projectwall_type"
-                                  value={ProjectStep2FormData.wall_type}
-                                  onChange={(e) =>
-                                    setProjectStep2FormData({
-                                      ...ProjectStep2FormData,
-                                      wall_type: e.target.value,
-                                    })
-                                  }
-                                >
-                                  <option value="">Select Choice</option>
-                                  <option value="Completed">Completed</option>
-                                  <option value="Working">Working</option>
-                                  <option value="Pending">Pending</option>
-                                </select>
-                              </div>
-                            </div>
-                          </>
-                        )}
-                        {projectactiveStep === 2 && (
-                          <>
-                            <div className="bothDiv gap-3 mt-4">
-                              <div className="Oneline">
-                                <label
-                                  htmlFor="location"
-                                  className="form-label"
-                                >
-                                  FINISH LEVEL MARKUPS:
-                                </label>
-                                <select
-                                  className="form-select"
-                                  id="Projectfinish"
-                                  name="Projectfinish"
-                                  value={ProjectStep3FormData.finish}
-                                  onChange={(e) =>
-                                    setProjectStep3FormData({
-                                      ...ProjectStep3FormData,
-                                      finish: e.target.value,
-                                    })
-                                  }
-                                >
-                                  <option value="">Select Choice</option>
-                                  <option value="Completed">Completed</option>
-                                  <option value="Working">Working</option>
-                                  <option value="Pending">Pending</option>
-                                </select>
-                              </div>
-                              <div className="Oneline">
-                                <label
-                                  htmlFor="location"
-                                  className="form-label"
-                                >
-                                  PROGRESS TRACKING:
-                                </label>
-                                <select
-                                  className="form-select"
-                                  id="Projectprogress"
-                                  name="Projectprogress"
-                                  // value={selectedPROGRESSTRACKING}
-                                  // onChange={handlePROGRESSTRACKINGChange}
-                                  value={ProjectStep3FormData.progress}
-                                  onChange={(e) =>
-                                    setProjectStep3FormData({
-                                      ...ProjectStep3FormData,
-                                      progress: e.target.value,
-                                    })
-                                  }
-                                >
-                                  <option value="">Select Choice</option>
-                                  <option value="Completed">Completed</option>
-                                  <option value="Working">Working</option>
-                                  <option value="Pending">Pending</option>
-                                </select>
-                              </div>
-                            </div>
-                            <div className="bothDiv gap-3">
-                              <div className="Oneline">
-                                <label
-                                  htmlFor="location"
-                                  className="form-label"
-                                >
-                                  RO-Door:
-                                </label>
-                                <select
-                                  className="form-select"
-                                  id="ProjectRo_door"
-                                  name="ProjectRo_door"
-                                  // value={selectedRO_Door}
-                                  // onChange={handleRO_DoorChange}
-                                  value={ProjectStep3FormData.ro_door}
-                                  onChange={(e) =>
-                                    setProjectStep3FormData({
-                                      ...ProjectStep3FormData,
-                                      ro_door: e.target.value,
-                                    })
-                                  }
-                                >
-                                  <option value="">Select Choice</option>
-                                  <option value="Working">Working</option>
-                                  <option value="Submited">Submited</option>
-                                  <option value="Pending">Pending</option>
-                                  <option value="Done">Done</option>
-                                </select>
-                              </div>
-                              <div className="Oneline">
-                                <label
-                                  htmlFor="location"
-                                  className="form-label"
-                                >
-                                  RO-Window:
-                                </label>
-                                <select
-                                  className="form-select"
-                                  id="ProjectRO-Window"
-                                  name="ProjectRO-Window"
-                                  // value={selectedRO_Window}
-                                  // onChange={handleRO_WindowChange}
-                                  value={ProjectStep3FormData.ro_window}
-                                  onChange={(e) =>
-                                    setProjectStep3FormData({
-                                      ...ProjectStep3FormData,
-                                      ro_window: e.target.value,
-                                    })
-                                  }
-                                >
-                                  <option value="">Select Choice</option>
-                                  <option value="Working">Working</option>
-                                  <option value="Submited">Submited</option>
-                                  <option value="Pending">Pending</option>
-                                  <option value="Done">Done</option>
-                                </select>
-                              </div>
-                            </div>
-                            <div className="bothDiv  gap-3">
-                              <div className="Oneline">
-                                <label
-                                  htmlFor="location"
-                                  className="form-label"
-                                >
-                                  Status:
-                                </label>
-                                <select
-                                  className="form-select"
-                                  id="ProjectEngineerID"
-                                  // value={selectedProjectStatus}
-                                  // onChange={handleProjectStatusChange}
-                                  value={ProjectStep3FormData.status}
-                                  onChange={(e) =>
-                                    setProjectStep3FormData({
-                                      ...ProjectStep3FormData,
-                                      status: e.target.value,
-                                    })
-                                  }
-                                >
-                                  <option  value="Pre-Construction">
-                                    Pre-Construction
-                                  </option>
-                                  <option value="Construction Phase">
-                                    Construction Phase
-                                  </option>
-                                  <option value="Close out phase">
-                                    Close out phase
-                                  </option>
-                                  <option value="Upcoming/Estimating phase">
-                                    Upcoming/Estimating phase
-                                  </option>
-                                  <option value="Complete">Complete</option>
-                                </select>
-                              </div>
-                              <div className="Oneline">
-                                <label
-                                  htmlFor="location"
-                                  className="form-label"
-                                >
-                                  Contacts:
-                                </label>
-                                <select
-                                  className="form-select"
-                                  id="Projectcontacts"
-                                  name="Projectcontacts"
-                                  // value={selectedContacts}
-                                  // onChange={handleContactsChange}
-                                  value={ProjectStep3FormData.contacts}
-                                  onChange={(e) =>
-                                    setProjectStep3FormData({
-                                      ...ProjectStep3FormData,
-                                      contacts: e.target.value,
-                                    })
-                                  }
-                                >
-                                  <option value="">Select Contacts</option>
-                                  <option value="On build">On build</option>
-                                  <option value="Pending">Pending</option>
-                                </select>
-                              </div>
-                            </div>
-                            <div style={{ width: "100%" }}>
-                              <label
-                                htmlFor="projectName"
-                                className="form-label"
-                              >
-                                Substitution:
-                              </label>
-                              <input
-                                type="text"
-                                className="form-control"
-                                id="projectsubstitution"
-                                name="projectsubstitution"
-                                placeholder="Write here!"
-                                // value={selectedSubstitution}
-                                // onChange={handleSubstitutionChange}
-                                value={ProjectStep3FormData.substitution}
+                          </div>
+                        </div>
+                        <div style={{ width: "100%" }}>
+                          <div>
+                            <label className="form-label">
+                              <span>SCHEDULE_OF_VALUES:</span>
+                            </label>
+                            <div id="" className="input-group">
+                              <select
+                                className="form-select"
+                                placeholder="Schedule"
+                                id="schedule"
+                                value={
+                                  ProjectStep4FormData.schedule_of_value[0]
+                                    .schedule
+                                }
                                 onChange={(e) =>
-                                  setProjectStep3FormData({
-                                    ...ProjectStep3FormData,
-                                    substitution: e.target.value,
+                                  setProjectStep4FormData({
+                                    ...ProjectStep4FormData,
+                                    schedule_of_value: [
+                                      {
+                                        ...ProjectStep4FormData
+                                          .schedule_of_value[0],
+                                        schedule: e.target.value,
+                                      },
+                                    ],
+                                  })
+                                }
+                              >
+                                <option value="">Select Choice</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Pending">Pending</option>
+                              </select>
+                              <input
+                                id=""
+                                type="date"
+                                name="schedule_date"
+                                className="form-control"
+                                value={
+                                  ProjectStep4FormData.schedule_of_value[0]
+                                    .schedule_date
+                                }
+                                onChange={(e) =>
+                                  setProjectStep4FormData({
+                                    ...ProjectStep4FormData,
+                                    schedule_of_value: [
+                                      {
+                                        ...ProjectStep4FormData
+                                          .schedule_of_value[0],
+                                        schedule_date: e.target.value,
+                                      },
+                                    ],
                                   })
                                 }
                               />
                             </div>
-                          </>
-                        )}
-                       {projectactiveStep === 3 && (
-  <>
-    <div className="mt-4" style={{ width: "100%" }}>
-      <div>
-        <label className="form-label">
-          <span>Contract</span>
-        </label>
-        <div id="" className="input-group">
-  <select
-    className="form-select"
-    placeholder="Contract"
-    id="contract"
-    value={ProjectStep4FormData.contract[0].contract}
-    onChange={(e) =>
-      setProjectStep4FormData({
-        ...ProjectStep4FormData,
-        contract: [
-          {
-            ...ProjectStep4FormData.contract[0],
-            contract: e.target.value
-          }
-        ]
-      })
-    }
-  >
-    <option value="">Select Choice</option>
-    <option value="Fully Executed">Fully Executed</option>
-    <option value="Pending">Pending</option>
-  </select>
-  <input
-    id=""
-    type="date"
-    name="contract_date"
-    className="form-control"
-    value={ProjectStep4FormData.contract[0].contract_date}
-    onChange={(e) =>
-      setProjectStep4FormData({
-        ...ProjectStep4FormData,
-        contract: [
-          {
-            ...ProjectStep4FormData.contract[0],
-            contract_date: e.target.value
-          }
-        ]
-      })
-    }
-  />
-</div>
+                          </div>
+                        </div>
+                        <div style={{ width: "100%" }}>
+                          <div>
+                            <label className="form-label">
+                              <span>INSURANCES:</span>
+                            </label>
+                            <div id="" className="input-group">
+                              <select
+                                className="form-select"
+                                placeholder="Insurance"
+                                id="insurance"
+                                value={
+                                  ProjectStep4FormData.insurance[0].insurance
+                                }
+                                onChange={(e) =>
+                                  setProjectStep4FormData({
+                                    ...ProjectStep4FormData,
+                                    insurance: [
+                                      {
+                                        ...ProjectStep4FormData.insurance[0],
+                                        insurance: e.target.value,
+                                      },
+                                    ],
+                                  })
+                                }
+                              >
+                                <option value="">Select Choice</option>
+                                <option value="CCIP">CCIP</option>
+                                <option value="Sent">Sent</option>
+                                <option value="Received">Received</option>
+                                <option value="Complete">Complete</option>
+                              </select>
+                              <input
+                                id=""
+                                type="date"
+                                name="date"
+                                className="form-control"
+                                value={ProjectStep4FormData.insurance[0].date}
+                                onChange={(e) =>
+                                  setProjectStep4FormData({
+                                    ...ProjectStep4FormData,
+                                    insurance: [
+                                      {
+                                        ...ProjectStep4FormData.insurance[0],
+                                        date: e.target.value,
+                                      },
+                                    ],
+                                  })
+                                }
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div style={{ width: "100%" }}>
+                          <div>
+                            <label className="form-label">
+                              <span>BONDS:</span>
+                            </label>
+                            <div id="" className="input-group">
+                              <select
+                                className="form-select"
+                                placeholder="Bond"
+                                id="bond"
+                                value={ProjectStep4FormData.bond[0].bond}
+                                onChange={(e) =>
+                                  setProjectStep4FormData({
+                                    ...ProjectStep4FormData,
+                                    bond: [
+                                      {
+                                        ...ProjectStep4FormData.bond[0],
+                                        bond: e.target.value,
+                                      },
+                                    ],
+                                  })
+                                }
+                              >
+                                <option value="">Select Choice</option>
+                                <option value="Sent">Sent</option>
+                                <option value="Received">Received</option>
+                                <option value="Complete">Complete</option>
+                              </select>
+                              <input
+                                id=""
+                                type="date"
+                                name="date"
+                                className="form-control"
+                                value={ProjectStep4FormData.bond[0].date}
+                                onChange={(e) =>
+                                  setProjectStep4FormData({
+                                    ...ProjectStep4FormData,
+                                    bond: [
+                                      {
+                                        ...ProjectStep4FormData.bond[0],
+                                        date: e.target.value,
+                                      },
+                                    ],
+                                  })
+                                }
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    )}
 
-      </div>
-    </div>
-    <div style={{ width: "100%" }}>
-      <div>
-        <label className="form-label">
-          <span>SCHEDULE_OF_VALUES:</span>
-        </label>
-        <div id="" className="input-group">
-          <select
-            className="form-select"
-            placeholder="Schedule"
-            id="schedule"
-            value={ProjectStep4FormData.schedule_of_value[0].schedule}
-            onChange={(e) =>
-              setProjectStep4FormData({
-                ...ProjectStep4FormData,
-                schedule_of_value: [{ ...ProjectStep4FormData.schedule_of_value[0], schedule: e.target.value }]
-              })
-            }
-          >
-            <option value="">Select Choice</option>
-            <option value="Approved">Approved</option>
-            <option value="Pending">Pending</option>
-          </select>
-          <input
-            id=""
-            type="date"
-            name="schedule_date"
-            className="form-control"
-            value={ProjectStep4FormData.schedule_of_value[0].schedule_date}
-            onChange={(e) =>
-              setProjectStep4FormData({
-                ...ProjectStep4FormData,
-                schedule_of_value: [{ ...ProjectStep4FormData.schedule_of_value[0], schedule_date: e.target.value }]
-              })
-            }
-          />
-        </div>
-      </div>
-    </div>
-    <div style={{ width: "100%" }}>
-      <div>
-        <label className="form-label">
-          <span>INSURANCES:</span>
-        </label>
-        <div id="" className="input-group">
-          <select
-            className="form-select"
-            placeholder="Insurance"
-            id="insurance"
-            value={ProjectStep4FormData.insurance[0].insurance}
-            onChange={(e) =>
-              setProjectStep4FormData({
-                ...ProjectStep4FormData,
-                insurance: [{ ...ProjectStep4FormData.insurance[0], insurance: e.target.value }]
-              })
-            }
-          >
-            <option value="">Select Choice</option>
-            <option value="CCIP">CCIP</option>
-            <option value="Sent">Sent</option>
-            <option value="Received">Received</option>
-            <option value="Complete">Complete</option>
-          </select>
-          <input
-            id=""
-            type="date"
-            name="date"
-            className="form-control"
-            value={ProjectStep4FormData.insurance[0].date}
-            onChange={(e) =>
-              setProjectStep4FormData({
-                ...ProjectStep4FormData,
-                insurance: [{ ...ProjectStep4FormData.insurance[0], date: e.target.value }]
-              })
-            }
-          />
-        </div>
-      </div>
-    </div>
-    <div style={{ width: "100%" }}>
-      <div>
-        <label className="form-label">
-          <span>BONDS:</span>
-        </label>
-        <div id="" className="input-group">
-          <select
-            className="form-select"
-            placeholder="Bond"
-            id="bond"
-            value={ProjectStep4FormData.bond[0].bond}
-            onChange={(e) =>
-              setProjectStep4FormData({
-                ...ProjectStep4FormData,
-                bond: [{ ...ProjectStep4FormData.bond[0], bond: e.target.value }]
-              })
-            }
-          >
-            <option value="">Select Choice</option>
-            <option value="Sent">Sent</option>
-            <option value="Received">Received</option>
-            <option value="Complete">Complete</option>
-          </select>
-          <input
-            id=""
-            type="date"
-            name="date"
-            className="form-control"
-            value={ProjectStep4FormData.bond[0].date}
-            onChange={(e) =>
-              setProjectStep4FormData({
-                ...ProjectStep4FormData,
-                bond: [{ ...ProjectStep4FormData.bond[0], date: e.target.value }]
-              })
-            }
-          />
-        </div>
-      </div>
-    </div>
-  </>
-)}
-
-
-                        {projectactiveStep === 4 && (
-                          <>
-                          <div style={{ width: "100%" }}>
-      <div>
-        <label className="form-label">
-          <span>ZLIENS:</span>
-        </label>
-        <div id="" className="input-group">
-          <select
-            className="form-select"
-            placeholder="zlien"
-            id="zlien"
-            value={ProjectStep5FormData.zlien[0].zlien}
-            onChange={(e) =>
-              setProjectStep5FormData({
-                ...ProjectStep5FormData,
-                zlien: [{ ...ProjectStep5FormData.zlien[0], zlien: e.target.value }]
-              })
-            }
-          >
-            <option value="">Select Choice</option>
-            <option value="Submitted">Submitted</option>
-            <option value="Pending">Pending</option>
-          </select>
-          <input
-            id=""
-            type="date"
-            name="date"
-            className="form-control"
-            value={ProjectStep5FormData.zlien[0].date}
-            onChange={(e) =>
-              setProjectStep5FormData({
-                ...ProjectStep5FormData,
-                zlien: [{ ...ProjectStep5FormData.zlien[0], date: e.target.value }]
-              })
-            }
-          />
-        </div>
-      </div>
-    </div>
+                    {projectactiveStep === 4 && (
+                      <>
+                        <div style={{ width: "100%" }}>
+                          <div>
+                            <label className="form-label">
+                              <span>ZLIENS:</span>
+                            </label>
+                            <div id="" className="input-group">
+                              <select
+                                className="form-select"
+                                placeholder="zlien"
+                                id="zlien"
+                                value={ProjectStep5FormData.zlien[0].zlien}
+                                onChange={(e) =>
+                                  setProjectStep5FormData({
+                                    ...ProjectStep5FormData,
+                                    zlien: [
+                                      {
+                                        ...ProjectStep5FormData.zlien[0],
+                                        zlien: e.target.value,
+                                      },
+                                    ],
+                                  })
+                                }
+                              >
+                                <option value="">Select Choice</option>
+                                <option value="Submitted">Submitted</option>
+                                <option value="Pending">Pending</option>
+                              </select>
+                              <input
+                                id=""
+                                type="date"
+                                name="date"
+                                className="form-control"
+                                value={ProjectStep5FormData.zlien[0].date}
+                                onChange={(e) =>
+                                  setProjectStep5FormData({
+                                    ...ProjectStep5FormData,
+                                    zlien: [
+                                      {
+                                        ...ProjectStep5FormData.zlien[0],
+                                        date: e.target.value,
+                                      },
+                                    ],
+                                  })
+                                }
+                              />
+                            </div>
+                          </div>
+                        </div>
                         <div className="mt-3" style={{ width: "100%" }}>
-                              <label
-                                htmlFor="projectName"
-                                className="form-label mt-2"
+                          <label
+                            htmlFor="projectName"
+                            className="form-label mt-2"
+                          >
+                            <span>SUBMITTALSS</span>
+                          </label>
+                          {ProjectStep5FormData.submittals.map(
+                            (mysubmittals, index) => (
+                              <div
+                                key={index}
+                                className="wholespecificationEntry"
                               >
-                                <span>SUBMITTALSS</span>
-                              </label>
-                              {ProjectStep5FormData.submittals.map(
-                                (mysubmittals, index) => (
-                                  <div
-                                    key={index}
-                                    className="wholespecificationEntry"
+                                <div className="ScopofWorkSectionRemove">
+                                  <button
+                                    type="button"
+                                    className="btn btn-danger"
+                                    onClick={handleRemoveSubmittal}
                                   >
-                                    <div className="ScopofWorkSectionRemove">
-                                      <button
-                                        type="button"
-                                        className="btn btn-danger"
-                                      >
-                                        <i className="far">X</i>
-                                      </button>
-                                    </div>
+                                    <i className="far">X</i>
+                                  </button>
+                                </div>
 
-                                    <div className="mb-2 mt-4">
-                                      <label className="form-label">
-                                        Add scope of Work
-                                      </label>
-                                      <select
-  className="form-select"
-  aria-label="Select Specification"
-  value={mysubmittals.scop_work_number}
-  onChange={(e) =>
-    handleSubmittalsChange(index, "scop_work_number", e.target.value)
-  }
->
-
-                                        <option value="Base Bid Drywall/Framing">
-                                          All scope numbers will here
-                                        </option>
-                                      </select>
-                                    </div>
-                                    <div className="bothDiv gap-3">
-                                      <div className="Oneline mb-4">
-                                        <label
-                                          htmlFor="location"
-                                          className="form-label"
-                                        >
-                                          Status:
-                                        </label>
-                                        <select
-                                          className="form-select"
-                                          value={mysubmittals.status}
-                                          onChange={(e) =>
-                                            handleSubmittalsChange(
-                                              index,
-                                              "status",
-                                              e.target.value
-                                            )
-                                          }
-                                        >
-                                          <option value="">
-                                            Select Choice
-                                          </option>
-                                          <option value="Approved">
-                                            Approved
-                                          </option>
-                                          <option value="Pending">
-                                            Pending
-                                          </option>
-                                        </select>
-                                      </div>
-
-                                      <div className="Oneline">
-                                        <label
-                                          htmlFor="location"
-                                          className="form-label"
-                                        >
-                                          Date:
-                                        </label>
-                                        <input
-                                          type="date"
-                                          className="form-control"
-                                          value={mysubmittals.date}
-                                          onChange={(e) =>
-                                            handleSubmittalsChange(
-                                              index,
-                                              "date",
-                                              e.target.value
-                                            )
-                                          }
-                                        />
-                                      </div>
-                                    </div>
+                                <div className="mb-2 mt-4">
+                                  <label className="form-label">
+                                    Add scope of Work
+                                  </label>
+                                  <select
+                                    className="form-select"
+                                    aria-label="Select Specification"
+                                    value={mysubmittals.scop_work_number}
+                                    onChange={(e) =>
+                                      handleSubmittalsChange(
+                                        index,
+                                        "scop_work_number",
+                                        e.target.value
+                                      )
+                                    }
+                                  >
+                                    <option value="Base Bid Drywall/Framing">
+                                      All scope numbers will here
+                                    </option>
+                                  </select>
+                                </div>
+                                <div className="bothDiv gap-3">
+                                  <div className="Oneline mb-4">
+                                    <label
+                                      htmlFor="location"
+                                      className="form-label"
+                                    >
+                                      Status:
+                                    </label>
+                                    <select
+                                      className="form-select"
+                                      value={mysubmittals.status}
+                                      onChange={(e) =>
+                                        handleSubmittalsChange(
+                                          index,
+                                          "status",
+                                          e.target.value
+                                        )
+                                      }
+                                    >
+                                      <option value="">Select Choice</option>
+                                      <option value="Approved">Approved</option>
+                                      <option value="Pending">Pending</option>
+                                    </select>
                                   </div>
-                                )
-                              )}
-                              <button type="button" className="btn btn-success">
-                                Add Submittals
-                              </button>
-                            </div>
-                          </>
-                        )}
 
-                        {projectactiveStep === 5 && (
-                          <>
-                            <div className="mt-3" style={{ width: "100%" }}>
-                              <label
-                                htmlFor="projectName"
-                                className="form-label mt-2"
+                                  <div className="Oneline">
+                                    <label
+                                      htmlFor="location"
+                                      className="form-label"
+                                    >
+                                      Date:
+                                    </label>
+                                    <input
+                                      type="date"
+                                      className="form-control"
+                                      value={mysubmittals.date}
+                                      onChange={(e) =>
+                                        handleSubmittalsChange(
+                                          index,
+                                          "date",
+                                          e.target.value
+                                        )
+                                      }
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            )
+                          )}
+                          <button type="button" onClick={handleAddSubmittal} className="btn btn-success">
+                            Add Submittals
+                          </button>
+                        </div>
+                      </>
+                    )}
+
+                    {projectactiveStep === 5 && (
+                      <>
+                        <div className="mt-3" style={{ width: "100%" }}>
+                          <label
+                            htmlFor="projectName"
+                            className="form-label mt-2"
+                          >
+                            <span>SHOP DRAWINGS</span>
+                          </label>
+                          {ProjectStep6FormData.shop_drawing.map(
+                            (shopdrawing, index) => (
+                              <div
+                                key={index}
+                                className="wholespecificationEntry"
                               >
-                                <span>SHOP DRAWINGS</span>
-                              </label>
-                              {ProjectStep6FormData.shop_drawing.map(
-                                (shopdrawing, index) => (
-                                  <div
-                                    key={index}
-                                    className="wholespecificationEntry"
+                                <div className="ScopofWorkSectionRemove">
+                                  <button
+                                    type="button"
+                                    className="btn btn-danger"
+                                    onClick={handleRemoveShopDrawing}
                                   >
-                                    <div className="ScopofWorkSectionRemove">
-                                      <button
-                                        type="button"
-                                        className="btn btn-danger"
-                                      >
-                                        <i className="far">X</i>
-                                      </button>
-                                    </div>
+                                    <i className="far">X</i>
+                                  </button>
+                                </div>
 
-                                    <div className="mb-2 mt-4">
-                                      <label className="form-label">
-                                        Add scope of Work
-                                      </label>
-                                      <select
-                                        className="form-select"
-                                        aria-label="Select Specification"
-                                        value={shopdrawing.scop_work_number}
-                                        onChange={(e) =>
-                                          handleShopDrawingChange(
-                                            index,
-                                            "scop_work_number",
-                                            e.target.value
-                                          )
-                                        }
-                                      >
-                                        <option value="Base Bid Drywall/Framing">
-                                          All scope numbers will here
-                                        </option>
-                                      </select>
-                                    </div>
-                                    <div className="bothDiv gap-3">
-                                      <div className="Oneline mb-4">
-                                        <label
-                                          htmlFor="location"
-                                          className="form-label"
-                                        >
-                                          Status:
-                                        </label>
-                                        <select
-                                          className="form-select"
-                                          value={shopdrawing.status}
-                                          onChange={(e) =>
-                                            handleShopDrawingChange(
-                                              index,
-                                              "status",
-                                              e.target.value
-                                            )
-                                          }
-                                        >
-                                          <option value="">
-                                            Select Choice
-                                          </option>
-                                          <option value="Approved">
-                                            Approved
-                                          </option>
-                                          <option value="Pending">
-                                            Pending
-                                          </option>
-                                        </select>
-                                      </div>
-
-                                      <div className="Oneline">
-                                        <label
-                                          htmlFor="location"
-                                          className="form-label"
-                                        >
-                                          Date:
-                                        </label>
-                                        <input
-                                          type="date"
-                                          className="form-control"
-                                          value={shopdrawing.date}
-                                          onChange={(e) =>
-                                            handleShopDrawingChange(
-                                              index,
-                                              "date",
-                                              e.target.value
-                                            )
-                                          }
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                )
-                              )}
-                              <button type="button" className="btn btn-success">
-                                Add SHOP DRAWINGS
-                              </button>
-                            </div>
-                            <div style={{ width: "100%" }}>
-                              <label
-                                htmlFor="projectName"
-                                className="form-label mt-2"
-                              >
-                                <span>SAFETY</span>
-                              </label>
-                              {ProjectStep6FormData.safity.map(
-                                (safety, index) => (
-                                  <div
-                                    key={index}
-                                    className="wholespecificationEntry"
+                                <div className="mb-2 mt-4">
+                                  <label className="form-label">
+                                    Add scope of Work
+                                  </label>
+                                  <select
+                                    className="form-select"
+                                    aria-label="Select Specification"
+                                    value={shopdrawing.scop_work_number}
+                                    onChange={(e) =>
+                                      handleShopDrawingChange(
+                                        index,
+                                        "scop_work_number",
+                                        e.target.value
+                                      )
+                                    }
                                   >
-                                    <div className="ScopofWorkSectionRemove">
-                                      <button
-                                        type="button"
-                                        className="btn btn-danger"
-                                      >
-                                        <i className="far">X</i>
-                                      </button>
-                                    </div>
-                                    <div className="mb-2 mt-4">
-                                      <label className="form-label">
-                                        Add scope of Work
-                                      </label>
-                                      <select
-                                        className="form-select"
-                                        aria-label="Select Specification"
-                                        value={safety.scop_work_number}
-                                        onChange={(e) =>
-                                          handleSafetyChange(
-                                            index,
-                                            "scop_work_number",
-                                            e.target.value
-                                          )
-                                        }
-                                      >
-                                        <option value="Base Bid Drywall/Framing">
-                                          All scope numbers will be here
-                                        </option>
-                                        {/* Add more options here */}
-                                      </select>
-                                    </div>
-                                    <div className="bothDiv gap-3">
-                                      <div className="Oneline mb-4">
-                                        <label
-                                          htmlFor="location"
-                                          className="form-label"
-                                        >
-                                          Safety:
-                                        </label>
-                                        <select
-                                          className="form-select"
-                                          onChange={(e) =>
-                                            handleSafetyChange(
-                                              index,
-                                              "status",
-                                              e.target.value
-                                            )
-                                          }
-                                          value={safety.status}
-                                        >
-                                          <option value="">
-                                            Select Choice
-                                          </option>
-                                          <option value="Approved">
-                                            Approved
-                                          </option>
-                                          <option value="Pending">
-                                            Pending
-                                          </option>
-                                        </select>
-                                      </div>
-                                      <div className="Oneline">
-                                        <label
-                                          htmlFor="location"
-                                          className="form-label"
-                                        >
-                                          Date:
-                                        </label>
-                                        <input
-                                          type="date"
-                                          className="form-control"
-                                          onChange={(e) =>
-                                            handleSafetyChange(
-                                              index,
-                                              "date",
-                                              e.target.value
-                                            )
-                                          }
-                                          value={safety.date}
-                                        />
-                                      </div>
-                                    </div>
-                                    <div className="mt-2">
-                                      <label htmlFor="comment">Comment:</label>
-                                      <textarea
-                                        style={{
-                                          width: "100%",
-                                          backgroundColor: "white",
-                                          color: "black",
-                                          padding: "10px",
-                                        }}
-                                        rows="2"
-                                        placeholder="Write your comment here!"
-                                        value={safety.comment_box}
-                                        onChange={(e) =>
-                                          handleSafetyChange(
-                                            index,
-                                            "comment_box",
-                                            e.target.value
-                                          )
-                                        }
-                                      ></textarea>
-                                    </div>
+                                    <option value="Base Bid Drywall/Framing">
+                                      All scope numbers will here
+                                    </option>
+                                  </select>
+                                </div>
+                                <div className="bothDiv gap-3">
+                                  <div className="Oneline mb-4">
+                                    <label
+                                      htmlFor="location"
+                                      className="form-label"
+                                    >
+                                      Status:
+                                    </label>
+                                    <select
+                                      className="form-select"
+                                      value={shopdrawing.status}
+                                      onChange={(e) =>
+                                        handleShopDrawingChange(
+                                          index,
+                                          "status",
+                                          e.target.value
+                                        )
+                                      }
+                                    >
+                                      <option value="">Select Choice</option>
+                                      <option value="Approved">Approved</option>
+                                      <option value="Pending">Pending</option>
+                                    </select>
                                   </div>
-                                )
-                              )}
-                              <button type="button" className="btn btn-success">
-                                Add SAFETY
-                              </button>
-                            </div>
 
-                            <div style={{ width: "100%" }}>
-                                <label
-                                  htmlFor="projectName"
-                                  className="form-label mt-2"
+                                  <div className="Oneline">
+                                    <label
+                                      htmlFor="location"
+                                      className="form-label"
+                                    >
+                                      Date:
+                                    </label>
+                                    <input
+                                      type="date"
+                                      className="form-control"
+                                      value={shopdrawing.date}
+                                      onChange={(e) =>
+                                        handleShopDrawingChange(
+                                          index,
+                                          "date",
+                                          e.target.value
+                                        )
+                                      }
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            )
+                          )}
+                          <button type="button" onClick={handleAddShopDrawing} className="btn btn-success">
+                            Add SHOP DRAWINGS
+                          </button>
+                        </div>
+                        <div style={{ width: "100%" }}>
+                          <label
+                            htmlFor="projectName"
+                            className="form-label mt-2"
+                          >
+                            <span>SAFETY</span>
+                          </label>
+                          {ProjectStep6FormData.safity.map((safety, index) => (
+                            <div
+                              key={index}
+                              className="wholespecificationEntry"
+                            >
+                              <div className="ScopofWorkSectionRemove">
+                                <button
+                                  type="button"
+                                  className="btn btn-danger"
+                                  onClick={handleRemoveSafety}
                                 >
-                                  <span>SCHEDULES</span>
+                                  <i className="far">X</i>
+                                </button>
+                              </div>
+                              <div className="mb-2 mt-4">
+                                <label className="form-label">
+                                  Add scope of Work
                                 </label>
+                                <select
+                                  className="form-select"
+                                  aria-label="Select Specification"
+                                  value={safety.scop_work_number}
+                                  onChange={(e) =>
+                                    handleSafetyChange(
+                                      index,
+                                      "scop_work_number",
+                                      e.target.value
+                                    )
+                                  }
+                                >
+                                  <option value="Base Bid Drywall/Framing">
+                                    All scope numbers will be here
+                                  </option>
+                                  {/* Add more options here */}
+                                </select>
+                              </div>
+                              <div className="bothDiv gap-3">
+                                <div className="Oneline mb-4">
+                                  <label
+                                    htmlFor="location"
+                                    className="form-label"
+                                  >
+                                    Safety:
+                                  </label>
+                                  <select
+                                    className="form-select"
+                                    onChange={(e) =>
+                                      handleSafetyChange(
+                                        index,
+                                        "status",
+                                        e.target.value
+                                      )
+                                    }
+                                    value={safety.status}
+                                  >
+                                    <option value="">Select Choice</option>
+                                    <option value="Approved">Approved</option>
+                                    <option value="Pending">Pending</option>
+                                  </select>
+                                </div>
+                                <div className="Oneline">
+                                  <label
+                                    htmlFor="location"
+                                    className="form-label"
+                                  >
+                                    Date:
+                                  </label>
+                                  <input
+                                    type="date"
+                                    className="form-control"
+                                    onChange={(e) =>
+                                      handleSafetyChange(
+                                        index,
+                                        "date",
+                                        e.target.value
+                                      )
+                                    }
+                                    value={safety.date}
+                                  />
+                                </div>
+                              </div>
+                              <div className="mt-2">
+                                <label htmlFor="comment">Comment:</label>
+                                <textarea
+                                  style={{
+                                    width: "100%",
+                                    backgroundColor: "white",
+                                    color: "black",
+                                    padding: "10px",
+                                  }}
+                                  rows="2"
+                                  placeholder="Write your comment here!"
+                                  value={safety.comment_box}
+                                  onChange={(e) =>
+                                    handleSafetyChange(
+                                      index,
+                                      "comment_box",
+                                      e.target.value
+                                    )
+                                  }
+                                ></textarea>
+                              </div>
+                            </div>
+                          ))}
+                          <button type="button" onClick={handleAddSafety} className="btn btn-success">
+                            Add SAFETY
+                          </button>
+                        </div>
+
+                        <div style={{ width: "100%" }}>
+                          <label
+                            htmlFor="projectName"
+                            className="form-label mt-2"
+                          >
+                            <span>SCHEDULES</span>
+                          </label>
+                              <div
+                                
+                                className="wholespecificationEntry"
+                                >
+                                <div className="mb-2 mt-3">
+
                                 {ProjectStep6FormData.schedule.map(
                                   (myschedule, index) => (
-                                    <div
-                                      key={index}
-                                      className="wholespecificationEntry"
+                                  <div key={index} className="input-group myrowInputgrouup">
+                                    <select
+                                      className="form-select"
+                                      aria-label="Select Specification"
+                                      value={myschedule.status}
+                                      onChange={(e) =>
+                                        handleScheduleChange(
+                                          index,
+                                          "status",
+                                          e.target.value
+                                        )
+                                      }
                                     >
-                                      <div className="mb-2 mt-3">
-                                        <div className="input-group myrowInputgrouup">
-<select
-  className="form-select"
-  aria-label="Select Specification"
-  value={myschedule.status}
-  onChange={(e) =>
-    handleScheduleChange(index, "status", e.target.value)
-  }
->                                            <option value="">
-                                              Select Choice
-                                            </option>
-                                            <option value="Available">
-                                              Available
-                                            </option>
-                                            <option value="Not Available">
-                                              Not Available
-                                            </option>
-                                          </select>
-                                          <input
-                                            type="date"
-                                            className="form-control"
-                                            placeholder="Due Date"
-                                            value={myschedule.date}
-                                            onChange={(e) =>
-                                              handleScheduleChange(
-                                                index,
-                                                "date",
-                                                e.target.value
-                                              )
-                                            }
-                                          />
-                                          <button
-                                            type="button"
-                                            className="btn btn-danger"
-                                            onClick={() =>
-                                              handleRemoveSchedule(index)
-                                            }
-                                          >
-                                            <i className="far">X</i>
-                                          </button>
-                                        </div>
-                                      </div>
-                                      <button
-                                        type="button"
-                                        className="btn btn-success bk"
-                                        onClick={handleAddSchedule}
-                                      >
-                                        <i className="fa-regular icon fa-plus"></i>
-                                      </button>
-                                    </div>
+                                      {" "}
+                                      <option value="">Select Choice</option>
+                                      <option value="Available">
+                                        Available
+                                      </option>
+                                      <option value="Not Available">
+                                        Not Available
+                                      </option>
+                                    </select>
+                                    <input
+                                      type="date"
+                                      className="form-control"
+                                      placeholder="Due Date"
+                                      value={myschedule.date}
+                                      onChange={(e) =>
+                                        handleScheduleChange(
+                                          index,
+                                          "date",
+                                          e.target.value
+                                        )
+                                      }
+                                    />
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger"
+                                      onClick={() =>
+                                        handleRemoveSchedule(index)
+                                      }
+                                    >
+                                      <i className="far">X</i>
+                                    </button>
+                                  </div>
                                   )
                                 )}
+                                </div>
+                                <button
+                                  type="button"
+                                  className="btn btn-success bk"
+                                  onClick={handleAddSchedule}
+                                >
+                                  <i className="fa-regular icon fa-plus"></i>
+                                </button>
                               </div>
+                        </div>
 
-                            <div style={{ width: "100%" }}>
-                              <label
-                                htmlFor="projectName"
-                                className="form-label mt-2"
+                        <div style={{ width: "100%" }}>
+                          <label
+                            htmlFor="projectName"
+                            className="form-label mt-2"
+                          >
+                            <span>SUB_CONTRACTORSS</span>
+                          </label>
+                          {ProjectStep6FormData.sub_contractors.map(
+                            (subContractor, index) => (
+                              <div
+                                key={index}
+                                className="wholespecificationEntry"
                               >
-                                <span>SUB_CONTRACTORSS</span>
-                              </label>
-                              {ProjectStep6FormData.sub_contractors.map(
-                                (subContractor, index) => (
-                                  <div
-                                    key={index}
-                                    className="wholespecificationEntry"
+                                <div className="ScopofWorkSectionRemove">
+                                  <button
+                                    type="button"
+                                    className="btn btn-danger"
+                                    onClick={handleRemoveSubContractors}
                                   >
-                                    <div className="ScopofWorkSectionRemove">
-                                      <button
-                                        type="button"
-                                        className="btn btn-danger"
-                                      >
-                                        <i className="far">X</i>
-                                      </button>
-                                    </div>
-                                    <div
-                                      className="mb-2 mt-4"
-                                      style={{ width: "100%" }}
-                                    >
-                                      <div>
-                                        <label className="form-label">
-                                          <span>Sub Contractors:</span>
-                                        </label>
-                                        <div className="input-group">
-                                          <select
-                                            className="form-select"
-                                            placeholder="Contract"
-                                            value={subContractor.contract}
-                                            onChange={(e) =>
-                                              handleSubContractorChange(
-                                                index,
-                                                "contract",
-                                                e.target.value
-                                              )
-                                            }
-                                          >
-                                            <option value="">
-                                              Select Choice
-                                            </option>
-                                            <option value="Capable">
-                                              Capable
-                                            </option>
-                                            <option value="Not Capable">
-                                              Not Capable
-                                            </option>
-                                            <option value="Custom">
-                                              Custom
-                                            </option>
-                                            {/* Add more options here */}
-                                          </select>
-                                          <input
-                                            type="date"
-                                            name={`subContractorDate-${index}`} // Use a unique name
-                                            className="form-control"
-                                            value={subContractor.date}
-                                            onChange={(e) =>
-                                              handleSubContractorChange(
-                                                index,
-                                                "date",
-                                                e.target.value
-                                              )
-                                            }
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div className="mt-2">
-                                      <label htmlFor="comment">Comment:</label>
-                                      <textarea
-                                        style={{
-                                          width: "100%",
-                                          backgroundColor: "white",
-                                          color: "black",
-                                          padding: "10px",
-                                        }}
-                                        rows="2"
-                                        placeholder="Write your comment here!"
-                                        value={subContractor.comment}
+                                    <i className="far">X</i>
+                                  </button>
+                                </div>
+                                <div
+                                  className="mb-2 mt-4"
+                                  style={{ width: "100%" }}
+                                >
+                                  <div>
+                                    <label className="form-label">
+                                      <span>Sub Contractors:</span>
+                                    </label>
+                                    <div className="input-group">
+                                      <select
+                                        className="form-select"
+                                        placeholder="Contract"
+                                        value={subContractor.contract}
                                         onChange={(e) =>
                                           handleSubContractorChange(
                                             index,
-                                            "comment",
+                                            "contract",
                                             e.target.value
                                           )
                                         }
-                                      ></textarea>
+                                      >
+                                        <option value="">Select Choice</option>
+                                        <option value="Capable">Capable</option>
+                                        <option value="Not Capable">
+                                          Not Capable
+                                        </option>
+                                        <option value="Custom">Custom</option>
+                                        {/* Add more options here */}
+                                      </select>
+                                      <input
+                                        type="date"
+                                        name={`subContractorDate-${index}`} // Use a unique name
+                                        className="form-control"
+                                        value={subContractor.date}
+                                        onChange={(e) =>
+                                          handleSubContractorChange(
+                                            index,
+                                            "date",
+                                            e.target.value
+                                          )
+                                        }
+                                      />
                                     </div>
                                   </div>
-                                )
-                              )}
-                              <button type="button" className="btn btn-success">
-                                Add SUB_CONTRACTOR
-                              </button>
-                            </div>
-                          </>
-                        )}
+                                </div>
+                                <div className="mt-2">
+                                  <label htmlFor="comment">Comment:</label>
+                                  <textarea
+                                    style={{
+                                      width: "100%",
+                                      backgroundColor: "white",
+                                      color: "black",
+                                      padding: "10px",
+                                    }}
+                                    rows="2"
+                                    placeholder="Write your comment here!"
+                                    value={subContractor.comment}
+                                    onChange={(e) =>
+                                      handleSubContractorChange(
+                                        index,
+                                        "comment",
+                                        e.target.value
+                                      )
+                                    }
+                                  ></textarea>
+                                </div>
+                              </div>
+                            )
+                          )}
+                          <button type="button" onClick={handleAddSubContractors} className="btn btn-success">
+                            Add SUB_CONTRACTOR
+                          </button>
+                        </div>
+                      </>
+                    )}
 
-                        {projectactiveStep === 6 && (
-                          <>
-                            <div className="mt-3">
-                              <div style={{ width: "100%" }}>
-                                <label
-                                  htmlFor="projectName"
-                                  className="form-label mt-2"
+                    {projectactiveStep === 6 && (
+                      <>
+                        <div className="mt-3">
+                          <div style={{ width: "100%" }}>
+                            <label
+                              htmlFor="projectName"
+                              className="form-label mt-2"
+                            >
+                              <span>LABOR RATES</span>
+                            </label>
+                            {ProjectStep7FormData.labor_rate.map(
+                              (laborRate, index) => (
+                                <div
+                                  key={index}
+                                  className="wholespecificationEntry"
                                 >
-                                  <span>LABOR RATES</span>
-                                </label>
-                                {ProjectStep7FormData.labor_rate.map(
-                                  (laborRate, index) => (
-                                    <div
-                                      key={index}
-                                      className="wholespecificationEntry"
+                                  <div className="ScopofWorkSectionRemove">
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger"
+                                      onClick={() =>
+                                        handleRemoveLaborRate(index)
+                                      }
                                     >
-                                      <div className="ScopofWorkSectionRemove">
-                                        <button
-                                          type="button"
-                                          className="btn btn-danger"
-                                          onClick={() =>
-                                            handleRemoveLaborRate(index)
-                                          }
-                                        >
-                                          <i className="far">X</i>
-                                        </button>
-                                      </div>
+                                      <i className="far">X</i>
+                                    </button>
+                                  </div>
 
-                                      <div className="mb-2 mt-4">
-                                        <div style={{ width: "100%" }}>
-                                          <label className="form-label">
-                                            <span>Labor Rate:</span>
-                                          </label>
-                                          <div className="input-group">
-                                            <select
-                                              className="form-select"
-                                              placeholder="Contract"
-                                              value={laborRate.status}
-                                              onChange={(e) =>
-                                                handleLaborRateChange(
-                                                  index,
-                                                  "status",
-                                                  e.target.value
-                                                )
-                                              }
-                                            >
-                                              <option value="">
-                                                Select Choice
-                                              </option>
-                                              <option value="Pending">
-                                                Pending
-                                              </option>
-                                              <option value="Approved">
-                                                Approved
-                                              </option>
-                                              <option value="Custom">
-                                                Custom
-                                              </option>
-                                            </select>
-                                            <input
-                                              type="date"
-                                              name={`laborRateDate-${index}`}
-                                              className="form-control"
-                                              value={laborRate.date}
-                                              onChange={(e) =>
-                                                handleLaborRateChange(
-                                                  index,
-                                                  "date",
-                                                  e.target.value
-                                                )
-                                              }
-                                            />
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div className="mt-2">
-                                        <label htmlFor="comment">
-                                          Comment:
-                                        </label>
-                                        <textarea
-                                          style={{
-                                            width: "100%",
-                                            backgroundColor: "white",
-                                            color: "black",
-                                            padding: "10px",
-                                          }}
-                                          rows="2"
-                                          value={laborRate.comment_box}
+                                  <div className="mb-2 mt-4">
+                                    <div style={{ width: "100%" }}>
+                                      <label className="form-label">
+                                        <span>Labor Rate:</span>
+                                      </label>
+                                      <div className="input-group">
+                                        <select
+                                          className="form-select"
+                                          placeholder="Contract"
+                                          value={laborRate.status}
                                           onChange={(e) =>
                                             handleLaborRateChange(
                                               index,
-                                              "comment_box",
+                                              "status",
                                               e.target.value
                                             )
                                           }
-                                          placeholder="Write your comment here!"
-                                        ></textarea>
+                                        >
+                                          <option value="">
+                                            Select Choice
+                                          </option>
+                                          <option value="Pending">
+                                            Pending
+                                          </option>
+                                          <option value="Approved">
+                                            Approved
+                                          </option>
+                                          <option value="Custom">Custom</option>
+                                        </select>
+                                        <input
+                                          type="date"
+                                          name={`laborRateDate-${index}`}
+                                          className="form-control"
+                                          value={laborRate.date}
+                                          onChange={(e) =>
+                                            handleLaborRateChange(
+                                              index,
+                                              "date",
+                                              e.target.value
+                                            )
+                                          }
+                                        />
                                       </div>
                                     </div>
-                                  )
-                                )}
+                                  </div>
+                                  <div className="mt-2">
+                                    <label htmlFor="comment">Comment:</label>
+                                    <textarea
+                                      style={{
+                                        width: "100%",
+                                        backgroundColor: "white",
+                                        color: "black",
+                                        padding: "10px",
+                                      }}
+                                      rows="2"
+                                      value={laborRate.comment_box}
+                                      onChange={(e) =>
+                                        handleLaborRateChange(
+                                          index,
+                                          "comment_box",
+                                          e.target.value
+                                        )
+                                      }
+                                      placeholder="Write your comment here!"
+                                    ></textarea>
+                                  </div>
+                                </div>
+                              )
+                            )}
 
+                            <button
+                              type="button"
+                              className="btn btn-success"
+                              onClick={handleAddLaborRate}
+                            >
+                              Add Labor Rate
+                            </button>
+                          </div>
+
+                          <div style={{ width: "100%" }}>
+                            <label
+                              htmlFor="projectName"
+                              className="form-label mt-2"
+                            >
+                              <span>BILLINGS</span>
+                            </label>
+                                <div
+                                  
+                                  className="wholespecificationEntry"
+                                >
+                                  {ProjectStep7FormData.billing.map(
+                                    (mybilling, index) => (
+                                  <div key={index} className="mb-2 mt-3">
+                                    <div className="input-group myrowInputgrouup">
+                                      <input
+                                        type="date"
+                                        className="form-control"
+                                        placeholder="Due Date"
+                                        value={mybilling.due_date}
+                                        onChange={(e) =>
+                                          handleBillingChange(
+                                            index,
+                                            "due_date",
+                                            e.target.value
+                                          )
+                                        }
+                                      />
+                                      <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Add Reduction"
+                                        value={mybilling.reduction}
+                                        onChange={(e) =>
+                                          handleBillingChange(
+                                            index,
+                                            "reduction",
+                                            e.target.value
+                                          )
+                                        }
+                                      />
+                                      <button
+                                        type="button"
+                                        className="btn btn-danger"
+                                        onClick={() =>
+                                          handleRemoveBilling(index)
+                                        }
+                                      >
+                                        <i className="far">X</i>
+                                      </button>
+                                    </div>
+                                  </div>
+                                  )
+                                  )}
+                                  <button
+                                    type="button"
+                                    className="btn btn-success bk"
+                                    onClick={handleAddBilling}
+                                  >
+                                    <i className="fa-regular icon fa-plus"></i>
+                                  </button>
+                                </div>
+                            
+                          </div>
+                          <div style={{ width: "100%" }}>
+                            <label
+                              htmlFor="projectName"
+                              className="form-label mt-2"
+                            >
+                              <span>SOVS</span>
+                            </label>
+                              <div
+                                                                className="wholespecificationEntry"
+                              >
+                            {ProjectStep7FormData.sov.map((mysov, index) => (
+                                <div key={index} className="mb-2 mt-3">
+                                  <div className="input-group myrowInputgrouup">
+                                    <select
+                                      className="form-select"
+                                      aria-label="Select Specification"
+                                      value={mysov.status}
+                                      onChange={(e) =>
+                                        handleSovChange(
+                                          index,
+                                          "status",
+                                          e.target.value
+                                        )
+                                      }
+                                    >
+                                      <option value="">Select Choice</option>
+                                      <option value="Approved">Approved</option>
+                                      <option value="Pending">Pending</option>
+                                    </select>
+                                    <input
+                                      type="date"
+                                      className="form-control"
+                                      placeholder="Due Date"
+                                      value={mysov.date}
+                                      onChange={(e) =>
+                                        handleSovChange(
+                                          index,
+                                          "date",
+                                          e.target.value
+                                        )
+                                      }
+                                    />
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger"
+                                      onClick={() => handleRemoveSov(index)}
+                                    >
+                                      <i className="far">X</i>
+                                    </button>
+                                  </div>
+                                </div>
+                                ))}
                                 <button
                                   type="button"
-                                  className="btn btn-success"
-                                  onClick={handleAddLaborRate}
+                                  className="btn btn-success bk"
+                                  onClick={handleAddSov}
                                 >
-                                  Add Labor Rate
+                                  <i className="fa-regular icon fa-plus"></i>
                                 </button>
                               </div>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    {projectactiveStep === 7 && (
+                      <div className="mt-3">
+                        <div style={{ width: "100%" }}>
+                          <label
+                            htmlFor="projectName"
+                            className="form-label mt-2"
+                          >
+                            <span>HD S_SYSTEMS</span>
+                          </label>
+                          {ProjectStep8FormData.hds_system.map(
+                            (myhdsSystem, index) => (
+                              <div
+                                key={index}
+                                className="wholespecificationEntry"
+                              >
+                                <div className="ScopofWorkSectionRemove">
+                                  <button
+                                    type="button"
+                                    className="btn btn-danger"
+                                    onClick={() => handleRemoveHDSSystem(index)}
+                                  >
+                                    <i className="far">X</i>
+                                  </button>
+                                </div>
+                                <div className="mb-2 mt-4">
+                                  <div
+                                    className="mt-4"
+                                    style={{ width: "100%" }}
+                                  >
+                                    <div>
+                                      <label className="form-label">
+                                        <span>HDS System:</span>
+                                      </label>
+                                      <div id="" className="input-group">
+                                        <select
+                                          className="form-select"
+                                          placeholder="Contract"
+                                          id="ProjectEngineerID"
+                                          value={myhdsSystem.status}
+                                          onChange={(e) =>
+                                            handleHDSChange(
+                                              index,
+                                              "status",
+                                              e.target.value
+                                            )
+                                          }
+                                        >
+                                          <option value="Pending">
+                                            Pending
+                                          </option>
+                                          <option value="Aproved">
+                                            Aproved
+                                          </option>
+                                          <option value="Custom">Custom</option>
+                                          <option value="Not Required">
+                                            Not Required
+                                          </option>
+                                        </select>
+                                        <input
+                                          id=""
+                                          type="date"
+                                          name="date"
+                                          className="form-control"
+                                          value={myhdsSystem.date}
+                                          onChange={(e) =>
+                                            handleHDSChange(
+                                              index,
+                                              "date",
+                                              e.target.value
+                                            )
+                                          }
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="mt-2">
+                                  <label htmlFor="comment">Comment:</label>
+                                  <textarea
+                                    id="comment"
+                                    style={{
+                                      width: "100%",
+                                      backgroundColor: "white",
+                                      color: "black",
+                                      padding: "10px",
+                                    }}
+                                    rows="2"
+                                    placeholder=" Write your comment here !"
+                                    value={myhdsSystem.comment_box}
+                                    onChange={(e) =>
+                                      handleHDSChange(
+                                        index,
+                                        "comment_box",
+                                        e.target.value
+                                      )
+                                    }
+                                  ></textarea>
+                                </div>
+                              </div>
+                            )
+                          )}
+                          <button
+                            type="button"
+                            className="btn btn-success"
+                            onClick={handleAddHDSSystem}
+                          >
+                            Add HD S_SYSTEMS
+                          </button>
+                        </div>
 
-                              <div style={{ width: "100%" }}>
-                                <label
-                                  htmlFor="projectName"
-                                  className="form-label mt-2"
-                                >
-                                  <span>BILLINGS</span>
-                                </label>
-                                {ProjectStep7FormData.billing.map(
-                                  (mybilling, index) => (
-                                    <div
-                                      key={index}
-                                      className="wholespecificationEntry"
+                        <div style={{ width: "100%" }}>
+                          <label
+                            htmlFor="projectName"
+                            className="form-label mt-2"
+                          >
+                            <span>ON UPLOADED:</span>
+                          </label>
+                              <div
+                                
+                                className="wholespecificationEntry"
+                              >
+                                <div className="mb-2 mt-3">
+                                  <label className="form-label">
+                                    On Uploaded Choice:
+                                  </label>
+
+                                {ProjectStep8FormData.on_build.map(
+                                  (ONbuild, index) => (
+                                  <div key={index} className="input-group myrowInputgrouup">
+                                    <select
+                                      className="form-select"
+                                      aria-label="Select Specification"
+                                      value={ONbuild.field}
+                                      onChange={(e) =>
+                                        handleOnBuildChange(
+                                          index,
+                                          "field",
+                                          e.target.value
+                                        )
+                                      }
                                     >
-                                      <div className="mb-2 mt-3">
-                                        <div className="input-group myrowInputgrouup">
-                                          <input
-                                            type="date"
-                                            className="form-control"
-                                            placeholder="Due Date"
-                                            value={mybilling.due_date}
-                                            onChange={(e) =>
-                                              handleBillingChange(
-                                                index,
-                                                "due_date",
-                                                e.target.value
-                                              )
-                                            }
-                                          />
-                                          <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="Add Reduction"
-                                            value={mybilling.reduction}
-                                            onChange={(e) =>
-                                              handleBillingChange(
-                                                index,
-                                                "reduction",
-                                                e.target.value
-                                              )
-                                            }
-                                          />
-                                          <button
-                                            type="button"
-                                            className="btn btn-danger"
-                                            onClick={() =>
-                                              handleRemoveBilling(index)
-                                            }
-                                          >
-                                            <i className="far">X</i>
-                                          </button>
-                                        </div>
-                                      </div>
-                                      <button
-                                        type="button"
-                                        className="btn btn-success bk"
-                                        onClick={handleAddBilling}
-                                      >
-                                        <i className="fa-regular icon fa-plus"></i>
-                                      </button>
-                                    </div>
-                                  )
-                                )}
-                              </div>
-                              <div style={{ width: "100%" }}>
-                                <label
-                                  htmlFor="projectName"
-                                  className="form-label mt-2"
-                                >
-                                  <span>SOVS</span>
-                                </label>
-                                {ProjectStep7FormData.sov.map(
-                                  (mysov, index) => (
-                                    <div
-                                      key={index}
-                                      className="wholespecificationEntry"
+                                      <option value="">Select Choice</option>
+                                      <option value="Addendum">Addendum</option>
+                                      <option value="Bid Proposal">
+                                        Bid Proposal
+                                      </option>
+                                      <option value="Specs">Specs</option>
+                                      <option value="Contract">Contract</option>
+                                      <option value="Submitile">
+                                        Submitile
+                                      </option>
+                                      <option value="Safety">Safety</option>
+                                      <option value="Shop Drawing">
+                                        Shop Drawing
+                                      </option>
+                                      <option value="Budget">Budget</option>
+                                    </select>
+                                    <select
+                                      className="form-select"
+                                      aria-label="Select Specification"
+                                      value={ONbuild.status}
+                                      onChange={(e) =>
+                                        handleOnBuildChange(
+                                          index,
+                                          "status",
+                                          e.target.value
+                                        )
+                                      }
                                     >
-                                      <div className="mb-2 mt-3">
-                                        <div className="input-group myrowInputgrouup">
-                                          <select
-                                            className="form-select"
-                                            aria-label="Select Specification"
-                                            value={mysov.status}
-                                            onChange={(e) =>
-                                              handleSovChange(
-                                                index,
-                                                "status",
-                                                e.target.value
-                                              )
-                                            }
-                                          >
-                                            <option value="">
-                                              Select Choice
-                                            </option>
-                                            <option value="Approved">
-                                              Approved
-                                            </option>
-                                            <option value="Pending">
-                                              Pending
-                                            </option>
-                                          </select>
-                                          <input
-                                            type="date"
-                                            className="form-control"
-                                            placeholder="Due Date"
-                                            value={mysov.date}
-                                            onChange={(e) =>
-                                              handleSovChange(
-                                                index,
-                                                "date",
-                                                e.target.value
-                                              )
-                                            }
-                                          />
-                                          <button
-                                            type="button"
-                                            className="btn btn-danger"
-                                            onClick={() =>
-                                              handleRemoveSov(index)
-                                            }
-                                          >
-                                            <i className="far">X</i>
-                                          </button>
-                                        </div>
-                                      </div>
-                                      <button
-                                        type="button"
-                                        className="btn btn-success bk"
-                                        onClick={handleAddSov}
-                                      >
-                                        <i className="fa-regular icon fa-plus"></i>
-                                      </button>
-                                    </div>
-                                  )
-                                )}
+                                      <option value="">Select Choice</option>
+                                      <option value="Upload">Upload</option>
+                                      <option value="Pending">Pending</option>
+                                    </select>
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger"
+                                      onClick={() => handleRemoveOnBuild(index)}
+                                    >
+                                      <i className="far">X</i>
+                                    </button>
+                                  </div>
+                                )
+                              )}
+                                </div>
+                                <button
+                                  type="button"
+                                  className="btn btn-success bk"
+                                  onClick={handleAddOnBuild}
+                                >
+                                  <i className="fa-regular icon fa-plus"></i>
+                                </button>
                               </div>
+                        </div>
+                        <div style={{ width: "100%" }}>
+                          <label
+                            htmlFor="projectName"
+                            className="form-label mt-2"
+                          >
+                            <span>BUGETS</span>
+                          </label>
+                            <div
+                              
+                              className="wholespecificationEntry"
+                            >
+                              <div className="mb-2 mt-3">
+                                <label className="form-label">
+                                  Labor Rate:
+                                </label>
+
+
+                              {ProjectStep8FormData.buget.map((mybudget, index) => (
+                                <div key={index} className="input-group myrowInputgrouup">
+                                  <select
+                                    className="form-select"
+                                    aria-label="Select Specification"
+                                    value={mybudget.status}
+                                    onChange={(e) =>
+                                      handleBudgetChange(
+                                        index,
+                                        "status",
+                                        e.target.value
+                                      )
+                                    }
+                                  >
+                                    <option value="">Select Choice</option>
+                                    <option value="Done">Done</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Custom">Custom</option>
+                                  </select>
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Comment"
+                                    value={mybudget.comment_box}
+                                    onChange={(e) =>
+                                      handleBudgetChange(
+                                        index,
+                                        "comment_box",
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                  <button
+                                    type="button"
+                                    className="btn btn-danger"
+                                    onClick={() => handleRemoveBudget(index)}
+                                  >
+                                    <i className="far">X</i>
+                                  </button>
+                                </div>
+                              ))}
+                              </div>
+                              <button
+                                type="button"
+                                className="btn btn-success bk"
+                                onClick={handleAddBudget}
+                              >
+                                <i className="fa-regular icon fa-plus"></i>
+                              </button>
                             </div>
-                          </>
-                        )}
-                      {projectactiveStep === 7 && (
-  <div className="mt-3">
-    <div style={{ width: "100%" }}>
-      <label htmlFor="projectName" className="form-label mt-2">
-        <span>HD S_SYSTEMS</span>
-      </label>
-      {ProjectStep8FormData.hds_system.map((myhdsSystem, index) => (
-        <div key={index} className="wholespecificationEntry">
-          <div className="ScopofWorkSectionRemove">
-            <button
-              type="button"
-              className="btn btn-danger"
-              onClick={() => handleRemoveHDSSystem(index)}
-            >
-              <i className="far">X</i>
-            </button>
-          </div>
-          <div className="mb-2 mt-4">
-            <div className="mt-4" style={{ width: "100%" }}>
-              <div>
-                <label className="form-label">
-                  <span>HDS System:</span>
-                </label>
-                <div id="" className="input-group">
-                  <select
-                    className="form-select"
-                    placeholder="Contract"
-                    id="ProjectEngineerID"
-                    value={myhdsSystem.status}
-                    onChange={(e) =>
-                      handleHDSChange(index, "status", e.target.value)
-                    }
-                  >
-                    <option value="Pending">Pending</option>
-                    <option value="Aproved">Aproved</option>
-                    <option value="Custom">Custom</option>
-                    <option value="Not Required">Not Required</option>
-                  </select>
-                  <input
-                    id=""
-                    type="date"
-                    name="date"
-                    className="form-control"
-                    value={myhdsSystem.date}
-                    onChange={(e) =>
-                      handleHDSChange(index, "date", e.target.value)
-                    }
-                  />
+                        
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="mt-1">
+                      {projectactiveStep < 7 ? (
+                        <div className="parentbtnsdiv">
+                          <div className="spacebtns">
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              disabled={projectactiveStep === 0} // Disable the button when activeStep is 0
+                              onClick={handleprojectBack}
+                            >
+                              Back
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={handleprojectNext}
+                            >
+                              Next
+                            </Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="parentbtnsdiv">
+                          <div className="spacebtns">
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={handleprojectBack}
+                            >
+                              Back
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              type="button"
+                              onClick={handleProjectFormSubmit}
+                            >
+                              Submit
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </form>
                 </div>
               </div>
-            </div>
-          </div>
-          <div className="mt-2">
-            <label htmlFor="comment">Comment:</label>
-            <textarea
-              id="comment"
-              style={{
-                width: "100%",
-                backgroundColor: "white",
-                color: "black",
-                padding: "10px",
-              }}
-              rows="2"
-              placeholder=" Write your comment here !"
-              value={myhdsSystem.comment_box}
-              onChange={(e) =>
-                handleHDSChange(index, "comment_box", e.target.value)
-              }
-            ></textarea>
+            </Modal>
           </div>
         </div>
-      ))}
-      <button
-        type="button"
-        className="btn btn-success"
-        onClick={handleAddHDSSystem}
-      >
-        Add HD S_SYSTEMS
-      </button>
-    </div>
-
-    <div style={{ width: "100%" }}>
-      <label htmlFor="projectName" className="form-label mt-2">
-        <span>ON UPLOADED:</span>
-      </label>
-      {ProjectStep8FormData.on_build.map((ONbuild, index) => (
-        <div key={index} className="wholespecificationEntry">
-          <div className="mb-2 mt-3">
-            <label className="form-label">
-              On Uploaded Choice:
-            </label>
-            <div className="input-group myrowInputgrouup">
-              <select
-                className="form-select"
-                aria-label="Select Specification"
-                value={ONbuild.field}
-                onChange={(e) =>
-                  handleOnBuildChange(index, "field", e.target.value)
-                }
-              >
-                <option value="">Select Choice</option>
-                <option value="Addendum">Addendum</option>
-                <option value="Bid Proposal">Bid Proposal</option>
-                <option value="Specs">Specs</option>
-                <option value="Contract">Contract</option>
-                <option value="Submitile">Submitile</option>
-                <option value="Safety">Safety</option>
-                <option value="Shop Drawing">Shop Drawing</option>
-                <option value="Budget">Budget</option>
-              </select>
-              <select
-                className="form-select"
-                aria-label="Select Specification"
-                value={ONbuild.status}
-                onChange={(e) =>
-                  handleOnBuildChange(index, "status", e.target.value)
-                }
-              >
-                <option value="">Select Choice</option>
-                <option value="Upload">Upload</option>
-                <option value="Pending">Pending</option>
-              </select>
-              <button
-                type="button"
-                className="btn btn-danger"
-                onClick={() => handleRemoveOnBuild(index)}
-              >
-                <i className="far">X</i>
-              </button>
-            </div>
-          </div>
-          <button
-            type="button"
-            className="btn btn-success bk"
-            onClick={handleAddOnBuild}
-          >
-            <i className="fa-regular icon fa-plus"></i>
-          </button>
-        </div>
-      ))}
-    </div>
-    <div style={{ width: "100%" }}>
-      <label htmlFor="projectName" className="form-label mt-2">
-        <span>BUGETS</span>
-      </label>
-      {ProjectStep8FormData.buget.map((mybudget, index) => (
-        <div key={index} className="wholespecificationEntry">
-          <div className="mb-2 mt-3">
-            <label className="form-label">
-              Labor Rate:
-            </label>
-            <div className="input-group myrowInputgrouup">
-              <select
-                className="form-select"
-                aria-label="Select Specification"
-                value={mybudget.status}
-                onChange={(e) =>
-                  handleBudgetChange(index, "status", e.target.value)
-                }
-              >
-                <option value="">Select Choice</option>
-                <option value="Done">Done</option>
-                <option value="Pending">Pending</option>
-                <option value="Custom">Custom</option>
-              </select>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Comment"
-                value={mybudget.comment_box}
-                onChange={(e) =>
-                  handleBudgetChange(index, "comment_box", e.target.value)
-                }
-              />
-              <button
-                type="button"
-                className="btn btn-danger"
-                onClick={() => handleRemoveBudget(index)}
-              >
-                <i className="far">X</i>
-              </button>
-            </div>
-          </div>
-          <button
-            type="button"
-            className="btn btn-success bk"
-            onClick={handleAddBudget}
-          >
-            <i className="fa-regular icon fa-plus"></i>
-          </button>
-        </div>
-      ))}
-    </div>
-  </div>
-)}
-
-
-                        <div className="mt-1">
-                          {projectactiveStep < 7 ? (
-                            <div className="parentbtnsdiv">
-                              <div className="spacebtns">
-                                <Button
-                                  variant="contained"
-                                  color="primary"
-                                  disabled={projectactiveStep === 0} // Disable the button when activeStep is 0
-                                  onClick={handleprojectBack}
-                                >
-                                  Back
-                                </Button>
-                                <Button
-                                  variant="contained"
-                                  color="primary"
-                                  onClick={handleprojectNext}
-                                >
-                                  Next
-                                </Button>
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="parentbtnsdiv">
-                              <div className="spacebtns">
-                                <Button
-                                  variant="contained"
-                                  color="primary"
-                                  onClick={handleprojectBack}
-                                >
-                                  Back
-                                </Button>
-                                <Button
-                                  variant="contained"
-                                  color="primary"
-                                  type="button"
-                                  onClick={handleProjectFormSubmit}
-                                >
-                                  Submit
-                                </Button>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </Modal>
-              </div>
-            </div>
-          )}
+      )}
       {/* New Estimating Entry Posting-Code */}
       {showModal && (
         <div
@@ -4211,20 +4323,22 @@ console.log(ProjectStep1FormData.proposal_id);
                   <label htmlFor="time" className="form-label">
                     Time:
                   </label>
-                  <div className="d-flex bg-white">
+                  <div className="d-flex">
                     <input
                       type="time"
+                      className="form-control createTime"
                       placeholder="Select Time"
                       value={selectedTime}
                       onChange={(e) => setSelectedTime(e.target.value)}
                     />
+
                     {/* <p>Selected Time: {selectedTime}</p> */}
                     <select
                       value={timezone}
                       onChange={handleTimeZoneChange}
                       className="selectpicker"
                     >
-                      <option value="">Select TimeZone</option>
+                      <option value="">TimeZone</option>
                       <option value="PDT">PDT</option>
                       <option value="CT">CT</option>
                     </select>
@@ -4308,7 +4422,7 @@ console.log(ProjectStep1FormData.proposal_id);
                     type="date"
                     className="form-control"
                     id="dueDate"
-                    value={formattedStartDate ? formattedStartDate : "No Date"} // Update selectedstart_date
+                    value={formattedStartDate ? formattedStartDate : "No Date"}
                     onChange={(e) => setSelectedstart_date(e.target.value)}
                   />
                 </div>
@@ -4320,17 +4434,13 @@ console.log(ProjectStep1FormData.proposal_id);
                   <select
                     className="form-select"
                     id="location"
-                    value={selectedCompany} // Update location or define it in your state
+                    value={selectedCompany ? selectedCompany : "No Company"}
                     onChange={(e) => setSelectedCompany(e.target.value)}
                   >
-                    <option
-                      value={selectedCompany ? selectedCompany : "No Company"}
-                    >
-                      {selectedCompany ? selectedCompany : "No Company"}
-                    </option>
-                    {companyName && companyName.length > 0 ? (
-                      companyName.map((companyItem) => (
-                        <option value={companyItem.id} key={companyItem.id}>
+                    <option value="No Company">No Company</option>
+                    {fetchcompanyName && fetchcompanyName.length > 0 ? (
+                      fetchcompanyName.map((companyItem) => (
+                        <option value={companyItem.Cmpny_Name} key={companyItem.id}>
                           {companyItem.Cmpny_Name}
                         </option>
                       ))
@@ -4355,7 +4465,7 @@ console.log(ProjectStep1FormData.proposal_id);
                     selectedEstimatingID
                       ? selectedEstimatingID
                       : "No Project Name"
-                  } // Update selectedEstimatingID
+                  }
                   onChange={(e) => setSelectedEstimatingID(e.target.value)}
                 />
               </div>
@@ -4368,21 +4478,13 @@ console.log(ProjectStep1FormData.proposal_id);
                   <select
                     className="form-select"
                     id="estimatorName"
-                    value={selectedEstimator} // Use the state value
+                    value={selectedEstimator}
                     onChange={(e) => setSelectedEstimator(e.target.value)}
                   >
-                    {/* Provide an initial option with the selectedEstimator value */}
-                    <option
-                      value={
-                        selectedEstimator ? selectedEstimator : "No Estimator"
-                      }
-                    >
-                      {selectedEstimator ? selectedEstimator : "No Estimator"}
-                    </option>
-
+                    <option value="No Estimator">No Estimator</option>
                     {EstimatorName && EstimatorName.length > 0 ? (
                       EstimatorName.map((user) => (
-                        <option value={user.id} key={user.id}>
+                        <option value={user.full_Name} key={user.id}>
                           {user.full_Name}
                         </option>
                       ))
@@ -4401,19 +4503,13 @@ console.log(ProjectStep1FormData.proposal_id);
                   <select
                     className="form-select"
                     id="location"
-                    value={selectedLocation} // Update location or define it in your state
+                    value={selectedLocation}
                     onChange={(e) => setSelectedLocation(e.target.value)}
                   >
-                    <option
-                      value={
-                        selectedLocation ? selectedLocation : "No Location"
-                      }
-                    >
-                      {selectedLocation ? selectedLocation : "No Location"}
-                    </option>
+                    <option value="No Location">No Location</option>
                     {userLocation && userLocation.length > 0 ? (
                       userLocation.map((place) => (
-                        <option value={place.id} key={place.id}>
+                        <option value={place.name} key={place.id}>
                           {place.name}
                         </option>
                       ))
@@ -4435,7 +4531,7 @@ console.log(ProjectStep1FormData.proposal_id);
                     type="date"
                     className="form-control"
                     id="dueDate"
-                    value={formattedDueDate} // Update selecteddueDate
+                    value={formattedDueDate}
                     onChange={(e) => setSelecteddueDate(e.target.value)}
                   />
                 </div>
@@ -4443,18 +4539,13 @@ console.log(ProjectStep1FormData.proposal_id);
                   <label htmlFor="time" className="form-label">
                     Time:
                   </label>
-                  <div className="d-flex bg-white">
-                    <input
-                      type="time"
-                      // value={formattedTimeEdit}
-                      // onChange={(e) => setSelectedTimeforUpdate(e.target.value)}
+                  <div className="d-flex ">
+                    <input type="time" className="form-control edittime"
+                    value={SelectedTimeforUpdate}
+                    onChange={e=>setSelectedTime(e.target.value)}
                     />
 
-                    <select
-                      value={SelectedTimeZone} // Update timezone or define it in your state
-                      // onChange={(e) => setSelectedTimeZone(e.target.value)}
-                      className="selectpicker"
-                    >
+                    <select value={SelectedTimeZone} className="selectpicker">
                       <option value={SelectedTimeZone}>
                         {SelectedTimeZone}
                       </option>
@@ -4475,22 +4566,21 @@ console.log(ProjectStep1FormData.proposal_id);
                     className="form-control"
                     placeholder="No Bidder Here !"
                     id="bidderName"
-                    value={selectedBidder} // Update selectedBidder
+                    value={selectedBidder}
                     onChange={(e) => setSelectedBidder(e.target.value)}
                   />
                 </div>
                 <div className="Oneline">
-                  <label htmlFor="bidderName" className="form-label">
+                  <label htmlFor="bidderEmail" className="form-label">
                     Bidder Email:
                   </label>
                   <input
                     type="text"
                     className="form-control"
                     placeholder="Bidder Email !"
-                    id="bidderName"
-                    // value={selectedBidder} // Update selectedBidder
-                    // onChange={(e) => setSelectedBidder(e.target.value)}
-                  />
+                    id="bidderEmail"
+                    value={selectedbidder_email}
+onChange={(e)=>setSelectedbidder_email(e.target.value)}                  />
                 </div>
               </div>
               <div>
@@ -4504,14 +4594,14 @@ console.log(ProjectStep1FormData.proposal_id);
                   placeholder="No Address Here !"
                   cols="10"
                   rows="10"
-                  value={selectedbidder_address}
-                  onChange={(e) => setSelectedbidder_address(e.target.value)}
+                  value={selectedbidder_detail}
+                  onChange={(e) => setSelectedbidder_detail(e.target.value)}
                 ></textarea>
               </div>
 
               <button
                 type="button"
-                onClick={(event) => handleEstimatingEditing(event, itemId)} // Pass item.id
+                onClick={(event) => handleEstimatingEditing(event, itemId)}
                 className="btn btn-submit mt-3 mb-4"
               >
                 Update

@@ -1,17 +1,7 @@
-*{
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-body{
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 16px;
-}
 #main{
   margin-top: 70px !important;
   display: flex;
   height: 96.22vh;
-  background-color: aquamarine;
 }
 .sidebar{
   width: 260px;
@@ -20,7 +10,7 @@ body{
   position: fixed;
   overflow: auto;
   color: rgb(59, 59, 59);
-  background-color: rgb(180, 180, 180);
+  background-color: rgb(236, 234, 234);
 }
 .sidebaritem{
   display: block;
@@ -29,7 +19,7 @@ body{
   transition: background-color 0.15s;
 }
 .sidebaritem:hover{
-  background-color: rgba(104, 28, 204, 0.589);
+  background-color: #0b58cca2;
   color: white;
   cursor: pointer;
 }

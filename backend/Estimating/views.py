@@ -85,12 +85,14 @@ class DMS_DertoryView(APIView):
 
     def delete(self, request, id, format=None):
         try:
-            DMS_Dertory = DMS_Dertory.objects.get(id=id)
+            dms_dertory_instance = DMS_Dertory.objects.get(id=id)  # Change the variable name
         except DMS_Dertory.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        DMS_Dertory.delete()
+        dms_dertory_instance.delete()  # Use the new variable name
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class SendEmailView(APIView):
 
     def post(self, request, estimating_id, format=None):
@@ -114,7 +116,13 @@ class SendEmailView(APIView):
             pdf_data = base64.b64decode(pdf_base64)
             pdf_file = ContentFile(pdf_data, 'proposal.pdf')
 
+            if not estimating.plane_date or not isinstance(estimating.plane_date, datetime):
+                return Response({'error': 'Invalid plane_date'}, status=status.HTTP_400_BAD_REQUEST)
 
+            if not estimating.bidder_mail or not isinstance(estimating.bidder_mail, str):
+                return Response({'error': 'Invalid bidder_mail'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            
             subject = 'Proposal'
             message = f"""
             Hello,

@@ -3,6 +3,7 @@
     height: 50px !important;
   vertical-align: center;
   text-align: center;
+  /* white-space: nowrap; */
 }
 .datatable{
   margin-top: 80px !important;
@@ -59,6 +60,9 @@
 }
 .successgreenColor{
     background-color: #007BFF !important;
+    /* min-width: 327px; */
+    width: 15px;
+  
 }
 .directoryinputsearch{
 
@@ -74,3 +78,14 @@
     border-radius: 0 !important;
     transition: all 0.5s ease-in-out;
   }
+  .rdt_TableCell {
+    padding: -100px !important;
+    
+  }
+  
+  /* Reduce padding for the table headers */
+  .rdt_TableHeader {
+    padding: -20px !important;
+  }
+
+

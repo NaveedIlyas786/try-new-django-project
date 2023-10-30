@@ -19,11 +19,14 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 // import ApexCharts from 'apexcharts'
 
+
 const Dashboard = () => {
-  const [isAlphabetical, setIsAlphabetical] = useState(false);
   const [originalData, setOriginalData] = useState([]);
-  const [buttonText, setButtonText] = useState("Sort Alphabetically");
   const [dashData, setDashData] = useState([]);
+
+  const [isAlphabetical, setIsAlphabetical] = useState(false);
+  const [isRotated, setIsRotated] = useState(false);
+
   useEffect(() => {
     // Fetch data from the API
     axios
@@ -36,6 +39,7 @@ const Dashboard = () => {
         );
         console.log(filteredData);
         setDashData(filteredData);
+        setOriginalData(filteredData);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -198,21 +202,25 @@ const Dashboard = () => {
         console.error("Error fetching data:", error);
       });
   }, [selectedYear]);
+  const toggleRotation = () => {
+    setIsRotated(!isRotated);
+  };
 
   const sortData = () => {
-    setOriginalData(dashData.slice());
-    if (!isAlphabetical) {
-      const sortedData = dashData.slice().sort((a, b) => {
-        return a.estimator.localeCompare(b.estimator);
-      });
-      setDashData(sortedData);
-      setButtonText("Return to Default"); // Change the button text
-    } else {
+    if (isAlphabetical) {
+      // Return to the original order
       setDashData(originalData);
-      setButtonText("Sort Alphabetically"); // Change the button text
+    } else {
+      // Sort in alphabetical order
+      const sortedData = [...dashData].sort((a, b) =>
+        a.estimator.localeCompare(b.estimator)
+      );
+      setDashData(sortedData);
     }
     setIsAlphabetical(!isAlphabetical);
   };
+
+
 
   return (
     <>
@@ -224,17 +232,18 @@ const Dashboard = () => {
             </p>
             <h5 className="ps-3 headsett">Won</h5>
             <h4 className="ps-3 headsettNo">
-            {dashgrandtotal[0]?.summary.Won?.total || 0}
+              {dashgrandtotal[0]?.summary.Won?.total || 0}
             </h4>
           </div>
- 
+
           <div className=" col-md-2   ProjectStatus pendingyellow ">
             <p className="mt-2">
               <i className="fa-solid  fa-question fs-5 pend"></i>
             </p>
             <h5 className="ps-3 headsett">Pending</h5>
             <h4 className="ps-3 headsettNo">
-            {dashgrandtotal[0]?.summary.Pending?.total || 0}            </h4>
+              {dashgrandtotal[0]?.summary.Pending?.total || 0}{" "}
+            </h4>
           </div>
           <div className=" col-md-2   ProjectStatus pendingWorking">
             <p className="mt-2">
@@ -242,7 +251,8 @@ const Dashboard = () => {
             </p>
             <h5 className="ps-3 headsett">Working</h5>
             <h4 className="ps-3 headsettNo">
-            {dashgrandtotal[0]?.summary.Working?.total || 0}            </h4>
+              {dashgrandtotal[0]?.summary.Working?.total || 0}{" "}
+            </h4>
             {/* <p>
               <i className="fa-solid fa-square-this-way-up "></i>
             </p> */}
@@ -253,7 +263,8 @@ const Dashboard = () => {
             </p>
             <h5 className="ps-3 headsett">Lost</h5>
             <h4 className="ps-3 headsettNo">
-            {dashgrandtotal[0]?.summary.Lost?.total || 0}            </h4>
+              {dashgrandtotal[0]?.summary.Lost?.total || 0}{" "}
+            </h4>
           </div>
         </div>
       </div>
@@ -302,11 +313,7 @@ const Dashboard = () => {
                 </Dropdown.Menu>
               </Dropdown>
               <h4 className="myh4">{selectedYear}</h4>
-              <div className="sortContainer">
-                <button onClick={sortData} className="btn btn-primary btnsort">
-                  {buttonText}
-                </button>{" "}
-              </div>
+
             </div>
           </div>
 
@@ -317,6 +324,15 @@ const Dashboard = () => {
                   <tr className="pk">
                     <th rowSpan={2} className="align-middle">
                       Estimator
+                      <i
+                        class={`fa-solid fa-caret-down ${
+                          isRotated ? "fa-caret-up" : "fa-caret-down"
+                        }`}
+                        onClick={() => {
+                          toggleRotation();
+                          sortData()}}
+                        // style={{ color: isAlphabetical ? 'blue' : 'initial' }}
+                      ></i>
                     </th>
                     <th rowSpan={2} className="align-middle">
                       Working
@@ -342,11 +358,7 @@ const Dashboard = () => {
                 </thead>
                 <tbody className="jk">
                   {dashData
-                    .sort((a, b) => {
-                      return isAlphabetical
-                        ? a.estimator.localeCompare(b.estimator)
-                        : 0;
-                    })
+
                     .map((e, index) => (
                       <tr key={index}>
                         <td className="dashtd">{e.estimator}</td>
@@ -458,7 +470,8 @@ const Dashboard = () => {
         <div className="container mt-5">
           <div className="row mt-5">
             <div className="ms-2 col text-center graphimg mt-5">
-              <BarChart className="graphimage"
+              <BarChart
+                className="graphimage"
                 width={1100}
                 height={440}
                 data={companyiesData}

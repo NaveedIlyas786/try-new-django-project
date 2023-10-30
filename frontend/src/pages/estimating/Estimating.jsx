@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./Estimating.css";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
@@ -17,8 +17,9 @@ import { updateStatus } from "../../store/EstimatingSlice";
 import { createSelector } from "reselect";
 // import { storeProposalData } from "../../store/EstimatingProposalSlice";
 // import { margin } from "@mui/system";
+// const update_status_when_close=0;
 
-const Estimator = () => {
+const Estimator = (props) => {
   const [filter, setFilter] = useState("");
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
   const [showEstimatingEditModal, setshowEstimatingEditModal] = useState(false); // State to control modal visibility
@@ -590,13 +591,32 @@ const Estimator = () => {
       date: "",
       comment_box: "",
     };
+  // Function to add a new "HD S_SYSTEMS" entry
+  const handleAddHDSSystem = () => {
+    const newHDSSystem = {
+      status: "Pending", // You can set default values here
+      date: "",
+      comment_box: "",
+    };
 
     setProjectStep8FormData((prevData) => ({
       ...prevData,
       hds_system: [...prevData.hds_system, newHDSSystem],
     }));
   };
+    setProjectStep8FormData((prevData) => ({
+      ...prevData,
+      hds_system: [...prevData.hds_system, newHDSSystem],
+    }));
+  };
 
+  // // Function to remove an existing "HD S_SYSTEMS" entry by index
+  // const handleRemoveHDSSystem = (index) => {
+  //   setProjectStep8FormData((prevData) => ({
+  //     ...prevData,
+  //     hds_system: prevData.hds_system.filter((_, i) => i !== index),
+  //   }));
+  // };
   // Function to remove an existing "HD S_SYSTEMS" entry by index
   const handleRemoveHDSSystem = (index) => {
     setProjectStep8FormData((prevData) => ({
@@ -616,6 +636,7 @@ const Estimator = () => {
     });
   };
 
+
   const handleAddOnBuild = () => {
     const newOnBuild = {
       field: "",
@@ -626,6 +647,16 @@ const Estimator = () => {
       on_build: [...ProjectStep8FormData.on_build, newOnBuild],
     });
   };
+  // const handleAddOnBuild = () => {
+  //   const newOnBuild = {
+  //     field: "",
+  //     status: "",
+  //   };
+  //   setProjectStep7FormData({
+  //     ...ProjectStep8FormData,
+  //     on_build: [...ProjectStep8FormData.on_build, newOnBuild],
+  //   });
+  // };
 
   const handleRemoveOnBuild = (index) => {
     const updatedOnBuild = [...ProjectStep8FormData.on_build];
@@ -635,6 +666,14 @@ const Estimator = () => {
       on_build: updatedOnBuild,
     });
   };
+  // const handleRemoveOnBuild = (index) => {
+  //   const updatedOnBuild = [...ProjectStep8FormData.on_build];
+  //   updatedOnBuild.splice(index, 1);
+  //   setProjectStep8FormData({
+  //     ...ProjectStep8FormData,
+  //     on_build: updatedOnBuild,
+  //   });
+  // };
 
   // Function to handle changes for the "ON UPLOADED" section
   const handleOnBuildChange = (index, field, value) => {
@@ -645,9 +684,29 @@ const Estimator = () => {
       on_build: updatedOnBuild,
     });
   };
+  // Function to handle changes for the "ON UPLOADED" section
+  // const handleOnBuildChange = (index, field, value) => {
+  //   const updatedOnBuild = [...ProjectStep8FormData.on_build];
+  //   updatedOnBuild[index][field] = value;
+  //   setProjectStep8FormData({
+  //     ...ProjectStep8FormData,
+  //     on_build: updatedOnBuild,
+  //   });
+  // };
 
   // ***************
+  // ***************
 
+  // const handleAddBudget = () => {
+  //   const newBudget = {
+  //     status: "",
+  //     comment_box: "",
+  //   };
+  //   setProjectStep8FormData({
+  //     ...ProjectStep8FormData,
+  //     buget: [...ProjectStep8FormData.buget, newBudget],
+  //   });
+  // };
   const handleAddBudget = () => {
     const newBudget = {
       status: "",
@@ -667,6 +726,14 @@ const Estimator = () => {
       buget: updatedBudget,
     });
   };
+  // const handleRemoveBudget = (index) => {
+  //   const updatedBudget = [...ProjectStep8FormData.buget];
+  //   updatedBudget.splice(index, 1);
+  //   setProjectStep8FormData({
+  //     ...ProjectStep8FormData,
+  //     buget: updatedBudget,
+  //   });
+  // };
 
   // Function to handle changes for the "BUGETS" section
   const handleBudgetChange = (index, field, value) => {
@@ -677,7 +744,17 @@ const Estimator = () => {
       buget: updatedBudget,
     });
   };
+  // Function to handle changes for the "BUGETS" section
+  // const handleBudgetChange = (index, field, value) => {
+  //   const updatedBudget = [...ProjectStep8FormData.buget];
+  //   updatedBudget[index][field] = value;
+  //   setProjectStep8FormData({
+  //     ...ProjectStep8FormData,
+  //     buget: updatedBudget,
+  //   });
+  // };
 
+  // *****************
   // *****************
 
   // Function to handle form submission
@@ -1499,15 +1576,21 @@ const Estimator = () => {
         setTimeout(() => {
           closeModal();
         }, 500);
+        return;
       } else {
         console.error("Error submitting proposal data");
         const errorResponse = await response.text();
         console.error("Error response:", errorResponse);
+        return;
       }
     } catch (error) {
       console.error("An error occurred:", error.message);
     }
   };
+
+
+// update status whn i clock on the project close button
+
 
   const closeModal = () => {
     setShowModal(false);
@@ -1515,6 +1598,9 @@ const Estimator = () => {
     setshowProjectModal(false);
     setshowEstimatingEditModal(false);
     // **********purposalModal
+    // update_status_when_close=1; 
+
+
     setStep0FormData({
       date: getCurrentDate(),
       estimating_id: "",
@@ -1531,6 +1617,13 @@ const Estimator = () => {
       budget: "",
       sefic: [],
     });
+
+
+
+
+
+
+
 
     // **************ShowModal Estimating
 
@@ -1899,7 +1992,7 @@ const Estimator = () => {
     }
   }
 
-  const handleStatusChange = async (event, itemId) => {
+  const handleStatusChange = async (event=null, itemId) => {
     const updatedStatus = event.target.value;
     console.log("Updated Status:", updatedStatus);
 
@@ -1955,6 +2048,7 @@ const Estimator = () => {
             }
 
             // Check if the updated status is "Won" and open the project modal
+          
             if (updatedStatus === "Won") {
               setshowProjectModal(true);
             }
@@ -2013,6 +2107,10 @@ const Estimator = () => {
     }
     return 0; // No change in order if both have no due date
   });
+
+  const [readMoreState, setReadMoreState] = useState({});
+  const [showBidderDetails, setShowBidderDetails] = useState(false);
+  const [selectedBidderDetails, setSelectedBidderDetails] = useState("");
 
   return (
     <div className="ParentAllDiv">
@@ -2127,6 +2225,7 @@ const Estimator = () => {
                             ? AreaChoice[item.id] || item.location
                             : "No aArea"
                         }
+                        
                       >
                         <option
                           value={item.location ? item.location : "No Area"}
@@ -2186,24 +2285,131 @@ const Estimator = () => {
                         onChange={(event) => handleStatusChange(event, item.id)}
                         value={statusMap[item.id] || item.status}
                       >
-                        <option value={item.status}>{item.status}</option>
-                        <option value="Won">Won</option>
+                        {/* <option value={item.status}>{item.status}</option> */}
+                        {/* <option value="Won" disabled={statusMap[item.id] === "Working" || item.status === "Working"}>Won</option>
                         <option value="Pending">Pending</option>
                         <option value="Working">Working</option>
-                        <option value="Lost">Lost</option>
+                        <option value="Lost">Lost</option> */}
+
+                        <option
+                          value="Won"
+                          disabled={
+                            statusMap[item.id] === "Working" ||
+                            item.status === "Working"
+                          }
+                          className={
+                            statusMap[item.id] === "Won" ||
+                            item.status === "Won"
+                              ? "active-option"
+                              : ""
+                          }
+                        >
+                          Won
+                        </option>
+                        <option
+                          value="Pending"
+                          className={
+                            statusMap[item.id] === "Pending" ||
+                            item.status === "Pending"
+                              ? "active-option"
+                              : ""
+                          }
+                        >
+                          Pending
+                        </option>
+                        <option
+                          value="Working"
+                          disabled={
+                            statusMap[item.id] === "Pending" ||
+                            item.status === "Pending"
+                          }
+
+                          className={
+                            statusMap[item.id] === "Working" ||
+                            item.status === "Working"
+                              ? "active-option"
+                              : ""
+                          }
+                        >
+                          Working
+                        </option>
+                        <option
+                          value="Lost"
+                          className={
+                            statusMap[item.id] === "Lost" ||
+                            item.status === "Lost"
+                              ? "active-option"
+                              : ""
+                          }
+                        >
+                          Lost
+                        </option>
                       </select>
                     </td>
-
                     <td className="mytdbidder centered-td">
-                      {item.bidder +
-                        " " +
-                        item.bidder_detail +
-                        " " +
-                        item.bidder_mail}
+                      {item.bidder || item.bidder_detail || item.bidder_mail ? (
+                        <>
+                          <p
+                            className={
+                              readMoreState[item.id] ? "" : "two-lines"
+                            }
+                          >
+                            {item.bidder ? item.bidder + " " : ""}
+                            {item.bidder_detail ? item.bidder_detail + " " : ""}
+                            {item.bidder_mail ? item.bidder_mail : ""}
+                          </p>
+
+                          {
+                            // Check if any of the fields exist and are longer than a set threshold
+                            (item.bidder && item.bidder.length > 20) ||
+                            (item.bidder_detail &&
+                              item.bidder_detail.length > 20) ||
+                            (item.bidder_mail &&
+                              item.bidder_mail.length > 20) ? (
+                              <label
+                                onClick={() => {
+                                  setSelectedBidderDetails(
+                                    (item.bidder ? item.bidder + " " : "") +
+                                      (item.bidder_detail
+                                        ? item.bidder_detail + " "
+                                        : "") +
+                                      (item.bidder_mail ? item.bidder_mail : "")
+                                  );
+                                  setShowBidderDetails(true);
+                                  setReadMoreState((prev) => ({
+                                    ...prev,
+                                    [item.id]: !prev[item.id],
+                                  }));
+                                }}
+                              >
+                                {readMoreState[item.id] ? (
+                                  <p class="read_more">Read less...</p>
+                                ) : (
+                                  <p class="read_more">Read more...</p>
+                                )}
+                              </label>
+                            ) : null
+                          }
+
+                          {showBidderDetails && (
+                            <div className="modal">
+                              <div className="modal-content">
+                                <span
+                                  onClick={() => setShowBidderDetails(false)}
+                                >
+                                  Close
+                                </span>
+                                {selectedBidderDetails}
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      ) : null}
                     </td>
+
                     <td className="mytd centered-td actionTD">
                       <div className="relative-container loop">
-                        <button
+                        {/* <button
                           onClick={() => {
                             // console.log(item.prjct_name);
                             const test = typeof item.id;
@@ -2214,7 +2420,7 @@ const Estimator = () => {
                           }}
                         >
                           Project
-                        </button>
+                        </button> */}
                         <div
                           type="button"
                           className="pb-2"
@@ -4188,6 +4394,7 @@ const Estimator = () => {
           </div>
         </div>
       )}
+
       {/* New Estimating Entry Posting-Code */}
       {showModal && (
         <div

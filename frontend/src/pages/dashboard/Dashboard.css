@@ -202,3 +202,13 @@ h5 {
   right: 0;
   margin-right: 130px;
 }
+
+.fa-solid{
+  padding-left: 15px;
+  cursor: pointer; 
+  transition: transform 0.2s; 
+}
+
+.fa-sort:hover {
+  transform: scale(1.3);
+}

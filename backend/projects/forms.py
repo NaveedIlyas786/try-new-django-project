@@ -16,10 +16,9 @@ class SubmittalsInlineForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.instance and self.instance.proposal:
-            self.fields['scop_work_number'].queryset = Spec_detail.objects.filter(
-                sefic__proposal=self.instance.proposal
-            )
+        if self.instance and hasattr(self.instance, 'project') and hasattr(self.instance.project, 'proposal'):
+            self.fields['scop_work_number'].queryset = Spec_detail.objects.filter(sefic__proposal=self.instance.project.proposal)
+
         else:
             self.fields['scop_work_number'].queryset = Spec_detail.objects.none()
 

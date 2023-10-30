@@ -186,6 +186,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(100%);
   cursor: pointer; /* Invert the colors (black icon on white background) */
 }
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(100%);
+  cursor: pointer; /* Invert the colors (black icon on white background) */
+}
 
 input:focus {
   border: none !important;
@@ -414,9 +418,19 @@ input[type="text"].serviceInput.focused {
   padding: 10px !important;
   position: relative;
 }
+.scheduleClass {
+  border-radius: 5px !important;
+  background-color: #e9e6e6;
+  margin-bottom: 10px !important;
+  padding: 10px !important;
+  position: relative;
+}
 .ScopofWorkSectionRemove{
   position: absolute;
   right: 20px;
+}
+.edittime, .createTime{
+  border-radius:7px 0 0 7px;
 }
 .myservices {
   max-height: 420px !important;
@@ -660,7 +674,12 @@ td:nth-child(8) {
   outline: none;
   background-color: white !important;
   color: black;
+  cursor: pointer;
 }
+.fa-clock{
+  cursor: pointer;
+}
+
 
 
 .ParentAllDiv {

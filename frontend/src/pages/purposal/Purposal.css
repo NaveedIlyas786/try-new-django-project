@@ -1,116 +1,75 @@
-* {
-  font-size: 17px;
-  line-height: 24px;
+body{
+  font-family: Roboto, sans-serif;
 }
-.exportdiv {
+*{
+  color: black !important;
+}
+/* Purposal.css */
+.pdfDiv{
+  margin-top: 80px;
+}
+.pdfpage {
+  padding: 20px;
+}
+
+.d-flex {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin: 2rem 0;
+  margin-bottom: 20px;
 }
-.urlbackbtn{
- border-radius: 25px !important;
+
+.bg-info {
+  background-color: #b3e0f2;
+  padding: 20px;
+  border: 1px solid #ccc;
 }
-.urlbackbtn:hover{
- background-color: #283897 !important;
+
+.page-template {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
-.pdf_form {
+
+.header {
+  background-color: #333;
+  color: white;
   padding: 10px;
+  text-align: center;
 }
 
-.pdf_form * {
-  font-size: 20px;
-}
-
-.exportSection {
-  cursor: pointer;
-}
-
-.pdfimg {
-  width: 50px; 
-  height: auto;
-}
-
-.purposal {
-  margin-top: 70px;
-  padding: 2rem;
-  
-}
-
-.myspan {
-  white-space: pre;
-  display: inline-block;
-  text-align: center !important;
-  font-weight: bold;
-  color: #283897;
-  opacity: 0.8;
-}
-.li {
-  list-style-type: none;
-}
-.myspan:before {
-  position: absolute;
-  top: -15px;
-  left: 20%;
-  content: "";
-  display: inline-block;
-  width: 520px;
-  height: 1.5px;
-  background-color: #283897;
-  opacity: 0.6;
-}
-.myspan:after {
-  position: absolute;
-  left: 20%;
-  bottom: -15px;
-  content: "";
-  display: inline-block;
-  opacity: 0.6;
-  width: 520px;
-  height: 2px;
-  color: black;
-  background-color: #283897;
-}
 .footer {
-  position: relative;
-  margin: 50px 0 500px 0 !important;
-}
-.drywall-interior h4 {
-  width: 400px;
-  margin: 0 auto;
-  text-decoration: underline;
-  font-weight: bold;
-  text-align: center !important;
-  margin-top: 120px;
-  margin-bottom: 120px;
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  text-align: center;
 }
 
-main,.header {
-  padding: 3rem;
+.contentPage {
+  page-break-before: always;
+  page-break-inside: avoid;
+  margin: 10px;
 }
-.inclusions .exclusions .qualifications p {
-  text-decoration: underline;
+
+.bodycontent {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 20px;
+  text-align: left;
+  padding-bottom: 30px !important;
 }
-.inclusions ul,
-.exclusions ul,
-.qualifications ul {
-  list-style-type: decimal;
-}
-.baseh4 {
+
+.bodycontent h5 {
+  margin: 0;
   font-weight: bold;
+  color: #333;
+  padding: 5px 0;
 }
-.logoimg {
-  width: 27%;
+
+.bodycontent p {
+  margin: 0;
+  padding: 5px 0;
 }
-.myesti {
-  line-height: 15px;
-}
-.topinfo {
-  line-height: 5px;
-}
-.topSection {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+
+/* Add more styles as needed */
 

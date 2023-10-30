@@ -7,6 +7,10 @@ import html2pdf from "html2pdf.js";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 
+import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
+import "@progress/kendo-theme-material/dist/all.css";
+
+
 function Rawpurposal() {
   const { id } = useParams();
   const [filteredEntries, setFilteredEntries] = useState([]);
@@ -52,39 +56,14 @@ function Rawpurposal() {
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
-  const conponentPDF = useRef();
-  const generatePDF = () => {
-    const element = document.getElementById("pdf-content");
 
-    html2canvas(element)
-      .then((canvas) => {
-        const imgData = canvas.toDataURL("image/png");
-        const pdf = new jsPDF(); // Declare and initialize here
-        const imgProps = pdf.getImageProperties(imgData);
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-        let heightLeft = pdfHeight;
-        let position = 0;
-
-        while (heightLeft >= 0) {
-          pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
-          heightLeft -= pdf.internal.pageSize.getHeight();
-          position = position - pdf.internal.pageSize.getHeight();
-
-          if (heightLeft >= 0) {
-            pdf.addPage();
-          }
-        }
-
-        pdf.save("test.pdf");
-      })
-      .catch((error) => {
-        console.error("Failed to generate PDF:", error);
-      });
-  };
-
-  const [sendUserEMail, setsendUserEMail] = useState(null);
+// ****************  Kendo PDF generator React JS Library ****************
+const PdfExportCompnent=useRef(null);
+  
+const handleExportWithComponent = (e) => {
+  e.preventDefault();
+  PdfExportCompnent.current.save()
+};
 
   const sendMyEmail = () => {
     const element = document.getElementById("pdf-content");
@@ -117,8 +96,8 @@ function Rawpurposal() {
         console.log("Sending Base64 Data:", base64data.slice(0, 100)); // Log the first 100 chars
 
         return axios.post(
-          "http://127.0.0.1:8000/api/estimating/sendEmail/${id}/",
-          { pdf: base64data },
+          `http://127.0.0.1:8000/api/estimating/sendEmail/${id}/`,
+          { pdf: handleExportWithComponent() },
           { headers: { "Content-Type": "application/json" } } // Added headers
         );
       })
@@ -145,7 +124,7 @@ function Rawpurposal() {
       {filteredEntries.length > 0 && (
         <div className="rawk">
           <div className="pdfside ">
-            <div className="btn" onClick={generatePDF}>
+            <div className="btn" onClick={handleExportWithComponent}>
               <i
                 className="fa-solid fa-file-pdf"
                 style={{
@@ -168,9 +147,10 @@ function Rawpurposal() {
             </div>
           </div>
 
-          <div ref={conponentPDF} id="pdf-content" className=" coverdiv">
+          {/* <div ref={conponentPDF} id="pdf-content" className=" coverdiv"> */}
+          <PDFExport ref={PdfExportCompnent} id="pdf-content" paperSize="A4" className=" coverdiv">
             {filteredEntries.map((proposalData) => (
-              <div>
+              <div className="pdfPage">
                 <header className="topSection">
                   <img
                     className="logoimg"
@@ -320,7 +300,8 @@ function Rawpurposal() {
                 <p>Phone number</p>
               </div>
             ))}
-          </div>
+            </PDFExport>
+          {/* </div> */}
         </div>
         // </div>
       )}

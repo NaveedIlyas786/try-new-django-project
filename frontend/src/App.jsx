@@ -44,11 +44,10 @@ function App() {
           <Route path="/waitingPage" element={<Waiting />} />
           <Route path="/rejectionPage" element={<RejectionPage />} />
           <Route path="/adminDecisionPage/:userId" element={<AdminDecisionpage />} />
-        {/* <Route path="/purposal" element={<Purposal />} /> */}
         <Route path="/homepage/" element={<HomePage />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="projects" element={<Projects />} />
-          <Route path="purposal/:id" element={<Purposal />} />
+          <Route path="purposal" element={<Purposal />} />
           <Route path="urlpage" element={<URLPage />} />
           <Route path="rawproposal/:id" element={<Rawpurposal />} />
           {/* <Route path="waitingPage/:id" element={<Waiting />} /> */}

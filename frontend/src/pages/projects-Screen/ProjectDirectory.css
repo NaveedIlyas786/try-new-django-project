@@ -1,132 +1,59 @@
-.projectDirectoryParent {
-  margin-top: 70px;
+#main{
+  margin-top: 70px !important;
   display: flex;
-  align-items: flex-start; /* Align items at the start (top) of the flex container */
+  height: 96.22vh;
 }
-
-.aside {
-  flex: 0 0 280px; /* Fixed width of 200px */
-  padding: 20px;
-  box-sizing: border-box; /* Include padding in the width */
-  min-height: 92.5vh;
-  box-shadow: 1px 2px 5px 0.2px rgb(133, 132, 132);
+.sidebar{
+  width: 260px;
+  flex-shrink: 0;
+  height: 100%;
+  position: fixed;
+  overflow: auto;
+  color: rgb(59, 59, 59);
+  background-color: rgb(236, 234, 234);
 }
-.asideData {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  color: black;
+.sidebaritem{
+  display: block;
+  font-size: 1em;
+  padding:.75em 1em;
+  transition: background-color 0.15s;
 }
-.asideData h1 {
-  text-align: left;
-  padding: 0 5px 0 10px;
-}
-ul {
-  display: flex;
-  flex-direction: column;
-  gap: 10px !important;
-  padding: 0 10px;
-  /* background-color: #c74040; */
-}
-/* .folders {
-  background-color: aqua;
-} */
-.mylist {
-  /* padding: 5px 20px !important; */
-  text-decoration: none;
-  list-style-type: none;
-  transition: all 0.3s ease-in-out;
-}
-
-.sublist {
-  padding: 0 5px !important;
-  text-decoration: none;
-  list-style-type: none;
-  transition: all 0.1s ease-in;
-  margin-top: 5px !important;
-
-}
-.mylist:hover {
-  /* padding: 5px 0 0 0  !important; */
-  background-color: rgb(121, 121, 255);
-    color: white;
-  transition: all 0.1s ease-out;
+.sidebaritem:hover{
+  background-color: #0b58cca2;
+  color: white;
   cursor: pointer;
-  border-radius: 2px;
 }
-.spanParent{
-  font-weight: bold;
+
+.sidebarContent{
+  font-size: 0.9em;
+  padding-top: 0.25em;
+  height: 0;
+  overflow: hidden;
+}
+.sidebaritem.open > .sidebarContent{
+  height: auto;
+}
+.sidebarTitle{
   display: flex;
   justify-content: space-between;
-  align-items: center;
-
+}
+.togglebtn .sidebarTitle{
+  cursor: pointer;
+  transition: transform .5s;
+}
+.sidebaritem.open >.sidebarTitle .togglebtn {
+  transform: rotate(180deg);
+}
+.container{
+  height: 100%;
+  padding: 20px;
+  /* flex-grow: 1; */
+  margin-left: 260px;
+  background-color: rgb(197, 159, 233);
 }
 
-.subSection{
-  width: 100%;
-  background-color: white;
-  color: black;
-}
 
-.sublist:hover{
-  background-color: rgb(177, 175, 175);
-  color: black;
-}
-.Projtitle {
-  font-weight: bold;
-  font-size: 16px;
-  text-decoration: underline;
-}
-.main {
 
-  min-height: 92.5vh;
-  flex-grow: 1; /* Allow main section to grow and fill the available space */
-  /* padding: 20px; */
-  box-sizing: border-box; /* Include padding in the width */
-  
-}
 
-h1,
-h3 {
-  color: #fff;
-}
-.projectdirectorymain{
-  margin-top: -90px !important;
-}
-.projectfiledshow{
-  width: 78vw !important;
-  display: flex;
-  flex-direction: column;
-}
-.heading-summary{
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
-  margin-left: 300px;
-  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-  text-shadow: 2px 2px 8px rgb(144, 204, 231);
-  font-size: 40px !important
-}
-.borderdealing{
-  border-right: 3px dotted black;
-}
-.borderdown{
-  border-bottom: 1px dotted rgb(110, 102, 102);
-}
-.phead{
-    /* font-weight: 600 !important; */
-    font-size: 16px !important;
-    color: rgb(85, 84, 84);
-}
-.borderleft{
-  border-right: 1px dotted rgb(70, 68, 68);
-}
-.borderbtttn{
-  border-bottom: 2px solid black;
-}
-.budgethide{
-  white-space: nowrap;         /* Prevent text from wrapping to the next line */
-  overflow: hidden;           /* Hide text that overflows its container */
-  text-overflow: ellipsis;    /* Display an ellipsis (...) when text is hidden */
-  max-width: 100%;
-}
+
+/* ********************* */

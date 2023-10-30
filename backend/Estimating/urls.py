@@ -43,6 +43,7 @@ urlpatterns = [
     path('company_won_bashboard/', views.CompanyWonEstimates.as_view(), name='company-won-bashboard'),
 
     path('dmsDrectory/',views.DMS_DertoryView.as_view(),name='DMS-Derctory'),
+    path('dmsDrectory/<int:id>/',views.DMS_DertoryView.as_view(),name='DMS-Derctory'),
 
     path('specificationDetail/',views.SpecificationDetailViews.as_view(),name='SpecificationDetail'),
 

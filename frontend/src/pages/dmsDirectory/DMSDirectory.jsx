@@ -13,6 +13,24 @@ const DMSDirectory = () => {
   const [sortState, setSortState] = useState("original");
   const [isRotated, setIsRotated] = useState(false);
 
+
+
+  function formatPhoneNumber(number) {
+    if (!number) { // Checks for null, undefined, and other falsy values.
+      return ''; // Returns an empty string if no valid number.
+    }
+  
+    if (typeof number !== 'string') {
+      number = String(number);
+    }
+  
+    const area = number.substring(0, 3);
+    const middle = number.substring(3, 6);
+    const end = number.substring(6, 10);
+    return `${area}-${middle}-${end}`;
+  }
+
+
   useEffect(() => {
     // Fetch data from the API
     axios
@@ -609,11 +627,11 @@ const DMSDirectory = () => {
                 <td className=" dmsTD centered-td">{item.last_name}</td>
                 <td className=" dmsTD centered-td">{item.first_name}</td>
                 <td className=" dmsTD centered-td">{item.job_title}</td>
-                <td className=" dmsTD  centered-td">{item.company}</td>
+                <td className=" dmsTD centered-td">{item.company}</td>
                 <td className=" dmsTD centered-td">{item.locaton}</td>
                 <td className=" dmsTD centered-td">{item.department}</td>
-                <td className=" dmsTD centered-td">{item.mobile_number}</td>
-                <td className=" dmsTD centered-td">{item.direct_number}</td>
+                <td className=" dmsTD centered-td" style={{ whiteSpace: 'nowrap' }}>{formatPhoneNumber(item.mobile_number)}</td>
+                <td className=" dmsTD centered-td" style={{ whiteSpace: 'nowrap' }}>{formatPhoneNumber(item.direct_number)}</td>
                 <td className=" dmsTD centered-td">{item.email}</td>
               </tr>
             ))}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./Estimating.css";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
@@ -17,8 +17,9 @@ import { updateStatus } from "../../store/EstimatingSlice";
 import { createSelector } from "reselect";
 // import { storeProposalData } from "../../store/EstimatingProposalSlice";
 // import { margin } from "@mui/system";
+// const update_status_when_close=0;
 
-const Estimator = () => {
+const Estimator = (props) => {
   const [filter, setFilter] = useState("");
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
   const [showEstimatingEditModal, setshowEstimatingEditModal] = useState(false); // State to control modal visibility
@@ -269,28 +270,27 @@ const Estimator = () => {
   const [ProjectStep4FormData, setProjectStep4FormData] = useState({
     contract: [
       {
-        contract:"",
-        contract_date:"",
-      }
+        contract: "",
+        contract_date: "",
+      },
     ],
     schedule_of_values: [
       {
         schedule: "",
-        schedule_date: ""
-    }
+        schedule_date: "",
+      },
     ],
     insurance: [
       {
         insurance: "",
-        date: ""
-    }
-  ],
-  bond: [
+        date: "",
+      },
+    ],
+    bond: [
       {
         bond: "",
-        date: ""
-    }
-      
+        date: "",
+      },
     ],
   });
   const [ProjectStep5FormData, setProjectStep5FormData] = useState({
@@ -426,8 +426,6 @@ const Estimator = () => {
 
   // ******************
 
-
-
   const handleAddBilling = () => {
     const newBilling = {
       due_date: "",
@@ -492,105 +490,102 @@ const Estimator = () => {
 
   // *******************
 
-// Function to add a new "HD S_SYSTEMS" entry
-const handleAddHDSSystem = () => {
-  const newHDSSystem = {
-    status: "Pending", // You can set default values here
-    date: "",
-    comment_box: "",
-  };
-
-  setProjectStep8FormData((prevData) => ({
-    ...prevData,
-    hds_system: [...prevData.hds_system, newHDSSystem],
-  }));
-};
-
-// Function to remove an existing "HD S_SYSTEMS" entry by index
-const handleRemoveHDSSystem = (index) => {
-  setProjectStep8FormData((prevData) => ({
-    ...prevData,
-    hds_system: prevData.hds_system.filter((_, i) => i !== index),
-  }));
-};
-
-const handleHDSChange = (index, field, value) => {
-  setProjectStep8FormData((prevData) => {
-    const updatedHDS = [...prevData.hds_system];
-    updatedHDS[index] = {
-      ...updatedHDS[index],
-      [field]: value,
+  // Function to add a new "HD S_SYSTEMS" entry
+  const handleAddHDSSystem = () => {
+    const newHDSSystem = {
+      status: "Pending", // You can set default values here
+      date: "",
+      comment_box: "",
     };
-    return { ...prevData, hds_system: updatedHDS };
-  });
-};
 
-
-const handleAddOnBuild = () => {
-  const newOnBuild = {
-    field: "",
-    status: "",
+    setProjectStep8FormData((prevData) => ({
+      ...prevData,
+      hds_system: [...prevData.hds_system, newHDSSystem],
+    }));
   };
-  setProjectStep7FormData({
-    ...ProjectStep8FormData,
-    on_build: [...ProjectStep8FormData.on_build, newOnBuild],
-  });
-};
 
-const handleRemoveOnBuild = (index) => {
-  const updatedOnBuild = [...ProjectStep8FormData.on_build];
-  updatedOnBuild.splice(index, 1);
-  setProjectStep8FormData({
-    ...ProjectStep8FormData,
-    on_build: updatedOnBuild,
-  });
-};
-
-// Function to handle changes for the "ON UPLOADED" section
-const handleOnBuildChange = (index, field, value) => {
-  const updatedOnBuild = [...ProjectStep8FormData.on_build];
-  updatedOnBuild[index][field] = value;
-  setProjectStep8FormData({
-    ...ProjectStep8FormData,
-    on_build: updatedOnBuild,
-  });
-};
-
-// ***************
-
-
-const handleAddBudget = () => {
-  const newBudget = {
-    status: "",
-    comment_box: "",
+  // Function to remove an existing "HD S_SYSTEMS" entry by index
+  const handleRemoveHDSSystem = (index) => {
+    setProjectStep8FormData((prevData) => ({
+      ...prevData,
+      hds_system: prevData.hds_system.filter((_, i) => i !== index),
+    }));
   };
-  setProjectStep8FormData({
-    ...ProjectStep8FormData,
-    buget: [...ProjectStep8FormData.buget, newBudget],
-  });
-};
 
-const handleRemoveBudget = (index) => {
-  const updatedBudget = [...ProjectStep8FormData.buget];
-  updatedBudget.splice(index, 1);
-  setProjectStep8FormData({
-    ...ProjectStep8FormData,
-    buget: updatedBudget,
-  });
-};
+  const handleHDSChange = (index, field, value) => {
+    setProjectStep8FormData((prevData) => {
+      const updatedHDS = [...prevData.hds_system];
+      updatedHDS[index] = {
+        ...updatedHDS[index],
+        [field]: value,
+      };
+      return { ...prevData, hds_system: updatedHDS };
+    });
+  };
 
-// Function to handle changes for the "BUGETS" section
-const handleBudgetChange = (index, field, value) => {
-  const updatedBudget = [...ProjectStep8FormData.buget];
-  updatedBudget[index][field] = value;
-  setProjectStep8FormData({
-    ...ProjectStep8FormData,
-    buget: updatedBudget,
-  });
-};
+  const handleAddOnBuild = () => {
+    const newOnBuild = {
+      field: "",
+      status: "",
+    };
+    setProjectStep7FormData({
+      ...ProjectStep8FormData,
+      on_build: [...ProjectStep8FormData.on_build, newOnBuild],
+    });
+  };
 
-// *****************
+  const handleRemoveOnBuild = (index) => {
+    const updatedOnBuild = [...ProjectStep8FormData.on_build];
+    updatedOnBuild.splice(index, 1);
+    setProjectStep8FormData({
+      ...ProjectStep8FormData,
+      on_build: updatedOnBuild,
+    });
+  };
 
+  // Function to handle changes for the "ON UPLOADED" section
+  const handleOnBuildChange = (index, field, value) => {
+    const updatedOnBuild = [...ProjectStep8FormData.on_build];
+    updatedOnBuild[index][field] = value;
+    setProjectStep8FormData({
+      ...ProjectStep8FormData,
+      on_build: updatedOnBuild,
+    });
+  };
+
+  // ***************
+
+  const handleAddBudget = () => {
+    const newBudget = {
+      status: "",
+      comment_box: "",
+    };
+    setProjectStep8FormData({
+      ...ProjectStep8FormData,
+      buget: [...ProjectStep8FormData.buget, newBudget],
+    });
+  };
+
+  const handleRemoveBudget = (index) => {
+    const updatedBudget = [...ProjectStep8FormData.buget];
+    updatedBudget.splice(index, 1);
+    setProjectStep8FormData({
+      ...ProjectStep8FormData,
+      buget: updatedBudget,
+    });
+  };
+
+  // Function to handle changes for the "BUGETS" section
+  const handleBudgetChange = (index, field, value) => {
+    const updatedBudget = [...ProjectStep8FormData.buget];
+    updatedBudget[index][field] = value;
+    setProjectStep8FormData({
+      ...ProjectStep8FormData,
+      buget: updatedBudget,
+    });
+  };
+
+  // *****************
 
   // Function to handle form submission
   //TODO: Multistep Form  React Code
@@ -1377,17 +1372,20 @@ const handleBudgetChange = (index, field, value) => {
           closeModal();
         }, 500);
         return;
-
       } else {
         console.error("Error submitting proposal data");
         const errorResponse = await response.text();
         console.error("Error response:", errorResponse);
         return;
-      } } catch (error) {
+      }
+    } catch (error) {
       console.error("An error occurred:", error.message);
-   
     }
   };
+
+
+// update status whn i clock on the project close button
+
 
   const closeModal = () => {
     setShowModal(false);
@@ -1395,6 +1393,9 @@ const handleBudgetChange = (index, field, value) => {
     setshowProjectModal(false);
     setshowEstimatingEditModal(false);
     // **********purposalModal
+    // update_status_when_close=1; 
+
+
     setStep0FormData({
       date: getCurrentDate(),
       estimating_id: "",
@@ -1411,6 +1412,13 @@ const handleBudgetChange = (index, field, value) => {
       budget: "",
       sefic: [],
     });
+
+
+
+
+
+
+
 
     // **************ShowModal Estimating
 
@@ -1779,7 +1787,7 @@ const handleBudgetChange = (index, field, value) => {
     }
   }
 
-  const handleStatusChange = async (event, itemId) => {
+  const handleStatusChange = async (event=null, itemId) => {
     const updatedStatus = event.target.value;
     console.log("Updated Status:", updatedStatus);
 
@@ -1835,6 +1843,7 @@ const handleBudgetChange = (index, field, value) => {
             }
 
             // Check if the updated status is "Won" and open the project modal
+          
             if (updatedStatus === "Won") {
               setshowProjectModal(true);
             }
@@ -1893,6 +1902,10 @@ const handleBudgetChange = (index, field, value) => {
     }
     return 0; // No change in order if both have no due date
   });
+
+  const [readMoreState, setReadMoreState] = useState({});
+  const [showBidderDetails, setShowBidderDetails] = useState(false);
+  const [selectedBidderDetails, setSelectedBidderDetails] = useState("");
 
   return (
     <div className="ParentAllDiv">
@@ -2007,6 +2020,7 @@ const handleBudgetChange = (index, field, value) => {
                             ? AreaChoice[item.id] || item.location
                             : "No aArea"
                         }
+                        
                       >
                         <option
                           value={item.location ? item.location : "No Area"}
@@ -2066,21 +2080,128 @@ const handleBudgetChange = (index, field, value) => {
                         onChange={(event) => handleStatusChange(event, item.id)}
                         value={statusMap[item.id] || item.status}
                       >
-                        <option value={item.status}>{item.status}</option>
-                        <option value="Won">Won</option>
+                        {/* <option value={item.status}>{item.status}</option> */}
+                        {/* <option value="Won" disabled={statusMap[item.id] === "Working" || item.status === "Working"}>Won</option>
                         <option value="Pending">Pending</option>
                         <option value="Working">Working</option>
-                        <option value="Lost">Lost</option>
+                        <option value="Lost">Lost</option> */}
+
+                        <option
+                          value="Won"
+                          disabled={
+                            statusMap[item.id] === "Working" ||
+                            item.status === "Working"
+                          }
+                          className={
+                            statusMap[item.id] === "Won" ||
+                            item.status === "Won"
+                              ? "active-option"
+                              : ""
+                          }
+                        >
+                          Won
+                        </option>
+                        <option
+                          value="Pending"
+                          className={
+                            statusMap[item.id] === "Pending" ||
+                            item.status === "Pending"
+                              ? "active-option"
+                              : ""
+                          }
+                        >
+                          Pending
+                        </option>
+                        <option
+                          value="Working"
+                          disabled={
+                            statusMap[item.id] === "Pending" ||
+                            item.status === "Pending"
+                          }
+
+                          className={
+                            statusMap[item.id] === "Working" ||
+                            item.status === "Working"
+                              ? "active-option"
+                              : ""
+                          }
+                        >
+                          Working
+                        </option>
+                        <option
+                          value="Lost"
+                          className={
+                            statusMap[item.id] === "Lost" ||
+                            item.status === "Lost"
+                              ? "active-option"
+                              : ""
+                          }
+                        >
+                          Lost
+                        </option>
                       </select>
                     </td>
-
                     <td className="mytdbidder centered-td">
-                      {item.bidder +
-                        " " +
-                        item.bidder_detail +
-                        " " +
-                        item.bidder_mail}
+                      {item.bidder || item.bidder_detail || item.bidder_mail ? (
+                        <>
+                          <p
+                            className={
+                              readMoreState[item.id] ? "" : "two-lines"
+                            }
+                          >
+                            {item.bidder ? item.bidder + " " : ""}
+                            {item.bidder_detail ? item.bidder_detail + " " : ""}
+                            {item.bidder_mail ? item.bidder_mail : ""}
+                          </p>
+
+                          {
+                            // Check if any of the fields exist and are longer than a set threshold
+                            (item.bidder && item.bidder.length > 20) ||
+                            (item.bidder_detail &&
+                              item.bidder_detail.length > 20) ||
+                            (item.bidder_mail &&
+                              item.bidder_mail.length > 20) ? (
+                              <label
+                                onClick={() => {
+                                  setSelectedBidderDetails(
+                                    (item.bidder ? item.bidder + " " : "") +
+                                      (item.bidder_detail
+                                        ? item.bidder_detail + " "
+                                        : "") +
+                                      (item.bidder_mail ? item.bidder_mail : "")
+                                  );
+                                  setShowBidderDetails(true);
+                                  setReadMoreState((prev) => ({
+                                    ...prev,
+                                    [item.id]: !prev[item.id],
+                                  }));
+                                }}
+                              >
+                                {readMoreState[item.id] ? (
+                                  <p class="read_more">Read less...</p>
+                                ) : (
+                                  <p class="read_more">Read more...</p>
+                                )}
+                              </label>
+                            ) : null
+                          }
+
+                          {showBidderDetails && (
+                            <div className="modal">
+                              <div className="modal-content">
+                                <span
+                                  onClick={() => setShowBidderDetails(false)}
+                                >
+                                  Close
+                                </span>
+                                {selectedBidderDetails}
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      ) : null}
                     </td>
+
                     <td className="mytd centered-td actionTD">
                       <div className="relative-container loop">
                         {/* <button
@@ -2755,7 +2876,7 @@ const handleBudgetChange = (index, field, value) => {
                                     })
                                   }
                                 >
-                                  <option  value="Pre-Construction">
+                                  <option value="Pre-Construction">
                                     Pre-Construction
                                   </option>
                                   <option value="Construction Phase">
@@ -2823,163 +2944,230 @@ const handleBudgetChange = (index, field, value) => {
                             </div>
                           </>
                         )}
-                       {projectactiveStep === 3 && (
-  <>
-    <div className="mt-4" style={{ width: "100%" }}>
-      <div>
-        <label className="form-label">
-          <span>Contract</span>
-        </label>
-        <div id="" className="input-group">
-          <select
-            className="form-select"
-            placeholder="Contract"
-            id="contract"
-            value={ProjectStep4FormData.contract[0].contract}
-            onChange={(e) =>
-              setProjectStep4FormData({
-                ...ProjectStep4FormData,
-                contract: [{ ...ProjectStep4FormData.contract[0], contract: e.target.value }]
-              })
-            }
-          >
-            <option value="">Select Choice</option>
-            <option value="Fully Executed">Fully Executed</option>
-            <option value="Pending">Pending</option>
-          </select>
-          <input
-            id=""
-            type="date"
-            name="contract_date"
-            className="form-control"
-            value={ProjectStep4FormData.contract[0].contract_date}
-            onChange={(e) =>
-              setProjectStep4FormData({
-                ...ProjectStep4FormData,
-                contract: [{ ...ProjectStep4FormData.contract[0], contract_date: e.target.value }]
-              })
-            }
-          />
-        </div>
-      </div>
-    </div>
-    <div style={{ width: "100%" }}>
-      <div>
-        <label className="form-label">
-          <span>SCHEDULE_OF_VALUES:</span>
-        </label>
-        <div id="" className="input-group">
-          <select
-            className="form-select"
-            placeholder="Schedule"
-            id="schedule"
-            value={ProjectStep4FormData.schedule_of_values[0].schedule}
-            onChange={(e) =>
-              setProjectStep4FormData({
-                ...ProjectStep4FormData,
-                schedule_of_values: [{ ...ProjectStep4FormData.schedule_of_values[0], schedule: e.target.value }]
-              })
-            }
-          >
-            <option value="">Select Choice</option>
-            <option value="Fully Executed">Fully Executed</option>
-            <option value="Pending">Pending</option>
-          </select>
-          <input
-            id=""
-            type="date"
-            name="schedule_date"
-            className="form-control"
-            value={ProjectStep4FormData.schedule_of_values[0].schedule_date}
-            onChange={(e) =>
-              setProjectStep4FormData({
-                ...ProjectStep4FormData,
-                schedule_of_values: [{ ...ProjectStep4FormData.schedule_of_values[0], schedule_date: e.target.value }]
-              })
-            }
-          />
-        </div>
-      </div>
-    </div>
-    <div style={{ width: "100%" }}>
-      <div>
-        <label className="form-label">
-          <span>INSURANCES:</span>
-        </label>
-        <div id="" className="input-group">
-          <select
-            className="form-select"
-            placeholder="Insurance"
-            id="insurance"
-            value={ProjectStep4FormData.insurance[0].insurance}
-            onChange={(e) =>
-              setProjectStep4FormData({
-                ...ProjectStep4FormData,
-                insurance: [{ ...ProjectStep4FormData.insurance[0], insurance: e.target.value }]
-              })
-            }
-          >
-            <option value="">Select Choice</option>
-            <option value="Fully Executed">Fully Executed</option>
-            <option value="Pending">Pending</option>
-          </select>
-          <input
-            id=""
-            type="date"
-            name="date"
-            className="form-control"
-            value={ProjectStep4FormData.insurance[0].date}
-            onChange={(e) =>
-              setProjectStep4FormData({
-                ...ProjectStep4FormData,
-                insurance: [{ ...ProjectStep4FormData.insurance[0], date: e.target.value }]
-              })
-            }
-          />
-        </div>
-      </div>
-    </div>
-    <div style={{ width: "100%" }}>
-      <div>
-        <label className="form-label">
-          <span>BONDS:</span>
-        </label>
-        <div id="" className="input-group">
-          <select
-            className="form-select"
-            placeholder="Bond"
-            id="bond"
-            value={ProjectStep4FormData.bond[0].bond}
-            onChange={(e) =>
-              setProjectStep4FormData({
-                ...ProjectStep4FormData,
-                bond: [{ ...ProjectStep4FormData.bond[0], bond: e.target.value }]
-              })
-            }
-          >
-            <option value="">Select Choice</option>
-            <option value="Fully Executed">Fully Executed</option>
-            <option value="Pending">Pending</option>
-          </select>
-          <input
-            id=""
-            type="date"
-            name="date"
-            className="form-control"
-            value={ProjectStep4FormData.bond[0].date}
-            onChange={(e) =>
-              setProjectStep4FormData({
-                ...ProjectStep4FormData,
-                bond: [{ ...ProjectStep4FormData.bond[0], date: e.target.value }]
-              })
-            }
-          />
-        </div>
-      </div>
-    </div>
-  </>
-)}
-
+                        {projectactiveStep === 3 && (
+                          <>
+                            <div className="mt-4" style={{ width: "100%" }}>
+                              <div>
+                                <label className="form-label">
+                                  <span>Contract</span>
+                                </label>
+                                <div id="" className="input-group">
+                                  <select
+                                    className="form-select"
+                                    placeholder="Contract"
+                                    id="contract"
+                                    value={
+                                      ProjectStep4FormData.contract[0].contract
+                                    }
+                                    onChange={(e) =>
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        contract: [
+                                          {
+                                            ...ProjectStep4FormData.contract[0],
+                                            contract: e.target.value,
+                                          },
+                                        ],
+                                      })
+                                    }
+                                  >
+                                    <option value="">Select Choice</option>
+                                    <option value="Fully Executed">
+                                      Fully Executed
+                                    </option>
+                                    <option value="Pending">Pending</option>
+                                  </select>
+                                  <input
+                                    id=""
+                                    type="date"
+                                    name="contract_date"
+                                    className="form-control"
+                                    value={
+                                      ProjectStep4FormData.contract[0]
+                                        .contract_date
+                                    }
+                                    onChange={(e) =>
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        contract: [
+                                          {
+                                            ...ProjectStep4FormData.contract[0],
+                                            contract_date: e.target.value,
+                                          },
+                                        ],
+                                      })
+                                    }
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div style={{ width: "100%" }}>
+                              <div>
+                                <label className="form-label">
+                                  <span>SCHEDULE_OF_VALUES:</span>
+                                </label>
+                                <div id="" className="input-group">
+                                  <select
+                                    className="form-select"
+                                    placeholder="Schedule"
+                                    id="schedule"
+                                    value={
+                                      ProjectStep4FormData.schedule_of_values[0]
+                                        .schedule
+                                    }
+                                    onChange={(e) =>
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        schedule_of_values: [
+                                          {
+                                            ...ProjectStep4FormData
+                                              .schedule_of_values[0],
+                                            schedule: e.target.value,
+                                          },
+                                        ],
+                                      })
+                                    }
+                                  >
+                                    <option value="">Select Choice</option>
+                                    <option value="Fully Executed">
+                                      Fully Executed
+                                    </option>
+                                    <option value="Pending">Pending</option>
+                                  </select>
+                                  <input
+                                    id=""
+                                    type="date"
+                                    name="schedule_date"
+                                    className="form-control"
+                                    value={
+                                      ProjectStep4FormData.schedule_of_values[0]
+                                        .schedule_date
+                                    }
+                                    onChange={(e) =>
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        schedule_of_values: [
+                                          {
+                                            ...ProjectStep4FormData
+                                              .schedule_of_values[0],
+                                            schedule_date: e.target.value,
+                                          },
+                                        ],
+                                      })
+                                    }
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div style={{ width: "100%" }}>
+                              <div>
+                                <label className="form-label">
+                                  <span>INSURANCES:</span>
+                                </label>
+                                <div id="" className="input-group">
+                                  <select
+                                    className="form-select"
+                                    placeholder="Insurance"
+                                    id="insurance"
+                                    value={
+                                      ProjectStep4FormData.insurance[0]
+                                        .insurance
+                                    }
+                                    onChange={(e) =>
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        insurance: [
+                                          {
+                                            ...ProjectStep4FormData
+                                              .insurance[0],
+                                            insurance: e.target.value,
+                                          },
+                                        ],
+                                      })
+                                    }
+                                  >
+                                    <option value="">Select Choice</option>
+                                    <option value="Fully Executed">
+                                      Fully Executed
+                                    </option>
+                                    <option value="Pending">Pending</option>
+                                  </select>
+                                  <input
+                                    id=""
+                                    type="date"
+                                    name="date"
+                                    className="form-control"
+                                    value={
+                                      ProjectStep4FormData.insurance[0].date
+                                    }
+                                    onChange={(e) =>
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        insurance: [
+                                          {
+                                            ...ProjectStep4FormData
+                                              .insurance[0],
+                                            date: e.target.value,
+                                          },
+                                        ],
+                                      })
+                                    }
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div style={{ width: "100%" }}>
+                              <div>
+                                <label className="form-label">
+                                  <span>BONDS:</span>
+                                </label>
+                                <div id="" className="input-group">
+                                  <select
+                                    className="form-select"
+                                    placeholder="Bond"
+                                    id="bond"
+                                    value={ProjectStep4FormData.bond[0].bond}
+                                    onChange={(e) =>
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        bond: [
+                                          {
+                                            ...ProjectStep4FormData.bond[0],
+                                            bond: e.target.value,
+                                          },
+                                        ],
+                                      })
+                                    }
+                                  >
+                                    <option value="">Select Choice</option>
+                                    <option value="Fully Executed">
+                                      Fully Executed
+                                    </option>
+                                    <option value="Pending">Pending</option>
+                                  </select>
+                                  <input
+                                    id=""
+                                    type="date"
+                                    name="date"
+                                    className="form-control"
+                                    value={ProjectStep4FormData.bond[0].date}
+                                    onChange={(e) =>
+                                      setProjectStep4FormData({
+                                        ...ProjectStep4FormData,
+                                        bond: [
+                                          {
+                                            ...ProjectStep4FormData.bond[0],
+                                            date: e.target.value,
+                                          },
+                                        ],
+                                      })
+                                    }
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        )}
 
                         {projectactiveStep === 4 && (
                           <>
@@ -3807,202 +3995,290 @@ const handleBudgetChange = (index, field, value) => {
                             </div>
                           </>
                         )}
-                      {projectactiveStep === 7 && (
-  <div className="mt-3">
-    <div style={{ width: "100%" }}>
-      <label htmlFor="projectName" className="form-label mt-2">
-        <span>HD S_SYSTEMS</span>
-      </label>
-      {ProjectStep8FormData.hds_system.map((myhdsSystem, index) => (
-        <div key={index} className="wholespecificationEntry">
-          <div className="ScopofWorkSectionRemove">
-            <button
-              type="button"
-              className="btn btn-danger"
-              onClick={() => handleRemoveHDSSystem(index)}
-            >
-              <i className="far">X</i>
-            </button>
-          </div>
-          <div className="mb-2 mt-4">
-            <div className="mt-4" style={{ width: "100%" }}>
-              <div>
-                <label className="form-label">
-                  <span>HDS System:</span>
-                </label>
-                <div id="" className="input-group">
-                  <select
-                    className="form-select"
-                    placeholder="Contract"
-                    id="ProjectEngineerID"
-                    value={myhdsSystem.status}
-                    onChange={(e) =>
-                      handleHDSChange(index, "status", e.target.value)
-                    }
-                  >
-                    <option value="Pending">Pending</option>
-                    <option value="Aproved">Aproved</option>
-                    <option value="Custom">Custom</option>
-                    <option value="Not Required">Not Required</option>
-                  </select>
-                  <input
-                    id=""
-                    type="date"
-                    name="date"
-                    className="form-control"
-                    value={myhdsSystem.date}
-                    onChange={(e) =>
-                      handleHDSChange(index, "date", e.target.value)
-                    }
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="mt-2">
-            <label htmlFor="comment">Comment:</label>
-            <textarea
-              id="comment"
-              style={{
-                width: "100%",
-                backgroundColor: "white",
-                color: "black",
-                padding: "10px",
-              }}
-              rows="2"
-              placeholder=" Write your comment here !"
-              value={myhdsSystem.comment_box}
-              onChange={(e) =>
-                handleHDSChange(index, "comment_box", e.target.value)
-              }
-            ></textarea>
-          </div>
-        </div>
-      ))}
-      <button
-        type="button"
-        className="btn btn-success"
-        onClick={handleAddHDSSystem}
-      >
-        Add HD S_SYSTEMS
-      </button>
-    </div>
+                        {projectactiveStep === 7 && (
+                          <div className="mt-3">
+                            <div style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>HD S_SYSTEMS</span>
+                              </label>
+                              {ProjectStep8FormData.hds_system.map(
+                                (myhdsSystem, index) => (
+                                  <div
+                                    key={index}
+                                    className="wholespecificationEntry"
+                                  >
+                                    <div className="ScopofWorkSectionRemove">
+                                      <button
+                                        type="button"
+                                        className="btn btn-danger"
+                                        onClick={() =>
+                                          handleRemoveHDSSystem(index)
+                                        }
+                                      >
+                                        <i className="far">X</i>
+                                      </button>
+                                    </div>
+                                    <div className="mb-2 mt-4">
+                                      <div
+                                        className="mt-4"
+                                        style={{ width: "100%" }}
+                                      >
+                                        <div>
+                                          <label className="form-label">
+                                            <span>HDS System:</span>
+                                          </label>
+                                          <div id="" className="input-group">
+                                            <select
+                                              className="form-select"
+                                              placeholder="Contract"
+                                              id="ProjectEngineerID"
+                                              value={myhdsSystem.status}
+                                              onChange={(e) =>
+                                                handleHDSChange(
+                                                  index,
+                                                  "status",
+                                                  e.target.value
+                                                )
+                                              }
+                                            >
+                                              <option value="Pending">
+                                                Pending
+                                              </option>
+                                              <option value="Aproved">
+                                                Aproved
+                                              </option>
+                                              <option value="Custom">
+                                                Custom
+                                              </option>
+                                              <option value="Not Required">
+                                                Not Required
+                                              </option>
+                                            </select>
+                                            <input
+                                              id=""
+                                              type="date"
+                                              name="date"
+                                              className="form-control"
+                                              value={myhdsSystem.date}
+                                              onChange={(e) =>
+                                                handleHDSChange(
+                                                  index,
+                                                  "date",
+                                                  e.target.value
+                                                )
+                                              }
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="mt-2">
+                                      <label htmlFor="comment">Comment:</label>
+                                      <textarea
+                                        id="comment"
+                                        style={{
+                                          width: "100%",
+                                          backgroundColor: "white",
+                                          color: "black",
+                                          padding: "10px",
+                                        }}
+                                        rows="2"
+                                        placeholder=" Write your comment here !"
+                                        value={myhdsSystem.comment_box}
+                                        onChange={(e) =>
+                                          handleHDSChange(
+                                            index,
+                                            "comment_box",
+                                            e.target.value
+                                          )
+                                        }
+                                      ></textarea>
+                                    </div>
+                                  </div>
+                                )
+                              )}
+                              <button
+                                type="button"
+                                className="btn btn-success"
+                                onClick={handleAddHDSSystem}
+                              >
+                                Add HD S_SYSTEMS
+                              </button>
+                            </div>
 
-    <div style={{ width: "100%" }}>
-      <label htmlFor="projectName" className="form-label mt-2">
-        <span>ON UPLOADED:</span>
-      </label>
-      {ProjectStep8FormData.on_build.map((ONbuild, index) => (
-        <div key={index} className="wholespecificationEntry">
-          <div className="mb-2 mt-3">
-            <label className="form-label">
-              On Uploaded Choice:
-            </label>
-            <div className="input-group myrowInputgrouup">
-              <select
-                className="form-select"
-                aria-label="Select Specification"
-                value={ONbuild.field}
-                onChange={(e) =>
-                  handleOnBuildChange(index, "field", e.target.value)
-                }
-              >
-                <option value="">Select Choice</option>
-                <option value="Addendum">Addendum</option>
-                <option value="Bid Proposal">Bid Proposal</option>
-                <option value="Specs">Specs</option>
-                <option value="Contract">Contract</option>
-                <option value="Submitile">Submitile</option>
-                <option value="Safety">Safety</option>
-                <option value="Shop Drawing">Shop Drawing</option>
-                <option value="Budget">Budget</option>
-              </select>
-              <select
-                className="form-select"
-                aria-label="Select Specification"
-                value={ONbuild.status}
-                onChange={(e) =>
-                  handleOnBuildChange(index, "status", e.target.value)
-                }
-              >
-                <option value="">Select Choice</option>
-                <option value="Upload">Upload</option>
-                <option value="Pending">Pending</option>
-              </select>
-              <button
-                type="button"
-                className="btn btn-danger"
-                onClick={() => handleRemoveOnBuild(index)}
-              >
-                <i className="far">X</i>
-              </button>
-            </div>
-          </div>
-          <button
-            type="button"
-            className="btn btn-success bk"
-            onClick={handleAddOnBuild}
-          >
-            <i className="fa-regular icon fa-plus"></i>
-          </button>
-        </div>
-      ))}
-    </div>
-    <div style={{ width: "100%" }}>
-      <label htmlFor="projectName" className="form-label mt-2">
-        <span>BUGETS</span>
-      </label>
-      {ProjectStep8FormData.buget.map((mybudget, index) => (
-        <div key={index} className="wholespecificationEntry">
-          <div className="mb-2 mt-3">
-            <label className="form-label">
-              Labor Rate:
-            </label>
-            <div className="input-group myrowInputgrouup">
-              <select
-                className="form-select"
-                aria-label="Select Specification"
-                value={mybudget.status}
-                onChange={(e) =>
-                  handleBudgetChange(index, "status", e.target.value)
-                }
-              >
-                <option value="">Select Choice</option>
-                <option value="Done">Done</option>
-                <option value="Pending">Pending</option>
-                <option value="Custom">Custom</option>
-              </select>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Comment"
-                value={mybudget.comment_box}
-                onChange={(e) =>
-                  handleBudgetChange(index, "comment_box", e.target.value)
-                }
-              />
-              <button
-                type="button"
-                className="btn btn-danger"
-                onClick={() => handleRemoveBudget(index)}
-              >
-                <i className="far">X</i>
-              </button>
-            </div>
-          </div>
-          <button
-            type="button"
-            className="btn btn-success bk"
-            onClick={handleAddBudget}
-          >
-            <i className="fa-regular icon fa-plus"></i>
-          </button>
-        </div>
-      ))}
-    </div>
-  </div>
-)}
-
+                            <div style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>ON UPLOADED:</span>
+                              </label>
+                              {ProjectStep8FormData.on_build.map(
+                                (ONbuild, index) => (
+                                  <div
+                                    key={index}
+                                    className="wholespecificationEntry"
+                                  >
+                                    <div className="mb-2 mt-3">
+                                      <label className="form-label">
+                                        On Uploaded Choice:
+                                      </label>
+                                      <div className="input-group myrowInputgrouup">
+                                        <select
+                                          className="form-select"
+                                          aria-label="Select Specification"
+                                          value={ONbuild.field}
+                                          onChange={(e) =>
+                                            handleOnBuildChange(
+                                              index,
+                                              "field",
+                                              e.target.value
+                                            )
+                                          }
+                                        >
+                                          <option value="">
+                                            Select Choice
+                                          </option>
+                                          <option value="Addendum">
+                                            Addendum
+                                          </option>
+                                          <option value="Bid Proposal">
+                                            Bid Proposal
+                                          </option>
+                                          <option value="Specs">Specs</option>
+                                          <option value="Contract">
+                                            Contract
+                                          </option>
+                                          <option value="Submitile">
+                                            Submitile
+                                          </option>
+                                          <option value="Safety">Safety</option>
+                                          <option value="Shop Drawing">
+                                            Shop Drawing
+                                          </option>
+                                          <option value="Budget">Budget</option>
+                                        </select>
+                                        <select
+                                          className="form-select"
+                                          aria-label="Select Specification"
+                                          value={ONbuild.status}
+                                          onChange={(e) =>
+                                            handleOnBuildChange(
+                                              index,
+                                              "status",
+                                              e.target.value
+                                            )
+                                          }
+                                        >
+                                          <option value="">
+                                            Select Choice
+                                          </option>
+                                          <option value="Upload">Upload</option>
+                                          <option value="Pending">
+                                            Pending
+                                          </option>
+                                        </select>
+                                        <button
+                                          type="button"
+                                          className="btn btn-danger"
+                                          onClick={() =>
+                                            handleRemoveOnBuild(index)
+                                          }
+                                        >
+                                          <i className="far">X</i>
+                                        </button>
+                                      </div>
+                                    </div>
+                                    <button
+                                      type="button"
+                                      className="btn btn-success bk"
+                                      onClick={handleAddOnBuild}
+                                    >
+                                      <i className="fa-regular icon fa-plus"></i>
+                                    </button>
+                                  </div>
+                                )
+                              )}
+                            </div>
+                            <div style={{ width: "100%" }}>
+                              <label
+                                htmlFor="projectName"
+                                className="form-label mt-2"
+                              >
+                                <span>BUGETS</span>
+                              </label>
+                              {ProjectStep8FormData.buget.map(
+                                (mybudget, index) => (
+                                  <div
+                                    key={index}
+                                    className="wholespecificationEntry"
+                                  >
+                                    <div className="mb-2 mt-3">
+                                      <label className="form-label">
+                                        Labor Rate:
+                                      </label>
+                                      <div className="input-group myrowInputgrouup">
+                                        <select
+                                          className="form-select"
+                                          aria-label="Select Specification"
+                                          value={mybudget.status}
+                                          onChange={(e) =>
+                                            handleBudgetChange(
+                                              index,
+                                              "status",
+                                              e.target.value
+                                            )
+                                          }
+                                        >
+                                          <option value="">
+                                            Select Choice
+                                          </option>
+                                          <option value="Done">Done</option>
+                                          <option value="Pending">
+                                            Pending
+                                          </option>
+                                          <option value="Custom">Custom</option>
+                                        </select>
+                                        <input
+                                          type="text"
+                                          className="form-control"
+                                          placeholder="Comment"
+                                          value={mybudget.comment_box}
+                                          onChange={(e) =>
+                                            handleBudgetChange(
+                                              index,
+                                              "comment_box",
+                                              e.target.value
+                                            )
+                                          }
+                                        />
+                                        <button
+                                          type="button"
+                                          className="btn btn-danger"
+                                          onClick={() =>
+                                            handleRemoveBudget(index)
+                                          }
+                                        >
+                                          <i className="far">X</i>
+                                        </button>
+                                      </div>
+                                    </div>
+                                    <button
+                                      type="button"
+                                      className="btn btn-success bk"
+                                      onClick={handleAddBudget}
+                                    >
+                                      <i className="fa-regular icon fa-plus"></i>
+                                    </button>
+                                  </div>
+                                )
+                              )}
+                            </div>
+                          </div>
+                        )}
 
                         <div className="mt-1">
                           {projectactiveStep < 7 ? (

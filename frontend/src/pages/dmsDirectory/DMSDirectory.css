@@ -3,6 +3,7 @@
     height: 50px !important;
   vertical-align: center;
   text-align: center;
+  /* white-space: nowrap; */
 }
 .datatable{
   margin-top: 80px !important;

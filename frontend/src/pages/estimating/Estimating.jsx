@@ -186,18 +186,12 @@ const Estimator = (props) => {
     return `${year}-${month}-${day}`;
   };
   const [startDate, setStartDate] = useState(getCurrentDate());
-  const [jobNo, setJobNo] = useState("");
-  const [selectedForeman, setSelectedForeman] = useState("");
-  const [selectedProjectEngineer, setSelectedProjectEngineer] = useState("");
-  const [selectedProjectID, setSelectedProjectID] = useState("");
-  const [selectedProjectManager, setSelectedProjectManager] = useState("");
-  const [selectedBimOperator, setSelectedBimOperator] = useState("");
-  const [SelectedGeneralSuperintendent, setSelectedGeneralSuperintendent] =
-    useState("");
 
   const [selectedEstimatingID, setSelectedEstimatingID] = useState(null);
 
   const [selectedProposalID, setSelectedProposalID] = useState(null);
+
+  const [selectedAddendumNumbers, setAddendumNumbers] = useState(null);
 
   useEffect(() => {
     const fetchAndFilterProposals = async () => {
@@ -220,6 +214,13 @@ const Estimator = (props) => {
 
         // Check if filteredProposals is not empty
         if (filteredProposals.length > 0) {
+          console.log(filteredProposals);
+          const proposalAddundumNumbers=filteredProposals[0];
+          // const response=proposalAddundumNumbers.spcifc.map((e)=>(e.sefic.map(e=>e.number)));
+          const response=proposalAddundumNumbers.spcifc.map((e)=>(e.sefic));
+          console.log(response);
+          setAddendumNumbers(response)
+
           const proposalID = filteredProposals[0].id;
           console.log(proposalID);
           setSelectedProposalID(proposalID);

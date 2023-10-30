@@ -135,7 +135,7 @@ const URLPage = () => {
         onClick={movetoEstimatingPage}
         className="btn btn-outline-primary backbtn"
       >
-       <i class="fa-duotone me-2 fa fa-angles-left icons backicon"></i> Back
+       <i className="fa-duotone me-2 fa fa-angles-left icons backicon"></i> Back
       </button>
 
       {showModal && (

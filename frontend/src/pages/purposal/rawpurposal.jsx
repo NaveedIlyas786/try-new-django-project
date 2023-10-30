@@ -65,6 +65,7 @@ const handleExportWithComponent = (e) => {
   PdfExportCompnent.current.save()
 };
 
+
   const sendMyEmail = () => {
     const element = document.getElementById("pdf-content");
 

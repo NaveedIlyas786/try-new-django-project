@@ -1,9 +1,9 @@
 import { useState,useEffect } from "react";
-
+import "./ProjectDirectory.css"
 export default function ProjectDetailSidebar({item}){
     const [open, setOpen] = useState(false);
 
-      // ************Project folder directory sidebar
+      // ******Project folder directory sidebar
 
 //   const [sidebarData, setSidebarData] = useState([]);
 //   // Fetch data from the API
@@ -30,7 +30,7 @@ export default function ProjectDetailSidebar({item}){
               {item.drctry_Name}
             </span>
             <i
-              class="bi bi-chevron-down togglebtn"
+              className="bi bi-chevron-down togglebtn"
               onClick={() => setOpen(!open)}
             ></i>
           </div>
@@ -52,4 +52,3 @@ export default function ProjectDetailSidebar({item}){
     )
  }
 }
-

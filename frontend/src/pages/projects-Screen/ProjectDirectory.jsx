@@ -6,7 +6,7 @@ import ProjectDetailSidebar from "./ProjectDetailSidebar";
 const ProjectDirectory = () => {
   const { id } = useParams();
 
-  // ************Project Details Data regarding specific Id
+  // ******Project Details Data regarding specific Id
   const [data, setData] = useState([]);
   // Fetch data from the API
   useEffect(() => {
@@ -22,7 +22,7 @@ const ProjectDirectory = () => {
       });
   }, [id]);
 
-  // ************Project folder directory sidebar
+  // ******Project folder directory sidebar
 
   const [sidebarData, setSidebarData] = useState([]);
   // Fetch data from the API

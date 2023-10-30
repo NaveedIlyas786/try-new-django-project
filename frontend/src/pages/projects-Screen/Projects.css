@@ -32,7 +32,7 @@
   background-color: rgb(14, 223, 153);
   width: 100%;
 }
-/********************Project Summary Section***************/
+/*******Project Summary Section******/
 
 .parentDiv {
   margin-top: 70px;
@@ -107,11 +107,11 @@ input:focus {
 
 .projectTable::-webkit-scrollbar-thumb {
   background-color: #5d5d5f; /* Set the color of the scrollbar track (the non-draggable part) */
-  border-radius: 10px 50px 50px 10px; /*Round the corners of the thumb*/
+  border-radius: 10px 50px 50px 10px; 
 }
 
 .projectTable::-webkit-scrollbar-track {
-  border-radius: 10px; /*Round the corners of the thumb*/
+  border-radius: 10px; 
   background-color: white; /* Set the color of the scrollbar thumb (the draggable part) */
 }
 /* .projectHeader{

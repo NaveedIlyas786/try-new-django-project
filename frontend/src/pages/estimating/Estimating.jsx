@@ -284,15 +284,10 @@ const Estimator = (props) => {
         contract: "",
         contract_date: "",
       },
-        contract: "",
-        contract_date: "",
-      },
     ],
     schedule_of_value: [
       {
         schedule: "",
-        schedule_date: "",
-      },
         schedule_date: "",
       },
     ],
@@ -303,14 +298,8 @@ const Estimator = (props) => {
       },
     ],
     bond: [
-        date: "",
-      },
-    ],
-    bond: [
       {
         bond: "",
-        date: "",
-      },
         date: "",
       },
     ],
@@ -620,13 +609,13 @@ const Estimator = (props) => {
     }));
   };
 
-  // Function to remove an existing "HD S_SYSTEMS" entry by index
-  const handleRemoveHDSSystem = (index) => {
-    setProjectStep8FormData((prevData) => ({
-      ...prevData,
-      hds_system: prevData.hds_system.filter((_, i) => i !== index),
-    }));
-  };
+  // // Function to remove an existing "HD S_SYSTEMS" entry by index
+  // const handleRemoveHDSSystem = (index) => {
+  //   setProjectStep8FormData((prevData) => ({
+  //     ...prevData,
+  //     hds_system: prevData.hds_system.filter((_, i) => i !== index),
+  //   }));
+  // };
   // Function to remove an existing "HD S_SYSTEMS" entry by index
   const handleRemoveHDSSystem = (index) => {
     setProjectStep8FormData((prevData) => ({
@@ -657,16 +646,16 @@ const Estimator = (props) => {
       on_build: [...ProjectStep8FormData.on_build, newOnBuild],
     });
   };
-  const handleAddOnBuild = () => {
-    const newOnBuild = {
-      field: "",
-      status: "",
-    };
-    setProjectStep7FormData({
-      ...ProjectStep8FormData,
-      on_build: [...ProjectStep8FormData.on_build, newOnBuild],
-    });
-  };
+  // const handleAddOnBuild = () => {
+  //   const newOnBuild = {
+  //     field: "",
+  //     status: "",
+  //   };
+  //   setProjectStep7FormData({
+  //     ...ProjectStep8FormData,
+  //     on_build: [...ProjectStep8FormData.on_build, newOnBuild],
+  //   });
+  // };
 
   const handleRemoveOnBuild = (index) => {
     const updatedOnBuild = [...ProjectStep8FormData.on_build];
@@ -676,14 +665,14 @@ const Estimator = (props) => {
       on_build: updatedOnBuild,
     });
   };
-  const handleRemoveOnBuild = (index) => {
-    const updatedOnBuild = [...ProjectStep8FormData.on_build];
-    updatedOnBuild.splice(index, 1);
-    setProjectStep8FormData({
-      ...ProjectStep8FormData,
-      on_build: updatedOnBuild,
-    });
-  };
+  // const handleRemoveOnBuild = (index) => {
+  //   const updatedOnBuild = [...ProjectStep8FormData.on_build];
+  //   updatedOnBuild.splice(index, 1);
+  //   setProjectStep8FormData({
+  //     ...ProjectStep8FormData,
+  //     on_build: updatedOnBuild,
+  //   });
+  // };
 
   // Function to handle changes for the "ON UPLOADED" section
   const handleOnBuildChange = (index, field, value) => {
@@ -695,28 +684,28 @@ const Estimator = (props) => {
     });
   };
   // Function to handle changes for the "ON UPLOADED" section
-  const handleOnBuildChange = (index, field, value) => {
-    const updatedOnBuild = [...ProjectStep8FormData.on_build];
-    updatedOnBuild[index][field] = value;
-    setProjectStep8FormData({
-      ...ProjectStep8FormData,
-      on_build: updatedOnBuild,
-    });
-  };
+  // const handleOnBuildChange = (index, field, value) => {
+  //   const updatedOnBuild = [...ProjectStep8FormData.on_build];
+  //   updatedOnBuild[index][field] = value;
+  //   setProjectStep8FormData({
+  //     ...ProjectStep8FormData,
+  //     on_build: updatedOnBuild,
+  //   });
+  // };
 
   // ***************
   // ***************
 
-  const handleAddBudget = () => {
-    const newBudget = {
-      status: "",
-      comment_box: "",
-    };
-    setProjectStep8FormData({
-      ...ProjectStep8FormData,
-      buget: [...ProjectStep8FormData.buget, newBudget],
-    });
-  };
+  // const handleAddBudget = () => {
+  //   const newBudget = {
+  //     status: "",
+  //     comment_box: "",
+  //   };
+  //   setProjectStep8FormData({
+  //     ...ProjectStep8FormData,
+  //     buget: [...ProjectStep8FormData.buget, newBudget],
+  //   });
+  // };
   const handleAddBudget = () => {
     const newBudget = {
       status: "",
@@ -736,14 +725,14 @@ const Estimator = (props) => {
       buget: updatedBudget,
     });
   };
-  const handleRemoveBudget = (index) => {
-    const updatedBudget = [...ProjectStep8FormData.buget];
-    updatedBudget.splice(index, 1);
-    setProjectStep8FormData({
-      ...ProjectStep8FormData,
-      buget: updatedBudget,
-    });
-  };
+  // const handleRemoveBudget = (index) => {
+  //   const updatedBudget = [...ProjectStep8FormData.buget];
+  //   updatedBudget.splice(index, 1);
+  //   setProjectStep8FormData({
+  //     ...ProjectStep8FormData,
+  //     buget: updatedBudget,
+  //   });
+  // };
 
   // Function to handle changes for the "BUGETS" section
   const handleBudgetChange = (index, field, value) => {
@@ -755,14 +744,14 @@ const Estimator = (props) => {
     });
   };
   // Function to handle changes for the "BUGETS" section
-  const handleBudgetChange = (index, field, value) => {
-    const updatedBudget = [...ProjectStep8FormData.buget];
-    updatedBudget[index][field] = value;
-    setProjectStep8FormData({
-      ...ProjectStep8FormData,
-      buget: updatedBudget,
-    });
-  };
+  // const handleBudgetChange = (index, field, value) => {
+  //   const updatedBudget = [...ProjectStep8FormData.buget];
+  //   updatedBudget[index][field] = value;
+  //   setProjectStep8FormData({
+  //     ...ProjectStep8FormData,
+  //     buget: updatedBudget,
+  //   });
+  // };
 
   // *****************
   // *****************
@@ -3406,9 +3395,10 @@ const Estimator = (props) => {
                                       )
                                     }
                                   >
-                                    <option value="Base Bid Drywall/Framing">
-                                      All scope numbers will here
+                                    <option value="">
+                                      Select Choice
                                     </option>
+                                    {selectedAddendumNumbers.map((e)=>e.map(p=>p.number))}
                                   </select>
                                 </div>
                                 <div className="bothDiv gap-3">
@@ -4403,6 +4393,7 @@ const Estimator = (props) => {
           </div>
         </div>
       )}
+
       {/* New Estimating Entry Posting-Code */}
       {showModal && (
         <div

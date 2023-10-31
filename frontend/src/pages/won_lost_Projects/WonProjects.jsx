@@ -4,11 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchEstimatingData } from "../../store/EstimatingSlice";
 import { createSelector } from "reselect";
+import { textAlign } from "@mui/system";
 
 const WonProjects = () => {
   const [filter, setFilter] = useState("");
+  const [readMoreState, setReadMoreState] = useState({}); // Added readMoreState
 
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(fetchEstimatingData());
   }, [dispatch]);
@@ -20,15 +23,19 @@ const WonProjects = () => {
   const selectFilteredData = createSelector([selectEstimatingData], (data) => {
     return data.filter((customer) => {
       return (
-        (customer.prjct_name &&
+        ((customer.prjct_name &&
           customer.prjct_name.toUpperCase().includes(filter.toUpperCase())) ||
-        (customer.status &&
-          customer.status.trim().toUpperCase().includes(filter.trim().toUpperCase())) ||
-        (customer.estimator &&
-          customer.estimator.toUpperCase().includes(filter.toUpperCase())) ||
-        (customer.bidder &&
-          customer.bidder.toUpperCase().includes(filter.toUpperCase()))
-      ) && customer.status === 'Won';
+          (customer.status &&
+            customer.status
+              .trim()
+              .toUpperCase()
+              .includes(filter.trim().toUpperCase())) ||
+          (customer.estimator &&
+            customer.estimator.toUpperCase().includes(filter.toUpperCase())) ||
+          (customer.bidder &&
+            customer.bidder.toUpperCase().includes(filter.toUpperCase()))) &&
+        customer.status === "Won"
+      );
     });
   });
 
@@ -58,11 +65,15 @@ const WonProjects = () => {
         onClick={movetoEstimatingPage}
         className="btn btn-outline-primary backbtn"
       >
-       <i className="fa-duotone me-2 fa fa-angles-left icons backicon"></i> Back
+        <i className="fa-duotone me-2 fa fa-angles-left icons backicon"></i>{" "}
+        Back
       </button>
 
       <div className="table-responsive proposalTable mt-2">
-        <table className="table  table-bordered table-hover" style={{ tableLayout: "auto" }}>
+        <table
+          className="table  table-bordered table-hover"
+          style={{ tableLayout: "auto" }}
+        >
           <thead className="proposalHeader">
             <tr>
               <th className="successgreenColor">Due Date</th>
@@ -85,14 +96,33 @@ const WonProjects = () => {
                   {item.prjct_name}
                 </td>
                 <td className="mytd centered-td">{item.location}</td>
-                <td className="mytdbidder centered-td">
-                  {item.estimator}
-                </td>
-                <td className="mytdbidder centered-td">
-                  {item.status}
-                </td>
+                <td className="mytdbidder centered-td">{item.estimator}</td>
+                <td className="mytdbidder centered-td" >{item.status}</td>
+
                 <td className="mytd centered-td">
-                  {item.bidder + " "  + item.bidder_detail  + " "  + item.bidder_mail}
+                  <p className={readMoreState[item.id] ? "" : "two-lines"}>
+                    {item.bidder ? item.bidder + " " : ""}
+                    {item.bidder_detail ? item.bidder_detail + " " : ""}
+                    {item.bidder_mail ? item.bidder_mail : ""}
+                  </p>
+                  {(item.bidder && item.bidder.length > 20) ||
+                  (item.bidder_detail && item.bidder_detail.length > 20) ||
+                  (item.bidder_mail && item.bidder_mail.length > 20) ? (
+                    <label
+                      onClick={() => {
+                        setReadMoreState((prev) => ({
+                          ...prev,
+                          [item.id]: !prev[item.id],
+                        }));
+                      }}
+                    >
+                      {readMoreState[item.id] ? (
+                        <p className="read_more">Read less...</p>
+                      ) : (
+                        <p className="read_more">Read more...</p>
+                      )}
+                    </label>
+                  ) : null}
                 </td>
               </tr>
             ))}

@@ -54,9 +54,9 @@
   
   .mytd {
     position: relative;
-    max-width: 150px !important;
-    text-align: center; /* Center horizontally */
-    vertical-align: middle; /* Center vertically */
+    max-width: 200px !important;
+    text-align: left; /* Center horizontally */
+    vertical-align: middle; /*Center vertically*/
   }
   .projectTable{
     max-height: 70vh !important;
@@ -108,3 +108,4 @@
   text-shadow: 2px 2px 8px rgb(144, 204, 231);
   font-size: 50px !important
   }
+

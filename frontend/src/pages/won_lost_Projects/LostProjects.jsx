@@ -9,6 +9,8 @@ import { createSelector } from "reselect";
 const LostProjects = () => {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState("");
+  const [readMoreState, setReadMoreState] = useState({}); // Added readMoreState
+
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -97,8 +99,31 @@ const LostProjects = () => {
                 <td className="mytdbidder centered-td">
                   {item.status}
                 </td>
+
                 <td className="mytd centered-td">
-                {item.bidder + " "  + item.bidder_detail  + " "  + item.bidder_mail}
+                  <p className={readMoreState[item.id] ? "" : "two-lines"}>
+                    {item.bidder ? item.bidder + " " : ""}
+                    {item.bidder_detail ? item.bidder_detail + " " : ""}
+                    {item.bidder_mail ? item.bidder_mail : ""}
+                  </p>
+                  {(item.bidder && item.bidder.length > 20) ||
+                  (item.bidder_detail && item.bidder_detail.length > 20) ||
+                  (item.bidder_mail && item.bidder_mail.length > 20) ? (
+                    <label
+                      onClick={() => {
+                        setReadMoreState((prev) => ({
+                          ...prev,
+                          [item.id]: !prev[item.id],
+                        }));
+                      }}
+                    >
+                      {readMoreState[item.id] ? (
+                        <p className="read_more">Read less...</p>
+                      ) : (
+                        <p className="read_more">Read more...</p>
+                      )}
+                    </label>
+                  ) : null}
                 </td>
               </tr>
             ))}

@@ -1,15 +1,16 @@
-#main{
+.main{
   margin-top: 70px !important;
   display: flex;
   height: 96.22vh;
+  background-color: rgb(207, 207, 209) ;
 }
 .sidebar{
-  width: 260px;
+  width: 260px !important;
   flex-shrink: 0;
   height: 100%;
   position: fixed;
   overflow: auto;
-  color: rgb(59, 59, 59);
+  color: rgb(255, 255, 255);
   background-color: rgb(236, 234, 234);
 }
 .sidebaritem{
@@ -56,4 +57,4 @@
 
 
 
-/* ********************* */
+/* ******* */

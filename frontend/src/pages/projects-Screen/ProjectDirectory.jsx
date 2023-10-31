@@ -6,7 +6,7 @@ import ProjectDetailSidebar from "./ProjectDetailSidebar";
 const ProjectDirectory = () => {
   const { id } = useParams();
 
-  // ************Project Details Data regarding specific Id
+  // ******Project Details Data regarding specific Id
   const [data, setData] = useState([]);
   // Fetch data from the API
   useEffect(() => {
@@ -22,7 +22,7 @@ const ProjectDirectory = () => {
       });
   }, [id]);
 
-  // ************Project folder directory sidebar
+  // ******Project folder directory sidebar
 
   const [sidebarData, setSidebarData] = useState([]);
   // Fetch data from the API
@@ -40,9 +40,9 @@ const ProjectDirectory = () => {
   }, []);
 
   return (
-    <div id="main">
-      <div className="sidebar ">
-        <h6 className="bg-primary text-white p-2">
+    <div class="main">
+      <div className="sidebar">
+        <h6 className="bg-primary text-white mt-2 p-2">
           {data?.proposal?.estimating?.prjct_name}
         </h6>
         {sidebarData.map((item,index)=><ProjectDetailSidebar item={item} key={index} {...item}/>)}

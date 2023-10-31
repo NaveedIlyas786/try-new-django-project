@@ -191,7 +191,8 @@ const Estimator = (props) => {
 
   const [selectedProposalID, setSelectedProposalID] = useState(null);
 
-  const [selectedAddendumNumbers, setAddendumNumbers] = useState(null);
+  const [selectedNumber, setSelectedNumber] = useState(""); 
+  const [selectedProposalNumbers, setSelectedProposalNumbers] = useState([]);
 
   useEffect(() => {
     const fetchAndFilterProposals = async () => {
@@ -215,11 +216,21 @@ const Estimator = (props) => {
         // Check if filteredProposals is not empty
         if (filteredProposals.length > 0) {
           console.log(filteredProposals);
-          const proposalAddundumNumbers=filteredProposals[0];
-          // const response=proposalAddundumNumbers.spcifc.map((e)=>(e.sefic.map(e=>e.number)));
-          const response=proposalAddundumNumbers.spcifc.map((e)=>(e.sefic));
-          console.log(response);
-          setAddendumNumbers(response)
+          const proposalAddundumNumbers = filteredProposals[0];
+          console.log(proposalAddundumNumbers);
+          // const seficNumbers = proposalAddundumNumbers.spcifc.map((sefic) => sefic.number);
+          const seficNumbers = proposalAddundumNumbers.spcifc;
+          console.log(seficNumbers);
+          // const numbers = seficNumbers.map((item) => item.sefic[0].number);
+          // console.log(numbers);
+          
+          const numbers = seficNumbers.map((item) => item.sefic.map((e)=>e.number));
+          console.log(numbers);
+
+          const flatArray = [].concat(...numbers);
+console.log(flatArray);
+
+          setSelectedProposalNumbers(flatArray);
 
           const proposalID = filteredProposals[0].id;
           console.log(proposalID);
@@ -237,7 +248,6 @@ const Estimator = (props) => {
   }, [selectedEstimatingID]);
 
   // ****************** Smart way to handle Nested Fields with multistep Project SUbmit form  **********
-  // console.log(selectedProposalID);
 
   const [ProjectStep1FormData, setProjectStep1FormData] = useState({
     proposal_id: null,
@@ -318,7 +328,7 @@ const Estimator = (props) => {
       {
         status: "",
         date: "",
-        scop_work_number: "",
+        scopWorkNumber: "",
       },
     ],
   });
@@ -328,14 +338,14 @@ const Estimator = (props) => {
       {
         status: "",
         date: "",
-        scop_work_number: "",
+        scopWorkNumber: "",
       },
     ],
     safity: [
       {
         status: "",
         date: "",
-        scop_work_number: "",
+        scopWorkNumber: "",
         comment_box: "",
       },
     ],
@@ -423,8 +433,8 @@ const Estimator = (props) => {
     const newSafety = {
       status: "",
       date: "",
-      scop_work_number: "",
-      comment_box:""
+      scopWorkNumber: "",
+      comment_box: "",
     };
     setProjectStep6FormData({
       ...ProjectStep6FormData,
@@ -444,7 +454,7 @@ const Estimator = (props) => {
     const newSUbmittal = {
       status: "",
       date: "",
-      scop_work_number: "",
+      scopWorkNumber: "",
     };
     setProjectStep5FormData({
       ...ProjectStep5FormData,
@@ -452,20 +462,20 @@ const Estimator = (props) => {
     });
   };
 
-  const handleRemoveSubmittal=(index)=>{
-    const updateSubmittals=[...ProjectStep5FormData.submittals];
-    updateSubmittals.splice(index,1);
+  const handleRemoveSubmittal = (index) => {
+    const updateSubmittals = [...ProjectStep5FormData.submittals];
+    updateSubmittals.splice(index, 1);
     setProjectStep5FormData({
       ...ProjectStep5FormData,
-      submittals:updateSubmittals
-    })
-  }
+      submittals: updateSubmittals,
+    });
+  };
 
   const handleAddShopDrawing = () => {
     const newShopDrawing = {
       status: "",
       date: "",
-      scop_work_number: "",
+      scopWorkNumber: "",
     };
     setProjectStep6FormData({
       ...ProjectStep6FormData,
@@ -488,7 +498,10 @@ const Estimator = (props) => {
     };
     setProjectStep6FormData({
       ...ProjectStep6FormData,
-      sub_contractors: [...ProjectStep6FormData.sub_contractors, newSubContractor],
+      sub_contractors: [
+        ...ProjectStep6FormData.sub_contractors,
+        newSubContractor,
+      ],
     });
   };
 
@@ -591,19 +604,19 @@ const Estimator = (props) => {
       date: "",
       comment_box: "",
     };
-  // Function to add a new "HD S_SYSTEMS" entry
-  const handleAddHDSSystem = () => {
-    const newHDSSystem = {
-      status: "Pending", // You can set default values here
-      date: "",
-      comment_box: "",
-    };
+    // Function to add a new "HD S_SYSTEMS" entry
+    const handleAddHDSSystem = () => {
+      const newHDSSystem = {
+        status: "Pending", // You can set default values here
+        date: "",
+        comment_box: "",
+      };
 
-    setProjectStep8FormData((prevData) => ({
-      ...prevData,
-      hds_system: [...prevData.hds_system, newHDSSystem],
-    }));
-  };
+      setProjectStep8FormData((prevData) => ({
+        ...prevData,
+        hds_system: [...prevData.hds_system, newHDSSystem],
+      }));
+    };
     setProjectStep8FormData((prevData) => ({
       ...prevData,
       hds_system: [...prevData.hds_system, newHDSSystem],
@@ -635,7 +648,6 @@ const Estimator = (props) => {
       return { ...prevData, hds_system: updatedHDS };
     });
   };
-
 
   const handleAddOnBuild = () => {
     const newOnBuild = {
@@ -928,7 +940,7 @@ const Estimator = (props) => {
       submittals: ProjectStep5FormData.submittals.map((mysubmittals) => ({
         status: mysubmittals.status,
         date: mysubmittals.date,
-        scop_work_number: mysubmittals.scop_work_number,
+        scopWorkNumber: parseInt(mysubmittals.scopWorkNumber,10),
       })),
 
       // *****step 06
@@ -936,13 +948,13 @@ const Estimator = (props) => {
       shop_drawing: ProjectStep6FormData.shop_drawing.map((myshopdrawing) => ({
         status: myshopdrawing.status,
         date: myshopdrawing.date,
-        scop_work_number: myshopdrawing.scop_work_number,
+        scopWorkNumber: myshopdrawing.scopWorkNumber,
       })),
 
       safity: ProjectStep6FormData.safity.map((mysafity) => ({
         status: mysafity.status,
         date: mysafity.date,
-        scop_work_number: mysafity.scop_work_number,
+        scopWorkNumber: mysafity.scopWorkNumber,
         comment_box: mysafity.comment_box,
       })),
 
@@ -1588,9 +1600,7 @@ const Estimator = (props) => {
     }
   };
 
-
-// update status whn i clock on the project close button
-
+  // update status whn i clock on the project close button
 
   const closeModal = () => {
     setShowModal(false);
@@ -1598,8 +1608,7 @@ const Estimator = (props) => {
     setshowProjectModal(false);
     setshowEstimatingEditModal(false);
     // **********purposalModal
-    // update_status_when_close=1; 
-
+    // update_status_when_close=1;
 
     setStep0FormData({
       date: getCurrentDate(),
@@ -1617,13 +1626,6 @@ const Estimator = (props) => {
       budget: "",
       sefic: [],
     });
-
-
-
-
-
-
-
 
     // **************ShowModal Estimating
 
@@ -1992,7 +1994,7 @@ const Estimator = (props) => {
     }
   }
 
-  const handleStatusChange = async (event=null, itemId) => {
+  const handleStatusChange = async (event = null, itemId) => {
     const updatedStatus = event.target.value;
     console.log("Updated Status:", updatedStatus);
 
@@ -2048,7 +2050,7 @@ const Estimator = (props) => {
             }
 
             // Check if the updated status is "Won" and open the project modal
-          
+
             if (updatedStatus === "Won") {
               setshowProjectModal(true);
             }
@@ -2225,7 +2227,6 @@ const Estimator = (props) => {
                             ? AreaChoice[item.id] || item.location
                             : "No aArea"
                         }
-                        
                       >
                         <option
                           value={item.location ? item.location : "No Area"}
@@ -2323,7 +2324,6 @@ const Estimator = (props) => {
                             statusMap[item.id] === "Pending" ||
                             item.status === "Pending"
                           }
-
                           className={
                             statusMap[item.id] === "Working" ||
                             item.status === "Working"
@@ -2409,7 +2409,7 @@ const Estimator = (props) => {
 
                     <td className="mytd centered-td actionTD">
                       <div className="relative-container loop">
-                        {/* <button
+                        <button
                           onClick={() => {
                             // console.log(item.prjct_name);
                             const test = typeof item.id;
@@ -2420,7 +2420,7 @@ const Estimator = (props) => {
                           }}
                         >
                           Project
-                        </button> */}
+                        </button>
                         <div
                           type="button"
                           className="pb-2"
@@ -3387,19 +3387,23 @@ const Estimator = (props) => {
                                   <select
                                     className="form-select"
                                     aria-label="Select Specification"
-                                    value={mysubmittals.scop_work_number}
+                                    value={mysubmittals.selectedNumber}
                                     onChange={(e) =>
                                       handleSubmittalsChange(
                                         index,
-                                        "scop_work_number",
+                                        "number",
                                         e.target.value
                                       )
                                     }
                                   >
-                                    <option value="">
-                                      Select Choice
-                                    </option>
-                                    {selectedAddendumNumbers.map((e)=>e.map(p=>p.number))}
+                                    <option value="">Select Choice</option>
+                                    {selectedProposalNumbers.map(
+                                      (number, index) => (
+                                        <option key={index} value={number}>
+                                          {number}
+                                        </option>
+                                      )
+                                    )}
                                   </select>
                                 </div>
                                 <div className="bothDiv gap-3">
@@ -3451,7 +3455,11 @@ const Estimator = (props) => {
                               </div>
                             )
                           )}
-                          <button type="button" onClick={handleAddSubmittal} className="btn btn-success">
+                          <button
+                            type="button"
+                            onClick={handleAddSubmittal}
+                            className="btn btn-success"
+                          >
                             Add Submittals
                           </button>
                         </div>
@@ -3490,18 +3498,25 @@ const Estimator = (props) => {
                                   <select
                                     className="form-select"
                                     aria-label="Select Specification"
-                                    value={shopdrawing.scop_work_number}
+                                    value={shopdrawing.scopWorkNumber}
                                     onChange={(e) =>
                                       handleShopDrawingChange(
                                         index,
-                                        "scop_work_number",
+                                        "scopWorkNumber",
                                         e.target.value
                                       )
                                     }
                                   >
-                                    <option value="Base Bid Drywall/Framing">
-                                      All scope numbers will here
+                                    <option value="">
+                                      Select Choice
                                     </option>
+                                    {selectedProposalNumbers.map(
+                                      (number, index) => (
+                                        <option key={index} value={number}>
+                                          {number}
+                                        </option>
+                                      )
+                                    )}
                                   </select>
                                 </div>
                                 <div className="bothDiv gap-3">
@@ -3553,7 +3568,11 @@ const Estimator = (props) => {
                               </div>
                             )
                           )}
-                          <button type="button" onClick={handleAddShopDrawing} className="btn btn-success">
+                          <button
+                            type="button"
+                            onClick={handleAddShopDrawing}
+                            className="btn btn-success"
+                          >
                             Add SHOP DRAWINGS
                           </button>
                         </div>
@@ -3585,19 +3604,25 @@ const Estimator = (props) => {
                                 <select
                                   className="form-select"
                                   aria-label="Select Specification"
-                                  value={safety.scop_work_number}
+                                  value={safety.scopWorkNumber}
                                   onChange={(e) =>
                                     handleSafetyChange(
                                       index,
-                                      "scop_work_number",
+                                      "scopWorkNumber",
                                       e.target.value
                                     )
                                   }
                                 >
-                                  <option value="Base Bid Drywall/Framing">
-                                    All scope numbers will be here
-                                  </option>
-                                  {/* Add more options here */}
+                                    <option value="">
+                                      Select Choice
+                                    </option>
+                                    {selectedProposalNumbers.map(
+                                      (number, index) => (
+                                        <option key={index} value={number}>
+                                          {number}
+                                        </option>
+                                      )
+                                    )}
                                 </select>
                               </div>
                               <div className="bothDiv gap-3">
@@ -3668,7 +3693,11 @@ const Estimator = (props) => {
                               </div>
                             </div>
                           ))}
-                          <button type="button" onClick={handleAddSafety} className="btn btn-success">
+                          <button
+                            type="button"
+                            onClick={handleAddSafety}
+                            className="btn btn-success"
+                          >
                             Add SAFETY
                           </button>
                         </div>
@@ -3680,15 +3709,14 @@ const Estimator = (props) => {
                           >
                             <span>SCHEDULES</span>
                           </label>
-                              <div
-                                
-                                className="wholespecificationEntry"
-                                >
-                                <div className="mb-2 mt-3">
-
-                                {ProjectStep6FormData.schedule.map(
-                                  (myschedule, index) => (
-                                  <div key={index} className="input-group myrowInputgrouup">
+                          <div className="wholespecificationEntry">
+                            <div className="mb-2 mt-3">
+                              {ProjectStep6FormData.schedule.map(
+                                (myschedule, index) => (
+                                  <div
+                                    key={index}
+                                    className="input-group myrowInputgrouup"
+                                  >
                                     <select
                                       className="form-select"
                                       aria-label="Select Specification"
@@ -3733,17 +3761,17 @@ const Estimator = (props) => {
                                       <i className="far">X</i>
                                     </button>
                                   </div>
-                                  )
-                                )}
-                                </div>
-                                <button
-                                  type="button"
-                                  className="btn btn-success bk"
-                                  onClick={handleAddSchedule}
-                                >
-                                  <i className="fa-regular icon fa-plus"></i>
-                                </button>
-                              </div>
+                                )
+                              )}
+                            </div>
+                            <button
+                              type="button"
+                              className="btn btn-success bk"
+                              onClick={handleAddSchedule}
+                            >
+                              <i className="fa-regular icon fa-plus"></i>
+                            </button>
+                          </div>
                         </div>
 
                         <div style={{ width: "100%" }}>
@@ -3837,7 +3865,11 @@ const Estimator = (props) => {
                               </div>
                             )
                           )}
-                          <button type="button" onClick={handleAddSubContractors} className="btn btn-success">
+                          <button
+                            type="button"
+                            onClick={handleAddSubContractors}
+                            className="btn btn-success"
+                          >
                             Add SUB_CONTRACTOR
                           </button>
                         </div>
@@ -3958,12 +3990,9 @@ const Estimator = (props) => {
                             >
                               <span>BILLINGS</span>
                             </label>
-                                <div
-                                  
-                                  className="wholespecificationEntry"
-                                >
-                                  {ProjectStep7FormData.billing.map(
-                                    (mybilling, index) => (
+                            <div className="wholespecificationEntry">
+                              {ProjectStep7FormData.billing.map(
+                                (mybilling, index) => (
                                   <div key={index} className="mb-2 mt-3">
                                     <div className="input-group myrowInputgrouup">
                                       <input
@@ -4003,17 +4032,16 @@ const Estimator = (props) => {
                                       </button>
                                     </div>
                                   </div>
-                                  )
-                                  )}
-                                  <button
-                                    type="button"
-                                    className="btn btn-success bk"
-                                    onClick={handleAddBilling}
-                                  >
-                                    <i className="fa-regular icon fa-plus"></i>
-                                  </button>
-                                </div>
-                            
+                                )
+                              )}
+                              <button
+                                type="button"
+                                className="btn btn-success bk"
+                                onClick={handleAddBilling}
+                              >
+                                <i className="fa-regular icon fa-plus"></i>
+                              </button>
+                            </div>
                           </div>
                           <div style={{ width: "100%" }}>
                             <label
@@ -4022,10 +4050,8 @@ const Estimator = (props) => {
                             >
                               <span>SOVS</span>
                             </label>
-                              <div
-                                                                className="wholespecificationEntry"
-                              >
-                            {ProjectStep7FormData.sov.map((mysov, index) => (
+                            <div className="wholespecificationEntry">
+                              {ProjectStep7FormData.sov.map((mysov, index) => (
                                 <div key={index} className="mb-2 mt-3">
                                   <div className="input-group myrowInputgrouup">
                                     <select
@@ -4066,15 +4092,15 @@ const Estimator = (props) => {
                                     </button>
                                   </div>
                                 </div>
-                                ))}
-                                <button
-                                  type="button"
-                                  className="btn btn-success bk"
-                                  onClick={handleAddSov}
-                                >
-                                  <i className="fa-regular icon fa-plus"></i>
-                                </button>
-                              </div>
+                              ))}
+                              <button
+                                type="button"
+                                className="btn btn-success bk"
+                                onClick={handleAddSov}
+                              >
+                                <i className="fa-regular icon fa-plus"></i>
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </>
@@ -4196,18 +4222,18 @@ const Estimator = (props) => {
                           >
                             <span>ON UPLOADED:</span>
                           </label>
-                              <div
-                                
-                                className="wholespecificationEntry"
-                              >
-                                <div className="mb-2 mt-3">
-                                  <label className="form-label">
-                                    On Uploaded Choice:
-                                  </label>
+                          <div className="wholespecificationEntry">
+                            <div className="mb-2 mt-3">
+                              <label className="form-label">
+                                On Uploaded Choice:
+                              </label>
 
-                                {ProjectStep8FormData.on_build.map(
-                                  (ONbuild, index) => (
-                                  <div key={index} className="input-group myrowInputgrouup">
+                              {ProjectStep8FormData.on_build.map(
+                                (ONbuild, index) => (
+                                  <div
+                                    key={index}
+                                    className="input-group myrowInputgrouup"
+                                  >
                                     <select
                                       className="form-select"
                                       aria-label="Select Specification"
@@ -4262,15 +4288,15 @@ const Estimator = (props) => {
                                   </div>
                                 )
                               )}
-                                </div>
-                                <button
-                                  type="button"
-                                  className="btn btn-success bk"
-                                  onClick={handleAddOnBuild}
-                                >
-                                  <i className="fa-regular icon fa-plus"></i>
-                                </button>
-                              </div>
+                            </div>
+                            <button
+                              type="button"
+                              className="btn btn-success bk"
+                              onClick={handleAddOnBuild}
+                            >
+                              <i className="fa-regular icon fa-plus"></i>
+                            </button>
+                          </div>
                         </div>
                         <div style={{ width: "100%" }}>
                           <label
@@ -4279,67 +4305,65 @@ const Estimator = (props) => {
                           >
                             <span>BUGETS</span>
                           </label>
-                            <div
-                              
-                              className="wholespecificationEntry"
-                            >
-                              <div className="mb-2 mt-3">
-                                <label className="form-label">
-                                  Labor Rate:
-                                </label>
+                          <div className="wholespecificationEntry">
+                            <div className="mb-2 mt-3">
+                              <label className="form-label">Labor Rate:</label>
 
-
-                              {ProjectStep8FormData.buget.map((mybudget, index) => (
-                                <div key={index} className="input-group myrowInputgrouup">
-                                  <select
-                                    className="form-select"
-                                    aria-label="Select Specification"
-                                    value={mybudget.status}
-                                    onChange={(e) =>
-                                      handleBudgetChange(
-                                        index,
-                                        "status",
-                                        e.target.value
-                                      )
-                                    }
+                              {ProjectStep8FormData.buget.map(
+                                (mybudget, index) => (
+                                  <div
+                                    key={index}
+                                    className="input-group myrowInputgrouup"
                                   >
-                                    <option value="">Select Choice</option>
-                                    <option value="Done">Done</option>
-                                    <option value="Pending">Pending</option>
-                                    <option value="Custom">Custom</option>
-                                  </select>
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    placeholder="Comment"
-                                    value={mybudget.comment_box}
-                                    onChange={(e) =>
-                                      handleBudgetChange(
-                                        index,
-                                        "comment_box",
-                                        e.target.value
-                                      )
-                                    }
-                                  />
-                                  <button
-                                    type="button"
-                                    className="btn btn-danger"
-                                    onClick={() => handleRemoveBudget(index)}
-                                  >
-                                    <i className="far">X</i>
-                                  </button>
-                                </div>
-                              ))}
-                              </div>
-                              <button
-                                type="button"
-                                className="btn btn-success bk"
-                                onClick={handleAddBudget}
-                              >
-                                <i className="fa-regular icon fa-plus"></i>
-                              </button>
+                                    <select
+                                      className="form-select"
+                                      aria-label="Select Specification"
+                                      value={mybudget.status}
+                                      onChange={(e) =>
+                                        handleBudgetChange(
+                                          index,
+                                          "status",
+                                          e.target.value
+                                        )
+                                      }
+                                    >
+                                      <option value="">Select Choice</option>
+                                      <option value="Done">Done</option>
+                                      <option value="Pending">Pending</option>
+                                      <option value="Custom">Custom</option>
+                                    </select>
+                                    <input
+                                      type="text"
+                                      className="form-control"
+                                      placeholder="Comment"
+                                      value={mybudget.comment_box}
+                                      onChange={(e) =>
+                                        handleBudgetChange(
+                                          index,
+                                          "comment_box",
+                                          e.target.value
+                                        )
+                                      }
+                                    />
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger"
+                                      onClick={() => handleRemoveBudget(index)}
+                                    >
+                                      <i className="far">X</i>
+                                    </button>
+                                  </div>
+                                )
+                              )}
                             </div>
-                        
+                            <button
+                              type="button"
+                              className="btn btn-success bk"
+                              onClick={handleAddBudget}
+                            >
+                              <i className="fa-regular icon fa-plus"></i>
+                            </button>
+                          </div>
                         </div>
                       </div>
                     )}
@@ -4649,7 +4673,10 @@ const Estimator = (props) => {
                     <option value="No Company">No Company</option>
                     {fetchcompanyName && fetchcompanyName.length > 0 ? (
                       fetchcompanyName.map((companyItem) => (
-                        <option value={companyItem.Cmpny_Name} key={companyItem.id}>
+                        <option
+                          value={companyItem.Cmpny_Name}
+                          key={companyItem.id}
+                        >
                           {companyItem.Cmpny_Name}
                         </option>
                       ))
@@ -4749,9 +4776,11 @@ const Estimator = (props) => {
                     Time:
                   </label>
                   <div className="d-flex ">
-                    <input type="time" className="form-control edittime"
-                    value={SelectedTimeforUpdate}
-                    onChange={e=>setSelectedTime(e.target.value)}
+                    <input
+                      type="time"
+                      className="form-control edittime"
+                      value={SelectedTimeforUpdate}
+                      onChange={(e) => setSelectedTime(e.target.value)}
                     />
 
                     <select value={SelectedTimeZone} className="selectpicker">
@@ -4789,7 +4818,8 @@ const Estimator = (props) => {
                     placeholder="Bidder Email !"
                     id="bidderEmail"
                     value={selectedbidder_email}
-onChange={(e)=>setSelectedbidder_email(e.target.value)}                  />
+                    onChange={(e) => setSelectedbidder_email(e.target.value)}
+                  />
                 </div>
               </div>
               <div>

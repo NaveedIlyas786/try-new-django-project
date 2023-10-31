@@ -40,9 +40,9 @@ const ProjectDirectory = () => {
   }, []);
 
   return (
-    <div id="main">
+    <div class="main">
       <div className="sidebar">
-        <h6 className="bg-primary text-white p-2">
+        <h6 className="bg-primary text-white mt-2 p-2">
           {data?.proposal?.estimating?.prjct_name}
         </h6>
         {sidebarData.map((item,index)=><ProjectDetailSidebar item={item} key={index} {...item}/>)}

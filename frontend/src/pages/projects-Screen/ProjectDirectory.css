@@ -1,7 +1,8 @@
-#main{
-  margin-top: 80px !important;
+.main{
+  margin-top: 70px !important;
   display: flex;
   height: 96.22vh;
+  background-color: rgb(207, 207, 209) ;
 }
 .sidebar{
   width: 260px !important;
@@ -48,7 +49,7 @@
   height: 100%;
   padding: 20px;
   /* flex-grow: 1; */
-  margin-left: 260px;
+  /* margin-left: 260px; */
   /* background-color: rgb(197, 159, 233); */
 }
 

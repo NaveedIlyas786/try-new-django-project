@@ -5,7 +5,7 @@
   background-color: rgb(207, 207, 209) ;
 }
 .sidebar{
-  width: 260px !important;
+  width: 350px !important;
   flex-shrink: 0;
   height: 100%;
   position: fixed;

@@ -1414,13 +1414,13 @@ console.log(flatArray);
   const [step1FormData, setStep1FormData] = useState({
     Addendums: [], // Make sure it's an array
   });
-  const [step2FormData, setStep2FormData] = useState([
+  const [step2FormData, setStep2FormData] = useState(
     {
       specific_name: "Base Bid Drywall/Framing",
       budget: null,
       sefic: [],
     },
-  ]);
+  );
 
   // ****************new entry of scope of work with unique id
 
@@ -2142,7 +2142,7 @@ console.log(flatArray);
                 New
               </button>
             </div>
-            <div className="d-flex mt-5  justify-content-between align-items-center h-70 ">
+            <div className="d-flex mt-5  justify-content-between align-items-center  ">
               <div>
                 <h3
                   className=" text-primary textestimating  "
@@ -2152,7 +2152,7 @@ console.log(flatArray);
                 </h3>
               </div>
               <div
-                className="btn-group btn-group-md bg-info  wonloseDiv"
+                className="btn-group btn-group-md  wonloseDiv"
                 data-aos="fade-left"
               >
                 <button
@@ -2177,7 +2177,7 @@ console.log(flatArray);
           <ParticlesAnimation numberOfCircles={numberOfCircles} />
           {/* //here was project Modal before */}
           <div
-            className="table-responsive proposalTable mt-2"
+            className="table-responsive proposalTable "
             data-aos="fade-up"
           >
             <table
@@ -3382,7 +3382,7 @@ console.log(flatArray);
 
                                 <div className="mb-2 mt-4">
                                   <label className="form-label">
-                                    Add scope of Work
+                                  Scope of work divisions Number
                                   </label>
                                   <select
                                     className="form-select"
@@ -3493,7 +3493,7 @@ console.log(flatArray);
 
                                 <div className="mb-2 mt-4">
                                   <label className="form-label">
-                                    Add scope of Work
+                                  Scope of work divisions Number
                                   </label>
                                   <select
                                     className="form-select"
@@ -3599,7 +3599,7 @@ console.log(flatArray);
                               </div>
                               <div className="mb-2 mt-4">
                                 <label className="form-label">
-                                  Add scope of Work
+                                Scope of work divisions Number
                                 </label>
                                 <select
                                   className="form-select"

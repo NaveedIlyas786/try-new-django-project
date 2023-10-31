@@ -191,7 +191,7 @@ const Estimator = (props) => {
 
   const [selectedProposalID, setSelectedProposalID] = useState(null);
 
-  const [selectedNumber, setSelectedNumber] = useState(""); 
+  const [selectedNumber, setSelectedNumber] = useState("");
   const [selectedProposalNumbers, setSelectedProposalNumbers] = useState([]);
 
   useEffect(() => {
@@ -223,12 +223,14 @@ const Estimator = (props) => {
           console.log(seficNumbers);
           // const numbers = seficNumbers.map((item) => item.sefic[0].number);
           // console.log(numbers);
-          
-          const numbers = seficNumbers.map((item) => item.sefic.map((e)=>e.number));
+
+          const numbers = seficNumbers.map((item) =>
+            item.sefic.map((e) => e.number)
+          );
           console.log(numbers);
 
           const flatArray = [].concat(...numbers);
-console.log(flatArray);
+          console.log(flatArray);
 
           setSelectedProposalNumbers(flatArray);
 
@@ -940,7 +942,7 @@ console.log(flatArray);
       submittals: ProjectStep5FormData.submittals.map((mysubmittals) => ({
         status: mysubmittals.status,
         date: mysubmittals.date,
-        scopWorkNumber: parseInt(mysubmittals.scopWorkNumber,10),
+        scopWorkNumber: parseInt(mysubmittals.scopWorkNumber, 10),
       })),
 
       // *****step 06
@@ -1414,13 +1416,11 @@ console.log(flatArray);
   const [step1FormData, setStep1FormData] = useState({
     Addendums: [], // Make sure it's an array
   });
-  const [step2FormData, setStep2FormData] = useState(
-    {
-      specific_name: "Base Bid Drywall/Framing",
-      budget: null,
-      sefic: [],
-    },
-  );
+  const [step2FormData, setStep2FormData] = useState({
+    specific_name: "Base Bid Drywall/Framing",
+    budget: null,
+    sefic: [],
+  });
 
   // ****************new entry of scope of work with unique id
 
@@ -2176,10 +2176,7 @@ console.log(flatArray);
 
           <ParticlesAnimation numberOfCircles={numberOfCircles} />
           {/* //here was project Modal before */}
-          <div
-            className="table-responsive proposalTable "
-            data-aos="fade-up"
-          >
+          <div className="table-responsive proposalTable " data-aos="fade-up">
             <table
               className="table table-bordered table-hover"
               style={{ tableLayout: "auto" }}
@@ -3382,7 +3379,7 @@ console.log(flatArray);
 
                                 <div className="mb-2 mt-4">
                                   <label className="form-label">
-                                  Scope of work divisions Number
+                                    Scope of work divisions Number
                                   </label>
                                   <select
                                     className="form-select"
@@ -3493,7 +3490,7 @@ console.log(flatArray);
 
                                 <div className="mb-2 mt-4">
                                   <label className="form-label">
-                                  Scope of work divisions Number
+                                    Scope of work divisions Number
                                   </label>
                                   <select
                                     className="form-select"
@@ -3507,9 +3504,7 @@ console.log(flatArray);
                                       )
                                     }
                                   >
-                                    <option value="">
-                                      Select Choice
-                                    </option>
+                                    <option value="">Select Choice</option>
                                     {selectedProposalNumbers.map(
                                       (number, index) => (
                                         <option key={index} value={number}>
@@ -3599,7 +3594,7 @@ console.log(flatArray);
                               </div>
                               <div className="mb-2 mt-4">
                                 <label className="form-label">
-                                Scope of work divisions Number
+                                  Scope of work divisions Number
                                 </label>
                                 <select
                                   className="form-select"
@@ -3613,16 +3608,14 @@ console.log(flatArray);
                                     )
                                   }
                                 >
-                                    <option value="">
-                                      Select Choice
-                                    </option>
-                                    {selectedProposalNumbers.map(
-                                      (number, index) => (
-                                        <option key={index} value={number}>
-                                          {number}
-                                        </option>
-                                      )
-                                    )}
+                                  <option value="">Select Choice</option>
+                                  {selectedProposalNumbers.map(
+                                    (number, index) => (
+                                      <option key={index} value={number}>
+                                        {number}
+                                      </option>
+                                    )
+                                  )}
                                 </select>
                               </div>
                               <div className="bothDiv gap-3">

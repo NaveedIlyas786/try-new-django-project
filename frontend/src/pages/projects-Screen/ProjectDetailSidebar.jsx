@@ -5,21 +5,6 @@ export default function ProjectDetailSidebar({item}){
 
       // ******Project folder directory sidebar
 
-//   const [sidebarData, setSidebarData] = useState([]);
-//   // Fetch data from the API
-//   useEffect(() => {
-//     axios
-//       .get(`http://127.0.0.1:8000/api/project/projectDrctory/`)
-//       .then((response) => response.data)
-//       .then((data) => {
-//         setSidebarData(data);
-//         console.log(data);
-//       })
-//       .catch((error) => {
-//         console.error("Error fetching data:", error);
-//       });
-//   }, []);
-
  if(item.children){
     return(
         <div className={open ? "sidebaritem open" : "sidebaritem"}>

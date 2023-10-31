@@ -328,7 +328,7 @@ console.log(flatArray);
       {
         status: "",
         date: "",
-        scop_work_number: "",
+        scopWorkNumber: "",
       },
     ],
   });
@@ -338,14 +338,14 @@ console.log(flatArray);
       {
         status: "",
         date: "",
-        scop_work_number: "",
+        scopWorkNumber: "",
       },
     ],
     safity: [
       {
         status: "",
         date: "",
-        scop_work_number: "",
+        scopWorkNumber: "",
         comment_box: "",
       },
     ],
@@ -433,7 +433,7 @@ console.log(flatArray);
     const newSafety = {
       status: "",
       date: "",
-      scop_work_number: "",
+      scopWorkNumber: "",
       comment_box: "",
     };
     setProjectStep6FormData({
@@ -454,7 +454,7 @@ console.log(flatArray);
     const newSUbmittal = {
       status: "",
       date: "",
-      scop_work_number: "",
+      scopWorkNumber: "",
     };
     setProjectStep5FormData({
       ...ProjectStep5FormData,
@@ -475,7 +475,7 @@ console.log(flatArray);
     const newShopDrawing = {
       status: "",
       date: "",
-      scop_work_number: "",
+      scopWorkNumber: "",
     };
     setProjectStep6FormData({
       ...ProjectStep6FormData,
@@ -940,7 +940,7 @@ console.log(flatArray);
       submittals: ProjectStep5FormData.submittals.map((mysubmittals) => ({
         status: mysubmittals.status,
         date: mysubmittals.date,
-        scop_work_number: parseInt(mysubmittals.scop_work_number,10),
+        scopWorkNumber: parseInt(mysubmittals.scopWorkNumber,10),
       })),
 
       // *****step 06
@@ -948,13 +948,13 @@ console.log(flatArray);
       shop_drawing: ProjectStep6FormData.shop_drawing.map((myshopdrawing) => ({
         status: myshopdrawing.status,
         date: myshopdrawing.date,
-        scop_work_number: myshopdrawing.scop_work_number,
+        scopWorkNumber: myshopdrawing.scopWorkNumber,
       })),
 
       safity: ProjectStep6FormData.safity.map((mysafity) => ({
         status: mysafity.status,
         date: mysafity.date,
-        scop_work_number: mysafity.scop_work_number,
+        scopWorkNumber: mysafity.scopWorkNumber,
         comment_box: mysafity.comment_box,
       })),
 
@@ -3498,11 +3498,11 @@ console.log(flatArray);
                                   <select
                                     className="form-select"
                                     aria-label="Select Specification"
-                                    value={shopdrawing.scop_work_number}
+                                    value={shopdrawing.scopWorkNumber}
                                     onChange={(e) =>
                                       handleShopDrawingChange(
                                         index,
-                                        "scop_work_number",
+                                        "scopWorkNumber",
                                         e.target.value
                                       )
                                     }
@@ -3604,11 +3604,11 @@ console.log(flatArray);
                                 <select
                                   className="form-select"
                                   aria-label="Select Specification"
-                                  value={safety.scop_work_number}
+                                  value={safety.scopWorkNumber}
                                   onChange={(e) =>
                                     handleSafetyChange(
                                       index,
-                                      "scop_work_number",
+                                      "scopWorkNumber",
                                       e.target.value
                                     )
                                   }

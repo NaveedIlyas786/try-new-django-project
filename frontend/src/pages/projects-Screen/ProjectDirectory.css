@@ -1,15 +1,15 @@
 #main{
-  margin-top: 70px !important;
+  margin-top: 80px !important;
   display: flex;
   height: 96.22vh;
 }
 .sidebar{
-  width: 260px;
+  width: 260px !important;
   flex-shrink: 0;
   height: 100%;
   position: fixed;
   overflow: auto;
-  color: rgb(59, 59, 59);
+  color: rgb(255, 255, 255);
   background-color: rgb(236, 234, 234);
 }
 .sidebaritem{
@@ -48,7 +48,7 @@
   height: 100%;
   padding: 20px;
   /* flex-grow: 1; */
-  /* margin-left: 260px; */
+  margin-left: 260px;
   /* background-color: rgb(197, 159, 233); */
 }
 

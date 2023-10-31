@@ -41,7 +41,7 @@ const ProjectDirectory = () => {
 
   return (
     <div id="main">
-      <div className="sidebar ">
+      <div className="sidebar">
         <h6 className="bg-primary text-white p-2">
           {data?.proposal?.estimating?.prjct_name}
         </h6>

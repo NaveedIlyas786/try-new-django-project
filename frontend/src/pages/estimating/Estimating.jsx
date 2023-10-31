@@ -641,6 +641,10 @@ const Estimator = (props) => {
   };
 
   const handleHDSChange = (index, field, value) => {
+
+    if (field === "date" && value === "") {
+      value = null;  // If the date is empty, set the value to null
+  }
     setProjectStep8FormData((prevData) => {
       const updatedHDS = [...prevData.hds_system];
       updatedHDS[index] = {
@@ -659,6 +663,9 @@ const Estimator = (props) => {
     setProjectStep8FormData({
       ...ProjectStep8FormData,
       on_build: [...ProjectStep8FormData.on_build, newOnBuild],
+
+      
+
     });
   };
   // const handleAddOnBuild = () => {
@@ -1006,8 +1013,10 @@ const Estimator = (props) => {
       })),
     };
     // console.log(proposal_id);
+    console.log('Sending data:', formData);
 
-    console.log("formData to be sent", formData);
+
+    // console.log("formData to be sent", formData);
 
     // Send a POST request using Axios
     axios
@@ -1025,9 +1034,7 @@ const Estimator = (props) => {
         setStartDate("");
         setJobNo("");
         setSelectedProjectID("");
-        setSelectedProjectManager("");
-        setSelectedForeman("");
-        setSelectedBimOperator("");
+
         setSelectedProjectEngineer("");
         setTimeout(() => {
           setshowProjectModal(false);
@@ -2522,7 +2529,8 @@ const Estimator = (props) => {
                           style={{ width: "100%" }}
                         >
                           <label htmlFor="projectName" className="form-label">
-                            Estimating/Project Name:
+                            
+                            <storng>Estimating/Project Name</storng>
                           </label>
                           <input
                             type="text"
@@ -2554,7 +2562,8 @@ const Estimator = (props) => {
                         <div className="bothDiv gap-3">
                           <div className="projName Oneline">
                             <label htmlFor="projectName" className="form-label">
-                              Start Date:
+                              
+                              <strong>Start Date</strong>
                             </label>
                             <input
                               type="date"
@@ -2572,7 +2581,7 @@ const Estimator = (props) => {
                           </div>
                           <div className="projName Oneline">
                             <label htmlFor="projectName" className="form-label">
-                              Job Number:
+                              <strong>Job Number</strong>
                             </label>
                             <input
                               type="text"
@@ -2595,7 +2604,7 @@ const Estimator = (props) => {
                               htmlFor="estimatorName"
                               className="form-label"
                             >
-                              Project Manager:
+                              <strong>Project Manager</strong>
                             </label>
                             <select
                               className="form-select"
@@ -2625,7 +2634,7 @@ const Estimator = (props) => {
                           </div>
                           <div className="Oneline">
                             <label htmlFor="location" className="form-label">
-                              Foreman:
+                              <strong>Foreman</strong>
                             </label>
                             <select
                               className="form-select"
@@ -2660,7 +2669,7 @@ const Estimator = (props) => {
                               htmlFor="estimatorName"
                               className="form-label"
                             >
-                              BIM Modeler:
+                              <strong>BIM Modeler</strong>
                             </label>
                             <select
                               className="form-select"
@@ -2690,7 +2699,7 @@ const Estimator = (props) => {
                           </div>
                           <div className="Oneline">
                             <label htmlFor="location" className="form-label">
-                              Project Engineer:
+                              <strong>Project Engineer</strong>
                             </label>
                             <select
                               className="form-select"
@@ -2727,7 +2736,7 @@ const Estimator = (props) => {
                         <div className="bothDiv gap-3 mt-4">
                           <div className="Oneline">
                             <label htmlFor="location" className="form-label">
-                              Genral_superintendent:
+                              <strong>Genral Superintendent</strong>
                             </label>
                             <select
                               className="form-select"
@@ -2766,7 +2775,7 @@ const Estimator = (props) => {
                               htmlFor="estimatorName"
                               className="form-label"
                             >
-                              Addendum:
+                              <strong>Addendum</strong>
                             </label>
                             <select
                               className="form-select"
@@ -2790,7 +2799,7 @@ const Estimator = (props) => {
                         </div>
                         <div style={{ width: "100%" }}>
                           <label htmlFor="projectName" className="form-label">
-                            Add project address::
+                            <strong>Project address</strong>
                           </label>
                           <input
                             type="text"
@@ -2813,7 +2822,7 @@ const Estimator = (props) => {
                               htmlFor="estimatorName"
                               className="form-label"
                             >
-                              Spec's per our Scope:
+                              <strong>Spec's per our Scope</strong>
                             </label>
                             <select
                               className="form-select"
@@ -2836,7 +2845,7 @@ const Estimator = (props) => {
                           </div>
                           <div className="Oneline">
                             <label htmlFor="location" className="form-label">
-                              Bid:
+                              <strong>Bid</strong>
                             </label>
                             <select
                               className="form-select"
@@ -2861,7 +2870,7 @@ const Estimator = (props) => {
                         <div className="bothDiv gap-3">
                           <div className="Oneline">
                             <label htmlFor="location" className="form-label">
-                              Drywell Conttrol Joins:
+                              <strong>Drywell Conttrol Joins</strong>
                             </label>
                             <select
                               className="form-select"
@@ -2883,7 +2892,7 @@ const Estimator = (props) => {
                           </div>
                           <div className="Oneline">
                             <label htmlFor="location" className="form-label">
-                              WALL TYPE MAPPING:
+                              <strong>Wall type Mapping</strong>
                             </label>
                             <select
                               className="form-select"
@@ -2911,7 +2920,10 @@ const Estimator = (props) => {
                         <div className="bothDiv gap-3 mt-4">
                           <div className="Oneline">
                             <label htmlFor="location" className="form-label">
-                              FINISH LEVEL MARKUPS:
+                            <strong
+                            >
+                              Finish level markups
+                            </strong>
                             </label>
                             <select
                               className="form-select"
@@ -2933,7 +2945,8 @@ const Estimator = (props) => {
                           </div>
                           <div className="Oneline">
                             <label htmlFor="location" className="form-label">
-                              PROGRESS TRACKING:
+                              <strong>
+                              Progress Tracking</strong>
                             </label>
                             <select
                               className="form-select"
@@ -2959,7 +2972,7 @@ const Estimator = (props) => {
                         <div className="bothDiv gap-3">
                           <div className="Oneline">
                             <label htmlFor="location" className="form-label">
-                              RO-Door:
+                              <strong>RO-Door</strong>
                             </label>
                             <select
                               className="form-select"
@@ -2984,7 +2997,7 @@ const Estimator = (props) => {
                           </div>
                           <div className="Oneline">
                             <label htmlFor="location" className="form-label">
-                              RO-Window:
+                              <strong>RO-Window</strong>
                             </label>
                             <select
                               className="form-select"
@@ -3011,7 +3024,9 @@ const Estimator = (props) => {
                         <div className="bothDiv  gap-3">
                           <div className="Oneline">
                             <label htmlFor="location" className="form-label">
-                              Status:
+                              
+                              <storng
+                            ><strong>Status</strong></storng>
                             </label>
                             <select
                               className="form-select"
@@ -3043,7 +3058,7 @@ const Estimator = (props) => {
                           </div>
                           <div className="Oneline">
                             <label htmlFor="location" className="form-label">
-                              Contacts:
+                              <strong>Contacts</strong>
                             </label>
                             <select
                               className="form-select"
@@ -3067,7 +3082,7 @@ const Estimator = (props) => {
                         </div>
                         <div style={{ width: "100%" }}>
                           <label htmlFor="projectName" className="form-label">
-                            Substitution:
+                            <strong>Substitution</strong>
                           </label>
                           <input
                             type="text"
@@ -3093,7 +3108,7 @@ const Estimator = (props) => {
                         <div className="mt-4" style={{ width: "100%" }}>
                           <div>
                             <label className="form-label">
-                              <span>Contract</span>
+                              <span> <strong>Contract</strong></span>
                             </label>
                             <div id="" className="input-group">
                               <select
@@ -3103,17 +3118,24 @@ const Estimator = (props) => {
                                 value={
                                   ProjectStep4FormData.contract[0].contract
                                 }
-                                onChange={(e) =>
+                                onChange={(e) => {
+                                  const isFullyExecuted =
+                                    e.target.value === "Fully Executed";
                                   setProjectStep4FormData({
                                     ...ProjectStep4FormData,
                                     contract: [
                                       {
                                         ...ProjectStep4FormData.contract[0],
                                         contract: e.target.value,
+                                        // If it's not fully executed, set the date to null
+                                        contract_date: isFullyExecuted
+                                          ? ProjectStep4FormData.contract[0]
+                                              .contract_date
+                                          : null,
                                       },
                                     ],
-                                  })
-                                }
+                                  });
+                                }}
                               >
                                 <option value="">Select Choice</option>
                                 <option value="Fully Executed">
@@ -3127,7 +3149,12 @@ const Estimator = (props) => {
                                 name="contract_date"
                                 className="form-control"
                                 value={
-                                  ProjectStep4FormData.contract[0].contract_date
+                                  ProjectStep4FormData.contract[0]
+                                    .contract_date || ""
+                                } // If it's null, set value to an empty string to prevent React warning
+                                disabled={
+                                  ProjectStep4FormData.contract[0].contract !==
+                                  "Fully Executed"
                                 }
                                 onChange={(e) =>
                                   setProjectStep4FormData({
@@ -3144,10 +3171,11 @@ const Estimator = (props) => {
                             </div>
                           </div>
                         </div>
+
                         <div style={{ width: "100%" }}>
                           <div>
                             <label className="form-label">
-                              <span>SCHEDULE_OF_VALUES:</span>
+                              <span> <strong>Schedule of values</strong></span>
                             </label>
                             <div id="" className="input-group">
                               <select
@@ -3158,7 +3186,9 @@ const Estimator = (props) => {
                                   ProjectStep4FormData.schedule_of_value[0]
                                     .schedule
                                 }
-                                onChange={(e) =>
+                                onChange={(e) => {
+                                  const isApproved =
+                                    e.target.value === "Approved";
                                   setProjectStep4FormData({
                                     ...ProjectStep4FormData,
                                     schedule_of_value: [
@@ -3166,10 +3196,16 @@ const Estimator = (props) => {
                                         ...ProjectStep4FormData
                                           .schedule_of_value[0],
                                         schedule: e.target.value,
+                                        // If it's not approved, set the date to null
+                                        schedule_date: isApproved
+                                          ? ProjectStep4FormData
+                                              .schedule_of_value[0]
+                                              .schedule_date
+                                          : null,
                                       },
                                     ],
-                                  })
-                                }
+                                  });
+                                }}
                               >
                                 <option value="">Select Choice</option>
                                 <option value="Approved">Approved</option>
@@ -3182,7 +3218,11 @@ const Estimator = (props) => {
                                 className="form-control"
                                 value={
                                   ProjectStep4FormData.schedule_of_value[0]
-                                    .schedule_date
+                                    .schedule_date || ""
+                                } // If it's null, set value to an empty string to prevent React warning
+                                disabled={
+                                  ProjectStep4FormData.schedule_of_value[0]
+                                    .schedule !== "Approved"
                                 }
                                 onChange={(e) =>
                                   setProjectStep4FormData({
@@ -3200,10 +3240,11 @@ const Estimator = (props) => {
                             </div>
                           </div>
                         </div>
+
                         <div style={{ width: "100%" }}>
                           <div>
                             <label className="form-label">
-                              <span>INSURANCES:</span>
+                              <span><strong>Insurances</strong></span>
                             </label>
                             <div id="" className="input-group">
                               <select
@@ -3213,17 +3254,25 @@ const Estimator = (props) => {
                                 value={
                                   ProjectStep4FormData.insurance[0].insurance
                                 }
-                                onChange={(e) =>
+                                onChange={(e) => {
+                                  const isSendOrComplete =
+                                    e.target.value === "Sent" ||
+                                    e.target.value === "Complete";
                                   setProjectStep4FormData({
                                     ...ProjectStep4FormData,
                                     insurance: [
                                       {
                                         ...ProjectStep4FormData.insurance[0],
                                         insurance: e.target.value,
+                                        // If it's not Sent or Complete, set the date to null
+                                        date: isSendOrComplete
+                                          ? ProjectStep4FormData.insurance[0]
+                                              .date
+                                          : null,
                                       },
                                     ],
-                                  })
-                                }
+                                  });
+                                }}
                               >
                                 <option value="">Select Choice</option>
                                 <option value="CCIP">CCIP</option>
@@ -3236,7 +3285,15 @@ const Estimator = (props) => {
                                 type="date"
                                 name="date"
                                 className="form-control"
-                                value={ProjectStep4FormData.insurance[0].date}
+                                value={
+                                  ProjectStep4FormData.insurance[0].date || ""
+                                } // If it's null, set value to an empty string to prevent React warning
+                                disabled={
+                                  ProjectStep4FormData.insurance[0]
+                                    .insurance !== "Sent" &&
+                                  ProjectStep4FormData.insurance[0]
+                                    .insurance !== "Complete"
+                                }
                                 onChange={(e) =>
                                   setProjectStep4FormData({
                                     ...ProjectStep4FormData,
@@ -3252,10 +3309,11 @@ const Estimator = (props) => {
                             </div>
                           </div>
                         </div>
+
                         <div style={{ width: "100%" }}>
                           <div>
                             <label className="form-label">
-                              <span>BONDS:</span>
+                              <span><strong>Bonds</strong></span>
                             </label>
                             <div id="" className="input-group">
                               <select
@@ -3263,17 +3321,25 @@ const Estimator = (props) => {
                                 placeholder="Bond"
                                 id="bond"
                                 value={ProjectStep4FormData.bond[0].bond}
-                                onChange={(e) =>
+                                onChange={(e) => {
+                                  const isAllowedStatus = [
+                                    "Sent",
+                                    "Complete",
+                                  ].includes(e.target.value);
                                   setProjectStep4FormData({
                                     ...ProjectStep4FormData,
                                     bond: [
                                       {
                                         ...ProjectStep4FormData.bond[0],
                                         bond: e.target.value,
+                                        // If it's not an allowed status, set the date to null
+                                        date: isAllowedStatus
+                                          ? ProjectStep4FormData.bond[0].date
+                                          : null,
                                       },
                                     ],
-                                  })
-                                }
+                                  });
+                                }}
                               >
                                 <option value="">Select Choice</option>
                                 <option value="Sent">Sent</option>
@@ -3285,7 +3351,12 @@ const Estimator = (props) => {
                                 type="date"
                                 name="date"
                                 className="form-control"
-                                value={ProjectStep4FormData.bond[0].date}
+                                value={ProjectStep4FormData.bond[0].date || ""} // If it's null, set value to an empty string to prevent React warning
+                                disabled={
+                                  !["Sent", "Complete"].includes(
+                                    ProjectStep4FormData.bond[0].bond
+                                  )
+                                }
                                 onChange={(e) =>
                                   setProjectStep4FormData({
                                     ...ProjectStep4FormData,
@@ -3309,7 +3380,9 @@ const Estimator = (props) => {
                         <div style={{ width: "100%" }}>
                           <div>
                             <label className="form-label">
-                              <span>ZLIENS:</span>
+                              <span>
+                                <strong>Zliens</strong>
+                              </span>
                             </label>
                             <div id="" className="input-group">
                               <select
@@ -3317,17 +3390,23 @@ const Estimator = (props) => {
                                 placeholder="zlien"
                                 id="zlien"
                                 value={ProjectStep5FormData.zlien[0].zlien}
-                                onChange={(e) =>
+                                onChange={(e) => {
+                                  const isSubmitted =
+                                    e.target.value === "Submitted";
                                   setProjectStep5FormData({
                                     ...ProjectStep5FormData,
                                     zlien: [
                                       {
                                         ...ProjectStep5FormData.zlien[0],
                                         zlien: e.target.value,
+                                        // If it's not submitted, set the date to null
+                                        date: isSubmitted
+                                          ? ProjectStep5FormData.zlien[0].date
+                                          : null,
                                       },
                                     ],
-                                  })
-                                }
+                                  });
+                                }}
                               >
                                 <option value="">Select Choice</option>
                                 <option value="Submitted">Submitted</option>
@@ -3338,7 +3417,11 @@ const Estimator = (props) => {
                                 type="date"
                                 name="date"
                                 className="form-control"
-                                value={ProjectStep5FormData.zlien[0].date}
+                                value={ProjectStep5FormData.zlien[0].date || ""} // If it's null, set value to an empty string to prevent React warning
+                                disabled={
+                                  ProjectStep5FormData.zlien[0].zlien !==
+                                  "Submitted"
+                                }
                                 onChange={(e) =>
                                   setProjectStep5FormData({
                                     ...ProjectStep5FormData,
@@ -3354,12 +3437,15 @@ const Estimator = (props) => {
                             </div>
                           </div>
                         </div>
+
                         <div className="mt-3" style={{ width: "100%" }}>
                           <label
                             htmlFor="projectName"
                             className="form-label mt-2"
                           >
-                            <span>SUBMITTALSS</span>
+                            <span>
+                              <strong>Submittals</strong>
+                            </span>
                           </label>
                           {ProjectStep5FormData.submittals.map(
                             (mysubmittals, index) => (
@@ -3379,7 +3465,7 @@ const Estimator = (props) => {
 
                                 <div className="mb-2 mt-4">
                                   <label className="form-label">
-                                    Scope of work divisions Number
+                                    Scope of work divisions number
                                   </label>
                                   <select
                                     className="form-select"
@@ -3403,24 +3489,34 @@ const Estimator = (props) => {
                                     )}
                                   </select>
                                 </div>
+
                                 <div className="bothDiv gap-3">
                                   <div className="Oneline mb-4">
                                     <label
                                       htmlFor="location"
                                       className="form-label"
                                     >
-                                      Status:
+                                      Status
                                     </label>
                                     <select
                                       className="form-select"
                                       value={mysubmittals.status}
-                                      onChange={(e) =>
+                                      onChange={(e) => {
                                         handleSubmittalsChange(
                                           index,
                                           "status",
                                           e.target.value
-                                        )
-                                      }
+                                        );
+
+                                        // If the new status is not "Approved", set the date to null
+                                        if (e.target.value !== "Approved") {
+                                          handleSubmittalsChange(
+                                            index,
+                                            "date",
+                                            null
+                                          );
+                                        }
+                                      }}
                                     >
                                       <option value="">Select Choice</option>
                                       <option value="Approved">Approved</option>
@@ -3438,7 +3534,10 @@ const Estimator = (props) => {
                                     <input
                                       type="date"
                                       className="form-control"
-                                      value={mysubmittals.date}
+                                      value={mysubmittals.date || ""}
+                                      disabled={
+                                        mysubmittals.status !== "Approved"
+                                      }
                                       onChange={(e) =>
                                         handleSubmittalsChange(
                                           index,
@@ -3470,7 +3569,9 @@ const Estimator = (props) => {
                             htmlFor="projectName"
                             className="form-label mt-2"
                           >
-                            <span>SHOP DRAWINGS</span>
+                            <span>
+                              <strong>Shop Drawings</strong>
+                            </span>
                           </label>
                           {ProjectStep6FormData.shop_drawing.map(
                             (shopdrawing, index) => (
@@ -3490,7 +3591,7 @@ const Estimator = (props) => {
 
                                 <div className="mb-2 mt-4">
                                   <label className="form-label">
-                                    Scope of work divisions Number
+                                    Scope of work divisions number
                                   </label>
                                   <select
                                     className="form-select"
@@ -3525,13 +3626,22 @@ const Estimator = (props) => {
                                     <select
                                       className="form-select"
                                       value={shopdrawing.status}
-                                      onChange={(e) =>
+                                      onChange={(e) => {
+                                        const newStatus = e.target.value;
                                         handleShopDrawingChange(
                                           index,
                                           "status",
-                                          e.target.value
-                                        )
-                                      }
+                                          newStatus
+                                        );
+                                        // If the status is not "Approved", set the date to null
+                                        if (newStatus !== "Approved") {
+                                          handleShopDrawingChange(
+                                            index,
+                                            "date",
+                                            null
+                                          );
+                                        }
+                                      }}
                                     >
                                       <option value="">Select Choice</option>
                                       <option value="Approved">Approved</option>
@@ -3549,7 +3659,10 @@ const Estimator = (props) => {
                                     <input
                                       type="date"
                                       className="form-control"
-                                      value={shopdrawing.date}
+                                      value={shopdrawing.date || ""} // If it's null, set value to an empty string
+                                      disabled={
+                                        shopdrawing.status !== "Approved"
+                                      } // Only enable when the status is "Approved"
                                       onChange={(e) =>
                                         handleShopDrawingChange(
                                           index,
@@ -3576,7 +3689,9 @@ const Estimator = (props) => {
                             htmlFor="projectName"
                             className="form-label mt-2"
                           >
-                            <span>SAFETY</span>
+                            <span>
+                              <strong> Safety</strong>
+                            </span>
                           </label>
                           {ProjectStep6FormData.safity.map((safety, index) => (
                             <div
@@ -3594,7 +3709,7 @@ const Estimator = (props) => {
                               </div>
                               <div className="mb-2 mt-4">
                                 <label className="form-label">
-                                  Scope of work divisions Number
+                                  Scope of work divisions number
                                 </label>
                                 <select
                                   className="form-select"
@@ -3624,17 +3739,21 @@ const Estimator = (props) => {
                                     htmlFor="location"
                                     className="form-label"
                                   >
-                                    Safety:
+                                    Status
                                   </label>
                                   <select
                                     className="form-select"
-                                    onChange={(e) =>
+                                    onChange={(e) => {
                                       handleSafetyChange(
                                         index,
                                         "status",
                                         e.target.value
-                                      )
-                                    }
+                                      );
+                                      // If the selected status is not "Approved", set the date to null
+                                      if (e.target.value !== "Approved") {
+                                        handleSafetyChange(index, "date", null);
+                                      }
+                                    }}
                                     value={safety.status}
                                   >
                                     <option value="">Select Choice</option>
@@ -3652,6 +3771,8 @@ const Estimator = (props) => {
                                   <input
                                     type="date"
                                     className="form-control"
+                                    // Disable the input if the status is not "Approved"
+                                    disabled={safety.status !== "Approved"}
                                     onChange={(e) =>
                                       handleSafetyChange(
                                         index,
@@ -3659,10 +3780,12 @@ const Estimator = (props) => {
                                         e.target.value
                                       )
                                     }
-                                    value={safety.date}
+                                    // If the date is null, set the value to an empty string
+                                    value={safety.date || ""}
                                   />
                                 </div>
                               </div>
+
                               <div className="mt-2">
                                 <label htmlFor="comment">Comment:</label>
                                 <textarea
@@ -3700,7 +3823,9 @@ const Estimator = (props) => {
                             htmlFor="projectName"
                             className="form-label mt-2"
                           >
-                            <span>SCHEDULES</span>
+                            <span>
+                              <strong>Schedules</strong>
+                            </span>
                           </label>
                           <div className="wholespecificationEntry">
                             <div className="mb-2 mt-3">
@@ -3714,15 +3839,22 @@ const Estimator = (props) => {
                                       className="form-select"
                                       aria-label="Select Specification"
                                       value={myschedule.status}
-                                      onChange={(e) =>
+                                      onChange={(e) => {
                                         handleScheduleChange(
                                           index,
                                           "status",
                                           e.target.value
-                                        )
-                                      }
+                                        );
+                                        // If the selected status is not "Available", set the date to an empty string
+                                        if (e.target.value !== "Available") {
+                                          handleScheduleChange(
+                                            index,
+                                            "date",
+                                            ""
+                                          );
+                                        }
+                                      }}
                                     >
-                                      {" "}
                                       <option value="">Select Choice</option>
                                       <option value="Available">
                                         Available
@@ -3731,11 +3863,16 @@ const Estimator = (props) => {
                                         Not Available
                                       </option>
                                     </select>
+
                                     <input
                                       type="date"
                                       className="form-control"
                                       placeholder="Due Date"
-                                      value={myschedule.date}
+                                      // Disable the input if the status is not "Available"
+                                      disabled={
+                                        myschedule.status !== "Available"
+                                      }
+                                      value={myschedule.date || ""}
                                       onChange={(e) =>
                                         handleScheduleChange(
                                           index,
@@ -3744,6 +3881,7 @@ const Estimator = (props) => {
                                         )
                                       }
                                     />
+
                                     <button
                                       type="button"
                                       className="btn btn-danger"
@@ -3772,7 +3910,9 @@ const Estimator = (props) => {
                             htmlFor="projectName"
                             className="form-label mt-2"
                           >
-                            <span>SUB_CONTRACTORSS</span>
+                            <span>
+                              <strong>Sub Contractors</strong>
+                            </span>
                           </label>
                           {ProjectStep6FormData.sub_contractors.map(
                             (subContractor, index) => (
@@ -3802,13 +3942,24 @@ const Estimator = (props) => {
                                         className="form-select"
                                         placeholder="Contract"
                                         value={subContractor.contract}
-                                        onChange={(e) =>
+                                        onChange={(e) => {
                                           handleSubContractorChange(
                                             index,
                                             "contract",
                                             e.target.value
-                                          )
-                                        }
+                                          );
+                                          // If the selected contract is neither "Capable" nor "Custom", set the date to null
+                                          if (
+                                            e.target.value !== "Capable" &&
+                                            e.target.value !== "Custom"
+                                          ) {
+                                            handleSubContractorChange(
+                                              index,
+                                              "date",
+                                              null
+                                            );
+                                          }
+                                        }}
                                       >
                                         <option value="">Select Choice</option>
                                         <option value="Capable">Capable</option>
@@ -3822,7 +3973,12 @@ const Estimator = (props) => {
                                         type="date"
                                         name={`subContractorDate-${index}`} // Use a unique name
                                         className="form-control"
-                                        value={subContractor.date}
+                                        // Disable the input if the contract is neither "Capable" nor "Custom"
+                                        disabled={
+                                          subContractor.contract !==
+                                            "Capable" &&
+                                          subContractor.contract !== "Custom"
+                                        }
                                         onChange={(e) =>
                                           handleSubContractorChange(
                                             index,
@@ -3830,6 +3986,8 @@ const Estimator = (props) => {
                                             e.target.value
                                           )
                                         }
+                                        // If the date is null, set the value to an empty string
+                                        value={subContractor.date || ""}
                                       />
                                     </div>
                                   </div>
@@ -3877,7 +4035,9 @@ const Estimator = (props) => {
                               htmlFor="projectName"
                               className="form-label mt-2"
                             >
-                              <span>LABOR RATES</span>
+                              <span>
+                                <strong>Labor Rates</strong>
+                              </span>
                             </label>
                             {ProjectStep7FormData.labor_rate.map(
                               (laborRate, index) => (
@@ -3907,13 +4067,25 @@ const Estimator = (props) => {
                                           className="form-select"
                                           placeholder="Contract"
                                           value={laborRate.status}
-                                          onChange={(e) =>
+                                          onChange={(e) => {
                                             handleLaborRateChange(
                                               index,
                                               "status",
                                               e.target.value
-                                            )
-                                          }
+                                            );
+
+                                            // If the selected status is neither "Approved" nor "Custom", set the date to null
+                                            if (
+                                              e.target.value !== "Approved" &&
+                                              e.target.value !== "Custom"
+                                            ) {
+                                              handleLaborRateChange(
+                                                index,
+                                                "date",
+                                                null
+                                              );
+                                            }
+                                          }}
                                         >
                                           <option value="">
                                             Select Choice
@@ -3930,7 +4102,11 @@ const Estimator = (props) => {
                                           type="date"
                                           name={`laborRateDate-${index}`}
                                           className="form-control"
-                                          value={laborRate.date}
+                                          // Disable the input if the status is neither "Approved" nor "Custom"
+                                          disabled={
+                                            laborRate.status !== "Approved" &&
+                                            laborRate.status !== "Custom"
+                                          }
                                           onChange={(e) =>
                                             handleLaborRateChange(
                                               index,
@@ -3938,10 +4114,13 @@ const Estimator = (props) => {
                                               e.target.value
                                             )
                                           }
+                                          // If the date is null, set the value to an empty string
+                                          value={laborRate.date || ""}
                                         />
                                       </div>
                                     </div>
                                   </div>
+
                                   <div className="mt-2">
                                     <label htmlFor="comment">Comment:</label>
                                     <textarea
@@ -3981,7 +4160,9 @@ const Estimator = (props) => {
                               htmlFor="projectName"
                               className="form-label mt-2"
                             >
-                              <span>BILLINGS</span>
+                              <span>
+                                <strong>Billings</strong>
+                              </span>
                             </label>
                             <div className="wholespecificationEntry">
                               {ProjectStep7FormData.billing.map(
@@ -4041,7 +4222,9 @@ const Estimator = (props) => {
                               htmlFor="projectName"
                               className="form-label mt-2"
                             >
-                              <span>SOVS</span>
+                              <span>
+                                <strong>Sovs</strong>
+                              </span>
                             </label>
                             <div className="wholespecificationEntry">
                               {ProjectStep7FormData.sov.map((mysov, index) => (
@@ -4051,23 +4234,41 @@ const Estimator = (props) => {
                                       className="form-select"
                                       aria-label="Select Specification"
                                       value={mysov.status}
-                                      onChange={(e) =>
+                                      onChange={(e) => {
                                         handleSovChange(
                                           index,
                                           "status",
                                           e.target.value
-                                        )
-                                      }
+                                        );
+
+                                        // If the selected status is not "Approved" or "Custom", set the date to null
+                                        if (
+                                          e.target.value !== "Approved" &&
+                                          e.target.value !== "Custom"
+                                        ) {
+                                          handleSovChange(index, "date", null);
+                                        }
+                                      }}
                                     >
                                       <option value="">Select Choice</option>
                                       <option value="Approved">Approved</option>
                                       <option value="Pending">Pending</option>
+                                      <option value="Custom">
+                                        Custom
+                                      </option>{" "}
+                                      {/* Assuming you want to add a "Custom" option */}
                                     </select>
                                     <input
                                       type="date"
                                       className="form-control"
                                       placeholder="Due Date"
-                                      value={mysov.date}
+                                      // Disable the input if the status is not "Approved" or "Custom"
+                                      disabled={
+                                        mysov.status !== "Approved" &&
+                                        mysov.status !== "Custom"
+                                      }
+                                      // If the date is null, set the value to an empty string
+                                      value={mysov.date || ""}
                                       onChange={(e) =>
                                         handleSovChange(
                                           index,
@@ -4105,7 +4306,9 @@ const Estimator = (props) => {
                             htmlFor="projectName"
                             className="form-label mt-2"
                           >
-                            <span>HD S_SYSTEMS</span>
+                            <span>
+                              <strong>HDS Systems</strong>
+                            </span>
                           </label>
                           {ProjectStep8FormData.hds_system.map(
                             (myhdsSystem, index) => (
@@ -4129,7 +4332,7 @@ const Estimator = (props) => {
                                   >
                                     <div>
                                       <label className="form-label">
-                                        <span>HDS System:</span>
+                                        <span>HDS System</span>
                                       </label>
                                       <div id="" className="input-group">
                                         <select
@@ -4137,13 +4340,25 @@ const Estimator = (props) => {
                                           placeholder="Contract"
                                           id="ProjectEngineerID"
                                           value={myhdsSystem.status}
-                                          onChange={(e) =>
+                                          onChange={(e) => {
                                             handleHDSChange(
                                               index,
                                               "status",
                                               e.target.value
-                                            )
-                                          }
+                                            );
+
+                                            // If the selected status is not "Aproved" or "Custom", set the date to null
+                                            if (
+                                              e.target.value !== "Aproved" &&
+                                              e.target.value !== "Custom"
+                                            ) {
+                                              handleHDSChange(
+                                                index,
+                                                "date",
+                                                null
+                                              );
+                                            }
+                                          }}
                                         >
                                           <option value="Pending">
                                             Pending
@@ -4161,7 +4376,11 @@ const Estimator = (props) => {
                                           type="date"
                                           name="date"
                                           className="form-control"
-                                          value={myhdsSystem.date}
+                                          // Disable the input if the status is neither "Aproved" nor "Custom"
+                                          disabled={
+                                            myhdsSystem.status !== "Aproved" &&
+                                            myhdsSystem.status !== "Custom"
+                                          }
                                           onChange={(e) =>
                                             handleHDSChange(
                                               index,
@@ -4169,6 +4388,8 @@ const Estimator = (props) => {
                                               e.target.value
                                             )
                                           }
+                                          // If the date is null, set the value to an empty string
+                                          value={myhdsSystem.date || ""}
                                         />
                                       </div>
                                     </div>
@@ -4204,7 +4425,7 @@ const Estimator = (props) => {
                             className="btn btn-success"
                             onClick={handleAddHDSSystem}
                           >
-                            Add HD S_SYSTEMS
+                            Add HDS Systems
                           </button>
                         </div>
 
@@ -4213,7 +4434,7 @@ const Estimator = (props) => {
                             htmlFor="projectName"
                             className="form-label mt-2"
                           >
-                            <span>ON UPLOADED:</span>
+                            <span><strong>On Uploaded</strong></span>
                           </label>
                           <div className="wholespecificationEntry">
                             <div className="mb-2 mt-3">
@@ -4296,7 +4517,7 @@ const Estimator = (props) => {
                             htmlFor="projectName"
                             className="form-label mt-2"
                           >
-                            <span>BUGETS</span>
+                            <span><strong>Bugets</strong></span>
                           </label>
                           <div className="wholespecificationEntry">
                             <div className="mb-2 mt-3">

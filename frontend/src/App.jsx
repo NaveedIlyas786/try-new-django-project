@@ -59,6 +59,7 @@ function App() {
           <Route path="dmsDirectory" element={<DMSDirectory />} />
           <Route path="hrPayroll" element={<HrPayRoll />} />
           <Route path="postEstimating" element={<PostEstimating />} />
+          <Route path="*" element={<>Not Found</>} />
         </Route>
       </Routes>
     </Router>

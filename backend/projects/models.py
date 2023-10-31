@@ -452,7 +452,7 @@ class OnBuild(models.Model):
         ('Submitile','Submitile'),('Safety','Safety'),('Shop Drawing','Shop Drawing'),('Budget','Budget'),
         ], null=True, blank=True)
     status=models.CharField(verbose_name="HDS System", max_length=50,choices=[
-        ('Uploade','Uploade'),('Pending','Pending'),
+        ('Upload','Upload'),('Pending','Pending'),
         ],default='Pending', null=True, blank=True)
 
 

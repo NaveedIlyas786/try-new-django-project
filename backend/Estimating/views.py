@@ -8,17 +8,18 @@ from rest_framework import status,views
 from .models import Company, Estimating,Estimating_detail, Proposal, Qualification,Service,Location,UrlsTable,Addendum,DMS_Dertory,Specification,Spec_detail,Role,Dprtmnt
 from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer,SpecificationSerializer,ServiceSerializer,LocationSerializer,EstimatingDetailSerializer,ProposalServiceSerializer,CompanySerializer,UrlsSerializers,DMS_DertorySezializers,Job_titleSerializers,DprtmentSerializers
 from accounts.models import User
+from django.core.files.uploadedfile import InMemoryUploadedFile
+
 
 from .forms import EstimatingDetailAdminForm
 
-from datetime import datetime
 from rest_framework.permissions import IsAuthenticated
 from django.core.mail import EmailMessage
 from django.core.files.base import ContentFile
 import base64
 import logging
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime
+from datetime import datetime,date
 from django.db.models import Sum
 
 class DepartmentViews(APIView):
@@ -107,17 +108,23 @@ class SendEmailView(APIView):
             email_from = 'mubeenjutt9757@gmail.com'  # Default sender email
 
 
-            pdf_base64 = request.data.get('pdf')
-            if not pdf_base64:
-                logger.error('PDF not provided')
-                logger.error(f'Request Data: {request.data}')  # Log the entire request data
-                return Response({'error': 'PDF is required'}, status=status.HTTP_400_BAD_REQUEST)
+            # pdf_base64 = request.data.get('pdf')
+            # if not pdf_base64:
+            #     logger.error('PDF not provided')
+            #     logger.error(f'Request Data: {request.data}')  # Log the entire request data
+            #     return Response({'error': 'PDF is required'}, status=status.HTTP_400_BAD_REQUEST)
 
-            pdf_data = base64.b64decode(pdf_base64)
-            pdf_file = ContentFile(pdf_data, 'proposal.pdf')
+            # pdf_data = base64.b64decode(pdf_base64)
+            # pdf_file = ContentFile(pdf_data, 'proposal.pdf')
 
-            if not estimating.plane_date or not isinstance(estimating.plane_date, datetime):
-                return Response({'error': 'Invalid plane_date'}, status=status.HTTP_400_BAD_REQUEST)
+             # Check the type of plane_date
+            if not hasattr(estimating, 'plane_date') or not estimating.plane_date:
+                return Response({'error': 'plane_date attribute missing or None'}, status=status.HTTP_400_BAD_REQUEST)
+
+            if not isinstance(estimating.plane_date, date):
+                return Response({'error': 'plane_date is not of type date'}, status=status.HTTP_400_BAD_REQUEST)
+
+
 
             if not estimating.bidder_mail or not isinstance(estimating.bidder_mail, str):
                 return Response({'error': 'Invalid bidder_mail'}, status=status.HTTP_400_BAD_REQUEST)
@@ -141,8 +148,11 @@ class SendEmailView(APIView):
                 [estimating.bidder_mail],
             )
             email.content_subtype = 'html'
-
-            email.attach(pdf_file.name, pdf_file.read(), 'application/pdf')
+            # Attach the PDF if it's in the request
+            pdf_file = request.FILES.get('pdf')
+            if isinstance(pdf_file, InMemoryUploadedFile):
+                email.attach(pdf_file.name, pdf_file.read(), 'application/pdf')
+            # email.attach(pdf_file.name, pdf_file.read(), 'application/pdf')
             email.send()
 
             return Response({'message': 'Email sent successfully!'})

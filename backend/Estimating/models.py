@@ -82,7 +82,7 @@ class Estimating(models.Model):
     bidder_mail=models.EmailField(verbose_name="add the bidder Mail", max_length=254,null=True,blank=True)
     plane_date= models.DateField(
         verbose_name="Plane Date(YYYY-MM-DD)",
-        blank=False,
+        blank=True,
         null=True)
 
 

@@ -22,7 +22,7 @@
     "@progress/kendo-react-pdf": "^6.0.2",
     "@progress/kendo-svg-icons": "^2.0.0",
     "@progress/kendo-theme-material": "^7.0.1",
-    "@react-pdf/renderer": "^3.1.13",
+    "@react-pdf/renderer": "^3.1.14",
     "@reduxjs/toolkit": "^1.9.5",
     "aos": "^2.3.4",
     "apexcharts": "^3.43.0",

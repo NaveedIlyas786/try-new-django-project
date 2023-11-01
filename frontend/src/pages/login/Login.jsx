@@ -1,153 +1,162 @@
-import React, { useState } from "react";
-import "./Login.css";
-import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "../../redux/authSlice";
-import { useDispatch } from "react-redux";
+  import React, { useState } from "react";
+  import "./Login.css";
+  import { Link, useNavigate } from "react-router-dom";
+  import { loginUser } from "../../redux/authSlice";
+  import { useDispatch } from "react-redux";
 
-const Login = () => {
-  const navigate = useNavigate();
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [SubmitbtnClicked, setSubmitbtnClicked] = useState(false);
-  const [error, setError] = useState(""); // State to store error message
-  const [successMessage, setSuccessMessage] = useState("");
+  const Login = () => {
+    const navigate = useNavigate();
+    const [passwordVisible, setPasswordVisible] = useState(false);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [SubmitbtnClicked, setSubmitbtnClicked] = useState(false);
+    const [error, setError] = useState(""); // State to store error message
+    const [successMessage, setSuccessMessage] = useState("");
+    const [loading, setLoading] = useState(false);
 
-  const dispatch = useDispatch();
 
-  const togglePasswordVisibility = () => {
-    setPasswordVisible(!passwordVisible);
-  };
+    const dispatch = useDispatch();
 
-  const handleLogin = async () => {
-    setSubmitbtnClicked(true);
-    if (!email || !password) {
-      setError(<div className="modal-overlay">
-      <div className="popupred">
-        <p>Both Fields are Required</p>
-      </div>
-    </div>);
-     setTimeout(() => {
-      setError(null); // Remove the error message
-    }, 1000);
-    
-      return;
-    }
+    const togglePasswordVisibility = () => {
+      setPasswordVisible(!passwordVisible);
+    };
 
-    try {
-      const response = await dispatch(loginUser({ email, password }));
-  
-      if (loginUser.fulfilled.match(response)) {
-        // Successful login, you can redirect the user or perform other actions here
-        setError(""); // Clear any previous errors
-        setSuccessMessage(
-          <div className="modal-overlay">
-            <div className="popupsuccess">
-              <p>Login Successful</p>
-              {alert("Login Successful")}
-            </div>
-          </div>
-        );
-        setTimeout(() => {
-          navigate("/homepage/dashboard");
-        }, 1700);
-      } else {
-        console.log('Error Response: ', response);
-        if (response.payload.error === 'Your request is pending') {
-          console.log('Your request is pending'); 
-          setError(
-            <div className="modal-overlay">
-              <div className="popupred">
-                <p>Your request is pending</p>
-              </div>
-            </div>
-          );
-        } else {
-          // Handle authentication failure, display an error message
-          console.log('Invalid Email OR Password');
-          setError(
-            <div className="modal-overlay">
-              <div className="popupred">
-                <p>Invalid Email OR Password</p>
-              </div>
-            </div>
-          );
-        }
-        setTimeout(() => {
-          setError(null); // Remove the error message
-        }, 3000);
+    const handleLogin = async () => {
+     
+      setSubmitbtnClicked(true);
+      if (!email || !password) {
+        setError(<>{alert("Both Fields are required")}</>);
+      setTimeout(() => {
+        setError(null); // Remove the error message
+      }, 1000);
+      setLoading(false);
+      
+        return;
       }
-    } catch (error) {
-      console.error("An error occurred during login: ", error);
-      setError("An error occurred during login.");
-    }
-  };
 
-  return (
-    <div className="parent">
-      <div className="sub_Parent">
-        <img src="../../../src/assets/DMS_logo.png" alt="" />
-        <h1 className="loginhead">Login</h1>
-        {SubmitbtnClicked && (
-          <>
-            {error ? (
-              <div
-                // className="error bg-danger w-100 p-2 text-center rounded"
-                // style={{ color: "white" }}
-              >
-                {error}
-              </div>
-            ) : (
-              successMessage && (
+      try {
+      setLoading(true);
+        const response = await dispatch(loginUser({ email, password }));
+    
+        if (loginUser.fulfilled.match(response)) {
+          // Successful login, you can redirect the user or perform other actions here
+          setLoading(true);
+          setError(""); // Clear any previous errors
+          setSuccessMessage(
+            setTimeout(() => {
+             // Show the alert after a delay
+            }, 100)
+            
+          );
+         
+          setTimeout(() => {
+            navigate("/homepage/dashboard");
+          }, 1000);
+        } else {
+          console.log('Error Response: ', response);
+          if (response.payload.error === 'Your request is pending') {
+            console.log('Your request is pending'); 
+            setTimeout(() => {
+              alert("Your Request is Pending"); // Show the alert after a delay
+            }, 100)
+      setLoading(false);
+      
+        return;
+          } else {
+            // Handle authentication failure, display an error message
+            console.log('Invalid Email OR Password');
+            
+            setTimeout(() => {
+              alert("Invalid Email OR Password"); // Show the alert after a delay
+            }, 100)
+
+          
+
+          }
+        
+        }
+      } catch (error) {
+        console.error("An error occurred during login: ", error);
+        setError("An error occurred during login.");
+      }finally{
+        setLoading(false);
+      }
+    };
+
+    return (
+      <>
+      {loading && (
+        <div className="loader">
+        <div className="spinner-border m-5 text-primary sixespinner" role="status">
+    <span className="sr-only">Loading...</span>
+  </div>
+  </div>
+      )}
+      <div className="parent">
+        <div className="sub_Parent">
+          <img src="../../../src/assets/DMS_logo.png" alt="" />
+          <h1 className="loginhead">Login</h1>
+          {/* {SubmitbtnClicked && (
+            <>
+              {error ? (
                 <div
-                  // className="success bg-success w-100 p-2 text-center rounded"
+                  // className="error bg-danger w-100 p-2 text-center rounded"
                   // style={{ color: "white" }}
                 >
-                  {successMessage}
+                  {error}
                 </div>
-              )
-            )}
-          </>
-        )}
-        <input
-          placeholder="Enter your email"
-          className="loginInput"
-          value={email}
-          type="email"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <div className="pass">
+              ) : (
+                successMessage && (
+                  <div
+                    // className="success bg-success w-100 p-2 text-center rounded"
+                    // style={{ color: "white" }}
+                  >
+                    {successMessage}
+                  </div>
+                )
+              )}
+            </>
+          )} */}
           <input
-            placeholder="Enter your password"
+            placeholder="Enter your email"
             className="loginInput"
-            value={password}
-            type={passwordVisible ? "text" : "password"} // Toggle between text and password
-            onChange={(e) => setPassword(e.target.value)}
+            value={email}
+            type="email"
+            onChange={(e) => setEmail(e.target.value)}
           />
-          <span className="password-toggle" onClick={togglePasswordVisibility}>
-            {passwordVisible ? (
-              <i className="fa-sharp fa fa-light fa-eye"></i>
-            ) : (
-              <i className="fa-light fa fa-eye-slash"></i>
-            )}
-          </span>
-          <Link className="forgot" to="/forgotScreen">
-            Forgot Password
-          </Link>
+          <div className="pass">
+            <input
+              placeholder="Enter your password"
+              className="loginInput"
+              value={password}
+              type={passwordVisible ? "text" : "password"} // Toggle between text and password
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <span className="password-toggle" onClick={togglePasswordVisibility}>
+              {passwordVisible ? (
+                <i className="fa-sharp fa fa-light fa-eye"></i>
+              ) : (
+                <i className="fa-light fa fa-eye-slash"></i>
+              )}
+            </span>
+            <Link className="forgot" to="/forgotScreen">
+              Forgot Password
+            </Link>
+          </div>
+          {/* {error && <div className="error">{error}</div>} Display error message */}
+          <button onClick={handleLogin} className="submitbtn">
+            Login
+          </button>
+          <p className="signuplink">
+            Create a New account:
+            <Link className="Link" to="/signup">
+              SignUp
+            </Link>
+          </p>
         </div>
-        {/* {error && <div className="error">{error}</div>} Display error message */}
-        <button onClick={handleLogin} className="submitbtn">
-          Login
-        </button>
-        <p className="signuplink">
-          Create a New account:
-          <Link className="Link" to="/signup">
-            SignUp
-          </Link>
-        </p>
       </div>
-    </div>
-  );
-};
+      </>
+    );
+  };
 
-export default Login;
+  export default Login;

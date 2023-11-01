@@ -13,6 +13,9 @@ const Signup = () => {
   const [defaultpass, setDefaultPass] = useState(false);
   const [error, setError] = useState("");
   const [SubmitbtnClicked, setSubmitbtnClicked] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
   const [successMessage, setSuccessMessage] = useState(
     "Registered Successfully !"
   );
@@ -26,17 +29,19 @@ const Signup = () => {
   const dispatch = useDispatch();
 
   const handleRegister = async () => {
+    setLoading(true);
     // Reset error messages
     setError("");
     setSuccessMessage("");
     setSubmitbtnClicked(true);
-
+    
     // Check for empty fields
     if (!full_Name || !email || !password || !password2) {
       setError(<>{alert("All Fields are required")}</>);
       setTimeout(() => {
         setError(null); // Remove the error message
       });
+      setLoading(false)
       return;
     }
 
@@ -48,6 +53,7 @@ const Signup = () => {
       setTimeout(() => {
         setError(null); // Remove the error message
       }); // 1000 milliseconds = 1 second
+      setLoading(false);
 
       useEffect(() => {
         // Effect to handle the response from the server
@@ -79,6 +85,7 @@ const Signup = () => {
       setTimeout(() => {
         setError(null); // Remove the error message
       });
+      setLoading(false);
       return;
     }
 
@@ -93,6 +100,7 @@ const Signup = () => {
       setTimeout(() => {
         setError(null); // Remove the error message
       });
+      setLoading(false);
       return;
     }
     if (!isValidPassword) {
@@ -100,6 +108,7 @@ const Signup = () => {
       setTimeout(() => {
         setError(null); // Remove the error message
       }); // 1000 milliseconds = 1 second
+      setLoading(false);
       return;
     }
 
@@ -117,8 +126,12 @@ const Signup = () => {
         .then((response) => {
           // Handle success response from the backend (if needed)
           console.log("User registration successful:", response);
+          setLoading(false); // Hide the loader
+      
           setSuccessMessage(
-            alert("Your Request has been sent to the admin for Approval")
+            setTimeout(() => {
+              alert("Your Request has been sent to Admin for Approval"); // Show the alert after a delay
+            }, 100)
           );
 
           // Clear the form fields
@@ -135,6 +148,7 @@ const Signup = () => {
         .catch((error) => {
           // Handle error response from the backend
           console.error("User registration failed:", error);
+          setLoading(false);
 
 
           // Adjust this to fit the actual error structure you’re receiving
@@ -143,7 +157,10 @@ const Signup = () => {
             error.email &&
             error.email.includes("user with this Email already exists.")
           ) {
-            setError(<>{alert("User this Email is already exists")}</>);
+            setLoading(false);
+            setError( setTimeout(() => {
+              alert("User This Email is Already Exists"); // Show the alert after a delay
+            }, 100));
           } else {
             setError("Registration failed. Please try again.");
           }
@@ -158,11 +175,19 @@ const Signup = () => {
   };
 
   return (
+    <>
+    {loading && (
+      <div className="loader">
+      <div className="spinner-border m-5 text-primary sixespinner" role="status">
+  <span className="sr-only">Loading...</span>
+</div>
+</div>
+    )}
     <div className="parent">
       <div className="sub_Parent">
         <img src="../../../src/assets/DMS_logo.png" alt="" />
         <h1 className="signnn">SignUp </h1>
-        {SubmitbtnClicked && (
+        {/* {SubmitbtnClicked && (
           <>
             {error ? (
               <div>{error}</div>
@@ -170,7 +195,7 @@ const Signup = () => {
               successMessage && <div>{successMessage}</div>
             )}
           </>
-        )}
+        )} */}
 
         <input
           placeholder="Full-Name"
@@ -229,6 +254,7 @@ const Signup = () => {
         </button>
       </div>
     </div>
+    </>
   );
 };
 

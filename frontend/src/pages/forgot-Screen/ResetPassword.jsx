@@ -10,6 +10,7 @@ const ResetPassword = () => {
   const [password2, setpassword2] = useState("");
   const [defaultpass, setDefaultPass] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
 
@@ -19,11 +20,32 @@ const ResetPassword = () => {
 
 
   const handleResetPass = () => {
+    setLoading(true);
+
+    if (!password || !password2) {
+      alert("Both Fields are Required");
+    setLoading(false);
+      return;
+    }
     // Check if both passwords match
     if (password !== password2) {
       alert("Passwords do not match");
+      setLoading(false);
       return;
     }
+    const passwordRegex =
+    /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Z][A-Za-z\d@$!%*?&]{7,}$/;
+  const isValidPassword = passwordRegex.test(password);
+  if (password.length < 8) {
+    alert("Password length should be Equal or greater than 8")
+    setLoading(false);
+    return;
+  }
+  if (!isValidPassword) {
+   alert('Invalid Password')// 1000 milliseconds = 1 second
+    setLoading(false);
+    return;
+  }
 
     const data = {
       id: id,
@@ -33,22 +55,38 @@ const ResetPassword = () => {
     };
   
     axios
-      .post(`http://127.0.0.1:8000/api/user/password-reset-confirm/${id}/${token}/`, data)
+      .post("http://127.0.0.1:8000/api/user/password-reset-confirm/${id}/${token}/", data)
       .then((response) => {
-        setShowPopup(true);
+       
+        console.log("Your Password has been reset");
+       
+       
         setTimeout(() => {
-          setShowPopup(false);
+          alert("Your Password has been Reset"); 
+          // setShowPopup(false);
           navigate("/")
-        }, 1000);
+        }, 100);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Password reset failed:", error);
+        setTimeout(() => {
+          alert("Your Token has been Expired"); // Show the alert after a delay
+        }, 100)
+        setLoading(false);
       });
   };
 
 
   return (
     <>
+     {loading && (
+        <div className="loader">
+        <div className="spinner-border m-5 text-primary sixespinner" role="status">
+    <span className="sr-only">Loading...</span>
+  </div>
+  </div>
+      )}
    
     <div className="parent">
       <div className="sub_Parent">
@@ -56,13 +94,13 @@ const ResetPassword = () => {
         <h1 className="headddd">Create New Password</h1>
         
 
-        {showPopup && (
+        {/* {showPopup && (
       <div className="modal-overlay">
         <div id="popup" className="popup">
-          <p>Congratulations! Your password has been reset.</p>
+         <p>Your Passowrd has been Reset</p>
         </div>
       </div>
-    )}
+    )} */}
         <div className="passfield">
           <input
             placeholder="Create New Password"
@@ -78,6 +116,11 @@ const ResetPassword = () => {
               <i className="fa-light fa fa-eye-slash"></i>
             )}
           </span>
+        </div>
+        <div className="password-validation ">
+          <p className="format">
+            First capital letter,At least one number and special character
+          </p>
         </div>
         <div className="passfield">
           <input

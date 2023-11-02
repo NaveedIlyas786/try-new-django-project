@@ -107,17 +107,7 @@ class SendEmailView(APIView):
 
             email_from = 'mubeenjutt9757@gmail.com'  # Default sender email
 
-
-            # pdf_base64 = request.data.get('pdf')
-            # if not pdf_base64:
-            #     logger.error('PDF not provided')
-            #     logger.error(f'Request Data: {request.data}')  # Log the entire request data
-            #     return Response({'error': 'PDF is required'}, status=status.HTTP_400_BAD_REQUEST)
-
-            # pdf_data = base64.b64decode(pdf_base64)
-            # pdf_file = ContentFile(pdf_data, 'proposal.pdf')
-
-             # Check the type of plane_date
+            # Check the type of plane_date
             if not hasattr(estimating, 'plane_date') or not estimating.plane_date:
                 return Response({'error': 'plane_date attribute missing or None'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -152,7 +142,6 @@ class SendEmailView(APIView):
             pdf_file = request.FILES.get('pdf')
             if isinstance(pdf_file, InMemoryUploadedFile):
                 email.attach(pdf_file.name, pdf_file.read(), 'application/pdf')
-            # email.attach(pdf_file.name, pdf_file.read(), 'application/pdf')
             email.send()
 
             return Response({'message': 'Email sent successfully!'})
@@ -182,6 +171,60 @@ class UrlsListViews(APIView):
         
 
 
+# class CompanyWonEstimates(APIView):
+
+#     def get(self, request):
+#         # Getting the year from the query parameters or using the current year if not provided
+#         year = int(request.query_params.get('year', datetime.now().year))
+
+#         # Getting all active companies
+#         companies = Company.objects.filter(is_active=True)
+
+#         data = []
+
+#         # Variables to store total counts and sums
+#         grand_total_won_estimates = 0
+#         grand_total_bid_amount = 0
+
+#         for company in companies:
+#             # Counting 'Won' estimating records for each active company for the selected year
+#             won_estimates = Estimating.objects.filter(
+#                 company=company, 
+#                 status='Won',
+#                 start_date__year=year  # Filtering by the selected year
+#             )
+
+#             total_won_estimates = won_estimates.count()
+
+#             if total_won_estimates > 0:  # Only including companies with won estimates in the selected year
+#                 # Summing bid amounts of 'Won' estimating records for each active company
+#                 total_bid_amount = won_estimates.aggregate(sum=Sum('bid_amount'))['sum'] or 0
+
+#                 # Adding the individual company's counts and sums to the grand totals
+#                 grand_total_won_estimates += total_won_estimates
+#                 grand_total_bid_amount += total_bid_amount
+
+#                 # Adding data to the response list
+#                 data.append({
+#                     "company_name": company.Cmpny_Name,
+#                     "total_won": total_won_estimates,
+#                     "total_won_bid_amount": total_bid_amount
+#                 })
+
+#         if grand_total_won_estimates > 0:  # Only adding the grand total if there are won estimates
+#             # Adding the grand totals to the response data
+#             data.append({
+#                 "company_name": "Grand Total",
+#                 "total_won": grand_total_won_estimates,
+#                 "total_won_bid_amount": grand_total_bid_amount
+#             })
+
+#         return Response(data)
+
+
+
+
+
 class CompanyWonEstimates(APIView):
 
     def get(self, request):
@@ -191,47 +234,44 @@ class CompanyWonEstimates(APIView):
         # Getting all active companies
         companies = Company.objects.filter(is_active=True)
 
+        # Month names
+        month_names = [
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ]
+
+        # Response list
         data = []
 
-        # Variables to store total counts and sums
-        grand_total_won_estimates = 0
-        grand_total_bid_amount = 0
+        # Iterate over each month
+        for month_num, month_name in enumerate(month_names, start=1):
+            # Dictionary to store each company's data for the current month
+            month_data = {}
 
-        for company in companies:
-            # Counting 'Won' estimating records for each active company for the selected year
-            won_estimates = Estimating.objects.filter(
-                company=company, 
-                status='Won',
-                start_date__year=year  # Filtering by the selected year
-            )
+            for company in companies:
+                # Counting 'Won' estimating records for each active company for the selected month and year
+                won_estimates = Estimating.objects.filter(
+                    company=company,
+                    status='Won',
+                    start_date__year=year,
+                    start_date__month=month_num  # Filtering by the selected month
+                )
 
-            total_won_estimates = won_estimates.count()
+                total_won_estimates = won_estimates.count()
 
-            if total_won_estimates > 0:  # Only including companies with won estimates in the selected year
-                # Summing bid amounts of 'Won' estimating records for each active company
+                # Summing bid amounts of 'Won' estimating records for each active company for the selected month
                 total_bid_amount = won_estimates.aggregate(sum=Sum('bid_amount'))['sum'] or 0
 
-                # Adding the individual company's counts and sums to the grand totals
-                grand_total_won_estimates += total_won_estimates
-                grand_total_bid_amount += total_bid_amount
-
-                # Adding data to the response list
-                data.append({
-                    "company_name": company.Cmpny_Name,
+                # Always add company data to the month's dictionary, even if it's zero
+                month_data[company.Cmpny_Name] = {
                     "total_won": total_won_estimates,
                     "total_won_bid_amount": total_bid_amount
-                })
+                }
 
-        if grand_total_won_estimates > 0:  # Only adding the grand total if there are won estimates
-            # Adding the grand totals to the response data
-            data.append({
-                "company_name": "Grand Total",
-                "total_won": grand_total_won_estimates,
-                "total_won_bid_amount": grand_total_bid_amount
-            })
+            # Always append the month's data to the response list, regardless of its content
+            data.append({month_name: month_data})
 
         return Response(data)
-
 
 
 

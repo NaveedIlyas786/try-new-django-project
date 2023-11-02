@@ -1,8 +1,9 @@
 .main{
-  margin-top: 70px !important;
+  /* margin-top: 20px !important; */
   display: flex;
   height: 96.22vh;
-  background-color: rgb(207, 207, 209) ;
+  background-color: rgb(255, 253, 253) ;
+  
 }
 .sidebar{
   width: 350px !important;
@@ -45,16 +46,112 @@
 .sidebaritem.open >.sidebarTitle .togglebtn {
   transform: rotate(180deg);
 }
+
+
 .container{
-  height: 100%;
-  padding: 20px;
-  /* flex-grow: 1; */
-  /* margin-left: 260px; */
-  /* background-color: rgb(197, 159, 233); */
+  border-right: 1px solid black;
+  height: 50vh;
+  /* background-color: rgb(155, 155, 155); */
+
+}
+
+
+
+.main-1{
+  display: flex;
+  /* background-color: rgb(207, 231, 252); */
+  height: 50vh;
+  margin-top:20vh;
+  margin-left: 40vh;
+  
+}
+
+.container-2{
+  display: flex;
+  /* align-items: center; */
+  margin-left: 20px;
+  /* background-color: rgb(150, 150, 150); */
+  height: 50vh;
+  align-items: center; /* Vertically center content */
+
+
+}
+
+.main-1 strong {
+  min-width: 200px;  
+  text-align: left; 
+}
+ .main-1 p {
+  padding-right: 10px; /* some padding to keep the text from touching the border */
+  display: flex;       /* make the p element a flex container */
+  justify-content: space-between; /* space out the strong and the data */
+}
+
+.main-1 label {
+  letter-spacing: 0;
+  white-space: nowrap;  /* To prevent wrapping */
+}
+
+.main-1 span {
+  margin-right: 5px; /* To add some spacing between contracts */
+}
+
+.container-2-2{
+  margin-top: 9px;
+  /* background-color: red; */
+  text-align: right !important;
+
+}
+
+.container-2-2 label {
+  letter-spacing: 0;
+  /* white-space: nowrap;  To prevent wrapping */
+  margin-left: 10vh;  
 }
 
 
 
 
+.main-2{
+  display: flex;
+  /* background-color: rgb(207, 231, 252); */
+  height: 50vh;
+  margin-top:10vh;
+  margin-left: 40vh;
+  border-top: 1px solid black;
+  text-align: center;
 
-/* ******* */
+  
+}
+
+.container1{
+  height: 50vh;
+  /* background-color: rgb(155, 155, 155); */
+
+}
+.main-2 strong {
+  min-width: 200px;  
+  text-align: left; 
+}
+ .main-2 p {
+  padding-right: 10px; /* some padding to keep the text from touching the border */
+  display: flex;       /* make the p element a flex container */
+  justify-content: space-between; /* space out the strong and the data */
+}
+
+.main-2 label {
+  letter-spacing: 0;
+  white-space: nowrap;  /* To prevent wrapping */
+}
+
+.main-2 span {
+  margin-right: 5px; /* To add some spacing between contracts */
+}
+
+.tableSubmitls{
+
+  height: 50vh;
+  margin-top:10vh;
+  margin-left: 40vh;
+  border-top: 1px solid black;
+}

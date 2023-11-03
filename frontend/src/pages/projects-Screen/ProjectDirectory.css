@@ -48,7 +48,7 @@
 }
 
 
-.container{
+.main-1 .container{
   border-right: 1px solid black;
   height: 50vh;
   /* background-color: rgb(155, 155, 155); */
@@ -96,10 +96,10 @@
   margin-right: 5px; /* To add some spacing between contracts */
 }
 
-.container-2-2{
+.main-1  .container-2-2{
   margin-top: 9px;
   /* background-color: red; */
-  text-align: right !important;
+  text-align: right ;
 
 }
 

@@ -467,7 +467,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        <div className="container mt-5">
+        {/* <div className="container mt-5">
           <div className="row mt-5">
             <div className="ms-2 col text-center graphimg mt-5">
               <BarChart
@@ -509,7 +509,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );

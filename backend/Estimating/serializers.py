@@ -133,8 +133,6 @@ class EstimatingSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
 
-        # Updating representation to include names instead of IDs for foreign keys
-        # representation['company'] = instance.company.Cmpny_Name if instance.company else None
         representation['location'] = instance.location.name if instance.location else None
         representation['estimator'] = instance.estimator.full_Name if instance.estimator else None
 

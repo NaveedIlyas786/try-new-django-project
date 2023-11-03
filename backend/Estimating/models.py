@@ -4,6 +4,12 @@ from django.core.exceptions import ValidationError
 import os
 from django.utils import timezone
 # from pytz import timezone as pytz_timezone
+
+
+
+
+
+
 # Create your models here.
 class Company(models.Model):
     Cmpny_Name = models.CharField(verbose_name="Company Name",max_length=50, null=True, blank=True,unique=True)

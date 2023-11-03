@@ -156,6 +156,8 @@ class SendEmailView(APIView):
             return Response({'error': 'Failed to send email', 'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+
+
 class UrlsListViews(APIView):
     def get(self,request):
         url=UrlsTable.objects.all()
@@ -171,55 +173,6 @@ class UrlsListViews(APIView):
         
 
 
-# class CompanyWonEstimates(APIView):
-
-#     def get(self, request):
-#         # Getting the year from the query parameters or using the current year if not provided
-#         year = int(request.query_params.get('year', datetime.now().year))
-
-#         # Getting all active companies
-#         companies = Company.objects.filter(is_active=True)
-
-#         data = []
-
-#         # Variables to store total counts and sums
-#         grand_total_won_estimates = 0
-#         grand_total_bid_amount = 0
-
-#         for company in companies:
-#             # Counting 'Won' estimating records for each active company for the selected year
-#             won_estimates = Estimating.objects.filter(
-#                 company=company, 
-#                 status='Won',
-#                 start_date__year=year  # Filtering by the selected year
-#             )
-
-#             total_won_estimates = won_estimates.count()
-
-#             if total_won_estimates > 0:  # Only including companies with won estimates in the selected year
-#                 # Summing bid amounts of 'Won' estimating records for each active company
-#                 total_bid_amount = won_estimates.aggregate(sum=Sum('bid_amount'))['sum'] or 0
-
-#                 # Adding the individual company's counts and sums to the grand totals
-#                 grand_total_won_estimates += total_won_estimates
-#                 grand_total_bid_amount += total_bid_amount
-
-#                 # Adding data to the response list
-#                 data.append({
-#                     "company_name": company.Cmpny_Name,
-#                     "total_won": total_won_estimates,
-#                     "total_won_bid_amount": total_bid_amount
-#                 })
-
-#         if grand_total_won_estimates > 0:  # Only adding the grand total if there are won estimates
-#             # Adding the grand totals to the response data
-#             data.append({
-#                 "company_name": "Grand Total",
-#                 "total_won": grand_total_won_estimates,
-#                 "total_won_bid_amount": grand_total_bid_amount
-#             })
-
-#         return Response(data)
 
 
 
@@ -228,50 +181,42 @@ class UrlsListViews(APIView):
 class CompanyWonEstimates(APIView):
 
     def get(self, request):
-        # Getting the year from the query parameters or using the current year if not provided
         year = int(request.query_params.get('year', datetime.now().year))
 
-        # Getting all active companies
         companies = Company.objects.filter(is_active=True)
 
-        # Month names
         month_names = [
             "Jan", "Feb", "Mar", "Apr", "May", "Jun",
             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
         ]
 
-        # Response list
         data = []
 
-        # Iterate over each month
         for month_num, month_name in enumerate(month_names, start=1):
-            # Dictionary to store each company's data for the current month
             month_data = {}
 
             for company in companies:
-                # Counting 'Won' estimating records for each active company for the selected month and year
                 won_estimates = Estimating.objects.filter(
                     company=company,
                     status='Won',
                     start_date__year=year,
-                    start_date__month=month_num  # Filtering by the selected month
+                    start_date__month=month_num 
                 )
 
                 total_won_estimates = won_estimates.count()
 
-                # Summing bid amounts of 'Won' estimating records for each active company for the selected month
                 total_bid_amount = won_estimates.aggregate(sum=Sum('bid_amount'))['sum'] or 0
 
-                # Always add company data to the month's dictionary, even if it's zero
                 month_data[company.Cmpny_Name] = {
                     "total_won": total_won_estimates,
                     "total_won_bid_amount": total_bid_amount
                 }
 
-            # Always append the month's data to the response list, regardless of its content
             data.append({month_name: month_data})
 
         return Response(data)
+
+
 
 
 
@@ -289,7 +234,6 @@ class EstimatorSummaryView(views.APIView):
 
         year = int(request.query_params.get('year', datetime.now().year))
 
-        # Handling the estimators
         estimators = User.objects.filter(roles__name='Estimator')
         for estimator in estimators:
             estimates = Estimating.objects.filter(
@@ -327,12 +271,11 @@ class EstimatorSummaryView(views.APIView):
 
         response_data.append(unassigned_data)
 
-        # total_data['estimator'] = 'Grand Totals'
-        # response_data.append(total_data)
+
         grand_totals = {
-            'summary': total_data,  # Modified this line to add all status including Grand Total
-            'ytd_total': total_data['Grand Total']['total'],  # Extracted grand total count
-            'ytd_total_bid_amount': total_data['Grand Total']['bid_amount'], # Extracted grand total bid amount
+            'summary': total_data,  
+            'ytd_total': total_data['Grand Total']['total'], 
+            'ytd_total_bid_amount': total_data['Grand Total']['bid_amount'],
             'estimator': 'Grand Totals'
         }
         response_data.append(grand_totals)
@@ -367,97 +310,7 @@ def calculate_summary(estimates, only_working=False):
 
 
 
-# class Grand_totleSummaryView(views.APIView):
 
-#     def get(self, request, format=None):
-#         response_data = []
-#         total_data = {
-#             'Working': {'total': 0, 'bid_amount': 0},
-#             'Pending': {'total': 0, 'bid_amount': 0},
-#             'Won': {'total': 0, 'bid_amount': 0},
-#             'Lost': {'total': 0, 'bid_amount': 0},
-#             'Grand Total': {'total': 0, 'bid_amount': 0}
-#         }
-
-#         year = int(request.query_params.get('year', datetime.now().year))
-
-#         # Handling the estimators
-#         estimators = User.objects.filter(roles__name='Estimator')
-#         for estimator in estimators:
-#             estimates = Estimating.objects.filter(
-#                 estimator=estimator,
-#                 start_date__year=year  
-#             )
-
-#             if estimates.count() == 0:
-#                 continue
-            
-#             estimator_data = calculate_summary(estimates)
-#             estimator_data['estimator'] = estimator.full_Name  
-            
-#             response_data.append(estimator_data)
-
-#         #     for status in ['Working', 'Pending', 'Won', 'Lost']:
-#         #         total_data[status]['total'] += estimator_data['summary'][status]['total']
-#         #         total_data[status]['bid_amount'] += estimator_data['summary'][status]['bid_amount']
-#         #         total_data['Grand Total']['total'] += estimator_data['summary'][status]['total']
-#         #         total_data['Grand Total']['bid_amount'] += estimator_data['summary'][status]['bid_amount']
-
-#         # unassigned_estimations = Estimating.objects.filter(
-#         #     estimator__isnull=True,
-#         #     status='Working',
-#         #     start_date__year=year  
-#         # )
-
-#         # unassigned_data = calculate_summary(unassigned_estimations, only_working=True)
-#         # unassigned_data['estimator'] = 'Unassigned'
-
-#         # total_data['Working']['total'] += unassigned_data['summary']['Working']['total']
-#         # total_data['Working']['bid_amount'] += unassigned_data['summary']['Working']['bid_amount']
-#         # total_data['Grand Total']['total'] += unassigned_data['summary']['Working']['total']
-#         # total_data['Grand Total']['bid_amount'] += unassigned_data['summary']['Working']['bid_amount']
-
-#         # response_data.append(unassigned_data)
-
-#         total_data['estimator'] = 'Grand Totals'
-#         response_data.append(total_data)
-#         grand_totals = {
-#             'summary': total_data,  # Modified this line to add all status including Grand Total
-#             'ytd_total': total_data['Grand Total']['total'],  # Extracted grand total count
-#             'ytd_total_bid_amount': total_data['Grand Total']['bid_amount'], # Extracted grand total bid amount
-#             'estimator': 'Grand Totals'
-#         }
-#         response_data.append(grand_totals)
-
-
-#         return Response(response_data, status=200)
-
-# def calculate_summary(estimates, only_working=False):
-#     grand_total = estimates.count()
-#     grand_total_bid_amount = estimates.aggregate(Sum('bid_amount'))['bid_amount__sum'] or 0
-#     statuses = ['Working'] if only_working else ['Working', 'Pending', 'Won', 'Lost']
-
-#     summary = {}
-#     for status in statuses:
-#         total = estimates.filter(status=status).count()
-#         bid_amount = estimates.filter(status=status).aggregate(bid_amount=Sum('bid_amount'))['bid_amount'] or 0
-#         percentage = (total / grand_total * 100) if grand_total > 0 else 0
-
-#         summary[status] = {
-#             'total': total,
-#             'percentage': percentage,
-#             'bid_amount': bid_amount
-#         }
-
-#     return {
-#         'summary': summary,
-#         'ytd_total': grand_total,
-#         'ytd_total_bid_amount': grand_total_bid_amount
-#     }
-
-
-
-#dfhdjhfjdhf
 class CompanyListView(APIView):
 
 

@@ -1,6 +1,6 @@
 # serializers.py
 from rest_framework import serializers
-from .models import Project, Contract, Schedule_of_Value, Insurance, Bond, Zlien, Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, Billing, Sov, HDS_system, OnBuild, Buget,Project_detail
+from .models import Project, Contract,  Insurance, Bond, Zlien, Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, Billing, Sov, HDS_system, OnBuild, Buget,Project_detail
 
 from Estimating.models import Proposal,Spec_detail
 from Estimating.serializers import ProposalSerializer,SpecificationDetailSerializer
@@ -25,21 +25,21 @@ class ContractSerializer(serializers.ModelSerializer):
 
         return representation
 
-class ScheduleOfValueSerializer(serializers.ModelSerializer):
-    schedule_date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+# class ScheduleOfValueSerializer(serializers.ModelSerializer):
+#     schedule_date = serializers.DateField(
+#         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
 
-    class Meta:
-        model = Schedule_of_Value
-        fields = '__all__'
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
+#     class Meta:
+#         model = Schedule_of_Value
+#         fields = '__all__'
+#     def to_representation(self, instance):
+#         representation = super().to_representation(instance)
         
         
-        representation['project'] = instance.project.job_num if instance.project else None
+#         representation['project'] = instance.project.job_num if instance.project else None
 
 
-        return representation
+#         return representation
 
 class InsuranceSerializer(serializers.ModelSerializer):
 
@@ -299,7 +299,7 @@ class BugetSerializer(serializers.ModelSerializer):
     
 class ProjectSerializer(serializers.ModelSerializer):
     contracts = ContractSerializer(source='contract_set', many=True, read_only=True)
-    schedule_of_values = ScheduleOfValueSerializer(source='schedule_of_value_set', many=True, read_only=True)
+    # schedule_of_values = ScheduleOfValueSerializer(source='schedule_of_value_set', many=True, read_only=True)
     insurancs = InsuranceSerializer(source='insurance_set', many=True, read_only=True)
     bond = BondSerializer(source='bond_set', many=True, read_only=True)
     zliens = ZlienSerializer(source='zlien_set', many=True, read_only=True)
@@ -325,7 +325,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         model = Project
         fields = ['id','status', 'job_num', 'start_date', 'proposal_id','prjct_engnr','bim_oprtr','Forman','prjct_mngr','start_date','general_superintendent',
                     'project_address','addendums','bid','Spec','contacts','drywell','finish','wall_type','progress','ro_door','ro_window','substitution',
-                    'contracts','schedule_of_values','insurancs','bond','zliens','submittals','shopdrawing','safity','schedule','sub_contractors','laborrate',
+                    'contracts','insurancs','bond','zliens','submittals','shopdrawing','safity','schedule','sub_contractors','laborrate',
                     'billing','sov','hds_system','onbuild','buget','proposal']
     def to_representation(self, instance):
         representation = super().to_representation(instance)

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Project_detail,Project
 from .models import (
-    Project, Contract, Schedule_of_Value, Insurance, Bond, Zlien, Submittals, 
+    Project, Contract,  Insurance, Bond, Zlien, Submittals, 
     ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, Billing, Sov, 
     HDS_system, OnBuild, Buget,Project_detail
 )
@@ -11,9 +11,9 @@ class ContractInline(admin.StackedInline):
     model = Contract
     extra = 1  
 
-class ScheduleOfValueInline(admin.StackedInline):
-    model = Schedule_of_Value
-    extra = 1
+# class ScheduleOfValueInline(admin.StackedInline):
+#     model = Schedule_of_Value
+#     extra = 1
 
 class InsuranceInline(admin.StackedInline):
     model = Insurance
@@ -83,7 +83,7 @@ class BugetInline(admin.StackedInline):
 
 class ProjectAdmin(admin.ModelAdmin):
     inlines = [
-        ContractInline, ScheduleOfValueInline, InsuranceInline, BondInline,
+        ContractInline,  InsuranceInline, BondInline,
         ZlienInline, SubmittalsInline, ShopDrawingInline, SafityInline,
         ScheduleInline, SubContractorsInline, LaborRateInline, BillingInline,
         SovInline, HDSSystemInline, OnBuildInline, BugetInline
@@ -111,7 +111,7 @@ class ProjectDetailAdmin(admin.ModelAdmin):
 admin.site.register(Project_detail, ProjectDetailAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Contract)
-admin.site.register(Schedule_of_Value)
+# admin.site.register(Schedule_of_Value)
 admin.site.register(Insurance)
 admin.site.register(Bond)
 admin.site.register(Zlien)

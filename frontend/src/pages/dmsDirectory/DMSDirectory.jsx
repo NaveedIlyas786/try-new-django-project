@@ -483,7 +483,7 @@ const DMSDirectory = () => {
           />
           <button
             className="btn btn-primary ms-2  btn-md"
-            onClick={(e) => {
+            onClick={() => {
               setShowModal(true);
             }}
           >

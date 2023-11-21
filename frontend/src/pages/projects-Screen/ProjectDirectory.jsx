@@ -119,23 +119,7 @@ const ProjectDirectory = () => {
         </div>
 
       </div>
-
-
-
-
-
-      <div className="tableSubmitls">
-
-
-      </div>
-
-
-
-
-
-
-
-      
+    
     </div>
   );
 };

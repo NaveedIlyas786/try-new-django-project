@@ -10,14 +10,11 @@ import { Modal, Button, Stepper, Step, StepLabel } from "@mui/material";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { addEstimating } from "../../store/EstimatingSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { createSelector } from "reselect";
 // import "aos/dist/aos.css";
 import ParticlesAnimation from "../../components/particleAnimation/ParticlesAnimation";
-import { useSelector, useDispatch } from "react-redux";
 import { updateStatus } from "../../store/EstimatingSlice";
-import { createSelector } from "reselect";
-// import { storeProposalData } from "../../store/EstimatingProposalSlice";
-// import { margin } from "@mui/system";
-// const update_status_when_close=0;
 
 const Estimator = (props) => {
   const [filter, setFilter] = useState("");
@@ -190,9 +187,9 @@ const Estimator = (props) => {
   const [selectedEstimatingID, setSelectedEstimatingID] = useState(null);
 
   const [selectedProposalID, setSelectedProposalID] = useState(null);
+  const [selectedProposalNumbers, setSelectedProposalNumbers] = useState([]);
 
   const [selectedNumber, setSelectedNumber] = useState("");
-  const [selectedProposalNumbers, setSelectedProposalNumbers] = useState([]);
 
   useEffect(() => {
     const fetchAndFilterProposals = async () => {
@@ -624,15 +621,6 @@ const Estimator = (props) => {
       hds_system: [...prevData.hds_system, newHDSSystem],
     }));
   };
-
-  // // Function to remove an existing "HD S_SYSTEMS" entry by index
-  // const handleRemoveHDSSystem = (index) => {
-  //   setProjectStep8FormData((prevData) => ({
-  //     ...prevData,
-  //     hds_system: prevData.hds_system.filter((_, i) => i !== index),
-  //   }));
-  // };
-  // Function to remove an existing "HD S_SYSTEMS" entry by index
   const handleRemoveHDSSystem = (index) => {
     setProjectStep8FormData((prevData) => ({
       ...prevData,
@@ -668,17 +656,7 @@ const Estimator = (props) => {
 
     });
   };
-  // const handleAddOnBuild = () => {
-  //   const newOnBuild = {
-  //     field: "",
-  //     status: "",
-  //   };
-  //   setProjectStep7FormData({
-  //     ...ProjectStep8FormData,
-  //     on_build: [...ProjectStep8FormData.on_build, newOnBuild],
-  //   });
-  // };
-
+ 
   const handleRemoveOnBuild = (index) => {
     const updatedOnBuild = [...ProjectStep8FormData.on_build];
     updatedOnBuild.splice(index, 1);
@@ -687,15 +665,6 @@ const Estimator = (props) => {
       on_build: updatedOnBuild,
     });
   };
-  // const handleRemoveOnBuild = (index) => {
-  //   const updatedOnBuild = [...ProjectStep8FormData.on_build];
-  //   updatedOnBuild.splice(index, 1);
-  //   setProjectStep8FormData({
-  //     ...ProjectStep8FormData,
-  //     on_build: updatedOnBuild,
-  //   });
-  // };
-
   // Function to handle changes for the "ON UPLOADED" section
   const handleOnBuildChange = (index, field, value) => {
     const updatedOnBuild = [...ProjectStep8FormData.on_build];
@@ -705,29 +674,6 @@ const Estimator = (props) => {
       on_build: updatedOnBuild,
     });
   };
-  // Function to handle changes for the "ON UPLOADED" section
-  // const handleOnBuildChange = (index, field, value) => {
-  //   const updatedOnBuild = [...ProjectStep8FormData.on_build];
-  //   updatedOnBuild[index][field] = value;
-  //   setProjectStep8FormData({
-  //     ...ProjectStep8FormData,
-  //     on_build: updatedOnBuild,
-  //   });
-  // };
-
-  // ***************
-  // ***************
-
-  // const handleAddBudget = () => {
-  //   const newBudget = {
-  //     status: "",
-  //     comment_box: "",
-  //   };
-  //   setProjectStep8FormData({
-  //     ...ProjectStep8FormData,
-  //     buget: [...ProjectStep8FormData.buget, newBudget],
-  //   });
-  // };
   const handleAddBudget = () => {
     const newBudget = {
       status: "",
@@ -747,15 +693,6 @@ const Estimator = (props) => {
       buget: updatedBudget,
     });
   };
-  // const handleRemoveBudget = (index) => {
-  //   const updatedBudget = [...ProjectStep8FormData.buget];
-  //   updatedBudget.splice(index, 1);
-  //   setProjectStep8FormData({
-  //     ...ProjectStep8FormData,
-  //     buget: updatedBudget,
-  //   });
-  // };
-
   // Function to handle changes for the "BUGETS" section
   const handleBudgetChange = (index, field, value) => {
     const updatedBudget = [...ProjectStep8FormData.buget];
@@ -765,17 +702,6 @@ const Estimator = (props) => {
       buget: updatedBudget,
     });
   };
-  // Function to handle changes for the "BUGETS" section
-  // const handleBudgetChange = (index, field, value) => {
-  //   const updatedBudget = [...ProjectStep8FormData.buget];
-  //   updatedBudget[index][field] = value;
-  //   setProjectStep8FormData({
-  //     ...ProjectStep8FormData,
-  //     buget: updatedBudget,
-  //   });
-  // };
-
-  // *****************
   // *****************
 
   // Function to handle form submission
@@ -1332,30 +1258,7 @@ const Estimator = (props) => {
     .toString()
     .padStart(2, "0")}`;
 
-  // *******************************************************
   const [itemId, setItemId] = useState();
-
-  // const convertToIsoTime = (formattedTime) => {
-  //   // Convert "hh:mm AM/PM" to "hh:mm"
-  //   const timeParts = formattedTime.split(" ");
-  //   if (timeParts.length === 2) {
-  //     const [time, ampm] = timeParts;
-  //     const [hours, minutes] = time.split(":");
-  //     const isPM = ampm === "PM" || ampm === "pm";
-  //     let isoHours = parseInt(hours, 10);
-  //     if (isPM && isoHours !== 12) {
-  //       isoHours += 12;
-  //     } else if (!isPM && isoHours === 12) {
-  //       isoHours = 0;
-  //     }
-  //     return `${String(isoHours).padStart(2, "0")}:${minutes}`;
-  //   }
-  //   return formattedTime;
-  // };
-
-  // const formattedTimeEdit = convertToIsoTime(SelectedTimeforUpdate);
-
-  // console.log("formattedTimeEdit:", formattedTimeEdit);
 
   const handleEstimatingEditing = async (event) => {
     event.preventDefault();
@@ -1423,11 +1326,11 @@ const Estimator = (props) => {
   const [step1FormData, setStep1FormData] = useState({
     Addendums: [], // Make sure it's an array
   });
-  const [step2FormData, setStep2FormData] = useState({
+  const [step2FormData, setStep2FormData] = useState([{
     specific_name: "Base Bid Drywall/Framing",
     budget: null,
     sefic: [],
-  });
+  }]);
 
   // ****************new entry of scope of work with unique id
 
@@ -1711,7 +1614,6 @@ const Estimator = (props) => {
     }
   };
 
-  // };
   const handleProjectNameChange = (e) => {
     setProjectName(e.target.value);
   };
@@ -1740,11 +1642,6 @@ const Estimator = (props) => {
     setBidder_detail(e.target.value);
   };
 
-  // const handleCompanyNameChange = (e) => {
-  //   console.log(e.target.value);
-  //   setCompanyName(e.target.value);
-  //   console.log("My Company value is:",mycompany);
-  // };
   // ********************************
   // Function to format the integer value with commas
   const formatNumberWithCommas = (value) => {
@@ -2180,7 +2077,29 @@ const Estimator = (props) => {
               </div>
             </div>
           </div>
+          {/* <!-- Button trigger modal --> */}
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+  Launch static backdrop modal
+</button>
 
+{/* <!-- Modal --> */}
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </div>
+</div>
           <ParticlesAnimation numberOfCircles={numberOfCircles} />
           {/* //here was project Modal before */}
           <div className="table-responsive proposalTable " data-aos="fade-up">
@@ -2260,7 +2179,7 @@ const Estimator = (props) => {
                         onChange={(event) =>
                           handleEstimatorChange(event, item.id)
                         }
-                        value={estimatorchoice[item.id] || item.estimator}
+                        value={estimatorchoice[item.id] || item.estimator }
                       >
                         <option value="">
                           {item.estimator ? item.estimator : "No Estimator"}
@@ -2387,9 +2306,9 @@ const Estimator = (props) => {
                                 }}
                               >
                                 {readMoreState[item.id] ? (
-                                  <p class="read_more">Read less...</p>
+                                  <p className="read_more">Read less...</p>
                                 ) : (
-                                  <p class="read_more">Read more...</p>
+                                  <p className="read_more">Read more...</p>
                                 )}
                               </label>
                             ) : null
@@ -2413,7 +2332,7 @@ const Estimator = (props) => {
 
                     <td className="mytd centered-td actionTD">
                       <div className="relative-container loop">
-                        <button
+                        {/* <button
                           onClick={() => {
                             // console.log(item.prjct_name);
                             const test = typeof item.id;
@@ -2424,7 +2343,7 @@ const Estimator = (props) => {
                           }}
                         >
                           Project
-                        </button>
+                        </button> */}
                         <div
                           type="button"
                           className="pb-2"
@@ -2446,7 +2365,7 @@ const Estimator = (props) => {
                             setshowEstimatingEditModal(true);
                           }}
                         >
-                          <i class="fa-solid fa-pen-to-square size11 edit "></i>
+                          <i className="fa-solid fa-pen-to-square size11 edit "></i>
                         </div>
 
                         <div
@@ -2464,7 +2383,7 @@ const Estimator = (props) => {
                             setPurposalModal(true);
                           }}
                         >
-                          <i class="fa-solid fa-square-plus size11"></i>
+                          <i className="fa-solid fa-square-plus size11"></i>
                         </div>
 
                         <div
@@ -2478,7 +2397,7 @@ const Estimator = (props) => {
                             );
                           }}
                         >
-                          <i class="fa-solid fa-eye size11"></i>
+                          <i className="fa-solid fa-eye size11"></i>
                         </div>
                       </div>
                     </td>
@@ -2489,6 +2408,8 @@ const Estimator = (props) => {
           </div>
         </div>
       </div>
+
+
       {showProjectModal && (
         <div
           className={`modal-container pt-5 ps-2 ${
@@ -5079,6 +5000,7 @@ const Estimator = (props) => {
               onClose={closeModal}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
+              BackdropProps={{ onClick: null }}
             >
               <div
                 className={`modal-container pt-5 ps-2 ${
@@ -5420,7 +5342,7 @@ const Estimator = (props) => {
                                 onClick={() =>
                                   handleAddScopeDivisionEntry(index)
                                 }
-                              >
+                              >kkk
                                 <i className="fa-regular icon fa-plus"></i>
                               </button>
                             </div>

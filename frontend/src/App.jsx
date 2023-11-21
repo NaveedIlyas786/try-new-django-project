@@ -41,9 +41,12 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/myDashboard" element={<MyDashboard />} />
         <Route path="/forgotScreen" element={<Forgot />} />
-        <Route path="/resetpassword/:id/:token" element={<ResetPassword/>}/>
-          <Route path="/adminDecisionPage/:userId" element={<AdminDecisionpage />} />
-          <Route path="/homepage/" element={<HomePage />}>
+        <Route path="/resetpassword/:id/:token" element={<ResetPassword />} />
+        <Route
+          path="/adminDecisionPage/:userId"
+          element={<AdminDecisionpage />}
+        />
+        <Route path="/homepage/" element={<HomePage />}>
           <Route path="projects" element={<Projects />} />
           <Route path="purposal" element={<Purposal />} />
           <Route path="dashboard" element={<Dashboard />} />

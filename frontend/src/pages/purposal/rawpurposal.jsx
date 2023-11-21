@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
-import "./Purposaldata.css";
+// import "./Purposaldata.css";
 
 
 import "@progress/kendo-theme-material/dist/all.css";
@@ -152,13 +152,6 @@ const generatePDFBlob = async (data) => {
   const asBlob = true;
   return pdf(doc).toBlob();
 };
-
-
-
-
-
-
-
 
 
 

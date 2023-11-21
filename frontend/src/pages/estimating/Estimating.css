@@ -363,14 +363,7 @@ input[type="text"].serviceInput.focused {
   overflow-y: scroll;
   scroll-behavior: smooth;
 }
-.switch {
-  position: relative;
-  display: inline-block;
-  height: 23px !important;
-  max-width: 23px !important;
-  /* background-color: #1976d2; */
-  margin: 0 10px;
-}
+
 
 .slider:before {
   position: absolute;
@@ -436,8 +429,6 @@ input[type="text"].serviceInput.focused {
   max-height: 420px !important;
   border-radius: 10px !important;
   background-color: #e6e2e2;
-  /* border: none !important;
-  outline: none !important; */
   overflow-y: scroll;
   scroll-behavior: smooth;
 }
@@ -460,11 +451,12 @@ input[type="text"].serviceInput.focused {
 .switch {
   position: relative;
   display: inline-block;
-  /* width: 30px;
-  height: 30px; */
   border: none !important;
   outline: none !important;
   padding: 0 30px;
+  height: 23px !important;
+  max-width: 23px !important;
+  margin: 0 10px;
 }
 
 .switch input {
@@ -555,6 +547,7 @@ input:checked + .slider:before {
 #bidderDetails {
   height: 120px !important;
 }
+
 table tr > th,
 tr {
   border: 1px solid rgb(182, 181, 181);
@@ -595,7 +588,6 @@ td:nth-child(8) {
   text-align: center; /* Center horizontally */
   vertical-align: middle; /* Center vertically */
 }
-
 .modal {
   max-height: 400px !important;
 }

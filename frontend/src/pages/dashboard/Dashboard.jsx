@@ -1,23 +1,10 @@
 import React, { useEffect, useState, PureComponent } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import Button from "react-bootstrap/Button";
-// import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import {
-  BarChart,
-  Bar,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
 import "./Dashboard.css";
 import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
-// import ApexCharts from 'apexcharts'
 
 
 const Dashboard = () => {

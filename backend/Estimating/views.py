@@ -20,7 +20,11 @@ import base64
 import logging
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime,date
-from django.db.models import Sum
+from django.db.models import Sum,Q
+
+
+
+
 
 class DepartmentViews(APIView):
     def get(self,request):
@@ -199,8 +203,8 @@ class CompanyWonEstimates(APIView):
                 won_estimates = Estimating.objects.filter(
                     company=company,
                     status='Won',
-                    start_date__year=year,
-                    start_date__month=month_num 
+                    due_date__year=year,
+                    due_date__month=month_num 
                 )
 
                 total_won_estimates = won_estimates.count()

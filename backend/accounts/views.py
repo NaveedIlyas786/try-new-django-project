@@ -56,7 +56,7 @@ class UserRegistrationView(APIView):
             admin_user = User.objects.get(is_admin=True)
             admin_token = get_tokens_for_user(admin_user)['access']
 
-            approval_link = request.build_absolute_uri(f'http://localhost:5173/adminDecisionPage/{user.id}/')
+            approval_link = request.build_absolute_uri(f'http://localhost:5174/adminDecisionPage/{user.id}/')
             # disapproval_link = request.build_absolute_uri(f'/api/user/disapprove_user/{user.id}/')
 
             message = (

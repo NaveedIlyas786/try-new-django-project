@@ -11,8 +11,8 @@ from rest_framework.views import APIView
 
 
 from rest_framework.decorators import api_view
-from .models import Project, Contract, Schedule_of_Value, Insurance, Bond, Zlien, Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, Billing, Sov, HDS_system, OnBuild, Buget
-from .serializers import (ProjectSerializer, ContractSerializer, ScheduleOfValueSerializer, InsuranceSerializer, BondSerializer,
+from .models import Project, Contract, Insurance, Bond, Zlien, Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, Billing, Sov, HDS_system, OnBuild, Buget
+from .serializers import (ProjectSerializer, ContractSerializer,  InsuranceSerializer, BondSerializer,
                           ZlienSerializer, SubmittalsSerializer, ShopDrawingSerializer, SafitySerializer, ScheduleSerializer,
                           SubContractorsSerializer, LaborRateSerializer, BillingSerializer, SovSerializer, HDSSystemSerializer,
                           OnBuildSerializer, BugetSerializer)
@@ -34,7 +34,7 @@ def create_project(request, id=None):
 
     related_data_models = [
             ('contract', Contract, ContractSerializer),
-            ('schedule_of_value', Schedule_of_Value, ScheduleOfValueSerializer),
+            # ('schedule_of_value', Schedule_of_Value, ScheduleOfValueSerializer),
             ('insurance', Insurance, InsuranceSerializer),
             ('bond', Bond, BondSerializer),
             ('zlien', Zlien, ZlienSerializer),
@@ -77,7 +77,7 @@ def create_project(request, id=None):
 
         related_data_models = [
             ('contract', Contract, ContractSerializer),
-            ('schedule_of_value', Schedule_of_Value, ScheduleOfValueSerializer),
+            # ('schedule_of_value', Schedule_of_Value, ScheduleOfValueSerializer),
             ('insurance', Insurance, InsuranceSerializer),
             ('bond', Bond, BondSerializer),
             ('zlien', Zlien, ZlienSerializer),

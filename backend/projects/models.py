@@ -341,12 +341,12 @@ class Contract(models.Model):
     contract_date=models.DateField(verbose_name="add date of the Contract if Fully Executed (YYYY-MM-DD)", null=True, blank=True)
 
 
-class Schedule_of_Value(models.Model):
-    project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
-    schedule=models.CharField(verbose_name="Schedule of Value", max_length=50,choices=[
-        ('Approved','Approved'),('Pending','Pending')
-        ],default='Pending', null=True, blank=True)
-    schedule_date=models.DateField(verbose_name="add date of the schedule if Approved (YYYY-MM-DD)", null=True, blank=True)
+# class Schedule_of_Value(models.Model):
+#     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
+#     schedule=models.CharField(verbose_name="Schedule of Value", max_length=50,choices=[
+#         ('Approved','Approved'),('Pending','Pending')
+#         ],default='Pending', null=True, blank=True)
+#     schedule_date=models.DateField(verbose_name="add date of the schedule if Approved (YYYY-MM-DD)", null=True, blank=True)
 
 
 

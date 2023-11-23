@@ -2281,7 +2281,6 @@ const Estimator = (props) => {
                             {item.bidder_detail ? item.bidder_detail + " " : ""}
                             {item.bidder_mail ? item.bidder_mail : ""}
                           </p>
-
                           {
                             // Check if any of the fields exist and are longer than a set threshold
                             (item.bidder && item.bidder.length > 20) ||

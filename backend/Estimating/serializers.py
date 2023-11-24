@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework import status
 
-from Estimating.models import Company,Estimating, Estimating_detail, Proposal, Addendum, Qualification, Spec_detail, Specification, ProposalService, Service, Location,UrlsTable,DMS_Dertory,Dprtmnt,Role
+from Estimating.models import Company,Estimating, Estimating_detail, Proposal, Addendum, Qualification, Spec_detail, Specification, ProposalService, Service, Location,UrlsTable,DMS_Dertory,Dprtmnt,Role,GC_detail
 
 from rest_framework.exceptions import ValidationError
 
@@ -71,6 +71,8 @@ class RecursiveEstimatingDetailSerializer(serializers.Serializer):
 
 
 
+
+
 class EstimatingDetailSerializer(serializers.ModelSerializer):
     children = RecursiveEstimatingDetailSerializer(many=True,read_only=True)
 
@@ -89,9 +91,21 @@ class Time12HourField(serializers.TimeField):
     def to_representation(self, value):
         return value.strftime(self.format)
 
+
+
     
+class GC_infoSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = GC_detail
+        fields = ['id','estimating', 'gc_name', 'gc_email', 'gc_detail']
+        # extra_kwargs = {'id': {'read_only': True}}
+
+
+
+
     
 class EstimatingSerializer(serializers.ModelSerializer):
+    gc_details = GC_infoSerializers(many=True, read_only=True)
 
     time = Time12HourField(format='%I:%M %p', input_formats=['%I:%M %p'], required=False, allow_null=True)
 
@@ -125,10 +139,9 @@ class EstimatingSerializer(serializers.ModelSerializer):
             'bidder_mail',
             'bidder_detail',
             'plane_date',
+            'gc_details',
     
         ]
-
-
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -136,6 +149,7 @@ class EstimatingSerializer(serializers.ModelSerializer):
         representation['location'] = instance.location.name if instance.location else None
         representation['estimator'] = instance.estimator.full_Name if instance.estimator else None
 
+        representation['gc_details'] = GC_infoSerializers(instance.gc_details.all(), many=True).data
 
 
 

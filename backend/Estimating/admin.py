@@ -5,9 +5,14 @@ from import_export.admin import ImportExportModelAdmin
 
 import os
 from django.contrib import admin
-from .models import Estimating,Proposal,Service,Addendum,Specification,Spec_detail,Qualification,ProposalService,UrlsTable,Role,Dprtmnt,DMS_Dertory
+from .models import Estimating,Proposal,Service,Addendum,Specification,Spec_detail,Qualification,ProposalService,UrlsTable,Role,Dprtmnt,DMS_Dertory,GC_detail
 from nested_admin import NestedStackedInline, NestedModelAdmin
 from .forms import EstimatingDetailAdminForm,EstimatingAdminForm
+
+
+
+
+
 
 
 class RoleAdmin(admin.ModelAdmin):
@@ -50,10 +55,12 @@ class LocationAdmin(admin.ModelAdmin):
 
 
 
+class GC_detailInline(NestedStackedInline): 
+    model = GC_detail
+    extra = 1  # Number of extra empty rows to display
 
-
-
-class EstimatingAdmin(admin.ModelAdmin):
+class EstimatingAdmin(NestedModelAdmin):
+    inlines = [GC_detailInline]
     form=EstimatingAdminForm
     list_display = ['id', 'start_date', 'prjct_name','time','timezone',
                     'due_date', 'status','company',
@@ -65,12 +72,6 @@ class EstimatingAdmin(admin.ModelAdmin):
         queryset = super().get_queryset(request)
         queryset = queryset.select_related('estimator')  # Optimize the number of SQL queries
         return queryset
-
-class ViewAdmin(ImportExportModelAdmin,EstimatingAdmin):
-    pass
-
-
-
 
 
 class EstimatingDetailAdmin(admin.ModelAdmin):

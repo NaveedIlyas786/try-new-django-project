@@ -5,8 +5,8 @@ import os
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status,views
-from .models import Company, Estimating,Estimating_detail, Proposal, Qualification,Service,Location,UrlsTable,Addendum,DMS_Dertory,Specification,Spec_detail,Role,Dprtmnt
-from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer,SpecificationSerializer,ServiceSerializer,LocationSerializer,EstimatingDetailSerializer,ProposalServiceSerializer,CompanySerializer,UrlsSerializers,DMS_DertorySezializers,Job_titleSerializers,DprtmentSerializers
+from .models import Company, Estimating,Estimating_detail, Proposal, Qualification,Service,Location,UrlsTable,Addendum,DMS_Dertory,Specification,Spec_detail,Role,Dprtmnt,GC_detail
+from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer,SpecificationSerializer,ServiceSerializer,LocationSerializer,EstimatingDetailSerializer,ProposalServiceSerializer,CompanySerializer,UrlsSerializers,DMS_DertorySezializers,Job_titleSerializers,DprtmentSerializers,GC_infoSerializers
 from accounts.models import User
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
@@ -374,11 +374,33 @@ class EstimatingListView(APIView):
             return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = EstimatingSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        estimating_serializer = EstimatingSerializer(data=request.data)
+        if estimating_serializer.is_valid():
+            estimating = estimating_serializer.save()  # Save the Estimating instance first
+
+            # Now handle the GC_detail data if present
+            gc_details_data = request.data.get('gc_details')  # 'gc_details' should be the key in your request data
+            if gc_details_data:
+                # Ensure that we have a list of GC_details
+                if not isinstance(gc_details_data, list):
+                    gc_details_data = [gc_details_data]
+
+                for gc_detail_data in gc_details_data:
+                    # Set the estimating instance to the current estimating id
+                    gc_detail_data['estimating'] = estimating.id
+                    gc_detail_serializer = GC_infoSerializers(data=gc_detail_data)
+                    if gc_detail_serializer.is_valid():
+                        gc_detail_serializer.save()  # Save the GC_detail instance
+                    else:
+                        # If GC_detail is not valid, delete the estimating instance and return an error
+                        estimating.delete()
+                        return Response(gc_detail_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            return Response(estimating_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(estimating_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 
     def delete(self, request, id, format=None):
         try:

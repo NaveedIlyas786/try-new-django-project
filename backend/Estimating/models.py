@@ -163,6 +163,21 @@ class Estimating(models.Model):
 
 
 
+class GC_detail(models.Model):
+    estimating = models.ForeignKey(Estimating, on_delete=models.CASCADE, null=True, blank=True,related_name='gc_details')
+    gc_name=models.CharField(verbose_name="GC Name",max_length=1500, null=True,blank=True)
+    gc_email=models.EmailField(verbose_name="GC Email", max_length=254,null=True,blank=True)
+    gc_detail=models.CharField(verbose_name="GC Detail", max_length=1500, null=True,blank=True)
+    def __str__ (self):
+        return self.gc_name
+
+
+
+
+
+
+
+
 class Estimating_detail(models.Model):
     Estimating=models.ForeignKey(Estimating,related_name='estimating_details', verbose_name="Add Estimating", on_delete=models.CASCADE)
     prnt = models.ForeignKey('self', verbose_name="Folder Parent ID", on_delete=models.CASCADE, null=True, blank=True, related_name="children")
@@ -285,9 +300,9 @@ class Dprtmnt(models.Model):
 
 class DMS_Dertory(models.Model):
     first_name=models.CharField(verbose_name="First Name", max_length=255,null=True,blank=True)
-    last_name=models.CharField(verbose_name="Last Name", max_length=50)
+    last_name=models.CharField(verbose_name="Last Name", max_length=50,null=True,blank=True)
     email = models.EmailField(verbose_name="Email",max_length=255,unique=True,null=True,blank=True)
-    job_title = models.ForeignKey(Role,verbose_name="Role",blank=True, on_delete=models.CASCADE,null=True)
+    job_title = models.ForeignKey(Role,verbose_name="Role", on_delete=models.CASCADE,null=True,blank=True)
     company = models.ForeignKey(Company, verbose_name="company", blank=True, on_delete=models.CASCADE,null=True)
     department=models.ForeignKey(Dprtmnt, verbose_name="Department ", on_delete=models.CASCADE,null=True,blank=True)
     direct_number=models.IntegerField(verbose_name="Direct",null=True,blank=True)

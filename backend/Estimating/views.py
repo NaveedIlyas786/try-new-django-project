@@ -82,7 +82,7 @@ class DMS_DertoryView(APIView):
         except DMS_Dertory.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        serializer = CompanySerializer(dms_dertory, data=request.data)
+        serializer = DMS_DertorySezializers(dms_dertory, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -163,10 +163,20 @@ class SendEmailView(APIView):
 
 
 class UrlsListViews(APIView):
-    def get(self,request):
-        url=UrlsTable.objects.all()
-        serializer=UrlsSerializers(url, many=True)
+    
+    def get(self, request, id=None):
+        if id:
+            try:
+                url = UrlsTable.objects.get(id=id)
+            except UrlsTable.DoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+            serializer = UrlsSerializers(url)
+        else:
+            urls = UrlsTable.objects.all()
+            serializer = UrlsSerializers(urls, many=True)
+
         return Response(serializer.data)
+    
     def post(self,request):
         serializer=UrlsSerializers(data=request.data)
         if serializer.is_valid():
@@ -175,7 +185,26 @@ class UrlsListViews(APIView):
         
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
         
+    def put(self, request, id, format=None):
+        try:
+            url = UrlsTable.objects.get(id=id)
+        except UrlsTable.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
+        serializer = UrlsSerializers(url, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id, format=None):
+        try:
+            url = UrlsTable.objects.get(id=id)  # Change the variable name
+        except UrlsTable.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        url.delete()  # Use the new variable name
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 

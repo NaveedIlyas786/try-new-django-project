@@ -5,6 +5,10 @@ from . import views
 
 urlpatterns = [
     path('Urllist/',views.UrlsListViews.as_view(),name='Url View'),
+    path('Urllist/<int:id>/',views.UrlsListViews.as_view(),name='Url View'),
+
+
+
     path('company/',views.CompanyListView.as_view(),name='Company Detail'),
     path('company/<int:id>/',views.CompanyListView.as_view(),name='Company Detail'),
 

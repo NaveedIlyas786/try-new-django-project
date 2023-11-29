@@ -65,7 +65,7 @@ class EstimatingAdmin(NestedModelAdmin):
     list_display = ['id', 'start_date', 'prjct_name','time','timezone',
                     'due_date', 'status','company',
                     'bid_amount', 'location', 'estimator',
-                    'bidder','bidder_mail','bidder_detail','plane_date']
+                    'bidder','bidder_mail','bidder_detail']
     list_filter = ['estimator']  # Use 'username' or another field that exists in the 'User' model
 
     def get_queryset(self, request):
@@ -132,10 +132,19 @@ class SpecificationInline(NestedStackedInline):
 
 class ProposalAdmin(NestedModelAdmin):
     inlines = [AddendumInline, ProposalServiceInline, SpecificationInline]
-    list_display = ['id', 'estimating', 'date', 'architect_name', 'architect_firm']
+    list_display = ['id', 'estimating', 'date', 'architect_name', 'architect_firm','plane_date','is_active']
     search_fields = ['architect_name', 'architect_firm']
 
 
+    def save_model(self, request, obj, form, change):
+        # If creating a new proposal (not change), update other proposals
+        if not change:
+            Proposal.objects.filter(estimating=obj.estimating).update(is_active=False)
+            obj.is_active = True  # Set the new proposal as active
+        
+        super().save_model(request, obj, form, change)
+
+        
 
 class QualificationAdmin(admin.ModelAdmin):
     list_display=['id','detail']

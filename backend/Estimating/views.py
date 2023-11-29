@@ -98,10 +98,10 @@ class DMS_DertoryView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+
 class SendEmailView(APIView):
 
     def post(self, request, estimating_id, format=None):
-        # Initialize logging
         logger = logging.getLogger(__name__)
 
         try:
@@ -111,41 +111,48 @@ class SendEmailView(APIView):
 
             email_from = 'mubeenjutt9757@gmail.com'  # Default sender email
 
-            # Check the type of plane_date
-            if not hasattr(estimating, 'plane_date') or not estimating.plane_date:
-                return Response({'error': 'plane_date attribute missing or None'}, status=status.HTTP_400_BAD_REQUEST)
+            # Find the active proposal related to this estimating
+            active_proposal = Proposal.objects.filter(estimating=estimating, is_active=True).first()
+            if not active_proposal:
+                return Response({'error': 'Active proposal not found'}, status=status.HTTP_400_BAD_REQUEST)
 
-            if not isinstance(estimating.plane_date, date):
-                return Response({'error': 'plane_date is not of type date'}, status=status.HTTP_400_BAD_REQUEST)
+            # Use the plane_date from the active proposal
+            plane_date = active_proposal.plane_date.strftime('%m-%d-%Y') if active_proposal.plane_date else "N/A"
+            architect_name=active_proposal.architect_name if active_proposal.architect_name else "N/A"
+            architect_firm=active_proposal.architect_firm if active_proposal.architect_firm else "N/A"
 
 
-
-            if not estimating.bidder_mail or not isinstance(estimating.bidder_mail, str):
-                return Response({'error': 'Invalid bidder_mail'}, status=status.HTTP_400_BAD_REQUEST)
-            
-            
+            # Email message
             subject = 'Proposal'
             message = f"""
             Hello,
 
             Thank you for allowing <strong>{estimating.company.Cmpny_Name}</strong> the opportunity to bid on the <strong>{estimating.prjct_name}</strong>.
 
-            The plans used to formulate the bid proposal are dated <strong> {estimating.plane_date.strftime('%m-%d-%Y')}</strong>, drafted by HPA, inc, and approved by Yong Nam.
+            The plans used to formulate the bid proposal are dated <strong>{plane_date}</strong>, drafted by <strong>{architect_firm}</strong>, and approved by <strong>{architect_name}</strong>.
 
             Thank you,
             """
+
+            # Fetch all GC emails related to this estimating
+            gc_emails = [gc.gc_email for gc in GC_detail.objects.filter(estimating=estimating) if gc.gc_email]
+
+            if not gc_emails:
+                return Response({'error': 'No valid GC emails found'}, status=status.HTTP_400_BAD_REQUEST)
 
             email = EmailMessage(
                 subject,
                 message,
                 email_from,
-                [estimating.bidder_mail],
+                gc_emails,
             )
             email.content_subtype = 'html'
+
             # Attach the PDF if it's in the request
             pdf_file = request.FILES.get('pdf')
             if isinstance(pdf_file, InMemoryUploadedFile):
                 email.attach(pdf_file.name, pdf_file.read(), 'application/pdf')
+
             email.send()
 
             return Response({'message': 'Email sent successfully!'})
@@ -158,8 +165,6 @@ class SendEmailView(APIView):
             logger.error(str(e))
             logger.error(f'Request Data: {request.data}')  # Log the entire request data
             return Response({'error': 'Failed to send email', 'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
 
 
 class UrlsListViews(APIView):
@@ -594,12 +599,15 @@ def create_proposal(request, proposal_id=None):
 
         except Estimating.DoesNotExist:
             return Response({"error": "Estimating instance not found"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        Proposal.objects.filter(estimating=estimating_instance).update(is_active=False)
 
         proposal_data = {
             "estimating_id": estimating_instance.id,
             "date": data['date'],
             "architect_name": data['architect_name'],
             "architect_firm": data['architect_firm'],
+            "is_active": True
         }
 
         proposal_serializer = ProposalSerializer(data=proposal_data)

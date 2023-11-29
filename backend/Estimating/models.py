@@ -73,7 +73,7 @@ class Estimating(models.Model):
             ('Working','Working'),
             ('Pending','Pending'),
             ('Won','Won'),
-            ('Lost','Lost'),],default='Working')
+            ('Lost','Lost'),],default='Working',null=True,blank=True)
     start_date = models.DateField(verbose_name="start Date",null=True,blank=True)
     company = models.ForeignKey(Company, verbose_name="Company",related_name='company_in_estimator',limit_choices_to=models.Q(is_active=True), on_delete=models.CASCADE,blank=True,null=True)
     bid_amount=models.IntegerField(verbose_name="Bid Amount ",blank=True,null=True)
@@ -86,10 +86,7 @@ class Estimating(models.Model):
     bidder = models.CharField(verbose_name="Bidder Name",max_length=1500, null=True,blank=True)
     bidder_detail=models.CharField(verbose_name="Bidder Detail",max_length=5000,null=True,blank=True)
     bidder_mail=models.EmailField(verbose_name="add the bidder Mail", max_length=254,null=True,blank=True)
-    plane_date= models.DateField(
-        verbose_name="Plane Date(YYYY-MM-DD)",
-        blank=True,
-        null=True)
+
 
 
 
@@ -220,6 +217,11 @@ class Proposal(models.Model):
     architect_firm=models.CharField(
         verbose_name="Architect Firm",
         max_length=50)
+    plane_date= models.DateField(
+        verbose_name="Plane Date(YYYY-MM-DD)",
+        blank=True,
+        null=True)
+    is_active=models.BooleanField(default=True)
     
 
     def __str__(self):
@@ -232,6 +234,7 @@ class ProposalService(models.Model):
     proposal = models.ForeignKey(Proposal, on_delete=models.CASCADE,related_name='services')
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
     service_type = models.CharField(max_length=2, choices=[('IN', 'Inclusion'), ('EX', 'Exclusion')], default='EX') # NEW_INCLUSION, NEW_EXCLUSION etc
+
     def __str__(self):
         return f"Service {self.service.name} in Proposal {self.proposal.id}"
     

@@ -1,5 +1,6 @@
 # serializers.py in the "Estimating" app
 
+from django.forms import BooleanField
 from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework import status
@@ -114,8 +115,8 @@ class EstimatingSerializer(serializers.ModelSerializer):
  
     start_date = serializers.DateField(
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
-    plane_date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+    # plane_date = serializers.DateField(
+    #     format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
     company_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Company.objects.all(), source='company',required=False, allow_null=True)
 
     company=CompanySerializer(read_only=True)
@@ -138,7 +139,7 @@ class EstimatingSerializer(serializers.ModelSerializer):
             'bidder',
             'bidder_mail',
             'bidder_detail',
-            'plane_date',
+            
             'gc_details',
     
         ]
@@ -258,9 +259,10 @@ class ProposalSerializer(serializers.ModelSerializer):
     date = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
     estimating=EstimatingSerializer(read_only=True)
     
+    
     class Meta:
         model = Proposal
-        fields = ['id','estimating', 'estimating_id', 'date','architect_name', 'architect_firm','Addendums', 'services','spcifc'] 
+        fields = ['id','estimating', 'estimating_id', 'date','architect_name','plane_date','is_active', 'architect_firm','Addendums', 'services','spcifc'] 
 
     # def to_representation(self, instance):
     #     representation = super().to_representation(instance)

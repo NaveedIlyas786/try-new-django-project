@@ -8,7 +8,7 @@ from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeErr
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
-
+import base64
 
 
 
@@ -19,23 +19,71 @@ class UserRegisterationSerializers(serializers.ModelSerializer):
     # this line for password hid (password ****** like this format)
     password2 = serializers.CharField(
         style={'input_type': 'password'}, write_only=True)
+    
+    def get_signtr(self, obj):
+        if obj.signtr:
+            # Convert the binary data to base64 encoded string
+            return base64.b64encode(obj.signtr).decode('utf-8')
+        return None
+
 
     class Meta:
         model = User
-        fields = ['id','email', 'full_Name', 'password', 'password2','phone_number','signtr','roles','is_active','company','department','direct_number','locaton']
+        fields = ['id','email', 'full_Name', 'password', 'password2','phone_number','roles','is_active','company','department','direct_number','locaton','signtr']
         extra_kwargs = {
             'password': {'write_only': True}
         }
+
+
+
     def to_representation(self, instance):
-        representation = super().to_representation(instance)
-    
-    # Get a list of role names
-        representation['roles'] = [role.name for role in instance.roles.all()] if instance.roles.all() else 'No roles assigned'
-        representation['company'] = instance.company.Cmpny_Name if instance.company else None
-        representation['department']=instance.department.dprtmnt_name if instance.department else None
-    
+        if instance is None:
+            return {}
+
+        # Simplify the representation to avoid complex logic that might cause issues
+        representation = {
+            'id': instance.id,
+            'email': instance.email,
+            'full_Name': instance.full_Name,
+            'phone_number': instance.phone_number,
+            # 'is_active': instance.is_active,
+            'company': instance.company.Cmpny_Name if instance.company else None,
+            # 'department': instance.department.dprtmnt_name if instance.department else None,
+            'direct_number': instance.direct_number,
+            # 'locaton': instance.locaton
+        }
+
+        # Optionally handle roles, ensuring None values don't cause issues
+        if instance.roles.exists():
+            representation['roles'] = [role.name for role in instance.roles.all()]
+        else:
+            representation['roles'] = 'No roles assigned'
+
         return representation
+        # representation['signtr_type'] = str(type(instance.signtr))
+
+
+
+        # if instance.signtr:
+        #     # Ensure the data is bytes before encoding
+        #     if isinstance(instance.signtr, bytes):
+        #         representation['signtr'] = base64.b64encode(instance.signtr).decode('utf-8')
+        #     else:
+        #         # Handle the case where signtr is not bytes
+        #         # You may need to adjust this part based on what signtr actually contains
+        #         representation['signtr'] = instance.signtr
+        # else:
+        #     representation['signtr'] = None
+    
+
+
+
+
 # Validating Password and Config Password while registration
+
+
+
+
 
     def validate(self, data):
         password = data.get('password')
@@ -44,9 +92,22 @@ class UserRegisterationSerializers(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "Password and Confirm Password Dosn't Match")
         return data
+    
 
-    def create(self, validate_data):
-        return User.objects.create_user(**validate_data)
+
+    
+    def create(self, validated_data):
+        signtr_data = validated_data.pop('signtr', None)
+        if signtr_data:
+            # Assuming signtr_data is in base64 string format
+            signtr_data = base64.b64decode(signtr_data)
+
+        user = User.objects.create_user(**validated_data)
+        if signtr_data:
+            user.signtr = signtr_data
+            user.save()
+        return user# type: ignore # type: ignore
+    
 
 
 
@@ -123,7 +184,7 @@ class SendEmailResetPasswordViewsSerializer(serializers.Serializer):
         email = attrs.get('email')
         if User.objects.filter(email=email).exists():
             user = User.objects.get(email=email)
-            user_ID = urlsafe_base64_encode(force_bytes(user.id))
+            user_ID = urlsafe_base64_encode(force_bytes(user.id)) # type: ignore
             token = PasswordResetTokenGenerator().make_token(user)
             link = f'http://localhost:5173/resetpassword/{user_ID}/{token}/'  # Revised link formatting
  

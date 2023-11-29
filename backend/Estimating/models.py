@@ -225,7 +225,7 @@ class Proposal(models.Model):
     
 
     def __str__(self):
-        return f"Proposal {self.id} by {self.architect_name}"
+        return f"Proposal {self.id} by {self.architect_name}" # type: ignore
     
 
 
@@ -236,7 +236,7 @@ class ProposalService(models.Model):
     service_type = models.CharField(max_length=2, choices=[('IN', 'Inclusion'), ('EX', 'Exclusion')], default='EX') # NEW_INCLUSION, NEW_EXCLUSION etc
 
     def __str__(self):
-        return f"Service {self.service.name} in Proposal {self.proposal.id}"
+        return f"Service {self.service.name} in Proposal {self.proposal.id}" # type: ignore
     
 
 

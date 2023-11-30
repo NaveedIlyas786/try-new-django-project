@@ -81,7 +81,7 @@ class User(AbstractBaseUser):
     direct_number=models.IntegerField(verbose_name="Direct",null=True,blank=True)
     locaton=models.CharField(verbose_name="Location", max_length=250,null=True,blank=True)
     create_at=models.DateTimeField(auto_now_add=True)
-    signtr = models.FileField(upload_to='user_Sgntr/', validators=[validate_file_extension], null=True, blank=True)
+    signtr = models.BinaryField(null=True, blank=True)
     phone_number=models.IntegerField(null=True,blank=True,unique=True)
     updated_at=models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=False)
@@ -92,7 +92,7 @@ class User(AbstractBaseUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ['full_Name']
 
-    def __str__(self):
+    def __str__(self): # type: ignore
         return self.email
     
     def __str__(self):

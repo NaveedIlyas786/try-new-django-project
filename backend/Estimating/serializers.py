@@ -9,6 +9,10 @@ from Estimating.models import Company,Estimating, Estimating_detail, Proposal, A
 
 from rest_framework.exceptions import ValidationError
 
+from accounts.models import User
+
+from accounts.serializers import UserRegisterationSerializers
+
 
 class DprtmentSerializers(serializers.ModelSerializer):
     class Meta:
@@ -108,18 +112,38 @@ class GC_infoSerializers(serializers.ModelSerializer):
 class EstimatingSerializer(serializers.ModelSerializer):
     gc_details = GC_infoSerializers(many=True, read_only=True)
 
-    time = Time12HourField(format='%I:%M %p', input_formats=['%I:%M %p'], required=False, allow_null=True)
+    time = Time12HourField(format='%I:%M %p', input_formats=['%I:%M %p'], required=False, allow_null=True) # type: ignore
 
     due_date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore
  
     start_date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore
     # plane_date = serializers.DateField(
     #     format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
     company_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Company.objects.all(), source='company',required=False, allow_null=True)
 
     company=CompanySerializer(read_only=True)
+
+
+    # estimator = UserRegisterationSerializers(read_only=True)  # Serializer for read operation
+    # estimator_id = serializers.PrimaryKeyRelatedField(
+    #     write_only=True, 
+    #     queryset=User.objects.filter(roles__name='Estimator', is_active=True), 
+    #     source='estimator', 
+    #     required=False, 
+    #     allow_null=True
+    # )  # Field for write operation
+    estimator = UserRegisterationSerializers(read_only=True)
+    estimator_id = serializers.PrimaryKeyRelatedField(
+        write_only=True,
+        queryset=User.objects.filter(roles__name='Estimator', is_active=True),
+        source='estimator',
+        required=False,
+        allow_null=True
+    )
+
+    estimator = serializers.SerializerMethodField()
 
     class Meta:
         model = Estimating
@@ -135,6 +159,7 @@ class EstimatingSerializer(serializers.ModelSerializer):
             'company_id',
             'company',
             'location',
+            'estimator_id',
             'estimator',
             'bidder',
             'bidder_mail',
@@ -144,12 +169,20 @@ class EstimatingSerializer(serializers.ModelSerializer):
     
         ]
 
+    
+    def get_estimator(self, obj):
+        if obj.estimator:
+            # Return a simple dict with the estimator's ID
+            return UserRegisterationSerializers(obj.estimator).data
+        return None
+        
+
+
     def to_representation(self, instance):
         representation = super().to_representation(instance)
 
         representation['location'] = instance.location.name if instance.location else None
-        representation['estimator'] = instance.estimator.full_Name if instance.estimator else None
-
+        # representation['estimator'] = instance.estimator.full_Name if instance.estimator else None
         representation['gc_details'] = GC_infoSerializers(instance.gc_details.all(), many=True).data
 
 
@@ -222,7 +255,7 @@ class ServiceSerializer(serializers.ModelSerializer):
 
 
 class AddendumSerializer(serializers.ModelSerializer):
-    date = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+    date = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore
 
     class Meta:
         model = Addendum
@@ -256,7 +289,8 @@ class ProposalSerializer(serializers.ModelSerializer):
     Addendums=AddendumSerializer(many=True,read_only=True)
     spcifc=SpecificationSerializer(many=True,read_only=True)
     estimating_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Estimating.objects.all(), source='estimating', required=True)
-    date = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+    date = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore
+    plane_date = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
     estimating=EstimatingSerializer(read_only=True)
     
     

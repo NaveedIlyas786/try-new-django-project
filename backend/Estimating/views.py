@@ -603,14 +603,15 @@ def create_proposal(request, proposal_id=None):
         Proposal.objects.filter(estimating=estimating_instance).update(is_active=False)
 
         proposal_data = {
-            "estimating_id": estimating_instance.id,
+            "estimating_id": estimating_instance.id, # type: ignore
             "date": data['date'],
             "architect_name": data['architect_name'],
             "architect_firm": data['architect_firm'],
+            "plane_date": data['plane_date'],
             "is_active": True
         }
 
-        proposal_serializer = ProposalSerializer(data=proposal_data)
+        proposal_serializer = ProposalSerializer(data=proposal_data) # type: ignore
         if proposal_serializer.is_valid():
             proposal = proposal_serializer.save()
         else:
@@ -627,10 +628,10 @@ def create_proposal(request, proposal_id=None):
                 service = Service.objects.get(id=service_data['service'])
                 proposal_service_data = {
                     "proposal": proposal.id,
-                    "service": service.id,
+                    "service": service.id, # type: ignore
                     "service_type": service_data['service_type']
                 }
-                proposal_service_serializer = ProposalServiceSerializer(data=proposal_service_data)
+                proposal_service_serializer = ProposalServiceSerializer(data=proposal_service_data) # type: ignore
                 if proposal_service_serializer.is_valid():
                     proposal_service_serializer.save()
                 else:
@@ -652,7 +653,7 @@ def create_proposal(request, proposal_id=None):
                     "date": addendum_data['date'],
                     "addendum_Number": addendum_data['addendum_number']
                 }
-                proposal_addendum_serializer = AddendumSerializer(data=proposal_addendum_data)
+                proposal_addendum_serializer = AddendumSerializer(data=proposal_addendum_data) # type: ignore
                 if proposal_addendum_serializer.is_valid():
                     proposal_addendum_serializer.save()
                 else:
@@ -672,7 +673,7 @@ def create_proposal(request, proposal_id=None):
                     "budget": spcifc_data['budget'],
                     "specific_name": spcifc_data['specific_name']
                 }
-                specification_serializer = SpecificationSerializer(data=specification_data)
+                specification_serializer = SpecificationSerializer(data=specification_data) # type: ignore
                 if specification_serializer.is_valid():
                     specification = specification_serializer.save()
                     total_budget += float(specification_data['budget'])
@@ -686,7 +687,7 @@ def create_proposal(request, proposal_id=None):
                         "number": sefic_data['number'],
                         "name": sefic_data['name']
                     }
-                    spec_detail_serializer = SpecificationDetailSerializer(data=spec_detail_data)
+                    spec_detail_serializer = SpecificationDetailSerializer(data=spec_detail_data) # type: ignore
                     if spec_detail_serializer.is_valid():
                         spec_detail_serializer.save()
                     else:
@@ -697,10 +698,10 @@ def create_proposal(request, proposal_id=None):
         if estimating_instance.bid_amount is None:
             estimating_instance.bid_amount = 0
 
-            estimating_instance.bid_amount = total_budget
+            estimating_instance.bid_amount = total_budget # type: ignore
         else:
             estimating_instance.bid_amount = 0
-            estimating_instance.bid_amount += total_budget
+            estimating_instance.bid_amount += total_budget # type: ignore
         estimating_instance.save()
 
 

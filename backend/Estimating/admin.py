@@ -6,7 +6,7 @@ from import_export.admin import ImportExportModelAdmin
 import os
 from django.contrib import admin
 from .models import Estimating,Proposal,Service,Addendum,Specification,Spec_detail,Qualification,ProposalService,UrlsTable,Role,Dprtmnt,DMS_Dertory,GC_detail
-from nested_admin import NestedStackedInline, NestedModelAdmin
+from nested_admin import NestedStackedInline, NestedModelAdmin # type: ignore
 from .forms import EstimatingDetailAdminForm,EstimatingAdminForm
 
 
@@ -144,7 +144,7 @@ class ProposalAdmin(NestedModelAdmin):
         
         super().save_model(request, obj, form, change)
 
-        
+
 
 class QualificationAdmin(admin.ModelAdmin):
     list_display=['id','detail']

@@ -607,6 +607,7 @@ def create_proposal(request, proposal_id=None):
             "date": data['date'],
             "architect_name": data['architect_name'],
             "architect_firm": data['architect_firm'],
+            "plane_date": data['plane_date'],
             "is_active": True
         }
 

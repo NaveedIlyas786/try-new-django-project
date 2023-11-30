@@ -46,8 +46,8 @@ class UserRegisterationSerializers(serializers.ModelSerializer):
             'email': instance.email,
             'full_Name': instance.full_Name,
             'phone_number': instance.phone_number,
-            # 'is_active': instance.is_active,
-            'company': instance.company.Cmpny_Name if instance.company else None,
+            'is_active': instance.is_active,
+            # 'company': instance.company.Cmpny_Name if instance.company else None,
             # 'department': instance.department.dprtmnt_name if instance.department else None,
             'direct_number': instance.direct_number,
             # 'locaton': instance.locaton

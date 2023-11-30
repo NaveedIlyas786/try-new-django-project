@@ -1478,22 +1478,6 @@ const Estimator = (props) => {
         console.log("Data Successfully Submitted !", responseData);
 
         // Clear form fields after successful submission
-        setStep0FormData({
-          date: getCurrentDate(),
-          estimating_id: "",
-          architect_name: "",
-          architect_firm: "",
-        });
-
-        setStep1FormData({
-          Addendums: [],
-        });
-
-        setStep2FormData({
-          specific_name: "",
-          budget: "",
-          sefic: [],
-        });
 
         setTimeout(() => {
           closeModal();

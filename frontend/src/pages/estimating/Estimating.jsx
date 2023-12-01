@@ -1176,7 +1176,7 @@ const Estimator = (props) => {
       timezone: timezone,
       prjct_name: projectName,
       company_id: companyName,
-      estimator: estimatorName,
+      estimator_id: estimatorName,
       location: location,
       bidder: bidderName,
       bidder_mail: bidderEmail,
@@ -1272,7 +1272,7 @@ const Estimator = (props) => {
       start_date: formattedStartDate,
       company: parseInt(selectedCompany, 10),
       location: parseInt(selectedLocation, 10),
-      estimator: parseInt(selectedEstimator, 10),
+      estimator_id: parseInt(selectedEstimator, 10),
       bidder: selectedBidder,
       bidder_address: selectedbidder_address,
       bidder_detail: selectedbidder_detail,
@@ -1478,22 +1478,6 @@ const Estimator = (props) => {
         console.log("Data Successfully Submitted !", responseData);
 
         // Clear form fields after successful submission
-        setStep0FormData({
-          date: getCurrentDate(),
-          estimating_id: "",
-          architect_name: "",
-          architect_firm: "",
-        });
-
-        setStep1FormData({
-          Addendums: [],
-        });
-
-        setStep2FormData({
-          specific_name: "",
-          budget: "",
-          sefic: [],
-        });
 
         setTimeout(() => {
           closeModal();
@@ -1569,9 +1553,9 @@ const Estimator = (props) => {
               .toUpperCase()
               .includes(filter.trim().toUpperCase())) ||
           (customer.estimator &&
-            customer.estimator.toUpperCase().includes(filter.toUpperCase())) ||
-          (customer.bidder &&
-            customer.bidder.toUpperCase().includes(filter.toUpperCase()))
+          customer.estimator.full_Name.toUpperCase().includes(filter.toUpperCase())) ||
+          (customer.gc_name &&
+          customer.gc_name.toUpperCase().includes(filter.toUpperCase()))
         );
       })
       .sort((a, b) => {
@@ -1787,7 +1771,7 @@ const Estimator = (props) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            estimator: updatedEstimatorId, // Only update the estimator
+            estimator_id: updatedEstimatorId, // Only update the estimator
           }),
         }
       );
@@ -1867,36 +1851,6 @@ const Estimator = (props) => {
       console.error("Error updating estimator:", error);
     }
   };
-  async function estimatorValueIsValid(itemId) {
-    try {
-      // Fetch the estimator value based on the estimating ID
-      const response = await fetch(
-        `http://127.0.0.1:8000/api/estimating/estimating/${itemId}/`
-      );
-
-      if (response.ok) {
-        const estimatingData = await response.json();
-        const estimatorValue = estimatingData.estimator; // Replace 'estimator' with the actual field name
-
-        // Check if the estimator value is valid
-        if (estimatorValue !== null && estimatorValue !== "") {
-          return true; // Valid estimator value
-        } else {
-          return false; // Invalid estimator value (null or empty)
-        }
-      } else {
-        // Handle API response errors here
-        console.error(
-          "Failed to fetch estimator data for estimating ID:",
-          itemId
-        );
-        return false; // Consider it as an invalid estimator value
-      }
-    } catch (error) {
-      console.error("Error fetching estimator data:", error);
-      return false; // Consider it as an invalid estimator value
-    }
-  }
 
   const handleStatusChange = async (event = null, itemId) => {
     const updatedStatus = event.target.value;
@@ -2181,8 +2135,8 @@ const Estimator = (props) => {
                         }
                         value={estimatorchoice[item.id] || item.estimator }
                       >
-                        <option value="">
-                          {item.estimator ? item.estimator : "No Estimator"}
+                        <option value={item?.estimator?.full_Name}>
+                          {item?.estimator?.full_Name ? item?.estimator?.full_Name: "No Estimator"}
                         </option>
                         {EstimatorName && EstimatorName.length > 0 ? (
                           EstimatorName.map((user) => (

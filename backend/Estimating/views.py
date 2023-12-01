@@ -445,19 +445,53 @@ class EstimatingListView(APIView):
         estimating.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
     def put(self, request, id, format=None):
         try:
             estimating = Estimating.objects.get(id=id)
         except Estimating.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        serializer = EstimatingSerializer(estimating, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
- 
+        estimating_serializer = EstimatingSerializer(estimating, data=request.data)
+        if estimating_serializer.is_valid():
+            estimating_serializer.save()
 
+            # Handle gc_details data
+            gc_details_data = request.data.get('gc_details')
+            if gc_details_data:
+                if not isinstance(gc_details_data, list):
+                    gc_details_data = [gc_details_data]
+
+                existing_gc_detail_ids = [gc_detail.id for gc_detail in estimating.gc_details.all()]
+                updated_gc_detail_ids = []
+
+                for gc_detail_data in gc_details_data:
+                    gc_detail_id = gc_detail_data.get('id')
+                    if gc_detail_id:
+                        # Update existing GC_detail
+                        try:
+                            gc_detail = GC_detail.objects.get(id=gc_detail_id, estimating=estimating)
+                            gc_detail_serializer = GC_infoSerializers(gc_detail, data=gc_detail_data)
+                            updated_gc_detail_ids.append(gc_detail_id)
+                        except GC_detail.DoesNotExist:
+                            return Response({'error': 'GC_detail not found'}, status=status.HTTP_404_NOT_FOUND)
+                    else:
+                        # Create new GC_detail
+                        gc_detail_data['estimating'] = estimating.id
+                        gc_detail_serializer = GC_infoSerializers(data=gc_detail_data)
+
+                    if gc_detail_serializer.is_valid():
+                        gc_detail_serializer.save()
+                    else:
+                        return Response(gc_detail_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+                # Optional: Delete GC_details that were not included in the request
+                for gc_detail_id in existing_gc_detail_ids:
+                    if gc_detail_id not in updated_gc_detail_ids:
+                        GC_detail.objects.get(id=gc_detail_id).delete()
+
+            return Response(estimating_serializer.data)
+        return Response(estimating_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 

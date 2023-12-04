@@ -603,19 +603,6 @@ const Estimator = (props) => {
       date: "",
       comment_box: "",
     };
-    // Function to add a new "HD S_SYSTEMS" entry
-    const handleAddHDSSystem = () => {
-      const newHDSSystem = {
-        status: "Pending", // You can set default values here
-        date: "",
-        comment_box: "",
-      };
-
-      setProjectStep8FormData((prevData) => ({
-        ...prevData,
-        hds_system: [...prevData.hds_system, newHDSSystem],
-      }));
-    };
     setProjectStep8FormData((prevData) => ({
       ...prevData,
       hds_system: [...prevData.hds_system, newHDSSystem],

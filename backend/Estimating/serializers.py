@@ -181,7 +181,7 @@ class EstimatingSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
 
-        representation['location'] = instance.location.name if instance.location else None
+        representation['location'] = {'id': instance.location.id, 'name': instance.location.name} if instance.location else None
         # representation['estimator'] = instance.estimator.full_Name if instance.estimator else None
         representation['gc_details'] = GC_infoSerializers(instance.gc_details.all(), many=True).data
 

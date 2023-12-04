@@ -265,7 +265,7 @@ class Specification(models.Model):
 
 class Spec_detail(models.Model):
     sefic=models.ForeignKey(Specification, verbose_name="Specification", on_delete=models.CASCADE,related_name='sefic')
-    number=models.CharField(verbose_name="Add Number",max_length=8)
+    number=models.CharField(verbose_name="Add Number",max_length=250)
     name=models.CharField(verbose_name="Name", max_length=250)
     def __str__(self) :
         return self.number

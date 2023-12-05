@@ -84,7 +84,8 @@ class BugetInline(admin.StackedInline):
 class ProjectAdmin(admin.ModelAdmin):
     inlines = [
         ContractInline,  InsuranceInline, BondInline,
-        ScheduleInline, SubContractorsInline, LaborRateInline
+        ScheduleInline, SubContractorsInline, LaborRateInline,
+        BugetInline,HDSSystemInline,SafityInline,ShopDrawingInline,SubmittalsInline
     ]
 
     

@@ -11,11 +11,11 @@ from rest_framework.views import APIView
 
 
 from rest_framework.decorators import api_view
-from .models import Project, Contract, Insurance, Bond, Zlien, Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, Billing, Sov, HDS_system, OnBuild, Buget
+from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget
 from .serializers import (ProjectSerializer, ContractSerializer,  InsuranceSerializer, BondSerializer,
-                          ZlienSerializer, SubmittalsSerializer, ShopDrawingSerializer, SafitySerializer, ScheduleSerializer,
-                          SubContractorsSerializer, LaborRateSerializer, BillingSerializer, SovSerializer, HDSSystemSerializer,
-                          OnBuildSerializer, BugetSerializer)
+                           SubmittalsSerializer, ShopDrawingSerializer, SafitySerializer, ScheduleSerializer,
+                          SubContractorsSerializer, LaborRateSerializer,HDSSystemSerializer,
+                          BugetSerializer)
 
 
 class ProjectDetailListCreateView(APIView):
@@ -37,17 +37,17 @@ def create_project(request, id=None):
             # ('schedule_of_value', Schedule_of_Value, ScheduleOfValueSerializer),
             ('insurance', Insurance, InsuranceSerializer),
             ('bond', Bond, BondSerializer),
-            ('zlien', Zlien, ZlienSerializer),
+            # ('zlien', Zlien, ZlienSerializer),
             ('submittals', Submittals, SubmittalsSerializer),
             ('shop_drawing', ShopDrawing, ShopDrawingSerializer),
             ('safity', Safity, SafitySerializer),
             ('schedule', Schedule, ScheduleSerializer),
             ('sub_contractors', Sub_Contractors, SubContractorsSerializer),
             ('labor_rate', LaborRate, LaborRateSerializer),
-            ('billing', Billing, BillingSerializer),
-            ('sov', Sov, SovSerializer),
+            # ('billing', Billing, BillingSerializer),
+            # ('sov', Sov, SovSerializer),
             ('hds_system', HDS_system, HDSSystemSerializer),
-            ('on_build', OnBuild, OnBuildSerializer),
+            # ('on_build', OnBuild, OnBuildSerializer),
             ('buget', Buget, BugetSerializer),
         ]
 
@@ -80,17 +80,17 @@ def create_project(request, id=None):
             # ('schedule_of_value', Schedule_of_Value, ScheduleOfValueSerializer),
             ('insurance', Insurance, InsuranceSerializer),
             ('bond', Bond, BondSerializer),
-            ('zlien', Zlien, ZlienSerializer),
+            # ('zlien', Zlien, ZlienSerializer),
             ('submittals', Submittals, SubmittalsSerializer),
             ('shop_drawing', ShopDrawing, ShopDrawingSerializer),
             ('safity', Safity, SafitySerializer),
             ('schedule', Schedule, ScheduleSerializer),
             ('sub_contractors', Sub_Contractors, SubContractorsSerializer),
             ('labor_rate', LaborRate, LaborRateSerializer),
-            ('billing', Billing, BillingSerializer),
-            ('sov', Sov, SovSerializer),
+            # ('billing', Billing, BillingSerializer),
+            # ('sov', Sov, SovSerializer),
             ('hds_system', HDS_system, HDSSystemSerializer),
-            ('on_build', OnBuild, OnBuildSerializer),
+            # ('on_build', OnBuild, OnBuildSerializer),
             ('buget', Buget, BugetSerializer),
         ]
         related_serializers = []

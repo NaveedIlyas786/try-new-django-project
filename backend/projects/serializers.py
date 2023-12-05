@@ -1,6 +1,6 @@
 # serializers.py
 from rest_framework import serializers
-from .models import Project, Contract,  Insurance, Bond, Zlien, Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, Billing, Sov, HDS_system, OnBuild, Buget,Project_detail
+from .models import Project, Contract,  Insurance, Bond, Submittals, ShopDrawing,Schedule_of_Value, Safity, Schedule, Sub_Contractors, LaborRate, HDS_system, Buget,Project_detail
 
 from Estimating.models import Proposal,Spec_detail
 from Estimating.serializers import ProposalSerializer,SpecificationDetailSerializer
@@ -25,21 +25,21 @@ class ContractSerializer(serializers.ModelSerializer):
 
         return representation
 
-# class ScheduleOfValueSerializer(serializers.ModelSerializer):
-#     schedule_date = serializers.DateField(
-#         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+class ScheduleOfValueSerializer(serializers.ModelSerializer):
+    schedule_date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
 
-#     class Meta:
-#         model = Schedule_of_Value
-#         fields = '__all__'
-#     def to_representation(self, instance):
-#         representation = super().to_representation(instance)
+    class Meta:
+        model = Schedule_of_Value
+        fields = '__all__'
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
         
         
-#         representation['project'] = instance.project.job_num if instance.project else None
+        representation['project'] = instance.project.job_num if instance.project else None
 
 
-#         return representation
+        return representation
 
 class InsuranceSerializer(serializers.ModelSerializer):
 
@@ -74,22 +74,22 @@ class BondSerializer(serializers.ModelSerializer):
 
         return representation
 
-class ZlienSerializer(serializers.ModelSerializer):
+# class ZlienSerializer(serializers.ModelSerializer):
 
-    date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+#     date = serializers.DateField(
+#         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
 
-    class Meta:
-        model = Zlien
-        fields = '__all__'
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
+#     class Meta:
+#         model = Zlien
+#         fields = '__all__'
+#     def to_representation(self, instance):
+#         representation = super().to_representation(instance)
         
         
-        representation['project'] = instance.project.job_num if instance.project else None
+#         representation['project'] = instance.project.job_num if instance.project else None
 
 
-        return representation
+#         return representation
 
 class SubmittalsSerializer(serializers.ModelSerializer):
     date = serializers.DateField(
@@ -218,37 +218,37 @@ class LaborRateSerializer(serializers.ModelSerializer):
 
         return representation
 
-class BillingSerializer(serializers.ModelSerializer):
-    due_date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+# class BillingSerializer(serializers.ModelSerializer):
+#     due_date = serializers.DateField(
+#         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
 
-    class Meta:
-        model = Billing
-        fields = '__all__'
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
+#     class Meta:
+#         model = Billing
+#         fields = '__all__'
+#     def to_representation(self, instance):
+#         representation = super().to_representation(instance)
         
         
-        representation['project'] = instance.project.job_num if instance.project else None
+#         representation['project'] = instance.project.job_num if instance.project else None
 
 
-        return representation
+#         return representation
 
-class SovSerializer(serializers.ModelSerializer):
-    date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+# class SovSerializer(serializers.ModelSerializer):
+#     date = serializers.DateField(
+#         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
 
-    class Meta:
-        model = Sov
-        fields = '__all__'
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
+#     class Meta:
+#         model = Sov
+#         fields = '__all__'
+#     def to_representation(self, instance):
+#         representation = super().to_representation(instance)
         
         
-        representation['project'] = instance.project.job_num if instance.project else None
+#         representation['project'] = instance.project.job_num if instance.project else None
 
 
-        return representation
+#         return representation
 
 class HDSSystemSerializer(serializers.ModelSerializer):
     date = serializers.DateField(
@@ -266,19 +266,19 @@ class HDSSystemSerializer(serializers.ModelSerializer):
 
         return representation
 
-class OnBuildSerializer(serializers.ModelSerializer):
+# class OnBuildSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = OnBuild
-        fields = '__all__'
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
+#     class Meta:
+#         model = OnBuild
+#         fields = '__all__'
+#     def to_representation(self, instance):
+#         representation = super().to_representation(instance)
         
         
-        representation['project'] = instance.project.job_num if instance.project else None
+#         representation['project'] = instance.project.job_num if instance.project else None
 
 
-        return representation
+#         return representation
 
 class BugetSerializer(serializers.ModelSerializer):
     contract_date = serializers.DateField(
@@ -298,22 +298,22 @@ class BugetSerializer(serializers.ModelSerializer):
     
     
 class ProjectSerializer(serializers.ModelSerializer):
-    contracts = ContractSerializer(source='contract_set', many=True, read_only=True)
-    # schedule_of_values = ScheduleOfValueSerializer(source='schedule_of_value_set', many=True, read_only=True)
-    insurancs = InsuranceSerializer(source='insurance_set', many=True, read_only=True)
-    bond = BondSerializer(source='bond_set', many=True, read_only=True)
-    zliens = ZlienSerializer(source='zlien_set', many=True, read_only=True)
-    submittals = SubmittalsSerializer(source='submittals_set', many=True, read_only=True)
-    shopdrawing = ShopDrawingSerializer(source='shopdrawing_set', many=True, read_only=True)
-    safity = SafitySerializer(source='safity_set', many=True, read_only=True)
-    schedule = ScheduleSerializer(source='schedule_set', many=True, read_only=True)
-    sub_contractors = SubContractorsSerializer(source='sub_contractors_set', many=True, read_only=True)
-    laborrate = LaborRateSerializer(source='laborrate_set', many=True, read_only=True)
-    billing = BillingSerializer(source='billing_set', many=True, read_only=True)
-    sov = SovSerializer(source='sov_set', many=True, read_only=True)
-    hds_system= HDSSystemSerializer(source='hds_system_set', many=True, read_only=True)
-    onbuild = OnBuildSerializer(source='onbuild_set', many=True, read_only=True)
-    buget = BugetSerializer(source='buget_set', many=True, read_only=True)
+    contracts = ContractSerializer(source='contract_set', many=True, read_only=True, required=False)
+    schedule_of_values = ScheduleOfValueSerializer(source='schedule_of_value_set', many=True, read_only=True)
+    insurancs = InsuranceSerializer(source='insurance_set', many=True, read_only=True, required=False)
+    bond = BondSerializer(source='bond_set', many=True, read_only=True, required=False)
+    # zliens = ZlienSerializer(source='zlien_set', many=True, read_only=True, required=False)
+    submittals = SubmittalsSerializer(source='submittals_set', many=True, read_only=True, required=False)
+    shopdrawing = ShopDrawingSerializer(source='shopdrawing_set', many=True, read_only=True, required=False)
+    safity = SafitySerializer(source='safity_set', many=True, read_only=True, required=False)
+    schedule = ScheduleSerializer(source='schedule_set', many=True, read_only=True, required=False)
+    sub_contractors = SubContractorsSerializer(source='sub_contractors_set', many=True, read_only=True, required=False)
+    laborrate = LaborRateSerializer(source='laborrate_set', many=True, read_only=True, required=False)
+    # billing = BillingSerializer(source='billing_set', many=True, read_only=True, required=False)
+    # sov = SovSerializer(source='sov_set', many=True, read_only=True, required=False)
+    hds_system= HDSSystemSerializer(source='hds_system_set', many=True, required=False, read_only=True)
+    # onbuild = OnBuildSerializer(source='onbuild_set', many=True, required=False, read_only=True)
+    buget = BugetSerializer(source='buget_set', many=True, required=False, read_only=True)
     start_date = serializers.DateField(
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
 
@@ -324,9 +324,9 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ['id','status', 'job_num', 'start_date', 'proposal_id','prjct_engnr','bim_oprtr','Forman','prjct_mngr','start_date','general_superintendent',
-                    'project_address','addendums','bid','Spec','contacts','drywell','finish','wall_type','progress','ro_door','ro_window','substitution',
-                    'contracts','insurancs','bond','zliens','submittals','shopdrawing','safity','schedule','sub_contractors','laborrate',
-                    'billing','sov','hds_system','onbuild','buget','proposal']
+                    'project_address','addendums','contacts','drywell','finish','wall_type','ro_door','ro_window','substitution',
+                    'contracts','schedule_of_values','insurancs','bond','submittals','shopdrawing','safity','schedule','sub_contractors','laborrate',
+                    'hds_system','buget','proposal']
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         

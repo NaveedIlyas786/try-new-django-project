@@ -1,9 +1,9 @@
 from django.contrib import admin
 from .models import Project_detail,Project
 from .models import (
-    Project, Contract,  Insurance, Bond, Zlien, Submittals, 
-    ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, Billing, Sov, 
-    HDS_system, OnBuild, Buget,Project_detail
+    Project, Contract,  Insurance, Bond, Submittals, 
+    ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, 
+    HDS_system,  Buget,Project_detail
 )
 from Estimating.models import Spec_detail
 
@@ -23,9 +23,9 @@ class BondInline(admin.StackedInline):
     model = Bond
     extra = 1
 
-class ZlienInline(admin.StackedInline):
-    model = Zlien
-    extra = 1
+# class ZlienInline(admin.StackedInline):
+#     model = Zlien
+#     extra = 1
 
 class SubmittalsInline(admin.StackedInline):
     model = Submittals
@@ -61,21 +61,21 @@ class LaborRateInline(admin.StackedInline):
     model = LaborRate
     extra = 1
 
-class BillingInline(admin.StackedInline):
-    model = Billing
-    extra = 1
+# class BillingInline(admin.StackedInline):
+#     model = Billing
+#     extra = 1
 
-class SovInline(admin.StackedInline):
-    model = Sov
-    extra = 1
+# class SovInline(admin.StackedInline):
+#     model = Sov
+#     extra = 1
 
 class HDSSystemInline(admin.StackedInline):
     model = HDS_system
     extra = 1
 
-class OnBuildInline(admin.StackedInline):
-    model = OnBuild
-    extra = 1
+# class OnBuildInline(admin.StackedInline):
+#     model = OnBuild
+#     extra = 1
 
 class BugetInline(admin.StackedInline):
     model = Buget
@@ -84,14 +84,12 @@ class BugetInline(admin.StackedInline):
 class ProjectAdmin(admin.ModelAdmin):
     inlines = [
         ContractInline,  InsuranceInline, BondInline,
-        ZlienInline, SubmittalsInline, ShopDrawingInline, SafityInline,
-        ScheduleInline, SubContractorsInline, LaborRateInline, BillingInline,
-        SovInline, HDSSystemInline, OnBuildInline, BugetInline
+        ScheduleInline, SubContractorsInline, LaborRateInline
     ]
 
     
     list_display = ('id','status', 'job_num', 'start_date', 'proposal','prjct_engnr','bim_oprtr','Forman','prjct_mngr','start_date','general_superintendent',
-                    'project_address','addendums','bid','Spec','contacts','drywell','finish','wall_type','progress','ro_door','ro_window','substitution')  
+                    'project_address','addendums','contacts','drywell','finish','wall_type','ro_door','ro_window','substitution')  
     search_fields = ['status', 'job_num'] 
 
 
@@ -114,15 +112,12 @@ admin.site.register(Contract)
 # admin.site.register(Schedule_of_Value)
 admin.site.register(Insurance)
 admin.site.register(Bond)
-admin.site.register(Zlien)
+# admin.site.register(Zlien)
 admin.site.register(Submittals)
 admin.site.register(ShopDrawing)
 admin.site.register(Safity)
 admin.site.register(Schedule)
 admin.site.register(Sub_Contractors)
 admin.site.register(LaborRate)
-admin.site.register(Billing)
-admin.site.register(Sov)
 admin.site.register(HDS_system)
-admin.site.register(OnBuild)
 admin.site.register(Buget)

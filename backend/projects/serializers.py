@@ -348,6 +348,73 @@ class ProjectSerializer(serializers.ModelSerializer):
         if 'hds_system' in representation:
             representation['HDS System'] = representation.pop('hds_system')
 
+        if 'schedule_of_values' in representation:
+            representation['Schedule Of Values'] = representation.pop('schedule_of_values')
+
+        if 'wall_type' in representation:
+            representation['Wall Type Mapping'] = representation.pop('wall_type')
+
+        if 'ro_door' in representation:
+            representation['RO-Door'] = representation.pop('ro_door')
+
+        if 'ro_window' in representation:
+            representation['RO-Window'] = representation.pop('ro_window')
+
+
+
+
+
+
+        if 'contracts' in representation:
+            representation['Contracts'] = representation.pop('contracts')
+
+        if 'contacts' in representation:
+            representation['Contacts'] = representation.pop('contacts')
+        
+        if 'drywell' in representation:
+            representation['Drywall Control Joints'] = representation.pop('drywell')
+
+        if 'finish' in representation:
+            representation['Finish Level Markups'] = representation.pop('finish')
+
+        if 'submittals' in representation:
+            representation['Submittals'] = representation.pop('submittals')
+
+        if 'shopdrawing' in representation:
+            representation['Shop Drawings'] = representation.pop('shopdrawing')
+
+
+        if 'safity' in representation:
+            representation['Safety Documents'] = representation.pop('safity')
+
+        if 'laborrate' in representation:
+            representation['Labor Rates'] = representation.pop('laborrate')
+
+        if 'buget' in representation:
+            representation['Budget'] = representation.pop('buget')
+
+        if 'sub_contractors' in representation:
+            representation['Sub Contractors'] = representation.pop('sub_contractors')
+
+        if 'insurancs' in representation:
+            representation['Insurances'] = representation.pop('insurancs')
+
+        if 'substitution' in representation:
+            representation['Substitutions'] = representation.pop('substitution')
+
+        if 'addendums' in representation:
+            representation['Addendum'] = representation.pop('addendums')
+
+
+        if 'bond' in representation:
+            representation['Bonds'] = representation.pop('bond')
+
+        if 'addendums' in representation:
+            representation['addendums'] = representation.pop('addendums')
+
+        if 'addendums' in representation:
+            representation['addendums'] = representation.pop('addendums')
+
 
         return representation
 class RecursiveProjectDetailSerializer(serializers.Serializer):

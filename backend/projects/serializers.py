@@ -328,9 +328,13 @@ class ProjectSerializer(serializers.ModelSerializer):
                     'contracts','schedule_of_values','insurancs','bond','submittals','shopdrawing','safity','schedule','sub_contractors','laborrate',
                     'hds_system','buget','proposal']
     def to_representation(self, instance):
+
+
         representation = super().to_representation(instance)
         
         # Handle job_title ManyToMany field
+        
+
 
         representation['prjct_engnr'] = instance.prjct_engnr.full_Name if instance.prjct_engnr else None
         representation['bim_oprtr'] = instance.bim_oprtr.full_Name if instance.bim_oprtr else None
@@ -340,6 +344,9 @@ class ProjectSerializer(serializers.ModelSerializer):
 
         # representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None
         # representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None
+
+        if 'hds_system' in representation:
+            representation['HDS System'] = representation.pop('hds_system')
 
 
         return representation

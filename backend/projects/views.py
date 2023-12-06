@@ -90,7 +90,7 @@ def create_project(request, id=None):
             # ('billing', Billing, BillingSerializer),
             # ('sov', Sov, SovSerializer),
             ('hds_system', HDS_system, HDSSystemSerializer),
-            # ('on_build', OnBuild, OnBuildSerializer),
+            #  
             ('buget', Buget, BugetSerializer),
         ]
         related_serializers = []

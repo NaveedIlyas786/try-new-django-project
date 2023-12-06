@@ -97,16 +97,12 @@ class UserRegisterationSerializers(serializers.ModelSerializer):
 
     
     def create(self, validated_data):
-        signtr_data = validated_data.pop('signtr', None)
-        if signtr_data:
-            # Assuming signtr_data is in base64 string format
-            signtr_data = base64.b64decode(signtr_data)
-
+        validated_data.pop('password2', None)  # Remove password2 from the validated data
         user = User.objects.create_user(**validated_data)
-        if signtr_data:
-            user.signtr = signtr_data
-            user.save()
-        return user# type: ignore # type: ignore
+        user.set_password(validated_data['password'])  # Set the password for the user
+        user.save()
+        return user
+
     
 
 

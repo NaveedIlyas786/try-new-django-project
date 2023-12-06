@@ -37,7 +37,7 @@ class UserManager(BaseUserManager):
             email=self.normalize_email(email),
             full_Name=full_Name,
             phone_number=phone_number,
-            signtr=signtr
+            # signtr=signtr
         )
 
         user.set_password(password)

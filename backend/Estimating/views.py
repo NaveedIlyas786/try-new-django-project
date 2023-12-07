@@ -126,12 +126,15 @@ class SendEmailView(APIView):
             subject = 'Proposal'
             message = f"""
             Hello,
+            <br>
 
             Thank you for allowing <strong>{estimating.company.Cmpny_Name}</strong> the opportunity to bid on the <strong>{estimating.prjct_name}</strong>.
 
             The plans used to formulate the bid proposal are dated <strong>{plane_date}</strong>, drafted by <strong>{architect_firm}</strong>, and approved by <strong>{architect_name}</strong>.
+            <br>
+            Let us know if there are any questions. <br><br>
 
-            Thank you,
+            Thank you
             """
 
             # Fetch all GC emails related to this estimating

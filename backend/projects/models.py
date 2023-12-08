@@ -1,3 +1,5 @@
+from operator import itemgetter
+from random import choice
 from django.db import models
 from .validation import validate_file_extension
 
@@ -45,9 +47,7 @@ class Project(models.Model):
 
     project_address=models.CharField(verbose_name="Add project address", max_length=5000, null=True, blank=True)
 
-    addendums=models.CharField(verbose_name="Addendum", max_length=50,choices=[
-        ('Available','Available'),('Not Available','Not Available'),
-        ],default='Not Available', null=True, blank=True)
+    addendums=models.CharField(verbose_name="Addendum", max_length=500, null=True, blank=True)
 
 
     # bid=models.CharField(verbose_name="bid", max_length=50,choices=[
@@ -63,25 +63,25 @@ class Project(models.Model):
         ],default='Pending', null=True, blank=True)
 
     drywell=models.CharField(verbose_name="Drywell Conttrol Joins", max_length=50,choices=[
-        ('Submited','Submited'),('Working','Working'),('Pending','Pending'),
-        ],default='Pending', null=True, blank=True)
+        ('Submited','Submited'),('Working','Working'),('Approved','Approved'),
+        ],default='null', null=True, blank=True)
 
     finish=models.CharField(verbose_name="FINISH LEVEL MARKUPS", max_length=50,choices=[
-        ('Completed','Completed'),('Working','Working'),('Pending','Pending'),
-        ],default='Pending', null=True, blank=True)
+        ('Completed','Completed'),('Working','Working'),('Uploaded','Uploaded'),
+        ],default='null', null=True, blank=True)
     wall_type=models.CharField(verbose_name="WALL TYPE MAPPING", max_length=50,choices=[
-        ('Completed','Completed'),('Working','Working'),('Pending','Pending'),
-        ],default='Pending', null=True, blank=True)
+        ('Completed','Completed'),('Working','Working'),('Uploaded','Uploaded'),
+        ],default='null', null=True, blank=True)
     # progress=models.CharField(verbose_name="PROGRESS TRACKING", max_length=50,choices=[
     #     ('Completed','Completed'),('Working','Working'),('Pending','Pending'),
     #     ],default='Pending', null=True, blank=True)
 
     ro_door=models.CharField(verbose_name="RO-Door", max_length=50,choices=[
-        ('Working','Working'),('Submited','Submited'),('Pending','Pending'),('Done','Done')
+        ('Requested','Requested'),('Pending','Pending'),('Received','Received')
         ],default='Pending', null=True, blank=True)
     
     ro_window=models.CharField(verbose_name="RO-Window", max_length=50,choices=[
-        ('Working','Working'),('Submited','Submited'),('Pending','Pending'),('Done','Done')
+        ('Requested','Requested'),('Pending','Pending'),('Received','Received')
         ],default='Pending', null=True, blank=True)
 
     substitution=models.CharField(verbose_name="Substitution", max_length=5000, null=True, blank=True)
@@ -319,7 +319,7 @@ class Project(models.Model):
                 {'name': 'Structa Wire', 'parent': 'Lath'},
 
             ]:
-                create_directory(item['name'], item['parent'])
+                create_directory(itemgetter['name'], item['parent']) # type: ignore # type: ignore
 
     def __str__(self):
         return str(self.proposal)
@@ -359,7 +359,7 @@ class Insurance(models.Model):
 class Bond(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     bond=models.CharField(verbose_name="Bond", max_length=50,choices=[
-        ('Sent','Sent'),('Received','Received'),('Complete','Complete'),
+        ('Sent','Sent'),('Received','Received'),('Complete','Complete'),('N/A','N/A'),
         ],default='null', null=True, blank=True)
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
 # class  Zlien(models.Model):
@@ -372,17 +372,20 @@ class Bond(models.Model):
 
 class Submittals(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
-    scop_work_number=models.ForeignKey(Spec_detail,related_name='scop_work_number', verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
-    
+    # scop_work_number=models.ForeignKey(Spec_detail,related_name='scop_work_number', verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
+    dscrptn=models.CharField(verbose_name="Add Description", max_length=5000,null=True,blank=True)
+    gc_dcsn=models.CharField(verbose_name="GC Decision", max_length=500, choices=[('Accepted By GC','Accepted By GC'),('Rejected By GC','Rejected By GC')],default='Rejected By GC',null=True,blank=True)
     scopWorkNumber=models.CharField(verbose_name="Add the scop of work Number", max_length=250, null=True, blank=True)
     status=models.CharField(verbose_name="Submittals", max_length=50,choices=[
-        ('Approved','Approved'),('Pending','Pending'),
-        ],default='Pending', null=True, blank=True)
-    date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
+        ('Approved','Approved'),('Working','Working'),('Submitted','Submitted'),('R & R','R & R')
+        ], null=True, blank=True)
+    due_date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
+    actn_date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
+
 
 class ShopDrawing(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
-    scop_work_number=models.ForeignKey(Spec_detail,related_name='scop_work_number_shpdrg', verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
+    # scop_work_number=models.ForeignKey(Spec_detail,related_name='scop_work_number_shpdrg', verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
     status=models.CharField(verbose_name="Shop Drawing", max_length=50,choices=[
         ('Approved','Approved'),('Pending','Pending'),
         ],default='Pending', null=True, blank=True)
@@ -391,7 +394,7 @@ class ShopDrawing(models.Model):
 
 class Safity(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
-    scop_work_number=models.ForeignKey(Spec_detail,related_name='scop_work_number_sfty', verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
+    # scop_work_number=models.ForeignKey(Spec_detail,related_name='scop_work_number_sfty', verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
     status=models.CharField(verbose_name="Safity", max_length=50,choices=[
         ('Approved','Approved'),('Pending','Pending'),
         ],default='Pending', null=True, blank=True)
@@ -402,23 +405,19 @@ class Safity(models.Model):
 class Schedule(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     status=models.CharField(verbose_name="Schedule", max_length=50,choices=[
-        ('Available','Available'),('Not Available','Not Available'),
-        ],default='Not Available', null=True, blank=True)
+        ('Available','Available'),('Requested','Requested'),
+        ],default='Requested', null=True, blank=True)
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
 
 class Sub_Contractors(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
-    status=models.CharField(verbose_name="Sub Contractors", max_length=50,choices=[
-        ('Capable','Capable'),('Not Capable','Not Capable'),('Custom','Custom'),
-        ],default='Not Capable', null=True, blank=True)
+    status=models.CharField(verbose_name="Sub Contractors", max_length=5000, null=True, blank=True)
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
     comment_box=models.CharField(verbose_name="comment", max_length=5000, null=True, blank=True)
 
 class LaborRate(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
-    status=models.CharField(verbose_name="Labor Rate", max_length=50,choices=[
-        ('Approved','Approved'),('Pending','Pending'),('Custom','Custom'),
-        ],default='Pending', null=True, blank=True)
+    status=models.CharField(verbose_name="Labor Rate", max_length=500, null=True, blank=True)
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
     comment_box=models.CharField(verbose_name="comment", max_length=5000, null=True, blank=True)
 
@@ -437,9 +436,7 @@ class LaborRate(models.Model):
 
 class HDS_system(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
-    status=models.CharField(verbose_name="HDS System", max_length=50,choices=[
-        ('Not Required','Not Required'),('Approved','Approved'),('Pending','Pending'),('Custom','Custom'),
-        ],default='Pending', null=True, blank=True)
+    status=models.CharField(verbose_name="HDS System", max_length=500, null=True, blank=True)
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
     comment_box=models.CharField(verbose_name="comment", max_length=5000, null=True, blank=True)
 
@@ -459,7 +456,7 @@ class HDS_system(models.Model):
 class Buget(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     status=models.CharField(verbose_name="Labor Rate", max_length=50,choices=[
-        ('Done','Done'),('Pending','Pending'),('Custom','Custom'),
+        ('Pending','Pending'),('Save','Save'),
         ],default='Pending', null=True, blank=True)
     comment_box=models.CharField(verbose_name="comment", max_length=5000, null=True, blank=True)
 

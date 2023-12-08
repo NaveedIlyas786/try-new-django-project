@@ -92,7 +92,9 @@ class BondSerializer(serializers.ModelSerializer):
 #         return representation
 
 class SubmittalsSerializer(serializers.ModelSerializer):
-    date = serializers.DateField(
+    due_date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+    actn_date = serializers.DateField(
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
 
     class Meta:

@@ -465,7 +465,7 @@ class EstimatingListView(APIView):
                 if not isinstance(gc_details_data, list):
                     gc_details_data = [gc_details_data]
 
-                existing_gc_detail_ids = [gc_detail.id for gc_detail in estimating.gc_details.all()]
+                existing_gc_detail_ids = [gc_detail.id for gc_detail in estimating.gc_details.all()] # type: ignore
                 updated_gc_detail_ids = []
 
                 for gc_detail_data in gc_details_data:
@@ -480,7 +480,7 @@ class EstimatingListView(APIView):
                             return Response({'error': 'GC_detail not found'}, status=status.HTTP_404_NOT_FOUND)
                     else:
                         # Create new GC_detail
-                        gc_detail_data['estimating'] = estimating.id
+                        gc_detail_data['estimating'] = estimating.id # type: ignore
                         gc_detail_serializer = GC_infoSerializers(data=gc_detail_data)
 
                     if gc_detail_serializer.is_valid():

@@ -63,7 +63,7 @@ class Project(models.Model):
         ],default='Pending', null=True, blank=True)
 
     drywell=models.CharField(verbose_name="Drywell Conttrol Joins", max_length=50,choices=[
-        ('Submited','Submited'),('Working','Working'),('Approved','Approved'),
+        ('Submitted','Submitted'),('Working','Working'),('Approved','Approved'),
         ],default='null', null=True, blank=True)
 
     finish=models.CharField(verbose_name="FINISH LEVEL MARKUPS", max_length=50,choices=[
@@ -319,7 +319,7 @@ class Project(models.Model):
                 {'name': 'Structa Wire', 'parent': 'Lath'},
 
             ]:
-                create_directory(itemgetter['name'], item['parent']) # type: ignore # type: ignore
+                create_directory(itemgetter('name')(item), itemgetter('parent')(item)) # type: ignore # type: ignore
 
     def __str__(self):
         return str(self.proposal)

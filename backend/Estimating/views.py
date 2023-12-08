@@ -317,7 +317,7 @@ class EstimatorSummaryView(views.APIView):
             'summary': total_data,  
             'ytd_total': total_data['Grand Total']['total'], 
             'ytd_total_bid_amount': total_data['Grand Total']['bid_amount'],
-            'estimator': 'Grand Totals'
+            'estimator': 'Grand Total'
         }
         response_data.append(grand_totals)
 

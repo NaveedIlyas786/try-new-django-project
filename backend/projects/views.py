@@ -70,8 +70,7 @@ def create_project(request, id=None):
         data = request.data
         if isinstance(data, list):
             data = data[0]
-        project_serializer = ProjectSerializer(
-            data=data)  # And this line has been changed
+        project_serializer = ProjectSerializer(data=data)
         if not project_serializer.is_valid():
             return Response(project_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -134,6 +133,7 @@ def create_project(request, id=None):
         project_serializer = ProjectSerializer(project, data=data)
         if not project_serializer.is_valid():
             return Response(project_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
         related_serializers = []
         for key, model, serializer_class in related_data_models:

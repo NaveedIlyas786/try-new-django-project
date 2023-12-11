@@ -420,6 +420,8 @@ class Sub_Contractors(models.Model):
 class LaborRate(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     status=models.CharField(verbose_name="Labor Rate", max_length=500, null=True, blank=True)
+    custom=models.CharField(verbose_name="If Custom", max_length=5000, null=True, blank=True)
+
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
     comment_box=models.CharField(verbose_name="comment", max_length=5000, null=True, blank=True)
 
@@ -439,6 +441,8 @@ class LaborRate(models.Model):
 class HDS_system(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     status=models.CharField(verbose_name="HDS System", max_length=500, null=True, blank=True)
+    custom=models.CharField(verbose_name="If Custom", max_length=500, null=True, blank=True)
+
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
     comment_box=models.CharField(verbose_name="comment", max_length=5000, null=True, blank=True)
 

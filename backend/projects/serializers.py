@@ -319,7 +319,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     start_date = serializers.DateField(
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
 
-    proposal_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Proposal.objects.all(), source='proposal', required=True)
+    proposal_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Proposal.objects.all(), source='proposal', required=False)
     
 
     proposal=ProposalSerializer(read_only=True)
@@ -329,6 +329,15 @@ class ProjectSerializer(serializers.ModelSerializer):
                     'project_address','addendums','contacts','drywell','finish','wall_type','ro_door','ro_window','substitution',
                     'contracts','schedule_of_values','insurancs','bond','submittals','shopdrawing','safity','schedule','sub_contractors','laborrate',
                     'hds_system','buget','proposal']
+        
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field_name, field in self.fields.items():
+            field.required = False
+            
     def to_representation(self, instance):
 
 

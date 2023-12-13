@@ -19,11 +19,22 @@ from .serializers import (ProjectSerializer, ContractSerializer,  InsuranceSeria
 
 
 class ProjectDetailListCreateView(APIView):
-    def get(self, request):
-        top_level_details = Project_detail.objects.filter(prnt_id__isnull=True)
-        serializer = ProjectDetailSerializer(top_level_details, many=True)
+    def get(self, request, prjct_id):
+        # Filter details based on the prjct_id
+        project_details = Project_detail.objects.filter(prjct_id=prjct_id)
+
+        # Serialize the data
+        serializer = ProjectDetailSerializer(project_details, many=True)
+
+        # Return the serialized data
         return Response(serializer.data)
 
+    # def get(self,request,id=None,format=None):
+    #     if id:
+    #         try:
+    #             if(project)
+    #         except:
+    #             pass
 # class ProjectDetailListCreateView(viewsets.ReadOnlyModelViewSet):
 #     queryset = Project_detail.objects.filter(prnt_id__isnull=True)  # This fetches top-level directories
 #     serializer_class = ProjectDetailSerializer

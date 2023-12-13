@@ -359,6 +359,10 @@ class ProjectSerializer(serializers.ModelSerializer):
         if 'hds_system' in representation:
             representation['HDS System'] = representation.pop('hds_system')
 
+
+        if 'proposal' in representation:
+            representation['Proposal'] = representation.pop('proposal')
+
         if 'schedule_of_values' in representation:
             representation['Schedule Of Values'] = representation.pop('schedule_of_values')
 

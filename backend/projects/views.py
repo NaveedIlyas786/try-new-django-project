@@ -21,7 +21,7 @@ from .serializers import (ProjectSerializer, ContractSerializer,  InsuranceSeria
 class ProjectDetailListCreateView(APIView):
     def get(self, request, prjct_id):
         # Filter details based on the prjct_id
-        project_details = Project_detail.objects.filter(prjct_id=prjct_id)
+        project_details = Project_detail.objects.filter(prjct_id=prjct_id ,prnt_id__isnull=True)
 
         # Serialize the data
         serializer = ProjectDetailSerializer(project_details, many=True)

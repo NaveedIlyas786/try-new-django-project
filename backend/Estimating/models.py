@@ -153,8 +153,9 @@ class Estimating(models.Model):
             for item in fourth_level_data:
                 parent_obj = third_level_objects[item['parent']]
                 Estimating_detail.objects.create(Estimating=self, drctry_name=item['name'], prnt_id=parent_obj.id)
-        def __str__(self):
-            return self.prjct_name
+                
+    def __str__(self):
+        return self.prjct_name
         
 
 
@@ -165,8 +166,11 @@ class GC_detail(models.Model):
     gc_name=models.CharField(verbose_name="GC Name",max_length=1500, null=True,blank=True)
     gc_email=models.EmailField(verbose_name="GC Email", max_length=254,null=True,blank=True)
     gc_detail=models.CharField(verbose_name="GC Detail", max_length=1500, null=True,blank=True)
-    def __str__ (self):
-        return self.gc_name
+    # def __str__ (self):
+    #     return self.gc_name
+    # def __str__(self):
+    #     print(f"GC_detail __str__ called for object with id {self.id}")
+    #     return self.gc_name  # Replace with the appropriate field
 
 
 

@@ -3,7 +3,7 @@ from .models import Project_detail,Project
 from .models import (
     Project, Contract,  Insurance, Bond, Submittals, 
     ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, 
-    HDS_system,  Buget,Project_detail
+    HDS_system,  Buget,Project_detail,Delay_Notice
 )
 from Estimating.models import Spec_detail
 
@@ -106,6 +106,15 @@ class ProjectDetailAdmin(admin.ModelAdmin):
 
 
 
+class Delay_NoticeAdmin(admin.ModelAdmin):
+    list_display=('delay_num','project','floor','area','schdul_num','date','Asocatd_rfi','if_yes','open_date','close_date',
+                  'dscrptn_impct','dscrptn_task','gnrl_cntrctr','gc_forem','comnt','preprd_by')
+    
+
+
+
+
+
 # Register the models with their respective admin views
 admin.site.register(Project_detail, ProjectDetailAdmin)
 admin.site.register(Project, ProjectAdmin)
@@ -122,3 +131,4 @@ admin.site.register(Sub_Contractors)
 admin.site.register(LaborRate)
 admin.site.register(HDS_system)
 admin.site.register(Buget)
+admin.site.register(Delay_Notice,Delay_NoticeAdmin)

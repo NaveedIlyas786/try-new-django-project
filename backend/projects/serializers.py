@@ -1,6 +1,6 @@
 # serializers.py
 from rest_framework import serializers
-from .models import Project, Contract,  Insurance, Bond, Submittals, ShopDrawing,Schedule_of_Value, Safity, Schedule, Sub_Contractors, LaborRate, HDS_system, Buget,Project_detail
+from .models import Project, Contract,  Insurance, Bond, Submittals, ShopDrawing,Schedule_of_Value, Safity, Schedule, Sub_Contractors, LaborRate, HDS_system, Buget,Project_detail,Delay_Notice
 
 from Estimating.models import Proposal,Spec_detail
 from Estimating.serializers import ProposalSerializer,SpecificationDetailSerializer
@@ -11,7 +11,7 @@ from Estimating.serializers import ProposalSerializer,SpecificationDetailSeriali
 class ContractSerializer(serializers.ModelSerializer):
     
     contract_date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore
 
     class Meta:
         model = Contract
@@ -27,7 +27,7 @@ class ContractSerializer(serializers.ModelSerializer):
 
 class ScheduleOfValueSerializer(serializers.ModelSerializer):
     schedule_date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore # type: ignore
 
     class Meta:
         model = Schedule_of_Value
@@ -44,7 +44,7 @@ class ScheduleOfValueSerializer(serializers.ModelSerializer):
 class InsuranceSerializer(serializers.ModelSerializer):
 
     date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore
 
     class Meta:
         model = Insurance
@@ -60,7 +60,7 @@ class InsuranceSerializer(serializers.ModelSerializer):
 
 class BondSerializer(serializers.ModelSerializer):
     date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore # type: ignore
 
     class Meta:
         model = Bond
@@ -93,9 +93,9 @@ class BondSerializer(serializers.ModelSerializer):
 
 class SubmittalsSerializer(serializers.ModelSerializer):
     due_date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore
     actn_date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore # type: ignore
 
     class Meta:
         model = Submittals
@@ -135,7 +135,7 @@ class SubmittalsSerializer(serializers.ModelSerializer):
 
 class ShopDrawingSerializer(serializers.ModelSerializer):
     date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore
 
     class Meta:
         model = ShopDrawing
@@ -156,7 +156,7 @@ class ShopDrawingSerializer(serializers.ModelSerializer):
 
 class SafitySerializer(serializers.ModelSerializer):
     date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore # type: ignore
 
     class Meta:
         model = Safity
@@ -176,7 +176,7 @@ class SafitySerializer(serializers.ModelSerializer):
         return representation
 class ScheduleSerializer(serializers.ModelSerializer):
     date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore # type: ignore
 
     class Meta:
         model = Schedule
@@ -192,7 +192,7 @@ class ScheduleSerializer(serializers.ModelSerializer):
 
 class SubContractorsSerializer(serializers.ModelSerializer):
     date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore # type: ignore
 
     class Meta:
         model = Sub_Contractors
@@ -208,7 +208,7 @@ class SubContractorsSerializer(serializers.ModelSerializer):
         return representation
 class LaborRateSerializer(serializers.ModelSerializer):
     date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore
     class Meta:
         model = LaborRate
         fields = '__all__'
@@ -254,7 +254,7 @@ class LaborRateSerializer(serializers.ModelSerializer):
 
 class HDSSystemSerializer(serializers.ModelSerializer):
     date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore
 
     class Meta:
         model = HDS_system
@@ -284,7 +284,7 @@ class HDSSystemSerializer(serializers.ModelSerializer):
 
 class BugetSerializer(serializers.ModelSerializer):
     contract_date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore # type: ignore
 
     class Meta:
         model = Buget
@@ -317,7 +317,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     # onbuild = OnBuildSerializer(source='onbuild_set', many=True, required=False, read_only=True)
     buget = BugetSerializer(source='buget_set', many=True, required=False, read_only=True)
     start_date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore
 
     proposal_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Proposal.objects.all(), source='proposal', required=False)
     
@@ -445,3 +445,18 @@ class ProjectDetailSerializer(serializers.ModelSerializer):
         model = Project_detail
         fields = ['id', 'drctry_Name', 'prjct_id', 'prnt_id', 'file_type', 'file_name', 'children']
 
+
+
+
+
+
+
+class Delay_NoticeSerializer(serializers.ModelSerializer):
+    
+    project_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Project.objects.all(), source='project', required=False)
+    project=ProjectSerializer(read_only=True)
+
+    
+    class Meta:
+        model=Delay_Notice
+        fields=['id','project_id','delay_num','floor','area','schdul_num','date','Asocatd_rfi','if_yes','close_date','open_date','dscrptn_impct','dscrptn_task','gnrl_cntrctr','gc_forem','comnt','preprd_by','project']

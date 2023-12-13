@@ -561,7 +561,7 @@ class QualificationView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(sef, request, id, format=None):
+    def put(self, request, id, format=None):
         try:
             qualification = Qualification.objects.get(id=id)
         except Qualification.DoesNotExist:

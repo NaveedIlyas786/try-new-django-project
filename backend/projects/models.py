@@ -1,12 +1,9 @@
 from operator import itemgetter
-from random import choice
 from django.db import models
-from .validation import validate_file_extension
 
-import os
 
 from accounts.models import User
-from Estimating.models import Estimating, Estimating_detail, Proposal,Specification,Spec_detail
+from Estimating.models import Estimating, Estimating_detail, Proposal,GC_detail
 
 
 class Project(models.Model):
@@ -486,3 +483,32 @@ class Project_detail(models.Model):
 
     def __str__(self):
         return self.drctry_Name
+
+
+
+
+class  Delay_Notice(models.Model):
+    project=models.ForeignKey(Project, verbose_name="slect project", on_delete=models.CASCADE , blank=True,null=True)
+    delay_num=models.IntegerField(verbose_name="Delay Number #",blank=True)
+    floor=models.CharField(verbose_name="Floor", max_length=500,null=True,blank=True)
+    area=models.CharField(verbose_name="area",max_length=500,null=True,blank=True)
+    schdul_num=models.IntegerField(verbose_name="Schedule ID #",null=True,blank=True)
+
+    date=models.DateField(verbose_name="date", auto_now=False, auto_now_add=False,null=True,blank=True)
+    Asocatd_rfi=models.BooleanField(verbose_name="Assoicated RFI",blank=True,null=True)
+    if_yes=models.IntegerField(verbose_name="If Yes #",null=True,blank=True)
+    open_date=models.DateField(verbose_name="date Opened", auto_now=False, auto_now_add=False,null=True,blank=True)
+    close_date=models.DateField(verbose_name="date Closed", auto_now=False, auto_now_add=False,null=True,blank=True)
+
+
+    dscrptn_impct=models.CharField(verbose_name="Detailed Description of Impact Trade:", max_length=5000 , blank=True, null=True)
+    dscrptn_task=models.CharField(verbose_name="Schedule ID # and description of tasks that follow that will be affected:", max_length=5000 , blank=True, null=True)
+
+    gnrl_cntrctr=models.ForeignKey(GC_detail,verbose_name="General Contractor", on_delete=models.CASCADE,null=True,blank=True) 
+    gc_forem=models.CharField(verbose_name="GC Foreman or Supervisor Name:", max_length=500,null=True,blank=True)
+    comnt=models.CharField(verbose_name="Additional Comments:", max_length=5000,null=True,blank=True)
+    preprd_by=models.CharField(verbose_name="Prepared by:", max_length=500,null=True,blank=True)
+    
+    # def __str__(self):
+    #     print(f"Delay_Notice __str__ called for object with id {self.id}")
+    #     return str(self.delay_num) if self.delay_num is not None else 'No Delay Number'

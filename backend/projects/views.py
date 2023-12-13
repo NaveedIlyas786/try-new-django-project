@@ -1,6 +1,7 @@
 # views.py
 from rest_framework import generics
 from rest_framework import viewsets
+from yaml import serialize
 
 from .models import Project, Project_detail
 from .serializers import ProjectSerializer, ProjectDetailSerializer
@@ -11,11 +12,11 @@ from rest_framework.views import APIView
 
 
 from rest_framework.decorators import api_view
-from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget
+from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget,Delay_Notice
 from .serializers import (ProjectSerializer, ContractSerializer,  InsuranceSerializer, BondSerializer,
                            SubmittalsSerializer, ShopDrawingSerializer, SafitySerializer, ScheduleSerializer,
                           SubContractorsSerializer, LaborRateSerializer,HDSSystemSerializer,
-                          BugetSerializer)
+                          BugetSerializer,Delay_NoticeSerializer)
 
 
 class ProjectDetailListCreateView(APIView):
@@ -169,3 +170,27 @@ def create_project(request, id=None):
             serializer.save()
         return Response({"message": "Project and related data updated successfully"}, status=status.HTTP_200_OK)
 
+
+
+
+class Delay_NoticeViews(APIView):
+    def get(self, request,id=None):
+        if id:
+            try:
+                delay_notice=Delay_Notice.objects.get(id=id)
+            except:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+            serialize=Delay_NoticeSerializer(delay_notice)
+        else:
+            delay_notice=Delay_Notice.objects.all()
+            serialize=Delay_NoticeSerializer(delay_notice,many=True)
+            
+        return Response(serialize.data)
+    
+    def post(self,request):
+        serialize=Delay_NoticeSerializer(data=request.data)
+        if serialize.is_valid():
+            serialize.save()
+            return Response(serialize.data,status=status.HTTP_201_CREATED)
+        return Response(serialize.data,status=status.HTTP_400_BAD_REQUEST)
+    

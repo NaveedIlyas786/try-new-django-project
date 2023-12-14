@@ -457,9 +457,8 @@ class Delay_NoticeSerializer(serializers.ModelSerializer):
     
     project_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Project.objects.all(), source='project', required=False)
     project=ProjectSerializer(read_only=True)
-    gnrl_cntrctr_id=serializers.PrimaryKeyRelatedField(write_only=True,queryset=GC_detail.objects.all(),source='GC_detail',required=False)
+    gnrl_cntrctr_id=serializers.PrimaryKeyRelatedField(write_only=True,queryset=GC_detail.objects.all(),source='gnrl_cntrctr',required=False)
     gnrl_cntrctr=GC_infoSerializers(read_only=True)
-    
     
 
     

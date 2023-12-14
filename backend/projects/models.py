@@ -1,4 +1,5 @@
 from operator import itemgetter
+from unittest.util import _MAX_LENGTH
 from django.db import models
 
 
@@ -82,6 +83,15 @@ class Project(models.Model):
         ],default='Pending', null=True, blank=True)
 
     substitution=models.CharField(verbose_name="Substitution", max_length=5000, null=True, blank=True)
+    
+    gc=models.ForeignKey(GC_detail, verbose_name="Add GC", on_delete=models.CASCADE, null=True, blank=True)
+    # gc_email=models.EmailField(verbose_name="Add GC Email", max_length=254, null=True, blank=True)
+    gc_address=models.CharField(verbose_name="GC Address", max_length=5000, null=True, blank=True)
+    gc_phone=models.CharField(verbose_name="GC Phone number", max_length=50, null=True, blank=True)
+    gc_pm = models.CharField(verbose_name="GC Super/PM", max_length=100,null=True,blank=True)
+    
+    
+    
 
 
 
@@ -483,6 +493,32 @@ class Project_detail(models.Model):
 
     def __str__(self):
         return self.drctry_Name
+    
+    
+
+
+
+class RFI(models.Model):
+    project=models.ForeignKey(Project, verbose_name="Select", on_delete=models.CASCADE,null=True,blank=True)
+    rfi_num=models.CharField(verbose_name="RFI #",max_length=50,null=True,blank=True)
+    date=models.DateField(verbose_name="Date", auto_now=False, auto_now_add=False,null=True,blank=True)
+    attn=models.CharField(verbose_name="Attn", max_length=500,null=True,blank=True)
+    company=models.CharField(verbose_name="Company", max_length=500,null=True,blank=True)
+    phne=models.CharField(verbose_name="Phone", max_length=50,null=True,blank=True)
+    email=models.EmailField(verbose_name="Email", max_length=254,null=True,blank=True)
+    drwng_rfrnc=models.CharField(verbose_name="Drawing Reference", max_length=500,null=True,blank=True)
+    detl_num=models.IntegerField(verbose_name="Detail No",null=True,blank=True)
+    spc_rfrnc=models.CharField(verbose_name="Spec Reference", max_length=500,null=True,blank=True)
+    rspns_rqrd=models.CharField(verbose_name="Response Required By", max_length=500,null=True,blank=True)
+    qustn=models.CharField(verbose_name="Question", max_length=5000,null=True,blank=True)
+    
+    
+    # def __str__(self):
+    #     return self.rfi_num
+    
+    
+    
+    
 
 
 
@@ -496,7 +532,9 @@ class  Delay_Notice(models.Model):
 
     date=models.DateField(verbose_name="date", auto_now=False, auto_now_add=False,null=True,blank=True)
     Asocatd_rfi=models.BooleanField(verbose_name="Assoicated RFI",blank=True,null=True)
-    if_yes=models.IntegerField(verbose_name="If Yes #",null=True,blank=True)
+    # if_yes=models.IntegerField(verbose_name="If Yes #",null=True,blank=True)
+    if_yes_rfi=models.ForeignKey(RFI, verbose_name="select the RFI", on_delete=models.CASCADE,null=True,blank=True)
+    
     open_date=models.DateField(verbose_name="date Opened", auto_now=False, auto_now_add=False,null=True,blank=True)
     close_date=models.DateField(verbose_name="date Closed", auto_now=False, auto_now_add=False,null=True,blank=True)
 
@@ -504,8 +542,8 @@ class  Delay_Notice(models.Model):
     dscrptn_impct=models.CharField(verbose_name="Detailed Description of Impact Trade:", max_length=5000 , blank=True, null=True)
     dscrptn_task=models.CharField(verbose_name="Schedule ID # and description of tasks that follow that will be affected:", max_length=5000 , blank=True, null=True)
 
-    gnrl_cntrctr=models.ForeignKey(GC_detail,verbose_name="General Contractor", on_delete=models.CASCADE,null=True,blank=True) 
-    gc_forem=models.CharField(verbose_name="GC Foreman or Supervisor Name:", max_length=500,null=True,blank=True)
+    # gnrl_cntrctr=models.ForeignKey(GC_detail,verbose_name="General Contractor", on_delete=models.CASCADE,null=True,blank=True) 
+    # gc_forem=models.CharField(verbose_name="GC Foreman or Supervisor Name:", max_length=500,null=True,blank=True)
     comnt=models.CharField(verbose_name="Additional Comments:", max_length=5000,null=True,blank=True)
     preprd_by=models.CharField(verbose_name="Prepared by:", max_length=500,null=True,blank=True)
     

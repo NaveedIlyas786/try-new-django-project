@@ -1,9 +1,9 @@
 from django import forms
 from django.contrib import admin
 from .models import (
-    Project, Contract, Schedule_of_Value, Insurance, Bond, Zlien, Submittals,
-    ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, Billing, Sov,
-    HDS_system, OnBuild, Buget, Project_detail
+    Project, Contract, Schedule_of_Value, Insurance, Bond, Submittals,
+    ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, 
+    HDS_system,  Buget, Project_detail
 )
 from Estimating.models import Spec_detail
 from django import forms

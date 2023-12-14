@@ -1,7 +1,7 @@
 # serializers.py
 from os import write
 from rest_framework import serializers
-from .models import Project, Contract,  Insurance, Bond, Submittals, ShopDrawing,Schedule_of_Value, Safity, Schedule, Sub_Contractors, LaborRate, HDS_system, Buget,Project_detail,Delay_Notice
+from .models import Project, Contract,  Insurance, Bond, Submittals, ShopDrawing,Schedule_of_Value, Safity, Schedule, Sub_Contractors, LaborRate, HDS_system, Buget,Project_detail,Delay_Notice,RFI
 
 from Estimating.models import Proposal,Spec_detail,GC_detail
 from Estimating.serializers import ProposalSerializer,SpecificationDetailSerializer,GC_infoSerializers
@@ -325,10 +325,13 @@ class ProjectSerializer(serializers.ModelSerializer):
     
 
     proposal=ProposalSerializer(read_only=True)
+    
+    gc_id=serializers.PrimaryKeyRelatedField(write_only=True,queryset=GC_detail.objects.all(),source='gc',required=False)
+    gc=GC_infoSerializers(read_only=True)
     class Meta:
         model = Project
         fields = ['id','status', 'job_num', 'start_date', 'proposal_id','prjct_engnr','bim_oprtr','Forman','prjct_mngr','start_date','general_superintendent',
-                    'project_address','addendums','contacts','drywell','finish','wall_type','ro_door','ro_window','substitution',
+                    'project_address','addendums','contacts','gc_id','gc','gc_address','gc_phone','gc_pm','drywell','finish','wall_type','ro_door','ro_window','substitution',
                     'contracts','schedule_of_values','insurancs','bond','submittals','shopdrawing','safity','schedule','sub_contractors','laborrate',
                     'hds_system','buget','proposal']
         
@@ -451,17 +454,23 @@ class ProjectDetailSerializer(serializers.ModelSerializer):
 
 
 
+class RFISerializer(serializers.ModelSerializer):
+    class Meta:
+        model=RFI
+        fields=['id','project','rfi_num','date','attn','company','phne','email','drwng_rfrnc','detl_num','spc_rfrnc','rspns_rqrd','qustn']
+
+
 
 
 class Delay_NoticeSerializer(serializers.ModelSerializer):
     
     project_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Project.objects.all(), source='project', required=False)
     project=ProjectSerializer(read_only=True)
-    gnrl_cntrctr_id=serializers.PrimaryKeyRelatedField(write_only=True,queryset=GC_detail.objects.all(),source='gnrl_cntrctr',required=False)
-    gnrl_cntrctr=GC_infoSerializers(read_only=True)
+    # gnrl_cntrctr_id=serializers.PrimaryKeyRelatedField(write_only=True,queryset=GC_detail.objects.all(),source='gnrl_cntrctr',required=False)
+    # gnrl_cntrctr=GC_infoSerializers(read_only=True)
     
 
     
     class Meta:
         model=Delay_Notice
-        fields=['id','project_id','delay_num','floor','area','schdul_num','date','Asocatd_rfi','if_yes','close_date','open_date','dscrptn_impct','dscrptn_task','gnrl_cntrctr_id','gnrl_cntrctr','gc_forem','comnt','preprd_by','project']
+        fields=['id','project_id','delay_num','floor','area','schdul_num','date','Asocatd_rfi','if_yes_rfi','close_date','open_date','dscrptn_impct','dscrptn_task','comnt','preprd_by','project']

@@ -1,9 +1,10 @@
 # serializers.py
+from os import write
 from rest_framework import serializers
 from .models import Project, Contract,  Insurance, Bond, Submittals, ShopDrawing,Schedule_of_Value, Safity, Schedule, Sub_Contractors, LaborRate, HDS_system, Buget,Project_detail,Delay_Notice
 
-from Estimating.models import Proposal,Spec_detail
-from Estimating.serializers import ProposalSerializer,SpecificationDetailSerializer
+from Estimating.models import Proposal,Spec_detail,GC_detail
+from Estimating.serializers import ProposalSerializer,SpecificationDetailSerializer,GC_infoSerializers
 
 
 
@@ -205,6 +206,7 @@ class SubContractorsSerializer(serializers.ModelSerializer):
         representation['project'] = instance.project.job_num if instance.project else None
 
 
+        
         return representation
 class LaborRateSerializer(serializers.ModelSerializer):
     date = serializers.DateField(
@@ -455,8 +457,12 @@ class Delay_NoticeSerializer(serializers.ModelSerializer):
     
     project_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Project.objects.all(), source='project', required=False)
     project=ProjectSerializer(read_only=True)
+    gnrl_cntrctr_id=serializers.PrimaryKeyRelatedField(write_only=True,queryset=GC_detail.objects.all(),source='GC_detail',required=False)
+    gnrl_cntrctr=GC_infoSerializers(read_only=True)
+    
+    
 
     
     class Meta:
         model=Delay_Notice
-        fields=['id','project_id','delay_num','floor','area','schdul_num','date','Asocatd_rfi','if_yes','close_date','open_date','dscrptn_impct','dscrptn_task','gnrl_cntrctr','gc_forem','comnt','preprd_by','project']
+        fields=['id','project_id','delay_num','floor','area','schdul_num','date','Asocatd_rfi','if_yes','close_date','open_date','dscrptn_impct','dscrptn_task','gnrl_cntrctr_id','gnrl_cntrctr','gc_forem','comnt','preprd_by','project']

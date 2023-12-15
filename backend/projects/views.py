@@ -3,6 +3,7 @@ from rest_framework import generics
 from rest_framework import viewsets
 from yaml import serialize
 
+
 from .models import Project, Project_detail
 from .serializers import ProjectSerializer, ProjectDetailSerializer
 from rest_framework.response import Response
@@ -12,11 +13,11 @@ from rest_framework.views import APIView
 
 
 from rest_framework.decorators import api_view
-from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget,Delay_Notice
+from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget,Delay_Notice,RFI,PCO
 from .serializers import (ProjectSerializer, ContractSerializer,  InsuranceSerializer, BondSerializer,
                            SubmittalsSerializer, ShopDrawingSerializer, SafitySerializer, ScheduleSerializer,
                           SubContractorsSerializer, LaborRateSerializer,HDSSystemSerializer,
-                          BugetSerializer,Delay_NoticeSerializer)
+                          BugetSerializer,Delay_NoticeSerializer,RFISerializer,PCOSerializer)
 
 
 class ProjectDetailListCreateView(APIView):
@@ -170,6 +171,60 @@ def create_project(request, id=None):
             serializer.save()
         return Response({"message": "Project and related data updated successfully"}, status=status.HTTP_200_OK)
 
+class RFIViews(APIView):
+    def get(self, request, id=None):
+        if id:
+            try:
+                rfi=RFI.objects.get(id=id)
+            except RFI.DoesNotExist:
+                return Response (status=status.HTTP_404_NOT_FOUND)
+            serializer=RFISerializer(rfi)
+        else:
+            rfi=RFI.objects.all()
+            serializer=RFISerializer(rfi,many=True)
+        return Response(serializer.data)
+    
+    def post(self, request):
+        serializer = RFISerializer(data=request.data)
+        if serializer.is_valid():
+            # Provide a valid project_id here
+            project_id = request.data.get('project_id')
+            if project_id:
+                project = Project.objects.get(id=project_id)
+                serializer.save(project=project)  # Fix the typo here
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response({"error": "project_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class PCOViews(APIView):
+    def get(self, request, id=None, format=None):
+        if id:
+            try:
+                pco=PCO.objects.get(id=id)
+                # serializer=PCOSerializer(pco)
+                # return Response(serializer.data)
+            except PCO.DoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+            serializer=PCOSerializer(pco)
+            
+        else:
+            pco=PCO.objects.all() 
+            serializer=PCOSerializer(pco,many=True)
+        return Response(serializer.data)
+    
+    def post(self, request, format=None):
+        serializer=PCOSerializer(data=request.data)
+        if serializer.is_valid():
+            project_id = request.data.get('project_id')
+            if project_id:
+                project = Project.objects.get(id=project_id)
+                serializer.save(project=project)  # Fix the typo here
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response({"error": "project_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
 
 
 

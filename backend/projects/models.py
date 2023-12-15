@@ -48,13 +48,7 @@ class Project(models.Model):
     addendums=models.CharField(verbose_name="Addendum", max_length=500, null=True, blank=True)
 
 
-    # bid=models.CharField(verbose_name="bid", max_length=50,choices=[
-    #     ('Available','Available'),('Not Available','Not Available'),
-    #     ],default='Not Available', null=True, blank=True)
 
-    # Spec=models.CharField(verbose_name="Spec's per our Scope", max_length=50,choices=[
-    #     ('Available','Available'),('Not Available','Not Available'),
-    #     ],default='Not Available', null=True, blank=True)
 
     contacts=models.CharField(verbose_name="Contacts", max_length=50,choices=[
         ('On build','On build'),('Pending','Pending'),
@@ -70,9 +64,6 @@ class Project(models.Model):
     wall_type=models.CharField(verbose_name="WALL TYPE MAPPING", max_length=50,choices=[
         ('Completed','Completed'),('Working','Working'),('Uploaded','Uploaded'),
         ],default='null', null=True, blank=True)
-    # progress=models.CharField(verbose_name="PROGRESS TRACKING", max_length=50,choices=[
-    #     ('Completed','Completed'),('Working','Working'),('Pending','Pending'),
-    #     ],default='Pending', null=True, blank=True)
 
     ro_door=models.CharField(verbose_name="RO-Door", max_length=50,choices=[
         ('Requested','Requested'),('Pending','Pending'),('Received','Received')
@@ -369,13 +360,6 @@ class Bond(models.Model):
         ('Sent','Sent'),('Received','Received'),('Complete','Complete'),('N/A','N/A'),
         ],default='null', null=True, blank=True)
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
-# class  Zlien(models.Model):
-#     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
-#     zlien=models.CharField(verbose_name="Zlien", max_length=50,choices=[
-#         ('Submitted','Submitted'),('Pending','Pending'),
-#         ],default='Pending', null=True, blank=True)
-#     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
-
 
 class Submittals(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
@@ -432,18 +416,6 @@ class LaborRate(models.Model):
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
     comment_box=models.CharField(verbose_name="comment", max_length=5000, null=True, blank=True)
 
-# class Billing(models.Model):
-#     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
-#     due_date=models.DateField(verbose_name="add due date(YYYY-MM-DD)", null=True, blank=True)
-#     reduction=models.CharField(verbose_name="Add Reduction", max_length=500,null=True, blank=True)
-
-# class Sov(models.Model):
-#     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
-#     status=models.CharField(verbose_name="Labor Rate", max_length=50,choices=[
-#         ('Approved','Approved'),('Pending','Pending'),
-#         ],default='Pending', null=True, blank=True)
-#     date=models.DateField(verbose_name="add date if Status Approved (YYYY-MM-DD)", null=True, blank=True)
-
 
 class HDS_system(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
@@ -452,18 +424,6 @@ class HDS_system(models.Model):
 
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
     comment_box=models.CharField(verbose_name="comment", max_length=5000, null=True, blank=True)
-
-
-
-# class OnBuild(models.Model):
-#     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
-#     field=models.CharField(verbose_name="select field for the On Build", max_length=50,choices=[
-#         ('Addendum','Addendum'),('Bide Proposal','Bide Proposal'),('Specs','Specs'),('Contract','Contract'),
-#         ('Submitile','Submitile'),('Safety','Safety'),('Shop Drawing','Shop Drawing'),('Budget','Budget'),
-#         ], null=True, blank=True)
-#     status=models.CharField(verbose_name="HDS System", max_length=50,choices=[
-#         ('Upload','Upload'),('Pending','Pending'),
-#         ],default='Pending', null=True, blank=True)
 
 
 class Buget(models.Model):
@@ -511,7 +471,12 @@ class RFI(models.Model):
     spc_rfrnc=models.CharField(verbose_name="Spec Reference", max_length=500,null=True,blank=True)
     rspns_rqrd=models.CharField(verbose_name="Response Required By", max_length=500,null=True,blank=True)
     qustn=models.CharField(verbose_name="Question", max_length=5000,null=True,blank=True)
-    
+    other_trd=models.BooleanField(verbose_name="Other Trades",null=True,blank=True)
+    rply_by=models.CharField(verbose_name="Reply By", max_length=500,null=True,blank=True)
+    rspns=models.CharField(verbose_name="Response",max_length=500,null=True,blank=True)
+    open_date=models.DateField(verbose_name="date Opened", auto_now=False, auto_now_add=False,null=True,blank=True)
+    close_date=models.DateField(verbose_name="date Closed", auto_now=False, auto_now_add=False,null=True,blank=True)
+
     
     # def __str__(self):
     #     return self.rfi_num
@@ -520,6 +485,15 @@ class RFI(models.Model):
     
     
 
+
+class PCO(models.Model):
+    date=models.DateField(verbose_name="Date", auto_now=False, auto_now_add=False)
+    attn=models.CharField(verbose_name="Attn", max_length=500,null=True,blank=True)
+    company=models.CharField(verbose_name="Company", max_length=500,null=True,blank=True)
+    addrs=models.CharField(verbose_name="Address", max_length=500,null=True,blank=True)
+    pco_num=models.CharField(verbose_name="PCO NO.", max_length=500,null=True,blank=True)
+    project=models.ForeignKey(Project,verbose_name="Project",on_delete=models.CASCADE,null=True,blank=True)
+    dcrsbsn=models.CharField(verbose_name="Description of work", max_length=500,null=True,blank=True)
 
 
 
@@ -534,10 +508,8 @@ class  Delay_Notice(models.Model):
     Asocatd_rfi=models.BooleanField(verbose_name="Assoicated RFI",blank=True,null=True)
     # if_yes=models.IntegerField(verbose_name="If Yes #",null=True,blank=True)
     if_yes_rfi=models.ForeignKey(RFI, verbose_name="select the RFI", on_delete=models.CASCADE,null=True,blank=True)
-    
-    open_date=models.DateField(verbose_name="date Opened", auto_now=False, auto_now_add=False,null=True,blank=True)
-    close_date=models.DateField(verbose_name="date Closed", auto_now=False, auto_now_add=False,null=True,blank=True)
-
+    pco=models.ForeignKey(PCO, verbose_name="PCO", on_delete=models.CASCADE,null=True,blank=True)
+   
 
     dscrptn_impct=models.CharField(verbose_name="Detailed Description of Impact Trade:", max_length=5000 , blank=True, null=True)
     dscrptn_task=models.CharField(verbose_name="Schedule ID # and description of tasks that follow that will be affected:", max_length=5000 , blank=True, null=True)

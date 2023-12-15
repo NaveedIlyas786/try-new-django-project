@@ -3,7 +3,7 @@ from .models import Project_detail,Project
 from .models import (
     Project, Contract,  Insurance, Bond, Submittals, 
     ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, 
-    HDS_system,  Buget,Project_detail,RFI,Delay_Notice
+    HDS_system,  Buget,Project_detail,RFI,Delay_Notice,PCO
 )
 from Estimating.models import Spec_detail
 
@@ -104,15 +104,16 @@ class ProjectDetailAdmin(admin.ModelAdmin):
 
 
 class RFIAdmin(admin.ModelAdmin):
-    list_display=('id','project','rfi_num','date','attn','company','phne','email','drwng_rfrnc','detl_num','spc_rfrnc','rspns_rqrd','qustn')
+    list_display=('id','project','rfi_num','date','attn','company','phne','email','drwng_rfrnc','detl_num','spc_rfrnc','rspns_rqrd','open_date','close_date','qustn')
 
 
-
+class PCOAdmin(admin.ModelAdmin):
+    list_display=('id','date','attn','company','addrs','pco_num','project','dcrsbsn')
 
 
 
 class Delay_NoticeAdmin(admin.ModelAdmin):
-    list_display=('id','delay_num','project','floor','area','schdul_num','date','Asocatd_rfi','open_date','close_date',
+    list_display=('id','delay_num','project','floor','area','schdul_num','date','Asocatd_rfi',
                   'dscrptn_impct','dscrptn_task','comnt','preprd_by','if_yes_rfi')
     
 
@@ -136,3 +137,4 @@ admin.site.register(HDS_system)
 admin.site.register(Buget)
 admin.site.register(Delay_Notice,Delay_NoticeAdmin)
 admin.site.register(RFI,RFIAdmin)
+admin.site.register(PCO,PCOAdmin)

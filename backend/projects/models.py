@@ -131,193 +131,243 @@ class Project(models.Model):
             #     )
             #     estimating_to_project[estimating_detail] = directory
 
-            for name in ['Accounting', 'Certified Payroll', 'Change Orders','Insurance', 'Contract', 'Estimating', 'PM', 'Safety', 'Subcontractors']:
+            for name in ['Accounting','Contract', 'Estimating', 'PM', 'Subcontractors']:
                 create_directory(name)
 
             # Second Level Entries
             for item  in [
                 {'name': 'Billing', 'parent': 'Accounting'},
-                {'name': 'DIR', 'parent': 'Certified Payroll'},
-                {'name': '001', 'parent': 'Change Orders'},
-                {'name': '002', 'parent': 'Change Orders'},
-                {'name': '003', 'parent': 'Change Orders'},
-                {'name': '004', 'parent': 'Change Orders'},
-                {'name': '005', 'parent': 'Change Orders'},
-                {'name': '006', 'parent': 'Change Orders'},
-                {'name': '007', 'parent': 'Change Orders'},
-                {'name': '008', 'parent': 'Change Orders'},
-                {'name': '009', 'parent': 'Change Orders'},
-                {'name': '010', 'parent': 'Change Orders'},
+                {'name': 'Supplier Invoices', 'parent': 'Accounting'},
+                {'name': 'Certified Payroll', 'parent': 'Accounting'},
+                {'name': 'Legal', 'parent': 'Accounting'},
+                {'name': 'Insurance', 'parent': 'Accounting'},
+                {'name': 'COI', 'parent': 'Accounting'},
+                {'name': 'Insurance REQ', 'parent': 'Accounting'},
+                
+                
+                
+                
+                {'name': 'ADD', 'parent': 'Estimating'},
+                {'name': 'BID', 'parent': 'Estimating'},
+                {'name': 'Plans', 'parent': 'Estimating'},
+                {'name': 'Pre BID RFIs', 'parent': 'Estimating'},
+                {'name': 'Quates', 'parent': 'Estimating'},
+                {'name': 'Specs', 'parent': 'Estimating'},
+                {'name': 'W9', 'parent': 'Estimating'},
+                {'name': 'Wage Rates', 'parent': 'Estimating'},
+                
+
+                
+                # {'name': '001', 'parent': 'Change Orders'},
+                # {'name': '002', 'parent': 'Change Orders'},
+                # {'name': '003', 'parent': 'Change Orders'},
+                # {'name': '004', 'parent': 'Change Orders'},
+                # {'name': '005', 'parent': 'Change Orders'},
+                # {'name': '006', 'parent': 'Change Orders'},
+                # {'name': '007', 'parent': 'Change Orders'},
+                # {'name': '008', 'parent': 'Change Orders'},
+                # {'name': '009', 'parent': 'Change Orders'},
+                # {'name': '010', 'parent': 'Change Orders'},
                 {'name': 'Contract', 'parent': 'Contract'},
                 {'name': 'Contract Documents', 'parent': 'Contract'},
-                {'name': 'Letter of Intent', 'parent': 'Contract'},
-                {'name': 'COI', 'parent': 'Insurance'},
-                {'name': 'Insurance Requirements', 'parent': 'Insurance'},
-                {'name': 'Rancho Mesa Insurance - Template', 'parent': 'Insurance'},
-
-                {'name': 'Badging', 'parent': 'PM'},
+                {'name': 'LOI', 'parent': 'Contract'},
+                {'name': 'Bond', 'parent': 'Contract'},
+                
 
                 {'name': 'BIM', 'parent': 'PM'},
                 {'name': 'Budget Report', 'parent': 'PM'},
                 {'name': 'Contacts', 'parent': 'PM'},
-                {'name': 'Coordination', 'parent': 'PM'},
                 {'name': 'Coordination Meetings', 'parent': 'PM'},
                 {'name': 'Delay Notices', 'parent': 'PM'},
-                {'name': 'Emails', 'parent': 'PM'},
                 {'name': 'Extra Work', 'parent': 'PM'},
                 {'name': 'Inspections', 'parent': 'PM'},
                 {'name': 'Material', 'parent': 'PM'},
                 {'name': 'Photos', 'parent': 'PM'},
                 {'name': 'Plans', 'parent': 'PM'},
-                {'name': 'Prelim', 'parent': 'PM'},
-                {'name': 'RFIs,ASIs,etc', 'parent': 'PM'},
+                {'name': 'Prelims', 'parent': 'PM'},
+                {'name': 'RFIs ASIs', 'parent': 'PM'},
                 {'name': 'Schedule', 'parent': 'PM'},
                 {'name': 'Specs', 'parent': 'PM'},
                 {'name': 'Submittals', 'parent': 'PM'},
-                {'name': 'Approved AHAs', 'parent': 'Safety'},
-                {'name': 'Charlies - AHA & Site Specific Safety Plan', 'parent': 'Safety'},
-                {'name': 'Hill AFB Safety - Jame Prepaired', 'parent': 'Safety'},
+                {'name': 'Change Order', 'parent': 'PM'},
+                {'name': 'Safety', 'parent': 'PM'},
+                
+                
+                # {'name': 'Emails', 'parent': 'PM'},
+                
+                
+                
+                
+                # {'name': 'Approved AHAs', 'parent': 'Safety'},
+                # {'name': 'Charlies - AHA & Site Specific Safety Plan', 'parent': 'Safety'},
 
-                {'name': 'Subcontractor Name', 'parent': 'Subcontractors'},
+                # {'name': 'Subcontractor Name', 'parent': 'Subcontractors'},
             ]:
                 create_directory(item['name'], item['parent'])
 
             # Third Level Entries
             for item  in [
-                {'name': '2022', 'parent': 'Billing'},
-                {'name': '2023', 'parent': 'Billing'},
-                {'name': 'Billing Form', 'parent': 'Billing'},
-                {'name': 'Releases', 'parent': 'Billing'},
-                {'name': 'OLD', 'parent': 'Contract'},
-                {'name': 'Prelim', 'parent': 'Contract Documents'},
-                {'name': 'Abadael Perez', 'parent': 'Badging'},
-                {'name': 'Carmelo Ayala', 'parent': 'Badging'},
-                {'name': 'David Schmitt', 'parent': 'Badging'},
-                {'name': 'Ernesto Rincon', 'parent': 'Badging'},
-                {'name': 'Gonzalo Currasco', 'parent': 'Badging'},
-                {'name': 'Jon Taylor', 'parent': 'Badging'},
-                {'name': 'Juan Currasco', 'parent': 'Badging'},
-                {'name': 'Tylor Tudor', 'parent': 'Badging'},
-                {'name': 'Extra Work Rates', 'parent': 'Extra Work'},
-                {'name': 'PCOs', 'parent': 'Extra Work'},
-                {'name': '00. POs w OAs', 'parent': 'Material'},
-                {'name': '06. Equipment Quotes', 'parent': 'Material'},
-                {'name': 'OAs - Still need a PO', 'parent': 'Material'},
-                {'name': 'Issued For Construction', 'parent': 'Plans'},
-                {'name': 'old', 'parent': 'Plans'},
-                {'name': 'ROUGH OPENINGS', 'parent': 'Plans'},
-                {'name': '100% Plans', 'parent': 'Plans'},
-                {'name': 'DMS RFIs', 'parent': 'RFIs,ASIs,etc'},
-                {'name': 'Talha Schedules', 'parent': 'Schedule'},
-                {'name': 'Approved', 'parent': 'Submittals'},
-                {'name': 'Badging', 'parent': 'Submittals'},
-                {'name': 'Close Out Docs', 'parent': 'Submittals'},
-                {'name': 'Returned Submittals', 'parent': 'Submittals'},
-                {'name': 'Shop Drawings', 'parent': 'Submittals'},
-                {'name': 'Submittal Catalog', 'parent': 'Submittals'},
-                {'name': 'Title Page & TOC for Submittals', 'parent': 'Submittals'},
-                {'name': 'Working File', 'parent': 'Submittals'},
-                {'name': 'Working File', 'parent': 'Submittals'},
-                {'name': 'Accounting', 'parent': 'Subcontractor Name'},
-                {'name': 'Change Order', 'parent': 'Subcontractor Name'},
-                {'name': 'Contract', 'parent': 'Subcontractor Name'},
-                {'name': 'PM', 'parent': 'Subcontractor Name'},
+
+                
+                {'name': 'Delay log', 'parent': 'Delay Notices'},
+                
+                
+                # {'name': 'DIR', 'parent': 'Certified Payroll'},
+                # {'name': 'DIR', 'parent': 'Certified Payroll'},
+                
+                
+                # {'name': '2022', 'parent': 'Billing'},
+                # {'name': '2023', 'parent': 'Billing'},
+                # {'name': 'Billing Form', 'parent': 'Billing'},
+                # {'name': 'Releases', 'parent': 'Billing'},
+                
+                # {'name': 'OLD', 'parent': 'Contract'},
+                # {'name': 'Prelim', 'parent': 'Contract Documents'},
+                # {'name': 'Abadael Perez', 'parent': 'Badging'},
+                # {'name': 'Carmelo Ayala', 'parent': 'Badging'},
+                # {'name': 'David Schmitt', 'parent': 'Badging'},
+                # {'name': 'Ernesto Rincon', 'parent': 'Badging'},
+                # {'name': 'Gonzalo Currasco', 'parent': 'Badging'},
+                # {'name': 'Jon Taylor', 'parent': 'Badging'},
+                # {'name': 'Juan Currasco', 'parent': 'Badging'},
+                # {'name': 'Tylor Tudor', 'parent': 'Badging'},
+                # {'name': 'Extra Work Rates', 'parent': 'Extra Work'},
+                {'name': 'PCO Log', 'parent': 'Extra Work'},
+                # {'name': '00. POs w OAs', 'parent': 'Material'},
+                # {'name': '06. Equipment Quotes', 'parent': 'Material'},
+                # {'name': 'OAs - Still need a PO', 'parent': 'Material'},
+                # {'name': 'Issued For Construction', 'parent': 'Plans'},
+                # {'name': 'old', 'parent': 'Plans'},
+                # {'name': 'ROUGH OPENINGS', 'parent': 'Plans'},
+                # {'name': '100% Plans', 'parent': 'Plans'},
+                {'name': 'RFIs/ASI Log', 'parent': 'RFIs ASIs'},
+                # {'name': 'Talha Schedules', 'parent': 'Schedule'},
+                {'name': 'Submittal Log', 'parent': 'Submittals'},
+                {'name': 'Safety Doc Log', 'parent': 'Safety'},
+
+                # {'name': 'Approved', 'parent': 'Submittals'},
+                # {'name': 'Badging', 'parent': 'Submittals'},
+                # {'name': 'Close Out Docs', 'parent': 'Submittals'},
+                # {'name': 'Returned Submittals', 'parent': 'Submittals'},
+                # {'name': 'Shop Drawings', 'parent': 'Submittals'},
+                # {'name': 'Submittal Catalog', 'parent': 'Submittals'},
+                # {'name': 'Title Page & TOC for Submittals', 'parent': 'Submittals'},
+                # {'name': 'Working File', 'parent': 'Submittals'},
+                # {'name': 'Working File', 'parent': 'Submittals'},
+                # {'name': 'Accounting', 'parent': 'Subcontractor Name'},
+                # {'name': 'Change Order', 'parent': 'Subcontractor Name'},
+                # {'name': 'Contract', 'parent': 'Subcontractor Name'},
+                # {'name': 'PM', 'parent': 'Subcontractor Name'},
 
             ]:
                 create_directory(item['name'], item['parent'])
+                
 
             # Fourth Level Entries
             for item  in [
-                {'name': '2023 Wage Rates for Dist', 'parent': 'Extra Work Rates'},
-                {'name': 'PCO 000 - DESCRIPTION', 'parent': 'PCOs'},
-                {'name': 'PCO 001 - Exterior Mock Up - Need to Send', 'parent': 'PCOs'},
-                {'name': 'PCO 002 - IFC Drawing Updates', 'parent': 'PCOs'},
-                {'name': 'PCO 003 - T&M for Mock Up', 'parent': 'PCOs'},
-                {'name': 'Misc pages', 'parent': '100% Plans'},
-                {'name': 'Sent to James .26.23', 'parent': 'Talha Schedules'},
-                {'name': 'Approved', 'parent': 'Returned Submittals'},
-                {'name': 'Exterior', 'parent': 'Shop Drawings'},
-                {'name': 'Interior', 'parent': 'Shop Drawings'},
-                {'name': 'Quotes', 'parent': 'Shop Drawings'},
-                {'name': '01. Product Data', 'parent': 'Submittal Catalog'},
-                {'name': '02. LEED', 'parent': 'Submittal Catalog'},
-                {'name': '03. Product Test Reports', 'parent': 'Submittal Catalog'},
-                {'name': '04. Certificates', 'parent': 'Submittal Catalog'},
-                {'name': '05. Typ Shop Drawings', 'parent': 'Submittal Catalog'},
-                {'name': '06. Trimble Concrete Guide', 'parent': 'Submittal Catalog'},
-                {'name': '05 40 00 - Cold Formed Metal Framing', 'parent': 'Working File'},
-                {'name': '07 21 16 - Mineral Fiber Blanket Insulation', 'parent': 'Working File'},
-                {'name': '07 84 00 - Firestopping', 'parent': 'Working File'},
-                {'name': '07 92 00 - Joint Sealants', 'parent': 'Working File'},
+                {'name': 'Delay Notice Template', 'parent': 'Delay log'},
+                {'name': 'PCO Template', 'parent': 'PCO Log'},
+                {'name': 'RFI Template', 'parent': 'RFIs/ASI Log'},
+                {'name': 'Submittal tittal sheet', 'parent': 'Submittal Log'},
+                
+                
+                
+                
+                
+                
+                
+                
+                # {'name': '2023 Wage Rates for Dist', 'parent': 'Extra Work Rates'},
+                # {'name': 'PCO 000 - DESCRIPTION', 'parent': 'PCOs'},
+                # {'name': 'PCO 001 - Exterior Mock Up - Need to Send', 'parent': 'PCOs'},
+                # {'name': 'PCO 002 - IFC Drawing Updates', 'parent': 'PCOs'},
+                # {'name': 'PCO 003 - T&M for Mock Up', 'parent': 'PCOs'},
+                # {'name': 'Misc pages', 'parent': '100% Plans'},
+                # {'name': 'Sent to James .26.23', 'parent': 'Talha Schedules'},
+                # {'name': 'Approved', 'parent': 'Returned Submittals'},
+                # {'name': 'Exterior', 'parent': 'Shop Drawings'},
+                # {'name': 'Interior', 'parent': 'Shop Drawings'},
+                # {'name': 'Quotes', 'parent': 'Shop Drawings'},
+                # {'name': '01. Product Data', 'parent': 'Submittal Catalog'},
+                # {'name': '02. LEED', 'parent': 'Submittal Catalog'},
+                # {'name': '03. Product Test Reports', 'parent': 'Submittal Catalog'},
+                # {'name': '04. Certificates', 'parent': 'Submittal Catalog'},
+                # {'name': '05. Typ Shop Drawings', 'parent': 'Submittal Catalog'},
+                # {'name': '06. Trimble Concrete Guide', 'parent': 'Submittal Catalog'},
+                # {'name': '05 40 00 - Cold Formed Metal Framing', 'parent': 'Working File'},
+                # {'name': '07 21 16 - Mineral Fiber Blanket Insulation', 'parent': 'Working File'},
+                # {'name': '07 84 00 - Firestopping', 'parent': 'Working File'},
+                # {'name': '07 92 00 - Joint Sealants', 'parent': 'Working File'},
 
-                {'name': '09 22 00 - Supports for Gyp', 'parent': 'Working File'},
-                {'name': '09 29 00 - Gypsum Board', 'parent': 'Working File'},
-                {'name': 'SEND', 'parent': 'Working File'},
-                {'name': 'Welding Procedures', 'parent': 'Working File'},
-
-            ]:
-                create_directory(item['name'], item['parent'])
-
-            for item  in [
-                {'name': 'old', 'parent': 'Exterior'},
-                {'name': '1. Dewalt', 'parent': '01. Product Data'},
-                {'name': '3. Ramset', 'parent': '01. Product Data'},
-                {'name': '4. Simpson', 'parent': '01. Product Data'},
-                {'name': '05 40 00 - Cold Form Metal Framing', 'parent': '01. Product Data'},
-                {'name': '07 92 00 - Joint Sealants', 'parent': '01. Product Data'},
-                {'name': '0924 Lath & Plaster', 'parent': '01. Product Data'},
-                {'name': '0929 Gypsum Board', 'parent': '01. Product Data'},
-                {'name': '078440 - Firestopping', 'parent': '01. Product Data'},
-                {'name': 'Interior', 'parent': '01. Product Data'},
-                {'name': '092216 - Non-Structural Metal Framing', 'parent': '01. Product Data'},
-                {'name': 'Backer Rod', 'parent': '01. Product Data'},
-                {'name': 'Insulation', 'parent': '01. Product Data'},
-                {'name': 'Insulation', 'parent': '01. Product Data'},
-                {'name': 'Neoprene Gasket Tape - -Base of wall', 'parent': '01. Product Data'},
-                {'name': 'RF Shielding - rFoil - with accessories', 'parent': '01. Product Data'},
-                {'name': 'VOC Certs', 'parent': '02. LEED'},
-
-                {'name': '08 Sound Board', 'parent': '09 29 00 - Gypsum Board'},
-                {'name': 'Mock Up', 'parent': 'SEND'},
-                {'name': 'Welding Procedures', 'parent': 'SEND'},
+                # {'name': '09 22 00 - Supports for Gyp', 'parent': 'Working File'},
+                # {'name': '09 29 00 - Gypsum Board', 'parent': 'Working File'},
+                # {'name': 'SEND', 'parent': 'Working File'},
+                # {'name': 'Welding Procedures', 'parent': 'Working File'},
 
             ]:
-                create_directory(item['name'], item['parent'])
+                # create_directory(item['name'], item['parent'])
+                create_directory(itemgetter('name')(item), itemgetter('parent')(item))
 
-            for item  in [
+            # for item  in [
+            #     {'name': 'old', 'parent': 'Exterior'},
+            #     {'name': '1. Dewalt', 'parent': '01. Product Data'},
+            #     {'name': '3. Ramset', 'parent': '01. Product Data'},
+            #     {'name': '4. Simpson', 'parent': '01. Product Data'},
+            #     {'name': '05 40 00 - Cold Form Metal Framing', 'parent': '01. Product Data'},
+            #     {'name': '07 92 00 - Joint Sealants', 'parent': '01. Product Data'},
+            #     {'name': '0924 Lath & Plaster', 'parent': '01. Product Data'},
+            #     {'name': '0929 Gypsum Board', 'parent': '01. Product Data'},
+            #     {'name': '078440 - Firestopping', 'parent': '01. Product Data'},
+            #     {'name': 'Interior', 'parent': '01. Product Data'},
+            #     {'name': '092216 - Non-Structural Metal Framing', 'parent': '01. Product Data'},
+            #     {'name': 'Backer Rod', 'parent': '01. Product Data'},
+            #     {'name': 'Insulation', 'parent': '01. Product Data'},
+            #     {'name': 'Insulation', 'parent': '01. Product Data'},
+            #     {'name': 'Neoprene Gasket Tape - -Base of wall', 'parent': '01. Product Data'},
+            #     {'name': 'RF Shielding - rFoil - with accessories', 'parent': '01. Product Data'},
+            #     {'name': 'VOC Certs', 'parent': '02. LEED'},
 
-                {'name': 'BlazeFrame Product Data', 'parent': '05 40 00 - Cold Form Metal Framing'},
-                {'name': 'Grabber screws', 'parent': '05 40 00 - Cold Form Metal Framing'},
-                {'name': 'Header Cripple Stud Clips', 'parent': '05 40 00 - Cold Form Metal Framing'},
-                {'name': 'Lath', 'parent': '0924 Lath & Plaster'},
-                {'name': 'Abuse Resistant', 'parent': '0929 Gypsum Board'},
-                {'name': 'Asbestos Free Certifications', 'parent': '0929 Gypsum Board'},
-                {'name': 'Cementious Board', 'parent': '0929 Gypsum Board'},
-                {'name': 'Ext. Gyp Sheathing', 'parent': '0929 Gypsum Board'},
-                {'name': 'Grabber Screws', 'parent': '0929 Gypsum Board'},
-                {'name': 'Hilti Screws', 'parent': '0929 Gypsum Board'},
-                {'name': 'Impact Resistant', 'parent': '0929 Gypsum Board'},
-                {'name': 'Pre-Rock Drywall', 'parent': '0929 Gypsum Board'},
-                {'name': 'Shaftwall Liner', 'parent': '0929 Gypsum Board'},
-                {'name': 'Type X Board', 'parent': '0929 Gypsum Board'},
-                {'name': 'Water Resistant', 'parent': '0929 Gypsum Board'},
-                {'name': 'Estimating Tables for Materials', 'parent': '078440 - Firestopping'},
-                {'name': 'Grabber Firestopping', 'parent': '078440 - Firestopping'},
-                {'name': 'STI Firestopping', 'parent': '078440 - Firestopping'},
-                {'name': 'Grabber Screws', 'parent': '092216 - Non-Structural Metal Framing'},
-                {'name': 'Header Cripple Stud Clips', 'parent': '092216 - Non-Structural Metal Framing'},
-                {'name': 'Submittal to be updated', 'parent': 'Welding Procedures'},
+            #     {'name': '08 Sound Board', 'parent': '09 29 00 - Gypsum Board'},
+            #     {'name': 'Mock Up', 'parent': 'SEND'},
+            #     {'name': 'Welding Procedures', 'parent': 'SEND'},
 
-            ]:
-                create_directory(item['name'], item['parent'])
+            # ]:
+            #     create_directory(item['name'], item['parent'])
 
-            for name in [
+            # for item  in [
 
-                {'name': 'Amico', 'parent': 'Lath'},
-                {'name': 'Structa Wire', 'parent': 'Lath'},
+            #     {'name': 'BlazeFrame Product Data', 'parent': '05 40 00 - Cold Form Metal Framing'},
+            #     {'name': 'Grabber screws', 'parent': '05 40 00 - Cold Form Metal Framing'},
+            #     {'name': 'Header Cripple Stud Clips', 'parent': '05 40 00 - Cold Form Metal Framing'},
+            #     {'name': 'Lath', 'parent': '0924 Lath & Plaster'},
+            #     {'name': 'Abuse Resistant', 'parent': '0929 Gypsum Board'},
+            #     {'name': 'Asbestos Free Certifications', 'parent': '0929 Gypsum Board'},
+            #     {'name': 'Cementious Board', 'parent': '0929 Gypsum Board'},
+            #     {'name': 'Ext. Gyp Sheathing', 'parent': '0929 Gypsum Board'},
+            #     {'name': 'Grabber Screws', 'parent': '0929 Gypsum Board'},
+            #     {'name': 'Hilti Screws', 'parent': '0929 Gypsum Board'},
+            #     {'name': 'Impact Resistant', 'parent': '0929 Gypsum Board'},
+            #     {'name': 'Pre-Rock Drywall', 'parent': '0929 Gypsum Board'},
+            #     {'name': 'Shaftwall Liner', 'parent': '0929 Gypsum Board'},
+            #     {'name': 'Type X Board', 'parent': '0929 Gypsum Board'},
+            #     {'name': 'Water Resistant', 'parent': '0929 Gypsum Board'},
+            #     {'name': 'Estimating Tables for Materials', 'parent': '078440 - Firestopping'},
+            #     {'name': 'Grabber Firestopping', 'parent': '078440 - Firestopping'},
+            #     {'name': 'STI Firestopping', 'parent': '078440 - Firestopping'},
+            #     {'name': 'Grabber Screws', 'parent': '092216 - Non-Structural Metal Framing'},
+            #     {'name': 'Header Cripple Stud Clips', 'parent': '092216 - Non-Structural Metal Framing'},
+            #     {'name': 'Submittal to be updated', 'parent': 'Welding Procedures'},
 
-            ]:
-                create_directory(itemgetter('name')(item), itemgetter('parent')(item)) # type: ignore # type: ignore
+            # ]:
+            #     create_directory(item['name'], item['parent'])
+
+            # for name in [
+
+            #     {'name': 'Amico', 'parent': 'Lath'},
+            #     {'name': 'Structa Wire', 'parent': 'Lath'},
+
+            # ]:
+            #     create_directory(itemgetter('name')(item), itemgetter('parent')(item)) # type: ignore # type: ignore
 
     def __str__(self):
         return str(self.proposal)

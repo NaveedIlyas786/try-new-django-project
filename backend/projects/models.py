@@ -492,7 +492,7 @@ class PCO(models.Model):
     company=models.CharField(verbose_name="Company", max_length=500,null=True,blank=True)
     email=models.EmailField(verbose_name="Email", max_length=254,null=True,blank=True)    
     addrs=models.CharField(verbose_name="Address", max_length=500,null=True,blank=True)
-    zip_city=models.CharField(verbose_name="City,Zip code", max_length=500,null=True,blank=True)
+    zip_city=models.CharField(verbose_name="City,Stat,Zip code", max_length=500,null=True,blank=True)
     pco_num=models.CharField(verbose_name="PCO NO.", max_length=500,null=True,blank=True)
     project=models.ForeignKey(Project,verbose_name="Project",on_delete=models.CASCADE,null=True,blank=True)
     dcrsbsn=models.CharField(verbose_name="Description of work", max_length=500,null=True,blank=True)

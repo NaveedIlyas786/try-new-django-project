@@ -469,7 +469,7 @@ class PCOSerializer(serializers.ModelSerializer):
     project=ProjectSerializer(read_only=True)
     class Meta:
         model = PCO
-        fields=['id','date','attn','company','addrs','pco_num','project_id','project','dcrsbsn']
+        fields=['id','date','attn','company','email','addrs','zip_city','pco_num','project_id','project','dcrsbsn']
 
 class Delay_NoticeSerializer(serializers.ModelSerializer):
     

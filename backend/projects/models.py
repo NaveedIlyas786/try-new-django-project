@@ -537,7 +537,7 @@ class RFI(models.Model):
 
 
 class PCO(models.Model):
-    date=models.DateField(verbose_name="Date", auto_now=False, auto_now_add=False)
+    date=models.DateField(verbose_name="Date", auto_now=False, auto_now_add=False,null=True,blank=True)
     attn=models.CharField(verbose_name="Attn", max_length=500,null=True,blank=True)
     company=models.CharField(verbose_name="Company", max_length=500,null=True,blank=True)
     email=models.EmailField(verbose_name="Email", max_length=254,null=True,blank=True)    

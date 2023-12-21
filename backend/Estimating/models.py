@@ -76,7 +76,7 @@ class Estimating(models.Model):
             ('Lost','Lost'),],default='Working',null=True,blank=True)
     start_date = models.DateField(verbose_name="start Date",null=True,blank=True)
     company = models.ForeignKey(Company, verbose_name="Company",related_name='company_in_estimator',limit_choices_to=models.Q(is_active=True), on_delete=models.CASCADE,blank=True,null=True)
-    bid_amount=models.IntegerField(verbose_name="Bid Amount ",blank=True,null=True)
+    bid_amount=models.FloatField(verbose_name="Bid Amount ",blank=True,null=True)
     location=models.ForeignKey(Location,verbose_name="Add Area", related_name='estimating_as_Area',limit_choices_to=models.Q(is_active=True), on_delete=models.CASCADE,blank=True,null=True)
     estimator = models.ForeignKey(
         'accounts.User',
@@ -259,7 +259,7 @@ class Addendum(models.Model):
 class Specification(models.Model):
     proposal=models.ForeignKey(Proposal, on_delete=models.CASCADE,related_name='spcifc')
     specific_name=models.CharField(verbose_name="Scope of Work Name", max_length=250)
-    budget=models.IntegerField(verbose_name="Scope of Work Price")
+    budget=models.FloatField(verbose_name="Scope of Work Price")
     def __str__(self) -> str:
         return self.specific_name
     

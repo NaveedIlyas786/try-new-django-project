@@ -60,7 +60,7 @@ class UserRegistrationView(APIView):
             # disapproval_link = request.build_absolute_uri(f'/api/user/disapprove_user/{user.id}/')
 
             message = (
-                            f'A new account for {user.full_Name} and Email {user.email} needs your approval to access the DMS Contant Management System. '
+                            f'A new account for {user.full_Name} and Email {user.email} needs your approval to access the DMS Content Management System. '
                             f'Click the link to approve or reject request: {approval_link}\n'
                             # f'Click this link to disapprove: {disapproval_link}\n'
                             # f'Use this token for authorization: Bearer {admin_token}'

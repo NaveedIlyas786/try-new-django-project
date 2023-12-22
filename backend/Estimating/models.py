@@ -13,7 +13,7 @@ from django.utils import timezone
 # Create your models here.
 class Company(models.Model):
     Cmpny_Name = models.CharField(verbose_name="Company Name",max_length=50, null=True, blank=True,unique=True)
-    adress=models.CharField(verbose_name="Adress",max_length=70, null=True, blank=True)
+    adress=models.CharField(verbose_name="Address",max_length=70, null=True, blank=True)
     office_phone_number = models.CharField(max_length=10, null=True, blank=True)
     fax_number = models.CharField(max_length=10, null=True, blank=True)
     license_number = models.CharField(max_length=50, null=True, blank=True)

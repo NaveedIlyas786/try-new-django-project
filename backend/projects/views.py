@@ -127,9 +127,7 @@ def create_project(request, id=None):
 
 
 
-
     if request.method == 'PUT':
-    # Retrieve the project instance
         data = request.data
         if isinstance(data, list):
             data = data[0]
@@ -147,28 +145,34 @@ def create_project(request, id=None):
         if not project_serializer.is_valid():
             return Response(project_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
         related_serializers = []
         for key, model, serializer_class in related_data_models:
-            related_data_list = data.get(key)
-            if related_data_list:
-            # Delete previous related records and create new ones (assuming a simple replacement strategy)
+            related_data = data.get(key)
+            if related_data:
+                # Check if related_data is a dictionary or a list
+                if isinstance(related_data, dict):
+                    related_data_list = [related_data]
+                elif isinstance(related_data, list):
+                    related_data_list = related_data
+                else:
+                    return Response({key: "Invalid data format"}, status=status.HTTP_400_BAD_REQUEST)
+
+                # Delete previous related records and create new ones (assuming a simple replacement strategy)
                 model.objects.filter(project=project).delete()
 
-                for related_data in related_data_list:
-                    serializer = serializer_class(data=related_data)
+                for related_data_item in related_data_list:
+                    serializer = serializer_class(data=related_data_item)
                     if not serializer.is_valid():
-                     return Response({key: serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+                        return Response({key: serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
                     related_serializers.append(serializer)
-            else:
-                return Response({key: "This field is required"}, status=status.HTTP_400_BAD_REQUEST)
 
         project_serializer.save()
 
-    # Now save all related data with the project id
+        # Now save all related data with the project id
         for serializer in related_serializers:
             serializer.validated_data['project'] = project
             serializer.save()
+
         return Response({"message": "Project and related data updated successfully"}, status=status.HTTP_200_OK)
 
 class RFIViews(APIView):

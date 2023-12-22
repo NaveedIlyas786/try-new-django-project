@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from rest_framework_simplejwt.views import TokenRefreshView
 urlpatterns = [
 
     # User Registration, Login, and Profile URLs
@@ -9,6 +10,11 @@ urlpatterns = [
 
     path('login/', views.UserLoginViews.as_view(), name="login"),
     path('profile/', views.UserProfileViews.as_view(), name="profile"),
+    
+    
+    
+    path('api/token/', views.UserLoginViews.as_view(), name='token-obtain-pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token-refresh'),
 
 
     # User Approval and Disapproval by Admin URLs   

@@ -13,6 +13,8 @@ from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth import authenticate    
 # For Token 
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView
+
 from django.http import Http404
 
 from .serializers import UserRegisterationSerializers,UserLoginserializers,UserProfileSerializer,UserChangePasswordSerializer,SendEmailResetPasswordViewsSerializer,UserPasswordResetSerializer,UserPasswordResetSerializer  
@@ -115,6 +117,7 @@ class UserRegistrationView(APIView):
 
 logger = logging.getLogger(__name__)
 
+
 class UserLoginViews(APIView):
     def post(self, request, format=None):
         serializer = UserLoginserializers(data=request.data)
@@ -146,8 +149,6 @@ class UserLoginViews(APIView):
 
         logger.error('Serializer is not valid.')
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 
 
 

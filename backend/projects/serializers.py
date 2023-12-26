@@ -408,7 +408,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             representation['Safety Documents'] = representation.pop('safity')
 
         if 'laborrate' in representation:
-            representation['Labor Rates'] = representation.pop('laborrate')
+            representation['Wage Rates'] = representation.pop('laborrate')
 
         if 'buget' in representation:
             representation['Budget'] = representation.pop('buget')

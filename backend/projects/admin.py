@@ -3,7 +3,7 @@ from .models import Project_detail,Project
 from .models import (
     Project, Contract,  Insurance, Bond, Submittals, 
     ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, 
-    HDS_system,  Buget,Project_detail,RFI,Delay_Notice,PCO
+    HDS_system,  Buget,Project_detail,RFI,Delay_Notice,PCO,Schedule_of_Value
 )
 from Estimating.models import Spec_detail
 
@@ -11,9 +11,9 @@ class ContractInline(admin.StackedInline):
     model = Contract
     extra = 1  
 
-# class ScheduleOfValueInline(admin.StackedInline):
-#     model = Schedule_of_Value
-#     extra = 1
+class ScheduleOfValueInline(admin.StackedInline):
+    model = Schedule_of_Value
+    extra = 1
 
 class InsuranceInline(admin.StackedInline):
     model = Insurance
@@ -85,7 +85,7 @@ class ProjectAdmin(admin.ModelAdmin):
     inlines = [
         ContractInline,  InsuranceInline, BondInline,
         ScheduleInline, SubContractorsInline, LaborRateInline,
-        BugetInline,HDSSystemInline,SafityInline,ShopDrawingInline,SubmittalsInline
+        BugetInline,HDSSystemInline,SafityInline,ShopDrawingInline,SubmittalsInline,ScheduleOfValueInline
     ]
 
     

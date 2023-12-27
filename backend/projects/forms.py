@@ -26,3 +26,7 @@ class SubmittalsInline(admin.StackedInline):
     model = Submittals
     form = SubmittalsInlineForm
     extra = 1
+    
+    
+    
+    

@@ -6,6 +6,7 @@ from .models import Project, Contract,  Insurance, Bond, Submittals, ShopDrawing
 from Estimating.models import Proposal,Spec_detail,GC_detail
 from Estimating.serializers import ProposalSerializer,SpecificationDetailSerializer,GC_infoSerializers
 
+import datetime
 
 
 
@@ -25,6 +26,11 @@ class ContractSerializer(serializers.ModelSerializer):
 
 
         return representation
+    def to_internal_value(self, data):
+        # Convert the date format before deserializing
+        if 'contract_date' in data and data['contract_date']:
+            data['contract_date'] = datetime.datetime.strptime(data['contract_date'], '%m-%d-%Y').date()
+        return super().to_internal_value(data)
 
 class ScheduleOfValueSerializer(serializers.ModelSerializer):
     schedule_date = serializers.DateField(
@@ -41,6 +47,12 @@ class ScheduleOfValueSerializer(serializers.ModelSerializer):
 
 
         return representation
+    
+    def to_internal_value(self, data):
+        # Convert the date format before deserializing
+        if 'schedule_date' in data and data['schedule_date']:
+            data['schedule_date'] = datetime.datetime.strptime(data['schedule_date'], '%m-%d-%Y').date()
+        return super().to_internal_value(data)
 
 class InsuranceSerializer(serializers.ModelSerializer):
 
@@ -58,6 +70,11 @@ class InsuranceSerializer(serializers.ModelSerializer):
 
 
         return representation
+    def to_internal_value(self, data):
+        # Convert the date format before deserializing
+        if 'date' in data and data['date']:
+            data['date'] = datetime.datetime.strptime(data['date'], '%m-%d-%Y').date()
+        return super().to_internal_value(data)
 
 class BondSerializer(serializers.ModelSerializer):
     date = serializers.DateField(
@@ -74,6 +91,11 @@ class BondSerializer(serializers.ModelSerializer):
 
 
         return representation
+    def to_internal_value(self, data):
+        # Convert the date format before deserializing
+        if 'date' in data and data['date']:
+            data['date'] = datetime.datetime.strptime(data['date'], '%m-%d-%Y').date()
+        return super().to_internal_value(data)
 
 # class ZlienSerializer(serializers.ModelSerializer):
 
@@ -116,6 +138,13 @@ class SubmittalsSerializer(serializers.ModelSerializer):
                 })
 
         return data
+    def to_internal_value(self, data):
+        # Convert the date format before deserializing
+        if 'due_date' in data and data['due_date']:
+            data['due_date'] = datetime.datetime.strptime(data['due_date'], '%m-%d-%Y').date()
+        if 'actn_date' in data and data['actn_date']:
+            data['actn_date'] = datetime.datetime.strptime(data['actn_date'], '%m-%d-%Y').date()    
+        return super().to_internal_value(data)
 
 
 
@@ -154,6 +183,11 @@ class ShopDrawingSerializer(serializers.ModelSerializer):
 
 
         return representation
+    def to_internal_value(self, data):
+        # Convert the date format before deserializing
+        if 'date' in data and data['date']:
+            data['date'] = datetime.datetime.strptime(data['date'], '%m-%d-%Y').date()
+        return super().to_internal_value(data)
 
 class SafitySerializer(serializers.ModelSerializer):
     date = serializers.DateField(
@@ -175,6 +209,11 @@ class SafitySerializer(serializers.ModelSerializer):
 
 
         return representation
+    def to_internal_value(self, data):
+        # Convert the date format before deserializing
+        if 'date' in data and data['date']:
+            data['date'] = datetime.datetime.strptime(data['date'], '%m-%d-%Y').date()
+        return super().to_internal_value(data)
 class ScheduleSerializer(serializers.ModelSerializer):
     date = serializers.DateField(
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore # type: ignore
@@ -190,6 +229,11 @@ class ScheduleSerializer(serializers.ModelSerializer):
 
 
         return representation
+    def to_internal_value(self, data):
+        # Convert the date format before deserializing
+        if 'date' in data and data['date']:
+            data['date'] = datetime.datetime.strptime(data['date'], '%m-%d-%Y').date()
+        return super().to_internal_value(data)
 
 class SubContractorsSerializer(serializers.ModelSerializer):
     date = serializers.DateField(
@@ -208,6 +252,11 @@ class SubContractorsSerializer(serializers.ModelSerializer):
 
         
         return representation
+    def to_internal_value(self, data):
+        # Convert the date format before deserializing
+        if 'date' in data and data['date']:
+            data['date'] = datetime.datetime.strptime(data['date'], '%m-%d-%Y').date()
+        return super().to_internal_value(data)
 class LaborRateSerializer(serializers.ModelSerializer):
     date = serializers.DateField(
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore
@@ -221,6 +270,11 @@ class LaborRateSerializer(serializers.ModelSerializer):
 
 
         return representation
+    def to_internal_value(self, data):
+        # Convert the date format before deserializing
+        if 'date' in data and data['date']:
+            data['date'] = datetime.datetime.strptime(data['date'], '%m-%d-%Y').date()
+        return super().to_internal_value(data)
 
 # class BillingSerializer(serializers.ModelSerializer):
 #     due_date = serializers.DateField(
@@ -269,6 +323,11 @@ class HDSSystemSerializer(serializers.ModelSerializer):
 
 
         return representation
+    def to_internal_value(self, data):
+        # Convert the date format before deserializing
+        if 'date' in data and data['date']:
+            data['date'] = datetime.datetime.strptime(data['date'], '%m-%d-%Y').date()
+        return super().to_internal_value(data)
 
 # class OnBuildSerializer(serializers.ModelSerializer):
 
@@ -299,9 +358,16 @@ class BugetSerializer(serializers.ModelSerializer):
 
 
         return representation
+    def to_internal_value(self, data):
+        # Convert the date format before deserializing
+        if 'contract_date' in data and data['contract_date']:
+            data['contract_date'] = datetime.datetime.strptime(data['contract_date'], '%m-%d-%Y').date()
+        return super().to_internal_value(data)
     
     
 class ProjectSerializer(serializers.ModelSerializer):
+    
+    
     contracts = ContractSerializer(source='contract_set', many=True, read_only=True, required=False)
     schedule_of_values = ScheduleOfValueSerializer(source='schedule_of_value_set', many=True, read_only=True)
     insurancs = InsuranceSerializer(source='insurance_set', many=True, read_only=True, required=False)

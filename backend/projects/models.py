@@ -401,13 +401,13 @@ class Schedule_of_Value(models.Model):
 class Insurance(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     insurance=models.CharField(verbose_name="Insurance", max_length=50,choices=[
-        ('CCIP','CCIP'),('Sent','Sent'),('Received','Received'),('Complete','Complete'),
+        ('CCIP','CCIP'),('Sent','Sent'),('Received','Received'),('Completed','Completed'),
         ],default='null', null=True, blank=True)
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
 class Bond(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     bond=models.CharField(verbose_name="Bond", max_length=50,choices=[
-        ('Sent','Sent'),('Received','Received'),('Complete','Complete'),('N/A','N/A'),
+        ('Sent','Sent'),('Received','Received'),('Completed','Completed'),('N/A','N/A'),
         ],default='null', null=True, blank=True)
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
 

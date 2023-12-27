@@ -429,11 +429,11 @@ class ProjectSerializer(serializers.ModelSerializer):
         if 'bond' in representation:
             representation['Bonds'] = representation.pop('bond')
 
-        if 'addendums' in representation:
-            representation['addendums'] = representation.pop('addendums')
+        if 'schedule' in representation:
+            representation['Schedule'] = representation.pop('schedule')
 
-        if 'addendums' in representation:
-            representation['addendums'] = representation.pop('addendums')
+        # if 'addendums' in representation:
+        #     representation['addendums'] = representation.pop('addendums')
 
 
         return representation

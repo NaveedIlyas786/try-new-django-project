@@ -56,7 +56,7 @@ class UserManager(BaseUserManager):
             full_Name=full_Name,
             roles=roles,
             phone_number=phone_number,
-            signtr=signtr
+            # signtr=signtr
 
 
         )

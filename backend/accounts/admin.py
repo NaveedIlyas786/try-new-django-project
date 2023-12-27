@@ -27,7 +27,7 @@ class UserModelAdmin(BaseUserAdmin):
             None,
             {
                 "classes": ["wide"],
-                "fields": ["email", "full_Name", "password1", "password2", "roles","phone_number","signtr","is_active","company","department","direct_number","locaton"],
+                "fields": ["email", "full_Name", "password1", "password2", "roles","phone_number","is_active","company","department","direct_number","locaton"],
             },
         ),
     ]

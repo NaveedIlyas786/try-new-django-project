@@ -64,9 +64,18 @@ class Job_titleViews(APIView):
 
 
 class DMS_DertoryView(APIView):
-    def get(self,request):
-        dms_dertory=DMS_Dertory.objects.all()
-        serializer=DMS_DertorySezializers(dms_dertory, many=True)
+    
+    def get(self, request, id=None):
+        if id:
+            try:
+                dms_dertory = DMS_Dertory.objects.get(id=id)
+                serializer = DMS_DertorySezializers(dms_dertory)
+            except DMS_Dertory.DoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+        else:
+            dms_dertory = DMS_Dertory.objects.all()
+            serializer = DMS_DertorySezializers(dms_dertory, many=True)
+
         return Response(serializer.data)
     def post(self,request):
         serializer=DMS_DertorySezializers(data=request.data)

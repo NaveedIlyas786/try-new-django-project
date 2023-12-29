@@ -433,13 +433,13 @@ class EstimatingListView(APIView):
 
                 for gc_detail_data in gc_details_data:
                     # Set the estimating instance to the current estimating id
-                    gc_detail_data['estimating'] = estimating.id
+                    gc_detail_data['estimating'] = estimating.id # type: ignore
                     gc_detail_serializer = GC_infoSerializers(data=gc_detail_data)
                     if gc_detail_serializer.is_valid():
                         gc_detail_serializer.save()  # Save the GC_detail instance
                     else:
                         # If GC_detail is not valid, delete the estimating instance and return an error
-                        estimating.delete()
+                        estimating.delete() # type: ignore
                         return Response(gc_detail_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
             return Response(estimating_serializer.data, status=status.HTTP_201_CREATED)
@@ -538,8 +538,8 @@ class Estimating_detailView(APIView):
             serializer = EstimatingDetailSerializer(data=cleaned_data)
             if serializer.is_valid():
                 instance = serializer.save()
-                instance.file_binary_data = file_binary_data
-                instance.save()
+                instance.file_binary_data = file_binary_data # type: ignore
+                instance.save() # type: ignore
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -673,7 +673,7 @@ def create_proposal(request, proposal_id=None):
             try:
                 service = Service.objects.get(id=service_data['service'])
                 proposal_service_data = {
-                    "proposal": proposal.id,
+                    "proposal": proposal.id, # type: ignore
                     "service": service.id, # type: ignore
                     "service_type": service_data['service_type']
                 }
@@ -695,7 +695,7 @@ def create_proposal(request, proposal_id=None):
         if 'Addendums' in data:
             for addendum_data in data['Addendums']:
                 proposal_addendum_data = {
-                    "proposal": proposal.id,
+                    "proposal": proposal.id, # type: ignore
                     "date": addendum_data['date'],
                     "addendum_Number": addendum_data['addendum_number']
                 }
@@ -715,7 +715,7 @@ def create_proposal(request, proposal_id=None):
             for spcifc_data in data['spcifc']:
                 # creating a new Specification instance
                 specification_data = {
-                    "proposal": proposal.id,
+                    "proposal": proposal.id, # type: ignore
                     "budget": spcifc_data['budget'],
                     "specific_name": spcifc_data['specific_name']
                 }
@@ -729,7 +729,7 @@ def create_proposal(request, proposal_id=None):
                 # Creating the nested Spec_detail instances
                 for sefic_data in spcifc_data['sefic']:
                     spec_detail_data = {
-                        "sefic": specification.id,
+                        "sefic": specification.id, # type: ignore
                         "number": sefic_data['number'],
                         "name": sefic_data['name']
                     }

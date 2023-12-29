@@ -140,10 +140,12 @@ class SubmittalsSerializer(serializers.ModelSerializer):
         return data
     def to_internal_value(self, data):
         # Convert the date format before deserializing
-        if 'due_date' in data and data['due_date']:
-            data['due_date'] = datetime.datetime.strptime(data['due_date'], '%m-%d-%Y').date()
-        if 'actn_date' in data and data['actn_date']:
-            data['actn_date'] = datetime.datetime.strptime(data['actn_date'], '%m-%d-%Y').date()    
+        for date_field in ['due_date', 'actn_date']:
+            if date_field in data and data[date_field]:
+                try:
+                    data[date_field] = datetime.datetime.strptime(data[date_field], '%m-%d-%Y').date()
+                except ValueError:
+                    raise serializers.ValidationError({date_field: 'Invalid date format. Use MM-DD-YYYY.'})   
         return super().to_internal_value(data)
 
 

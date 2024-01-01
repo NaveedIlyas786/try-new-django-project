@@ -158,7 +158,7 @@ class SubmittalsSerializer(serializers.ModelSerializer):
             representation['scop_work_number'] = instance.scop_work_number.number if instance.scop_work_number else None
         except (Spec_detail.DoesNotExist, AttributeError) as e:
             representation['scop_work_number'] = None   
-            print(e)     
+            # print(e)     
 
         representation['project'] = instance.project.job_num if instance.project else None
 
@@ -180,7 +180,7 @@ class ShopDrawingSerializer(serializers.ModelSerializer):
             representation['scop_work_number'] = instance.scop_work_number.number if instance.scop_work_number else None
         except (Spec_detail.DoesNotExist, AttributeError) as e:
             representation['scop_work_number'] = None   
-            print(e)  
+            # print(e)  
         representation['project'] = instance.project.job_num if instance.project else None
 
 
@@ -206,7 +206,7 @@ class SafitySerializer(serializers.ModelSerializer):
             representation['scop_work_number'] = instance.scop_work_number.number if instance.scop_work_number else None
         except (Spec_detail.DoesNotExist, AttributeError) as e:
             representation['scop_work_number'] = None   
-            print(e)  
+            # print(e)  
         representation['project'] = instance.project.job_num if instance.project else None
 
 

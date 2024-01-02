@@ -25,6 +25,8 @@ from rest_framework.permissions import IsAdminUser
 from django.utils.encoding import force_str, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from Estimating.models import DMS_Dertory  # Import the DMS_Dertory model
+from .models import UserRole
 
 import traceback
 
@@ -236,6 +238,16 @@ def approve_user(request, user_id):
         user = User.objects.get(pk=user_id)
     except User.DoesNotExist:
         return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+     # Check if there's a DMS_Dertory entry with the same email
+    try:
+        dms_user = DMS_Dertory.objects.get(email=user.email)
+        # Map the Role from DMS_Dertory to UserRole
+        user_role, created = UserRole.objects.get_or_create(name=dms_user.job_title.name)
+        user.roles.add(user_role)
+    except DMS_Dertory.DoesNotExist:
+        pass  # Handle if no matching DMS_Dertory or leave as is
+
 
     user.is_active = True
     user.save()

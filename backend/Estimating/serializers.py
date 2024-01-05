@@ -4,6 +4,7 @@ from django.forms import BooleanField
 from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework import status
+from django.db.models import Q
 
 from Estimating.models import Company,Estimating, Estimating_detail, Proposal, Addendum, Qualification, Spec_detail, Specification, ProposalService, Service, Location,UrlsTable,DMS_Dertory,Dprtmnt,Role,GC_detail
 
@@ -102,7 +103,7 @@ class Time12HourField(serializers.TimeField):
 class GC_infoSerializers(serializers.ModelSerializer):
     class Meta:
         model = GC_detail
-        fields = ['id','estimating', 'gc_name', 'gc_email', 'gc_detail']
+        fields = ['id','estimating', 'gc_name', 'gc_email', 'gc_detail','gc_number']
         # extra_kwargs = {'id': {'read_only': True}}
 
 
@@ -134,14 +135,14 @@ class EstimatingSerializer(serializers.ModelSerializer):
     #     required=False, 
     #     allow_null=True
     # )  # Field for write operation
-    estimator = UserRegisterationSerializers(read_only=True)
+    estimator = DMS_DertorySezializers(read_only=True)
     estimator_id = serializers.PrimaryKeyRelatedField(
-        write_only=True,
-        queryset=User.objects.filter(roles__name='Estimator', is_active=True),
-        source='estimator',
-        required=False,
-        allow_null=True
-    )
+    write_only=True,
+    queryset=DMS_Dertory.objects.filter(Q(job_title__name='Estimator') | Q(job_title__name='Estimating Manager')),
+    source='estimator',
+    required=False,
+    allow_null=True
+)
 
     estimator = serializers.SerializerMethodField()
 
@@ -161,9 +162,9 @@ class EstimatingSerializer(serializers.ModelSerializer):
             'location',
             'estimator_id',
             'estimator',
-            'bidder',
-            'bidder_mail',
-            'bidder_detail',
+            # 'bidder',
+            # 'bidder_mail',
+            # 'bidder_detail',
             
             'gc_details',
     
@@ -173,7 +174,7 @@ class EstimatingSerializer(serializers.ModelSerializer):
     def get_estimator(self, obj):
         if obj.estimator:
             # Return a simple dict with the estimator's ID
-            return UserRegisterationSerializers(obj.estimator).data
+            return DMS_DertorySezializers(obj.estimator).data
         return None
         
 
@@ -181,7 +182,7 @@ class EstimatingSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
 
-        representation['location'] = {'id': instance.location.id, 'name': instance.location.name} if instance.location else None
+        # representation['location'] = {'id': instance.location.id, 'name': instance.location.name} if instance.location else None
         # representation['estimator'] = instance.estimator.full_Name if instance.estimator else None
         representation['gc_details'] = GC_infoSerializers(instance.gc_details.all(), many=True).data
 

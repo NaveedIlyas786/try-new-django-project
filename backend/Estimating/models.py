@@ -7,9 +7,6 @@ from django.utils import timezone
 
 
 
-
-
-
 # Create your models here.
 class Company(models.Model):
     Cmpny_Name = models.CharField(verbose_name="Company Name",max_length=50, null=True, blank=True,unique=True)
@@ -23,6 +20,25 @@ class Company(models.Model):
     def __str__(self):
         return self.Cmpny_Name
     
+
+
+
+class Role(models.Model):
+    name=models.CharField(verbose_name="Role", max_length=50,unique=True)
+    description = models.TextField(verbose_name="Add Description", blank=True,null=True)
+    def __str__(self):
+        return self.name
+
+
+
+
+
+class Dprtmnt(models.Model):
+    dprtmnt_name=models.CharField(verbose_name="Add the department name ", max_length=250)
+    def __str__(self):
+        return self.dprtmnt_name
+    
+
 
 
 
@@ -54,6 +70,20 @@ class UrlsTable(models.Model):
 
 
 
+class DMS_Dertory(models.Model):
+    first_name=models.CharField(verbose_name="First Name", max_length=255,null=True,blank=True)
+    last_name=models.CharField(verbose_name="Last Name", max_length=50,null=True,blank=True)
+    email = models.EmailField(verbose_name="Email",max_length=255,unique=True,null=True,blank=True)
+    job_title = models.ForeignKey(Role,verbose_name="Role", on_delete=models.CASCADE,null=True,blank=True)
+    company = models.ForeignKey(Company, verbose_name="company", blank=True, on_delete=models.CASCADE,null=True)
+    department=models.ForeignKey(Dprtmnt, verbose_name="Department ", on_delete=models.CASCADE,null=True,blank=True)
+    direct_number=models.IntegerField(verbose_name="Direct",null=True,blank=True)
+    locaton=models.CharField(verbose_name="Location", max_length=250,null=True,blank=True)
+    mobile_number=models.IntegerField(null=True,blank=True,unique=True)
+    def __str__ (self):
+        return self.first_name
+
+
 
 
 class Estimating(models.Model):
@@ -61,10 +91,11 @@ class Estimating(models.Model):
     timezone = models.CharField(
         max_length=3,
         choices= [
-        ('PDT', 'PDT'),
-        ('CT', 'CT'),
-        ('EST', 'EST'),],
-        verbose_name="PST", null=True, blank=True
+        ('MST', 'MST'),
+        ('CST', 'CST'),
+        ('EST', 'EST'),
+        ('PST','PST'),],
+        verbose_name="Time zone", null=True, blank=True
     )
     prjct_name=models.CharField(verbose_name="Estimate Project Name", max_length=250,null=True,blank=True)
     due_date=models.DateField(verbose_name="Due Date",null=True,blank=True)
@@ -77,82 +108,85 @@ class Estimating(models.Model):
     start_date = models.DateField(verbose_name="start Date",null=True,blank=True)
     company = models.ForeignKey(Company, verbose_name="Company",related_name='company_in_estimator',limit_choices_to=models.Q(is_active=True), on_delete=models.CASCADE,blank=True,null=True)
     bid_amount=models.FloatField(verbose_name="Bid Amount ",blank=True,null=True)
-    location=models.ForeignKey(Location,verbose_name="Add Area", related_name='estimating_as_Area',limit_choices_to=models.Q(is_active=True), on_delete=models.CASCADE,blank=True,null=True)
+    # location=models.ForeignKey(Location,verbose_name="Add Area", related_name='estimating_as_Area',limit_choices_to=models.Q(is_active=True), on_delete=models.CASCADE,blank=True,null=True)
+    location=models.CharField(verbose_name="Location", max_length=250,default="California")
+
     estimator = models.ForeignKey(
-        'accounts.User',
+       DMS_Dertory,
         verbose_name="Estimator", related_name='estimations_as_estimator',
-        limit_choices_to=models.Q(roles__name='Estimator',is_active=True),
+        limit_choices_to=models.Q(job_title__name='Estimator')|
+        models.Q(job_title_name='Estimating Manager'),
         on_delete=models.SET_NULL, null=True , blank=True)
-    bidder = models.CharField(verbose_name="Bidder Name",max_length=1500, null=True,blank=True)
-    bidder_detail=models.CharField(verbose_name="Bidder Detail",max_length=5000,null=True,blank=True)
-    bidder_mail=models.EmailField(verbose_name="add the bidder Mail", max_length=254,null=True,blank=True)
+    # bidder = models.CharField(verbose_name="Bidder Name",max_length=1500, null=True,blank=True)
+    # bidder_detail=models.CharField(verbose_name="Bidder Detail",max_length=5000,null=True,blank=True)
+    # bidder_mail=models.EmailField(verbose_name="add the bidder Mail", max_length=254,null=True,blank=True)
 
 
 
 
-    def save(self, *args, **kwargs):
-        from accounts.models import User
-        # Check if this is a new instance (i.e., being created and not updated)
-        is_new = not self.pk
-        # First, save the Estimating instance (either create or update)
-        super(Estimating, self).save(*args, **kwargs)
-        if is_new:
-            # Top Level Entries
-            top_level_names = ['Addendums', 'Bid', 'Plans', 'Pre Bid RFIs', 'Quotes', 'Specs']
-            top_objects = {}
-            for name in top_level_names:
-                detail = Estimating_detail.objects.create(Estimating=self, drctry_name=name)
-                top_objects[name] = detail
-            # Second Level Entries
-            second_level_data = [
-                {'name': 'Add. 3', 'parent': 'Addendums'},
-                {'name': 'Bid', 'parent': 'Bid'},
-                {'name': 'Bidders', 'parent': 'Bid'},
-                {'name': 'Scope', 'parent': 'Bid'},
-                {'name': 'Plans', 'parent': 'Plans'},
-                {'name': 'Takeoff', 'parent': 'Plans'},
-                {'name': '00 Quote Request Plans-Specs', 'parent': 'Quotes'},
-                {'name': '00A - MC Request Form', 'parent': 'Quotes'},
-                {'name': '00B - Price Comparison', 'parent': 'Quotes'},
-                {'name': 'Material Quotes', 'parent': 'Quotes'},
-                {'name': 'Plaster', 'parent': 'Quotes'},
-                {'name': 'Scaffold', 'parent': 'Quotes'},
-                {'name': 'Biding Specs', 'parent': 'Specs'},
-                {'name': 'Specs', 'parent': 'Specs'}
-            ]
-            second_level_objects = {}
-            for item in second_level_data:
-                parent_obj = top_objects[item['parent']]
-                detail = Estimating_detail.objects.create(Estimating=self, drctry_name=item['name'], prnt_id=parent_obj.id)
-                second_level_objects[item['name']] = detail
-            # Third Level Entries
-            third_level_data = [
-                {'name': 'Emails Pertaining to Job', 'parent': 'Bid'},
-                {'name': 'FINAL Proposal', 'parent': 'Bid'},
-                {'name': 'Reference Docs', 'parent': 'Bid'},
-                {'name': 'Harris', 'parent': 'Bidders'},
-                {'name': 'OLD', 'parent': '00B - Price Comparison'},
-                {'name': 'AGS - LOCKED 04-08-2022', 'parent': 'Material Quotes'},
-                {'name': 'CWalla', 'parent': 'Material Quotes'},
-                {'name': 'FBM', 'parent': 'Material Quotes'},
-                {'name': 'Steeler', 'parent': 'Material Quotes'}
-            ]
-            third_level_objects = {}
-            for item in third_level_data:
-                parent_obj = second_level_objects[item['parent']]
-                detail = Estimating_detail.objects.create(Estimating=self, drctry_name=item['name'], prnt_id=parent_obj.id)
-                third_level_objects[item['name']] = detail
-            # Fourth Level Entries
-            fourth_level_data = [
-                {'name': 'Bid Results', 'parent': 'FINAL Proposal'},
-                {'name': 'OLD', 'parent': 'AGS - LOCKED 04-08-2022'},
-                {'name': 'OLD', 'parent': 'CWalla'},
-                {'name': 'OLD', 'parent': 'FBM'},
-                {'name': 'OLD', 'parent': 'Steeler'}
-            ]
-            for item in fourth_level_data:
-                parent_obj = third_level_objects[item['parent']]
-                Estimating_detail.objects.create(Estimating=self, drctry_name=item['name'], prnt_id=parent_obj.id)
+    # def save(self, *args, **kwargs):
+    #     from accounts.models import User
+    #     # Check if this is a new instance (i.e., being created and not updated)
+    #     is_new = not self.pk
+    #     # First, save the Estimating instance (either create or update)
+    #     super(Estimating, self).save(*args, **kwargs)
+    #     if is_new:
+    #         # Top Level Entries
+    #         top_level_names = ['Addendums', 'Bid', 'Plans', 'Pre Bid RFIs', 'Quotes', 'Specs']
+    #         top_objects = {}
+    #         for name in top_level_names:
+    #             detail = Estimating_detail.objects.create(Estimating=self, drctry_name=name)
+    #             top_objects[name] = detail
+    #         # Second Level Entries
+    #         second_level_data = [
+    #             {'name': 'Add. 3', 'parent': 'Addendums'},
+    #             {'name': 'Bid', 'parent': 'Bid'},
+    #             {'name': 'Bidders', 'parent': 'Bid'},
+    #             {'name': 'Scope', 'parent': 'Bid'},
+    #             {'name': 'Plans', 'parent': 'Plans'},
+    #             {'name': 'Takeoff', 'parent': 'Plans'},
+    #             {'name': '00 Quote Request Plans-Specs', 'parent': 'Quotes'},
+    #             {'name': '00A - MC Request Form', 'parent': 'Quotes'},
+    #             {'name': '00B - Price Comparison', 'parent': 'Quotes'},
+    #             {'name': 'Material Quotes', 'parent': 'Quotes'},
+    #             {'name': 'Plaster', 'parent': 'Quotes'},
+    #             {'name': 'Scaffold', 'parent': 'Quotes'},
+    #             {'name': 'Biding Specs', 'parent': 'Specs'},
+    #             {'name': 'Specs', 'parent': 'Specs'}
+    #         ]
+    #         second_level_objects = {}
+    #         for item in second_level_data:
+    #             parent_obj = top_objects[item['parent']]
+    #             detail = Estimating_detail.objects.create(Estimating=self, drctry_name=item['name'], prnt_id=parent_obj.id)
+    #             second_level_objects[item['name']] = detail
+    #         # Third Level Entries
+    #         third_level_data = [
+    #             {'name': 'Emails Pertaining to Job', 'parent': 'Bid'},
+    #             {'name': 'FINAL Proposal', 'parent': 'Bid'},
+    #             {'name': 'Reference Docs', 'parent': 'Bid'},
+    #             {'name': 'Harris', 'parent': 'Bidders'},
+    #             {'name': 'OLD', 'parent': '00B - Price Comparison'},
+    #             {'name': 'AGS - LOCKED 04-08-2022', 'parent': 'Material Quotes'},
+    #             {'name': 'CWalla', 'parent': 'Material Quotes'},
+    #             {'name': 'FBM', 'parent': 'Material Quotes'},
+    #             {'name': 'Steeler', 'parent': 'Material Quotes'}
+    #         ]
+    #         third_level_objects = {}
+    #         for item in third_level_data:
+    #             parent_obj = second_level_objects[item['parent']]
+    #             detail = Estimating_detail.objects.create(Estimating=self, drctry_name=item['name'], prnt_id=parent_obj.id)
+    #             third_level_objects[item['name']] = detail
+    #         # Fourth Level Entries
+    #         fourth_level_data = [
+    #             {'name': 'Bid Results', 'parent': 'FINAL Proposal'},
+    #             {'name': 'OLD', 'parent': 'AGS - LOCKED 04-08-2022'},
+    #             {'name': 'OLD', 'parent': 'CWalla'},
+    #             {'name': 'OLD', 'parent': 'FBM'},
+    #             {'name': 'OLD', 'parent': 'Steeler'}
+    #         ]
+    #         for item in fourth_level_data:
+    #             parent_obj = third_level_objects[item['parent']]
+    #             Estimating_detail.objects.create(Estimating=self, drctry_name=item['name'], prnt_id=parent_obj.id)
                 
     def __str__(self):
         return self.prjct_name
@@ -166,6 +200,7 @@ class GC_detail(models.Model):
     gc_name=models.CharField(verbose_name="GC Name",max_length=1500, null=True,blank=True)
     gc_email=models.EmailField(verbose_name="GC Email", max_length=254,null=True,blank=True)
     gc_detail=models.CharField(verbose_name="GC Detail", max_length=1500, null=True,blank=True)
+    gc_number=models.IntegerField(verbose_name="GC Number", null=True,blank=True)
     # def __str__ (self):
     #     return self.gc_name
     # def __str__(self):
@@ -286,34 +321,3 @@ class Qualification(models.Model):
 
 
 
-class Role(models.Model):
-    name=models.CharField(verbose_name="Role", max_length=50,unique=True)
-    description = models.TextField(verbose_name="Add Description", blank=True,null=True)
-    def __str__(self):
-        return self.name
-
-
-
-
-
-class Dprtmnt(models.Model):
-    dprtmnt_name=models.CharField(verbose_name="Add the department name ", max_length=250)
-    def __str__(self):
-        return self.dprtmnt_name
-    
-
-
-
-
-class DMS_Dertory(models.Model):
-    first_name=models.CharField(verbose_name="First Name", max_length=255,null=True,blank=True)
-    last_name=models.CharField(verbose_name="Last Name", max_length=50,null=True,blank=True)
-    email = models.EmailField(verbose_name="Email",max_length=255,unique=True,null=True,blank=True)
-    job_title = models.ForeignKey(Role,verbose_name="Role", on_delete=models.CASCADE,null=True,blank=True)
-    company = models.ForeignKey(Company, verbose_name="company", blank=True, on_delete=models.CASCADE,null=True)
-    department=models.ForeignKey(Dprtmnt, verbose_name="Department ", on_delete=models.CASCADE,null=True,blank=True)
-    direct_number=models.IntegerField(verbose_name="Direct",null=True,blank=True)
-    locaton=models.CharField(verbose_name="Location", max_length=250,null=True,blank=True)
-    mobile_number=models.IntegerField(null=True,blank=True,unique=True)
-    def __str__ (self):
-        return self.first_name

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Location,Estimating,Estimating_detail,Company
 from import_export.admin import ImportExportModelAdmin
-
+from django.db.models import Q
 
 import os
 from django.contrib import admin
@@ -65,13 +65,22 @@ class EstimatingAdmin(NestedModelAdmin):
     list_display = ['id', 'start_date', 'prjct_name','time','timezone',
                     'due_date', 'status','company',
                     'bid_amount', 'location', 'estimator',
-                    'bidder','bidder_mail','bidder_detail']
-    list_filter = ['estimator']  # Use 'username' or another field that exists in the 'User' model
+                    # 'bidder','bidder_mail','bidder_detail'
+                    ]
+    # list_filter = ['estimator']  # Use 'username' or another field that exists in the 'User' model
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
-        queryset = queryset.select_related('estimator')  # Optimize the number of SQL queries
+        queryset = queryset.prefetch_related('estimator')  # Optimize the number of SQL queries
         return queryset
+    def display_estimators(self, obj):
+        # Collect all estimators and estimator managers related to this object
+        estimators = obj.estimator.filter(
+            Q(job_title__name='Estimator') | Q(job_title__name='Estimating Manager')
+        )
+        # Join their names (or any other relevant field) in a comma-separated string
+        return ', '.join([estimator.__str__() for estimator in estimators])
+    display_estimators.short_description = 'Estimators/Managers'
 
 
 class EstimatingDetailAdmin(admin.ModelAdmin):

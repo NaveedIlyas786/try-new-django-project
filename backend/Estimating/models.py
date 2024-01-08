@@ -115,7 +115,7 @@ class Estimating(models.Model):
        DMS_Dertory,
         verbose_name="Estimator", related_name='estimations_as_estimator',
         limit_choices_to=models.Q(job_title__name='Estimator')|
-        models.Q(job_title_name='Estimating Manager'),
+        models.Q(job_title__name='Estimating Manager'),
         on_delete=models.SET_NULL, null=True , blank=True)
     # bidder = models.CharField(verbose_name="Bidder Name",max_length=1500, null=True,blank=True)
     # bidder_detail=models.CharField(verbose_name="Bidder Detail",max_length=5000,null=True,blank=True)
@@ -232,11 +232,11 @@ class Estimating_detail(models.Model):
 
 ##Create perposel
 #Service of Exclusion and Inclusion
-class Service(models.Model):
-    name = models.CharField(max_length=255)
-    def __str__(self):
-        return self.name
-#Proposal Table
+# class Service(models.Model):
+#     name = models.CharField(max_length=255)
+#     def __str__(self):
+#         return self.name
+# #Proposal Table
 
 
 
@@ -271,11 +271,12 @@ class Proposal(models.Model):
 
 class ProposalService(models.Model):
     proposal = models.ForeignKey(Proposal, on_delete=models.CASCADE,related_name='services')
-    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    # service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    services=models.CharField(verbose_name="Services", max_length=5000, blank=True, null=True)
     service_type = models.CharField(max_length=2, choices=[('IN', 'Inclusion'), ('EX', 'Exclusion')], default='EX') # NEW_INCLUSION, NEW_EXCLUSION etc
 
-    def __str__(self):
-        return f"Service {self.service.name} in Proposal {self.proposal.id}" # type: ignore
+    # def __str__(self):
+    #     return f"Service {self.services.name} in Proposal {self.proposal.id}" # type: ignore
     
 
 
@@ -314,6 +315,8 @@ class Spec_detail(models.Model):
 
 
 class Qualification(models.Model):
+    
+    proposal=models.ForeignKey(Proposal, on_delete=models.CASCADE,related_name='qualification')
     detail=models.CharField(verbose_name="Add Qualification", max_length=255)
     def __str__(self):
         return self.detail

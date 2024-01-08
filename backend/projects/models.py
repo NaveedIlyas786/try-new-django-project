@@ -4,7 +4,7 @@ from django.db import models
 
 
 from accounts.models import User
-from Estimating.models import Estimating, Estimating_detail, Proposal,GC_detail
+from Estimating.models import Estimating, Estimating_detail, Proposal,GC_detail,DMS_Dertory
 
 
 class Project(models.Model):
@@ -14,29 +14,29 @@ class Project(models.Model):
         verbose_name="Add Job #", unique=True, null=True, blank=True)
     proposal=models.ForeignKey(Proposal, verbose_name="Add Proposal", on_delete=models.CASCADE, null=True, blank=True)
 
-    prjct_engnr = models.ForeignKey(User, verbose_name="Project Engineer", related_name='Project_Engineer', limit_choices_to=models.Q(
-        roles__name='Project Engineer'), on_delete=models.SET_NULL, null=True, blank=True)
-    bim_oprtr = models.ForeignKey(User, verbose_name="BIM Modeler", related_name='Bim_Operator', limit_choices_to=models.Q(roles__name='BIM') | models.Q(
-        roles__name='BIM Modeler/Trimble Operator') | models.Q(roles__name='BIM/Manager PR'), on_delete=models.SET_NULL, null=True, blank=True)
-    Forman = models.ForeignKey(User, verbose_name="FOREMAN/Superintendent", related_name='Forman_as_Forman', limit_choices_to=models.Q(roles__name='Foreman') | models.Q(
-        roles__name='General Superintendent') | models.Q(roles__name='So. Cal. General Manager') | models.Q(roles__name='No. Cal. General Manager'), on_delete=models.SET_NULL, null=True, blank=True)
+    prjct_engnr = models.ForeignKey(DMS_Dertory, verbose_name="Project Engineer", related_name='Project_Engineer', limit_choices_to=models.Q(
+        job_title__name='Project Engineer'), on_delete=models.SET_NULL, null=True, blank=True)
+    bim_oprtr = models.ForeignKey(DMS_Dertory, verbose_name="BIM Modeler", related_name='Bim_Operator', limit_choices_to=models.Q(job_title__name='BIM') | models.Q(
+        job_title__name='BIM Modeler/Trimble Operator') | models.Q(job_title__name='BIM/Manager PR'), on_delete=models.SET_NULL, null=True, blank=True)
+    Forman = models.ForeignKey(DMS_Dertory, verbose_name="FOREMAN/Superintendent", related_name='Forman_as_Forman', limit_choices_to=models.Q(job_title__name='Foreman') | models.Q(
+        job_title__name='General Superintendent') | models.Q(job_title__name='So. Cal. General Manager') | models.Q(job_title__name='No. Cal. General Manager'), on_delete=models.SET_NULL, null=True, blank=True)
     
     
     
-    prjct_mngr = models.ForeignKey(User, verbose_name="Project Manager", related_name='Project_Manager', limit_choices_to=models.Q(
-        roles__name='Project Manager') | 
-        models.Q(roles__name='Proconstruction Manager') |
-        models.Q(roles__name='Vice President') |
-        models.Q(roles__name='No. Cal. General Manager'),
+    prjct_mngr = models.ForeignKey(DMS_Dertory, verbose_name="Project Manager", related_name='Project_Manager', limit_choices_to=models.Q(
+        job_title__name='Project Manager') | 
+        models.Q(job_title__name='Proconstruction Manager') |
+        models.Q(job_title__name='Vice President') |
+        models.Q(job_title__name='No. Cal. General Manager'),
           on_delete=models.SET_NULL, null=True, blank=True)
 
     start_date = models.DateField(
         verbose_name="start Date(YYYY-MM-DD)", null=True, blank=True)
-    general_superintendent = models.ForeignKey(User, verbose_name="Genral_superintendent",
-                                               limit_choices_to=models.Q(roles__name='General Superintendent') |
-                                               models.Q(roles__name='So. Cal. General Manager') |
-                                               models.Q(roles__name='No. Cal. General Manager') |
-                                               models.Q(roles__name='President'), on_delete=models.SET_NULL, null=True, blank=True)
+    general_superintendent = models.ForeignKey(DMS_Dertory , verbose_name="Genral_superintendent",
+                                               limit_choices_to=models.Q(job_title__name='General Superintendent') |
+                                               models.Q(job_title__name='So. Cal. General Manager') |
+                                               models.Q(job_title__name='No. Cal. General Manager') |
+                                               models.Q(job_title__name='President'), on_delete=models.SET_NULL, null=True, blank=True)
 
 
 
@@ -78,7 +78,7 @@ class Project(models.Model):
     gc=models.ForeignKey(GC_detail, verbose_name="Add GC", on_delete=models.CASCADE, null=True, blank=True)
     # gc_email=models.EmailField(verbose_name="Add GC Email", max_length=254, null=True, blank=True)
     gc_address=models.CharField(verbose_name="GC Address", max_length=5000, null=True, blank=True)
-    gc_phone=models.CharField(verbose_name="GC Phone number", max_length=50, null=True, blank=True)
+    # gc_phone=models.CharField(verbose_name="GC Phone number", max_length=50, null=True, blank=True)
     gc_pm = models.CharField(verbose_name="GC Super/PM", max_length=100,null=True,blank=True)
     
     

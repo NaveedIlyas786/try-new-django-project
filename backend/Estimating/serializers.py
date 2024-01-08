@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Q
 
-from Estimating.models import Company,Estimating, Estimating_detail, Proposal, Addendum, Qualification, Spec_detail, Specification, ProposalService, Service, Location,UrlsTable,DMS_Dertory,Dprtmnt,Role,GC_detail
+from Estimating.models import Company,Estimating, Estimating_detail, Proposal, Addendum, Qualification, Spec_detail, Specification, ProposalService, Location,UrlsTable,DMS_Dertory,Dprtmnt,Role,GC_detail
 
 from rest_framework.exceptions import ValidationError
 
@@ -205,7 +205,7 @@ class LocationSerializer(serializers.ModelSerializer):
 class QualificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Qualification
-        fields = ['id', 'detail']
+        fields = ['id','proposal', 'detail']
 
 
 
@@ -223,6 +223,12 @@ class SpecificationDetailSerializer(serializers.ModelSerializer):
         model = Spec_detail
         fields = ['id', 'sefic', 'number', 'name']
 
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
+    
     def to_representation(self, instance):
         representation = super().to_representation(instance)
 
@@ -234,22 +240,30 @@ class SpecificationDetailSerializer(serializers.ModelSerializer):
 
 
 
-
 class SpecificationSerializer(serializers.ModelSerializer):
-    sefic=SpecificationDetailSerializer(many=True,read_only=True)
+    sefic = SpecificationDetailSerializer(many=True, required=False)
+
     class Meta:
         model = Specification
-        fields = ['id', 'proposal', 'budget', 'specific_name','sefic']
+        fields = ['id', 'proposal', 'budget', 'specific_name', 'sefic']
 
+    def update(self, instance, validated_data):
+        sefics_data = validated_data.pop('sefic', [])
+        instance = super().update(instance, validated_data)
 
+        # Update or create Spec_detail instances
+        for sefic_data in sefics_data:
+            sefic_id = sefic_data.get('id', None)
+            if sefic_id:
+                # Update existing Spec_detail instance
+                sefic_instance = Spec_detail.objects.filter(id=sefic_id, sefic=instance).first()
+                if sefic_instance:
+                    SpecificationDetailSerializer().update(sefic_instance, sefic_data)
+            else:
+                # Create new Spec_detail instance
+                Spec_detail.objects.create(sefic=instance, **sefic_data)
 
-
-
-
-class ServiceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Service
-        fields = ['id','name']
+        return instance
 
 
 
@@ -269,7 +283,7 @@ class AddendumSerializer(serializers.ModelSerializer):
 class ProposalServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProposalService
-        fields = ['proposal', 'service', 'service_type']
+        fields = ['id','proposal', 'services', 'service_type']
     
     
     
@@ -277,7 +291,7 @@ class ProposalServiceSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
 
 
-        representation['service'] = instance.service.name if instance.service else None
+        # representation['service'] = instance.service.name if instance.service else None
 
 
         return representation
@@ -286,9 +300,10 @@ class ProposalServiceSerializer(serializers.ModelSerializer):
 
 
 class ProposalSerializer(serializers.ModelSerializer):
-    services = ProposalServiceSerializer(many=True, read_only=True)
-    Addendums=AddendumSerializer(many=True,read_only=True)
-    spcifc=SpecificationSerializer(many=True,read_only=True)
+    services = ProposalServiceSerializer(many=True, read_only=True, required=False)
+    qualification=QualificationSerializer(many=True, read_only=True, required=False)
+    Addendums=AddendumSerializer(many=True,read_only=True, required=False)
+    spcifc=SpecificationSerializer(many=True,read_only=True, required=False)
     estimating_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Estimating.objects.all(), source='estimating', required=True)
     date = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore
     plane_date = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore
@@ -297,7 +312,7 @@ class ProposalSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Proposal
-        fields = ['id', 'estimating_id', 'date','architect_name','plane_date','is_active', 'architect_firm','Addendums', 'services','spcifc','estimating'] 
+        fields = ['id', 'estimating_id', 'date','architect_name','plane_date','is_active', 'architect_firm','Addendums', 'services','spcifc','estimating','qualification'] 
 
     # def to_representation(self, instance):
     #     representation = super().to_representation(instance)

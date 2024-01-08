@@ -27,8 +27,8 @@ urlpatterns = [
     path('Qualification/<int:id>/',views.QualificationView.as_view(),name='Qualification detail'),
 
 
-    path('service/',views.ServiceViews.as_view(),name='service list'),
-    path('service/<int:id>/',views.ServiceViews.as_view(),name='service'),
+    # path('service/',views.ServiceViews.as_view(),name='service list'),
+    # path('service/<int:id>/',views.ServiceViews.as_view(),name='service'),
 
 
 

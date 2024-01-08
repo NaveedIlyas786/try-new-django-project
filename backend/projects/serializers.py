@@ -4,7 +4,7 @@ from rest_framework import serializers
 from .models import Project, Contract,  Insurance, Bond, Submittals, ShopDrawing,Schedule_of_Value, Safity, Schedule, Sub_Contractors, LaborRate, HDS_system, Buget,Project_detail,Delay_Notice,RFI,PCO
 
 from Estimating.models import Proposal,Spec_detail,GC_detail
-from Estimating.serializers import ProposalSerializer,SpecificationDetailSerializer,GC_infoSerializers
+from Estimating.serializers import ProposalSerializer,SpecificationDetailSerializer,GC_infoSerializers,DMS_Dertory
 
 import datetime
 
@@ -399,7 +399,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ['id','status', 'job_num', 'start_date', 'proposal_id','prjct_engnr','bim_oprtr','Forman','prjct_mngr','start_date','general_superintendent',
-                    'project_address','addendums','contacts','gc_id','gc','gc_address','gc_phone','gc_pm','drywell','finish','wall_type','ro_door','ro_window','substitution',
+                    'project_address','addendums','contacts','gc_id','gc','gc_address','gc_pm','drywell','finish','wall_type','ro_door','ro_window','substitution',
                     'contracts','schedule_of_values','insurancs','bond','submittals','shopdrawing','safity','schedule','sub_contractors','laborrate',
                     'hds_system','buget','proposal']
         
@@ -420,11 +420,11 @@ class ProjectSerializer(serializers.ModelSerializer):
         
 
 
-        representation['prjct_engnr'] = instance.prjct_engnr.full_Name if instance.prjct_engnr else None
-        representation['bim_oprtr'] = instance.bim_oprtr.full_Name if instance.bim_oprtr else None
-        representation['Forman'] = instance.Forman.full_Name if instance.Forman else None
-        representation['prjct_mngr'] = instance.prjct_mngr.full_Name if instance.prjct_mngr else None
-        representation['general_superintendent'] = instance.general_superintendent.full_Name if instance.general_superintendent else None
+        representation['prjct_engnr'] = instance.prjct_engnr.first_name if instance.prjct_engnr else None
+        representation['bim_oprtr'] = instance.bim_oprtr.first_name if instance.bim_oprtr else None
+        representation['Forman'] = instance.Forman.first_name if instance.Forman else None
+        representation['prjct_mngr'] = instance.prjct_mngr.first_name if instance.prjct_mngr else None
+        representation['general_superintendent'] = instance.general_superintendent.first_name if instance.general_superintendent else None
 
         # representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None
         # representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None

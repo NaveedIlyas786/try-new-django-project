@@ -5,8 +5,8 @@ import os
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status,views
-from .models import Company, Estimating,Estimating_detail, Proposal, Qualification,Service,Location,UrlsTable,Addendum,DMS_Dertory,Specification,Spec_detail,Role,Dprtmnt,GC_detail
-from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer,SpecificationSerializer,ServiceSerializer,LocationSerializer,EstimatingDetailSerializer,ProposalServiceSerializer,CompanySerializer,UrlsSerializers,DMS_DertorySezializers,Job_titleSerializers,DprtmentSerializers,GC_infoSerializers
+from .models import Company, Estimating,Estimating_detail, Proposal, Qualification,Location,UrlsTable,ProposalService,Addendum,DMS_Dertory,Specification,Spec_detail,Role,Dprtmnt,GC_detail
+from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer,SpecificationSerializer,LocationSerializer,EstimatingDetailSerializer,ProposalServiceSerializer,CompanySerializer,UrlsSerializers,DMS_DertorySezializers,Job_titleSerializers,DprtmentSerializers,GC_infoSerializers
 from accounts.models import User
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
@@ -632,129 +632,74 @@ class LocationViews(APIView):
 
 
 
-
-@api_view(['POST','GET','PUT','DELETE'])
+@api_view(['POST', 'GET', 'PUT', 'DELETE'])
 def create_proposal(request, proposal_id=None):
     if request.method == 'POST':
         data = request.data
-        if 'estimating_id' not in data:
+
+        # Validate 'estimating_id' presence
+        estimating_id = data.get('estimating_id')
+        if not estimating_id:
             return Response({"error": "estimating_id is required"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            estimating_instance = Estimating.objects.get(id=data['estimating_id'])
-
+            estimating_instance = Estimating.objects.get(id=estimating_id)
         except Estimating.DoesNotExist:
             return Response({"error": "Estimating instance not found"}, status=status.HTTP_400_BAD_REQUEST)
         
+        # Deactivate existing proposals for this estimating
         Proposal.objects.filter(estimating=estimating_instance).update(is_active=False)
 
-        proposal_data = {
-            "estimating_id": estimating_instance.id, # type: ignore
-            "date": data['date'],
-            "architect_name": data['architect_name'],
-            "architect_firm": data['architect_firm'],
-            "plane_date": data['plane_date'],
-            "is_active": True
-        }
-
-        proposal_serializer = ProposalSerializer(data=proposal_data) # type: ignore
+        # Create new proposal
+        proposal_serializer = ProposalSerializer(data=data)
         if proposal_serializer.is_valid():
-            proposal = proposal_serializer.save()
+          proposal_instance = proposal_serializer.save()
         else:
             return Response(proposal_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
 
+        # Handling nested data - services
+        for service_data in data.get('services', []):
+            service_data['proposal'] = proposal_instance.id # type: ignore
+            proposal_service_serializer = ProposalServiceSerializer(data=service_data)
+            if proposal_service_serializer.is_valid():
+                proposal_service_serializer.save()
+            else:
+                return Response(proposal_service_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+        # Handling nested data - addendums
+        for addendum_data in data.get('Addendums', []):
+            addendum_data['proposal'] = proposal_instance.id # type: ignore
+            proposal_addendum_serializer = AddendumSerializer(data=addendum_data)
+            if proposal_addendum_serializer.is_valid():
+                proposal_addendum_serializer.save()
+            else:
+                return Response(proposal_addendum_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-        
-
-        for service_data in data['services']:
-            try:
-                service = Service.objects.get(id=service_data['service'])
-                proposal_service_data = {
-                    "proposal": proposal.id, # type: ignore
-                    "service": service.id, # type: ignore
-                    "service_type": service_data['service_type']
-                }
-                proposal_service_serializer = ProposalServiceSerializer(data=proposal_service_data) # type: ignore
-                if proposal_service_serializer.is_valid():
-                    proposal_service_serializer.save()
-                else:
-                    return Response(proposal_service_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            except Service.DoesNotExist:
-                return Response({"error": f"Service with id {service_data['service']} not found"}, status=status.HTTP_400_BAD_REQUEST)
-            
-
-
-
-
-
-
-        
-        if 'Addendums' in data:
-            for addendum_data in data['Addendums']:
-                proposal_addendum_data = {
-                    "proposal": proposal.id, # type: ignore
-                    "date": addendum_data['date'],
-                    "addendum_Number": addendum_data['addendum_number']
-                }
-                proposal_addendum_serializer = AddendumSerializer(data=proposal_addendum_data) # type: ignore
-                if proposal_addendum_serializer.is_valid():
-                    proposal_addendum_serializer.save()
-                else:
-                    return Response(proposal_addendum_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response({"error": "No Addendums data provided"}, status=status.HTTP_400_BAD_REQUEST)
-        
-
-        total_budget = 0
-        
-
-        if 'spcifc' in data:
-            for spcifc_data in data['spcifc']:
-                # creating a new Specification instance
-                specification_data = {
-                    "proposal": proposal.id, # type: ignore
-                    "budget": spcifc_data['budget'],
-                    "specific_name": spcifc_data['specific_name']
-                }
-                specification_serializer = SpecificationSerializer(data=specification_data) # type: ignore
-                if specification_serializer.is_valid():
-                    specification = specification_serializer.save()
-                    total_budget += float(specification_data['budget'])
-                else:
-                    return Response(specification_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-                # Creating the nested Spec_detail instances
-                for sefic_data in spcifc_data['sefic']:
-                    spec_detail_data = {
-                        "sefic": specification.id, # type: ignore
-                        "number": sefic_data['number'],
-                        "name": sefic_data['name']
-                    }
-                    spec_detail_serializer = SpecificationDetailSerializer(data=spec_detail_data) # type: ignore
+        # Handling nested data - specific details
+        for specific_data in data.get('spcifc', []):
+            specific_data['proposal'] = proposal_instance.id # type: ignore
+            specification_serializer = SpecificationSerializer(data=specific_data)
+            if specification_serializer.is_valid():
+                specification = specification_serializer.save()
+                for detail_data in specific_data.get('sefic', []):
+                    detail_data['sefic'] = specification.id # type: ignore
+                    spec_detail_serializer = SpecificationDetailSerializer(data=detail_data)
                     if spec_detail_serializer.is_valid():
                         spec_detail_serializer.save()
                     else:
                         return Response(spec_detail_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response({"error": "No Specification data provided"}, status=status.HTTP_400_BAD_REQUEST)  
-        
-        if estimating_instance.bid_amount is None:
-            estimating_instance.bid_amount = 0
-
-            estimating_instance.bid_amount = total_budget # type: ignore
-        else:
-            estimating_instance.bid_amount = 0
-            estimating_instance.bid_amount += total_budget # type: ignore
-        estimating_instance.save()
-
-
+            else:
+                return Response(specification_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # qualifications_data = data.get('qualification', [])
+        for qualification_data in data.get('qualification', []):
+            qualification_data['proposal'] = proposal_instance.id # type: ignore
+            qualification_serializer = QualificationSerializer(data=qualification_data)
+            if qualification_serializer.is_valid():
+                qualification_serializer.save()
+            else:
+                return Response(qualification_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({"message": "Proposal created successfully"}, status=status.HTTP_201_CREATED)
-    
-
 
 
 
@@ -773,9 +718,10 @@ def create_proposal(request, proposal_id=None):
 
 
     
+
     elif request.method == 'PUT':
-        # Add PUT request handling logic here (update)
-        if proposal_id is None:
+        
+        if not proposal_id:
             return Response({"error": "Proposal ID is required for updating"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
@@ -783,15 +729,44 @@ def create_proposal(request, proposal_id=None):
         except Proposal.DoesNotExist:
             return Response({"error": "Proposal not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        data = request.data
-        proposal_serializer = ProposalSerializer(proposal, data=data)
+        proposal_serializer = ProposalSerializer(proposal, data=request.data, context={'request': request}, partial=True)
         if proposal_serializer.is_valid():
             proposal_serializer.save()
+
+            # Update or create nested services, addendums, specifics, and qualification
+            nested_entities = {
+                'services': (ProposalServiceSerializer, ProposalService),
+                'Addendums': (AddendumSerializer, Addendum),
+                'spcifc': (SpecificationSerializer, Specification),
+                'qualification': (QualificationSerializer, Qualification)
+            }
+
+            for entity_key, (SerializerClass, ModelClass) in nested_entities.items():
+                entity_data_list = request.data.get(entity_key, [])
+                for entity_data in entity_data_list:
+                    entity_id = entity_data.get('id')
+                    context = {'request': request}
+                    if entity_id:
+                        # Update existing entity
+                        try:
+                            entity_instance = ModelClass.objects.get(id=entity_id, proposal=proposal)
+                            entity_serializer = SerializerClass(entity_instance, data=entity_data, context=context, partial=True)
+                        except ModelClass.DoesNotExist:
+                            return Response({"error": f"{entity_key[:-1]} not found"}, status=status.HTTP_404_NOT_FOUND)
+                        # entity_serializer = SerializerClass(entity_instance, data=entity_data, partial=True)
+                    else:
+                        # Create new entity
+                        entity_data['proposal'] = proposal.id # type: ignore
+                        entity_serializer = SerializerClass(data=entity_data, context=context)
+
+                    if entity_serializer.is_valid():
+                        entity_serializer.save()
+                    else:
+                        return Response(entity_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
             return Response({"message": "Proposal updated successfully"}, status=status.HTTP_200_OK)
         else:
             return Response(proposal_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-
 
 
     
@@ -814,42 +789,42 @@ def create_proposal(request, proposal_id=None):
 
 
 
-class ServiceViews(APIView):
-    def get(self, request, format=None):
-        service = Service.objects.all()
-        serializer = ServiceSerializer(service, many=True)
-        return Response(serializer.data)
+# class ServiceViews(APIView):
+#     def get(self, request, format=None):
+#         service = Service.objects.all()
+#         serializer = ServiceSerializer(service, many=True)
+#         return Response(serializer.data)
 
 
-    def post(self, request, format=None):
-        serializer = ServiceSerializer(data=request.data)
-        if serializer.is_valid():
+#     def post(self, request, format=None):
+#         serializer = ServiceSerializer(data=request.data)
+#         if serializer.is_valid():
 
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
     
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, id, format=None):
-        try:
-            service = Service.objects.get(id=id)
-        except Service.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+#     def put(self, request, id, format=None):
+#         try:
+#             service = Service.objects.get(id=id)
+#         except Service.DoesNotExist:
+#             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        serializer = ServiceSerializer(service, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#         serializer = ServiceSerializer(service, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, id, format=None):
-        try:
-            service = Service.objects.get(id=id)
-        except Service.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+#     def delete(self, request, id, format=None):
+#         try:
+#             service = Service.objects.get(id=id)
+#         except Service.DoesNotExist:
+#             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        service.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+#         service.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
     
 
 

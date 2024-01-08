@@ -5,7 +5,7 @@ from django.db.models import Q
 
 import os
 from django.contrib import admin
-from .models import Estimating,Proposal,Service,Addendum,Specification,Spec_detail,Qualification,ProposalService,UrlsTable,Role,Dprtmnt,DMS_Dertory,GC_detail
+from .models import Estimating,Proposal,Addendum,Specification,Spec_detail,Qualification,ProposalService,UrlsTable,Role,Dprtmnt,DMS_Dertory,GC_detail
 from nested_admin import NestedStackedInline, NestedModelAdmin # type: ignore
 from .forms import EstimatingDetailAdminForm,EstimatingAdminForm
 
@@ -108,7 +108,7 @@ class ProposalServiceInline(admin.TabularInline):
     model = ProposalService
     extra = 1
     fk_name = 'proposal'
-    autocomplete_fields = ['service']  # Enable autocomplete for the service field
+    # autocomplete_fields = ['service']  # Enable autocomplete for the service field
     sortable_options = {}  # Keeping this to avoid the error you mentioned earlier
 
 
@@ -137,10 +137,13 @@ class SpecificationInline(NestedStackedInline):
     inlines = [SpecificationDetailInline]  # Nested inline for Spec_detail within Specification
 
 
+class QualificationInline(NestedStackedInline):
+    model = Qualification
+    extra = 1 
 
 
 class ProposalAdmin(NestedModelAdmin):
-    inlines = [AddendumInline, ProposalServiceInline, SpecificationInline]
+    inlines = [AddendumInline, ProposalServiceInline, SpecificationInline,QualificationInline]
     list_display = ['id', 'estimating', 'date', 'architect_name', 'architect_firm','plane_date','is_active']
     search_fields = ['architect_name', 'architect_firm']
 
@@ -155,8 +158,6 @@ class ProposalAdmin(NestedModelAdmin):
 
 
 
-class QualificationAdmin(admin.ModelAdmin):
-    list_display=['id','detail']
 
 
 
@@ -178,8 +179,8 @@ admin.site.register(Company, CompanyAdmin)
 admin.site.register(Location, LocationAdmin)
 admin.site.register(Estimating, EstimatingAdmin)
 admin.site.register(Proposal, ProposalAdmin)
-admin.site.register(Service, ServiceAdmin)
-admin.site.register(Qualification, QualificationAdmin)
+# admin.site.register(Service, ServiceAdmin)
+# admin.site.register(Qualification, QualificationAdmin)
 admin.site.register(Estimating_detail, EstimatingDetailAdmin)
 admin.site.register(UrlsTable, UrlsAdmin)
 admin.site.register(Role, RoleAdmin)

@@ -105,6 +105,7 @@ def create_project(request, id=None):
             ('hds_system', HDS_system, HDSSystemSerializer),
             # ('on_build', OnBuild, OnBuildSerializer),
             ('buget', Buget, BugetSerializer),
+            ('atten',GC_aen,GC_attenSerializer),
         ]
         related_serializers = []
         for key, model, serializer_class in related_data_models:

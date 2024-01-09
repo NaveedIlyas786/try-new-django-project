@@ -1,3 +1,4 @@
+from email.policy import default
 from operator import itemgetter
 from unittest.util import _MAX_LENGTH
 from django.db import models
@@ -61,15 +62,15 @@ class Project(models.Model):
         ],default='Pending', null=True, blank=True)
 
     drywell=models.CharField(verbose_name="Drywell Conttrol Joins", max_length=50,choices=[
-        ('Submitted','Submitted'),('Working','Working'),('Approved','Approved'),
-        ],default='null', null=True, blank=True)
+        ('Submitted','Submitted'),('Working','Working'),('Approved','Approved'),('Pending','Pending'),
+        ],default='Pending', null=True, blank=True)
 
     finish=models.CharField(verbose_name="FINISH LEVEL MARKUPS", max_length=50,choices=[
-        ('Completed','Completed'),('Working','Working'),('Uploaded','Uploaded'),
-        ],default='null', null=True, blank=True)
+        ('Completed','Completed'),('Working','Working'),('Uploaded','Uploaded'),('Pending','Pending'),
+        ],default='Pending', null=True, blank=True)
     wall_type=models.CharField(verbose_name="WALL TYPE MAPPING", max_length=50,choices=[
-        ('Completed','Completed'),('Working','Working'),('Uploaded','Uploaded'),
-        ],default='null', null=True, blank=True)
+        ('Completed','Completed'),('Working','Working'),('Uploaded','Uploaded'),('Pending','Pending'),
+        ],default='Pending', null=True, blank=True)
 
     ro_door=models.CharField(verbose_name="RO-Door", max_length=50,choices=[
         ('Requested','Requested'),('Pending','Pending'),('Received','Received')
@@ -412,14 +413,14 @@ class Schedule_of_Value(models.Model):
 class Insurance(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     insurance=models.CharField(verbose_name="Insurance", max_length=50,choices=[
-        ('CCIP','CCIP'),('Sent','Sent'),('Received','Received'),('Completed','Completed'),
-        ],default='null', null=True, blank=True)
+        ('CCIP','CCIP'),('Sent','Sent'),('Received','Received'),('Completed','Completed'),('Pending','Pending')
+        ],default='Pending', null=True, blank=True)
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
 class Bond(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     bond=models.CharField(verbose_name="Bond", max_length=50,choices=[
-        ('Sent','Sent'),('Received','Received'),('Completed','Completed'),('N/A','N/A'),
-        ],default='null', null=True, blank=True)
+        ('Sent','Sent'),('Received','Received'),('Completed','Completed'),('N/A','N/A'),('Pending','Pending')
+        ],default='Pending', null=True, blank=True)
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
 
 class Submittals(models.Model):
@@ -429,8 +430,8 @@ class Submittals(models.Model):
     gc_dcsn=models.CharField(verbose_name="GC Decision", max_length=500, choices=[('Accepted By GC','Accepted By GC'),('Rejected By GC','Rejected By GC')],default='Rejected By GC',null=True,blank=True)
     scopWorkNumber=models.CharField(verbose_name="Add the scop of work Number", max_length=250, null=True, blank=True)
     status=models.CharField(verbose_name="Submittals", max_length=50,choices=[
-        ('Approved','Approved'),('Working','Working'),('Submitted','Submitted'),('R & R','R & R')
-        ], null=True, blank=True)
+        ('Approved','Approved'),('Working','Working'),('Submitted','Submitted'),('R & R','R & R'),('Pending','Pending')
+        ],default="Pending", null=True, blank=True)
     due_date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
     actn_date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
 
@@ -457,8 +458,8 @@ class Safity(models.Model):
 class Schedule(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     status=models.CharField(verbose_name="Schedule", max_length=50,choices=[
-        ('Available','Available'),('Requested','Requested'),
-        ],default='Requested', null=True, blank=True)
+        ('Available','Available'),('Requested','Requested'),('Pending','Pending')
+        ],default='Pending', null=True, blank=True)
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
 
 class Sub_Contractors(models.Model):

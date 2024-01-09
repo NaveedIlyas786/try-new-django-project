@@ -385,7 +385,7 @@ class GC_attenSerializer(serializers.ModelSerializer):
 
 class ProjectSerializer(serializers.ModelSerializer):
     
-    atten=GC_attenSerializer(source='atten_set',many=True,read_only=True,required=False)
+    atten=GC_attenSerializer(source='atten_set', many=True, read_only=True, required=False)
     contracts = ContractSerializer(source='contract_set', many=True, read_only=True, required=False)
     schedule_of_values = ScheduleOfValueSerializer(source='schedule_of_value_set', many=True, read_only=True)
     insurancs = InsuranceSerializer(source='insurance_set', many=True, read_only=True, required=False)

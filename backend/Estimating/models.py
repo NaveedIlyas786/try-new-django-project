@@ -115,7 +115,7 @@ class Estimating(models.Model):
        DMS_Dertory,
         verbose_name="Estimator", related_name='estimations_as_estimator',
         limit_choices_to=models.Q(job_title__name='Estimator')|
-        models.Q(job_title__name='Estimating Manager'),
+        models.Q(job_title__name='Estimating Manager')| models.Q(job_title__name='Field Management')|models.Q(job_title__name='Owner'),
         on_delete=models.SET_NULL, null=True , blank=True)
     # bidder = models.CharField(verbose_name="Bidder Name",max_length=1500, null=True,blank=True)
     # bidder_detail=models.CharField(verbose_name="Bidder Detail",max_length=5000,null=True,blank=True)

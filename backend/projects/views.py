@@ -13,11 +13,11 @@ from rest_framework.views import APIView
 
 
 from rest_framework.decorators import api_view
-from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget,Delay_Notice,RFI,PCO,Schedule_of_Value
+from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget,Delay_Notice,RFI,PCO,Schedule_of_Value,GC_aen
 from .serializers import (ProjectSerializer, ContractSerializer,  InsuranceSerializer, BondSerializer,
                            SubmittalsSerializer, ShopDrawingSerializer, SafitySerializer, ScheduleSerializer,
                           SubContractorsSerializer, LaborRateSerializer,HDSSystemSerializer,
-                          BugetSerializer,Delay_NoticeSerializer,RFISerializer,PCOSerializer,ScheduleOfValueSerializer)
+                          BugetSerializer,Delay_NoticeSerializer,RFISerializer,PCOSerializer,ScheduleOfValueSerializer,GC_attenSerializer)
 
 
 class ProjectDetailListCreateView(APIView):
@@ -62,6 +62,7 @@ def create_project(request, id=None):
             ('hds_system', HDS_system, HDSSystemSerializer),
             # ('on_build', OnBuild, OnBuildSerializer),
             ('buget', Buget, BugetSerializer),
+            ('atten',GC_aen,GC_attenSerializer)
         ]
 
 
@@ -104,6 +105,7 @@ def create_project(request, id=None):
             ('hds_system', HDS_system, HDSSystemSerializer),
             # ('on_build', OnBuild, OnBuildSerializer),
             ('buget', Buget, BugetSerializer),
+            ('atten',GC_aen,GC_attenSerializer),
         ]
         related_serializers = []
         for key, model, serializer_class in related_data_models:

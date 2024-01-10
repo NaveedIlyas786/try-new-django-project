@@ -1,7 +1,10 @@
 # serializers.py
 from os import write
 from rest_framework import serializers
-from .models import Project, Contract,  Insurance, Bond, Submittals, ShopDrawing,Schedule_of_Value, Safity, Schedule, Sub_Contractors, LaborRate, HDS_system, Buget,Project_detail,Delay_Notice,RFI,PCO
+from .models import( Project,GC_aen, Contract,  Insurance, Bond, 
+                    Submittals, ShopDrawing,Schedule_of_Value, 
+                    Safity, Schedule, Sub_Contractors, LaborRate, HDS_system,
+                    Buget,Project_detail,Delay_Notice,RFI,PCO)
 
 from Estimating.models import Proposal,Spec_detail,GC_detail
 from Estimating.serializers import ProposalSerializer,SpecificationDetailSerializer,GC_infoSerializers,DMS_Dertory
@@ -366,10 +369,23 @@ class BugetSerializer(serializers.ModelSerializer):
             data['contract_date'] = datetime.datetime.strptime(data['contract_date'], '%m-%d-%Y').date()
         return super().to_internal_value(data)
     
-    
+
+class GC_attenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=GC_aen
+        fields='__all__'
+        
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        
+        representation['project'] = instance.project.job_num if instance.project else None
+        
+        return representation
+
 class ProjectSerializer(serializers.ModelSerializer):
     
-    
+    atten=GC_attenSerializer(source='atten_set', many=True, read_only=True, required=False)
     contracts = ContractSerializer(source='contract_set', many=True, read_only=True, required=False)
     schedule_of_values = ScheduleOfValueSerializer(source='schedule_of_value_set', many=True, read_only=True)
     insurancs = InsuranceSerializer(source='insurance_set', many=True, read_only=True, required=False)
@@ -399,7 +415,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ['id','status', 'job_num', 'start_date', 'proposal_id','prjct_engnr','bim_oprtr','Forman','prjct_mngr','start_date','general_superintendent',
-                    'project_address','addendums','contacts','gc_id','gc','gc_address','gc_pm','drywell','finish','wall_type','ro_door','ro_window','substitution',
+                    'project_address','addendums','contacts','gc_id','gc','gc_address','atten','drywell','finish','wall_type','ro_door','ro_window','substitution',
                     'contracts','schedule_of_values','insurancs','bond','submittals','shopdrawing','safity','schedule','sub_contractors','laborrate',
                     'hds_system','buget','proposal']
         
@@ -528,7 +544,7 @@ class RFISerializer(serializers.ModelSerializer):
     project=ProjectSerializer(read_only=True)
     class Meta:
         model=RFI
-        fields=['id','project_id','project','rfi_num','date','attn','company','phne','email','drwng_rfrnc','detl_num','spc_rfrnc','rspns_rqrd','qustn','open_date','close_date','other_trd']
+        fields=['id','project','project_id','rfi_num','date','drwng_rfrnc','detl_num','spc_rfrnc','rspns_rqrd','qustn','bool1','bool2','bool3','rply_by','rspns','name_log','title','date2']
 
 
 

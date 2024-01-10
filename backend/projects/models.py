@@ -1,3 +1,4 @@
+from email.policy import default
 from operator import itemgetter
 from unittest.util import _MAX_LENGTH
 from django.db import models
@@ -5,6 +6,12 @@ from django.db import models
 
 from accounts.models import User
 from Estimating.models import Estimating, Estimating_detail, Proposal,GC_detail,DMS_Dertory
+
+
+
+
+
+
 
 
 class Project(models.Model):
@@ -55,15 +62,15 @@ class Project(models.Model):
         ],default='Pending', null=True, blank=True)
 
     drywell=models.CharField(verbose_name="Drywell Conttrol Joins", max_length=50,choices=[
-        ('Submitted','Submitted'),('Working','Working'),('Approved','Approved'),
-        ],default='null', null=True, blank=True)
+        ('Submitted','Submitted'),('Working','Working'),('Approved','Approved'),('Pending','Pending'),
+        ],default='Pending', null=True, blank=True)
 
     finish=models.CharField(verbose_name="FINISH LEVEL MARKUPS", max_length=50,choices=[
-        ('Completed','Completed'),('Working','Working'),('Uploaded','Uploaded'),
-        ],default='null', null=True, blank=True)
+        ('Completed','Completed'),('Working','Working'),('Uploaded','Uploaded'),('Pending','Pending'),
+        ],default='Pending', null=True, blank=True)
     wall_type=models.CharField(verbose_name="WALL TYPE MAPPING", max_length=50,choices=[
-        ('Completed','Completed'),('Working','Working'),('Uploaded','Uploaded'),
-        ],default='null', null=True, blank=True)
+        ('Completed','Completed'),('Working','Working'),('Uploaded','Uploaded'),('Pending','Pending'),
+        ],default='Pending', null=True, blank=True)
 
     ro_door=models.CharField(verbose_name="RO-Door", max_length=50,choices=[
         ('Requested','Requested'),('Pending','Pending'),('Received','Received')
@@ -76,11 +83,9 @@ class Project(models.Model):
     substitution=models.CharField(verbose_name="Substitution", max_length=5000, null=True, blank=True)
     
     gc=models.ForeignKey(GC_detail, verbose_name="Add GC", on_delete=models.CASCADE, null=True, blank=True)
-    # gc_email=models.EmailField(verbose_name="Add GC Email", max_length=254, null=True, blank=True)
     gc_address=models.CharField(verbose_name="GC Address", max_length=5000, null=True, blank=True)
-    # gc_phone=models.CharField(verbose_name="GC Phone number", max_length=50, null=True, blank=True)
-    gc_pm = models.CharField(verbose_name="GC Super/PM", max_length=100,null=True,blank=True)
     
+    # gc_attn=models.ForeignKey(GC_attn, verbose_name="GC Atten", on_delete=models.CASCADE,null=True,blank=True)
     
     
 
@@ -377,7 +382,14 @@ class Project(models.Model):
 
 
 
-
+class GC_aen(models.Model):
+    
+    prjct=models.ForeignKey(Project, verbose_name="Add Project", on_delete=models.CASCADE)
+    gc_attn = models.CharField(verbose_name="GC attn", max_length=100,null=True,blank=True)
+    attn_email=models.EmailField(verbose_name="Add GC Email", max_length=254, null=True, blank=True)
+    attn_phone=models.CharField(verbose_name="GC Phone number", max_length=50, null=True, blank=True)
+    
+    
 
 
 
@@ -401,14 +413,14 @@ class Schedule_of_Value(models.Model):
 class Insurance(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     insurance=models.CharField(verbose_name="Insurance", max_length=50,choices=[
-        ('CCIP','CCIP'),('Sent','Sent'),('Received','Received'),('Completed','Completed'),
-        ],default='null', null=True, blank=True)
+        ('CCIP','CCIP'),('Sent','Sent'),('Received','Received'),('Completed','Completed'),('Pending','Pending')
+        ],default='Pending', null=True, blank=True)
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
 class Bond(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     bond=models.CharField(verbose_name="Bond", max_length=50,choices=[
-        ('Sent','Sent'),('Received','Received'),('Completed','Completed'),('N/A','N/A'),
-        ],default='null', null=True, blank=True)
+        ('Sent','Sent'),('Received','Received'),('Completed','Completed'),('N/A','N/A'),('Pending','Pending')
+        ],default='Pending', null=True, blank=True)
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
 
 class Submittals(models.Model):
@@ -418,8 +430,8 @@ class Submittals(models.Model):
     gc_dcsn=models.CharField(verbose_name="GC Decision", max_length=500, choices=[('Accepted By GC','Accepted By GC'),('Rejected By GC','Rejected By GC')],default='Rejected By GC',null=True,blank=True)
     scopWorkNumber=models.CharField(verbose_name="Add the scop of work Number", max_length=250, null=True, blank=True)
     status=models.CharField(verbose_name="Submittals", max_length=50,choices=[
-        ('Approved','Approved'),('Working','Working'),('Submitted','Submitted'),('R & R','R & R')
-        ], null=True, blank=True)
+        ('Approved','Approved'),('Working','Working'),('Submitted','Submitted'),('R & R','R & R'),('Pending','Pending')
+        ],default="Pending", null=True, blank=True)
     due_date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
     actn_date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
 
@@ -446,8 +458,8 @@ class Safity(models.Model):
 class Schedule(models.Model):
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     status=models.CharField(verbose_name="Schedule", max_length=50,choices=[
-        ('Available','Available'),('Requested','Requested'),
-        ],default='Requested', null=True, blank=True)
+        ('Available','Available'),('Requested','Requested'),('Pending','Pending')
+        ],default='Pending', null=True, blank=True)
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
 
 class Sub_Contractors(models.Model):
@@ -512,21 +524,26 @@ class RFI(models.Model):
     project=models.ForeignKey(Project, verbose_name="Select", on_delete=models.CASCADE,null=True,blank=True)
     rfi_num=models.CharField(verbose_name="RFI #",max_length=50,null=True,blank=True)
     date=models.DateField(verbose_name="Date", auto_now=False, auto_now_add=False,null=True,blank=True)
-    attn=models.CharField(verbose_name="Attn", max_length=500,null=True,blank=True)
-    company=models.CharField(verbose_name="Company", max_length=500,null=True,blank=True)
-    phne=models.CharField(verbose_name="Phone", max_length=50,null=True,blank=True)
-    email=models.EmailField(verbose_name="Email", max_length=254,null=True,blank=True)
+    # attn=models.CharField(verbose_name="Attn", max_length=500,null=True,blank=True)
+    # company=models.CharField(verbose_name="Company", max_length=500,null=True,blank=True)
+    # phne=models.CharField(verbose_name="Phone", max_length=50,null=True,blank=True)
+    # email=models.EmailField(verbose_name="Email", max_length=254,null=True,blank=True)
     drwng_rfrnc=models.CharField(verbose_name="Drawing Reference", max_length=500,null=True,blank=True)
     detl_num=models.IntegerField(verbose_name="Detail No",null=True,blank=True)
     spc_rfrnc=models.CharField(verbose_name="Spec Reference", max_length=500,null=True,blank=True)
-    rspns_rqrd=models.CharField(verbose_name="Response Required By", max_length=500,null=True,blank=True)
+    rspns_rqrd=models.DateField(verbose_name="Date", auto_now=False, auto_now_add=False,null=True,blank=True)
     qustn=models.CharField(verbose_name="Question", max_length=5000,null=True,blank=True)
-    other_trd=models.BooleanField(verbose_name="Other Trades",null=True,blank=True)
-    rply_by=models.CharField(verbose_name="Reply By", max_length=500,null=True,blank=True)
-    rspns=models.CharField(verbose_name="Response",max_length=500,null=True,blank=True)
-    open_date=models.DateField(verbose_name="date Opened", auto_now=False, auto_now_add=False,null=True,blank=True)
-    close_date=models.DateField(verbose_name="date Closed", auto_now=False, auto_now_add=False,null=True,blank=True)
+    bool1=models.BooleanField(verbose_name="Other Trades",null=True,blank=True)
+    bool2=models.BooleanField(verbose_name="bool2",null=True,blank=True)
+    bool3=models.BooleanField(verbose_name="boll3",null=True,blank=True)
 
+    rply_by=models.DateField(verbose_name="Date", auto_now=False, auto_now_add=False,null=True,blank=True)
+    rspns=models.CharField(verbose_name="Response",max_length=5000,null=True,blank=True)
+    # open_date=models.DateField(verbose_name="date Opened", auto_now=False, auto_now_add=False,null=True,blank=True)
+    # close_date=models.DateField(verbose_name="date Closed", auto_now=False, auto_now_add=False,null=True,blank=True)
+    name_log=models.CharField(verbose_name="Name Login", max_length=50,null=True,blank=True)
+    title=models.CharField(verbose_name="Title login", max_length=250,null=True,blank=True)
+    date2=models.DateField(verbose_name="Date", auto_now=False, auto_now_add=False,null=True,blank=True)
     
     # def __str__(self):
     #     return self.rfi_num

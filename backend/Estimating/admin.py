@@ -76,7 +76,7 @@ class EstimatingAdmin(NestedModelAdmin):
     def display_estimators(self, obj):
         # Collect all estimators and estimator managers related to this object
         estimators = obj.estimator.filter(
-            Q(job_title__name='Estimator') | Q(job_title__name='Estimating Manager')
+            Q(job_title__name='Estimator') | Q(job_title__name='Estimating Manager')| Q(job_title__name='Field Management')| Q(job_title__name='Owner')
         )
         # Join their names (or any other relevant field) in a comma-separated string
         return ', '.join([estimator.__str__() for estimator in estimators])

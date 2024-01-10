@@ -3,7 +3,7 @@ from .models import Project_detail,Project
 from .models import (
     Project, Contract,  Insurance, Bond, Submittals, 
     ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, 
-    HDS_system,  Buget,Project_detail,RFI,Delay_Notice,PCO,Schedule_of_Value
+    HDS_system,  Buget,Project_detail,RFI,Delay_Notice,PCO,Schedule_of_Value,GC_aen
 )
 from Estimating.models import Spec_detail
 
@@ -81,16 +81,20 @@ class BugetInline(admin.StackedInline):
     model = Buget
     extra = 1
 
+class GC_attenInline(admin.StackedInline):
+    model=GC_aen
+    extra=1
+
 class ProjectAdmin(admin.ModelAdmin):
     inlines = [
         ContractInline,  InsuranceInline, BondInline,
         ScheduleInline, SubContractorsInline, LaborRateInline,
-        BugetInline,HDSSystemInline,SafityInline,ShopDrawingInline,SubmittalsInline,ScheduleOfValueInline
+        BugetInline,HDSSystemInline,SafityInline,ShopDrawingInline,SubmittalsInline,ScheduleOfValueInline,GC_attenInline
     ]
 
     
     list_display = ('id','status', 'job_num', 'start_date', 'proposal','prjct_engnr','bim_oprtr','Forman','prjct_mngr','start_date','general_superintendent',
-                    'project_address','addendums','contacts','gc','gc_address','gc_pm','drywell','finish','wall_type','ro_door','ro_window','substitution')  
+                    'project_address','addendums','contacts','gc','gc_address','drywell','finish','wall_type','ro_door','ro_window','substitution')  
     search_fields = ['status', 'job_num'] 
 
 
@@ -104,7 +108,7 @@ class ProjectDetailAdmin(admin.ModelAdmin):
 
 
 class RFIAdmin(admin.ModelAdmin):
-    list_display=('id','project','rfi_num','date','attn','company','phne','email','drwng_rfrnc','detl_num','spc_rfrnc','rspns_rqrd','open_date','close_date','qustn')
+    list_display=('id','project','rfi_num','date','drwng_rfrnc','detl_num','spc_rfrnc','rspns_rqrd','qustn','bool1','bool2','bool3','rply_by','rspns','name_log','title','date2')
 
 
 class PCOAdmin(admin.ModelAdmin):
@@ -123,6 +127,7 @@ class Delay_NoticeAdmin(admin.ModelAdmin):
 admin.site.register(Project_detail, ProjectDetailAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Contract)
+admin.site.register(GC_aen)
 # admin.site.register(Schedule_of_Value)
 admin.site.register(Insurance)
 admin.site.register(Bond)

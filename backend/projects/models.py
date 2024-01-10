@@ -1,5 +1,6 @@
 from email.policy import default
 from operator import itemgetter
+from random import choice
 from unittest.util import _MAX_LENGTH
 from django.db import models
 
@@ -548,6 +549,18 @@ class RFI(models.Model):
     # def __str__(self):
     #     return self.rfi_num
     
+
+class RFI_Log(models.Model):
+    rfi=models.ForeignKey(RFI, verbose_name="Select RFI", on_delete=models.CASCADE,null=True,blank=True)
+    gc_rfi_num=models.IntegerField(verbose_name="GC RFI#",null=True,blank=True)
+    date_close=models.DateField(verbose_name="Date close", auto_now=False, auto_now_add=False,null=True,blank=True)
+    status=models.CharField(verbose_name="Status", max_length=50,choices=[
+        ('Open','Open'),('Close','Close'),('Void','Void')
+        ],default='Close',null=True,blank=True)
+    dscrptn=models.CharField(verbose_name="Description", max_length=5000,null=True,blank=True)
+    cost_schdl=models.CharField(verbose_name="Cost or Schedule", max_length=50,choices=[
+        ('Cost','Cost'),('Schedule','Schedule'),('Cost & Schedule','Cost & Schedule'),('None','None')
+        ],default='None',null=True,blank=True)
     
     
     

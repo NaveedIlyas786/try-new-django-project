@@ -3,6 +3,7 @@ from rest_framework import generics
 from rest_framework import viewsets
 from yaml import serialize
 
+from django.shortcuts import get_object_or_404
 
 from .models import Project, Project_detail
 from .serializers import ProjectSerializer, ProjectDetailSerializer
@@ -13,11 +14,12 @@ from rest_framework.views import APIView
 
 
 from rest_framework.decorators import api_view
-from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget,Delay_Notice,RFI,PCO,Schedule_of_Value,GC_aen
+from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget,Delay_Notice,RFI,PCO,Schedule_of_Value,GC_aen,RFI_Log
 from .serializers import (ProjectSerializer, ContractSerializer,  InsuranceSerializer, BondSerializer,
                            SubmittalsSerializer, ShopDrawingSerializer, SafitySerializer, ScheduleSerializer,
                           SubContractorsSerializer, LaborRateSerializer,HDSSystemSerializer,
-                          BugetSerializer,Delay_NoticeSerializer,RFISerializer,PCOSerializer,ScheduleOfValueSerializer,GC_attenSerializer)
+                          BugetSerializer,Delay_NoticeSerializer,RFISerializer,PCOSerializer,ScheduleOfValueSerializer,GC_attenSerializer,RFI_LogSerializer)
+
 
 
 class ProjectDetailListCreateView(APIView):
@@ -177,31 +179,78 @@ def create_project(request, id=None):
 
         return Response({"message": "Project and related data updated successfully"}, status=status.HTTP_200_OK)
 
+
 class RFIViews(APIView):
     def get(self, request, id=None):
         if id:
-            try:
-                rfi=RFI.objects.get(id=id)
-            except RFI.DoesNotExist:
-                return Response (status=status.HTTP_404_NOT_FOUND)
-            serializer=RFISerializer(rfi)
+            rfi = get_object_or_404(RFI, id=id)
+            serializer = RFISerializer(rfi)
         else:
-            rfi=RFI.objects.all()
-            serializer=RFISerializer(rfi,many=True)
+            rfi = RFI.objects.all()
+            serializer = RFISerializer(rfi, many=True)
         return Response(serializer.data)
-    
+
     def post(self, request):
         serializer = RFISerializer(data=request.data)
         if serializer.is_valid():
-            # Provide a valid project_id here
             project_id = request.data.get('project_id')
             if project_id:
-                project = Project.objects.get(id=project_id)
-                serializer.save(project=project)  # Fix the typo here
+                project = get_object_or_404(Project, id=project_id)
+                serializer.save(project=project)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 return Response({"error": "project_id is required"}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, id=None):
+        rfi = get_object_or_404(RFI, id=id)
+        serializer = RFISerializer(rfi, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id=None):
+        rfi = get_object_or_404(RFI, id=id)
+        rfi.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class RFILogViews(APIView):
+    def get(self, request, id=None):
+        if id:
+            rfi_log = get_object_or_404(RFI_Log, id=id)
+            serializer = RFI_LogSerializer(rfi_log)
+        else:
+            rfi_log = RFI_Log.objects.all()
+            serializer = RFI_LogSerializer(rfi_log, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = RFI_LogSerializer(data=request.data)
+        if serializer.is_valid():
+            rfi_id = request.data.get('rfi_id')
+            if rfi_id:
+                rfi = get_object_or_404(RFI, id=rfi_id)
+                serializer.save(rfi=rfi)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response({"error": "rfi_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, id=None):
+        rfi_log = get_object_or_404(RFI_Log, id=id)
+        serializer = RFI_LogSerializer(rfi_log, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id=None):
+        rfi_log = get_object_or_404(RFI_Log, id=id)
+        rfi_log.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class PCOViews(APIView):
     def get(self, request, id=None, format=None):

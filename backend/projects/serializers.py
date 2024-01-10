@@ -4,7 +4,7 @@ from rest_framework import serializers
 from .models import( Project,GC_aen, Contract,  Insurance, Bond, 
                     Submittals, ShopDrawing,Schedule_of_Value, 
                     Safity, Schedule, Sub_Contractors, LaborRate, HDS_system,
-                    Buget,Project_detail,Delay_Notice,RFI,PCO)
+                    Buget,Project_detail,Delay_Notice,RFI,PCO,RFI_Log)
 
 from Estimating.models import Proposal,Spec_detail,GC_detail
 from Estimating.serializers import ProposalSerializer,SpecificationDetailSerializer,GC_infoSerializers,DMS_Dertory
@@ -538,6 +538,7 @@ class ProjectDetailSerializer(serializers.ModelSerializer):
 
 
 
+
 class RFISerializer(serializers.ModelSerializer):
     
     project_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Project.objects.all(), source='project', required=False)
@@ -548,12 +549,31 @@ class RFISerializer(serializers.ModelSerializer):
 
 
 
+
+
+
+class RFI_LogSerializer(serializers.ModelSerializer):
+    rfi_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=RFI.objects.all(), source='rfi', required=False)
+    rfi=RFISerializer(read_only=True)
+
+    class Meta:
+        model=RFI_Log
+        fields=['id','rfi_id','rfi','gc_rfi_num','date_close','status','dscrptn','cost_schdl']
+
+
+
+
+
 class PCOSerializer(serializers.ModelSerializer):
     project_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Project.objects.all(), source='project', required=False)
     project=ProjectSerializer(read_only=True)
     class Meta:
         model = PCO
         fields=['id','date','attn','company','email','addrs','zip_city','pco_num','project_id','project','dcrsbsn']
+
+
+
+
 
 class Delay_NoticeSerializer(serializers.ModelSerializer):
     

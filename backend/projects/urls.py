@@ -14,5 +14,9 @@ urlpatterns = [
     
     path('pco/',views.PCOViews.as_view(),name='PCO'),
     path('pco/<int:id>/',views.PCOViews.as_view(),name='PCO'),
+    
+    path('rfi_log/',views.RFILogViews.as_view(),name='RFI_log'),
+
+    path('rfi_log/<int:id>/',views.RFILogViews.as_view(),name='RFI_log'),
 
 ]

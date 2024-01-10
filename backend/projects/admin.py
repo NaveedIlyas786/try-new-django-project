@@ -3,7 +3,7 @@ from .models import Project_detail,Project
 from .models import (
     Project, Contract,  Insurance, Bond, Submittals, 
     ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, 
-    HDS_system,  Buget,Project_detail,RFI,Delay_Notice,PCO,Schedule_of_Value,GC_aen
+    HDS_system,  Buget,Project_detail,RFI,RFI_Log,Delay_Notice,PCO,Schedule_of_Value,GC_aen
 )
 from Estimating.models import Spec_detail
 
@@ -110,7 +110,8 @@ class ProjectDetailAdmin(admin.ModelAdmin):
 class RFIAdmin(admin.ModelAdmin):
     list_display=('id','project','rfi_num','date','drwng_rfrnc','detl_num','spc_rfrnc','rspns_rqrd','qustn','bool1','bool2','bool3','rply_by','rspns','name_log','title','date2')
 
-
+class RFi_LogAdmin(admin.ModelAdmin):
+    list_display=('id','rfi','gc_rfi_num','date_close','status','dscrptn','cost_schdl')
 class PCOAdmin(admin.ModelAdmin):
     list_display=('id','date','attn','company','email','zip_city','addrs','pco_num','project','dcrsbsn')
 
@@ -142,4 +143,5 @@ admin.site.register(HDS_system)
 admin.site.register(Buget)
 admin.site.register(Delay_Notice,Delay_NoticeAdmin)
 admin.site.register(RFI,RFIAdmin)
+admin.site.register(RFI_Log,RFi_LogAdmin)
 admin.site.register(PCO,PCOAdmin)

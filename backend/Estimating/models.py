@@ -115,7 +115,7 @@ class Estimating(models.Model):
        DMS_Dertory,
         verbose_name="Estimator", related_name='estimations_as_estimator',
         limit_choices_to=models.Q(job_title__name='Estimator')|
-        models.Q(job_title__name='Estimating Manager'),
+        models.Q(job_title__name='Estimating Manager')| models.Q(job_title__name='Field Management')|models.Q(job_title__name='Owner'),
         on_delete=models.SET_NULL, null=True , blank=True)
     # bidder = models.CharField(verbose_name="Bidder Name",max_length=1500, null=True,blank=True)
     # bidder_detail=models.CharField(verbose_name="Bidder Detail",max_length=5000,null=True,blank=True)
@@ -282,7 +282,7 @@ class ProposalService(models.Model):
 
 
 class Addendum(models.Model):
-    proposal=models.ForeignKey(Proposal, on_delete=models.CASCADE,related_name='Addendums')
+    proposal=models.ForeignKey(Proposal, on_delete=models.CASCADE,related_name='Addendums',null=True,blank=True)
     date = models.DateField(verbose_name="Addendum Date(YYYY-MM-DD)",blank=False,null=True)
     addendum_Number=models.IntegerField(verbose_name="Addendum Number")
     def __str__(self):
@@ -293,7 +293,7 @@ class Addendum(models.Model):
 
 
 class Specification(models.Model):
-    proposal=models.ForeignKey(Proposal, on_delete=models.CASCADE,related_name='spcifc')
+    proposal=models.ForeignKey(Proposal, on_delete=models.CASCADE,related_name='spcifc',null=True,blank=True)
     specific_name=models.CharField(verbose_name="Scope of Work Name", max_length=250)
     budget=models.FloatField(verbose_name="Scope of Work Price")
     def __str__(self) -> str:
@@ -304,7 +304,7 @@ class Specification(models.Model):
 
 
 class Spec_detail(models.Model):
-    sefic=models.ForeignKey(Specification, verbose_name="Specification", on_delete=models.CASCADE,related_name='sefic')
+    sefic=models.ForeignKey(Specification, verbose_name="Specification", on_delete=models.CASCADE,related_name='sefic',null=True,blank=True)
     number=models.CharField(verbose_name="Add Number",max_length=250)
     name=models.CharField(verbose_name="Name", max_length=250)
     def __str__(self) :
@@ -316,7 +316,7 @@ class Spec_detail(models.Model):
 
 class Qualification(models.Model):
     
-    proposal=models.ForeignKey(Proposal, on_delete=models.CASCADE,related_name='qualification')
+    proposal=models.ForeignKey(Proposal, on_delete=models.CASCADE,related_name='qualification',null=True,blank=True)
     detail=models.CharField(verbose_name="Add Qualification", max_length=255)
     def __str__(self):
         return self.detail

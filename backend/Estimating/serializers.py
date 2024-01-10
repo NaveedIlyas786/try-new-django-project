@@ -241,7 +241,7 @@ class SpecificationDetailSerializer(serializers.ModelSerializer):
 
 
 class SpecificationSerializer(serializers.ModelSerializer):
-    sefic = SpecificationDetailSerializer(many=True, required=False)
+    sefic = SpecificationDetailSerializer(many=True,read_only=True, required=False)
 
     class Meta:
         model = Specification

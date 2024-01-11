@@ -142,7 +142,8 @@ class EstimatingSerializer(serializers.ModelSerializer):
     estimator = DMS_DertorySezializers(read_only=True)
     estimator_id = serializers.PrimaryKeyRelatedField(
     write_only=True,
-    queryset=DMS_Dertory.objects.filter(Q(job_title__name='Estimator') | Q(job_title__name='Estimating Manager')),
+    queryset=DMS_Dertory.objects.filter(Q(job_title__name='Estimator') | Q(job_title__name='Estimating Manager')
+                                        |Q(job_title__name='Field Management')|Q(job_title__name='Owner')),
     source='estimator',
     required=False,
     allow_null=True

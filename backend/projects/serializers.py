@@ -558,7 +558,7 @@ class RFI_LogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model=RFI_Log
-        fields=['id','rfi_id','rfi','gc_rfi_num','date_close','status','dscrptn','cost_schdl']
+        fields=['id','rfi_id','rfi','gc_rfi_num','date_close','status','dscrptn','cost_schdl','received_date']
 
 
 
@@ -581,15 +581,15 @@ class Delay_NoticeSerializer(serializers.ModelSerializer):
     project=ProjectSerializer(read_only=True)
     # gnrl_cntrctr_id=serializers.PrimaryKeyRelatedField(write_only=True,queryset=GC_detail.objects.all(),source='gnrl_cntrctr',required=False)
     # gnrl_cntrctr=GC_infoSerializers(read_only=True)
-    if_yes_rfi_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=RFI.objects.all(), source='rfi',required=False)
-    if_yes_rfi=RFISerializer(read_only=True)
+    rfi_log_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=RFI_Log.objects.all(), source='rfi_log',required=False)
+    rfi_log=RFI_LogSerializer(read_only=True)
     
-    pco_id=serializers.PrimaryKeyRelatedField(write_only=True,queryset=PCO.objects.all(),source='pco',required=False)
-    pco=PCOSerializer(read_only=True)
+    # pco_id=serializers.PrimaryKeyRelatedField(write_only=True,queryset=PCO.objects.all(),source='pco',required=False)
+    # pco=PCOSerializer(read_only=True)
     
     
 
     
     class Meta:
         model=Delay_Notice
-        fields=['id','project_id','delay_num','floor','area','schdul_num','date','Asocatd_rfi','if_yes_rfi_id','if_yes_rfi','dscrptn_impct','dscrptn_task','comnt','preprd_by','project','pco_id','pco']
+        fields=['id','project_id','delay_num','floor','area','schdul_num','date','rfi_log_id','rfi_log','dscrptn_impct','dscrptn_task','comnt','preprd_by','project']

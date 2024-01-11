@@ -111,15 +111,15 @@ class RFIAdmin(admin.ModelAdmin):
     list_display=('id','project','rfi_num','date','drwng_rfrnc','detl_num','spc_rfrnc','rspns_rqrd','qustn','bool1','bool2','bool3','rply_by','rspns','name_log','title','date2')
 
 class RFi_LogAdmin(admin.ModelAdmin):
-    list_display=('id','rfi','gc_rfi_num','date_close','status','dscrptn','cost_schdl')
+    list_display=('id','rfi','gc_rfi_num','date_close','status','dscrptn','cost_schdl','received_date')
 class PCOAdmin(admin.ModelAdmin):
     list_display=('id','date','attn','company','email','zip_city','addrs','pco_num','project','dcrsbsn')
 
 
 
 class Delay_NoticeAdmin(admin.ModelAdmin):
-    list_display=('id','delay_num','project','floor','area','schdul_num','date','Asocatd_rfi',
-                  'dscrptn_impct','dscrptn_task','comnt','preprd_by','if_yes_rfi')
+    list_display=('id','delay_num','project','floor','area','schdul_num','date',
+                  'dscrptn_impct','dscrptn_task','comnt','preprd_by','rfi_log')
     
 
 

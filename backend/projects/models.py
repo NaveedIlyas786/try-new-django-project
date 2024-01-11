@@ -552,7 +552,7 @@ class RFI(models.Model):
 
 class RFI_Log(models.Model):
     rfi=models.ForeignKey(RFI, verbose_name="Select RFI", on_delete=models.CASCADE,null=True,blank=True)
-    gc_rfi_num=models.IntegerField(verbose_name="GC RFI#",null=True,blank=True)
+    gc_rfi_num=models.CharField(verbose_name="GC RFI#",null=True,blank=True,max_length=50)
     date_close=models.DateField(verbose_name="Date close", auto_now=False, auto_now_add=False,null=True,blank=True)
     status=models.CharField(verbose_name="Status", max_length=50,choices=[
         ('Open','Open'),('Close','Close'),('Void','Void')
@@ -561,6 +561,7 @@ class RFI_Log(models.Model):
     cost_schdl=models.CharField(verbose_name="Cost or Schedule", max_length=50,choices=[
         ('Cost','Cost'),('Schedule','Schedule'),('Cost & Schedule','Cost & Schedule'),('None','None')
         ],default='None',null=True,blank=True)
+    received_date=models.DateField(verbose_name="Received Date", auto_now=False, auto_now_add=False,null=True,blank=True)
     
     
     
@@ -581,17 +582,16 @@ class PCO(models.Model):
 
 class  Delay_Notice(models.Model):
     project=models.ForeignKey(Project, verbose_name="slect project", on_delete=models.CASCADE , blank=True,null=True)
-    delay_num=models.IntegerField(verbose_name="Delay Number #",blank=True)
+    delay_num=models.CharField(verbose_name="Delay Number #",blank=True,null=True,max_length=50)
     floor=models.CharField(verbose_name="Floor", max_length=500,null=True,blank=True)
     area=models.CharField(verbose_name="area",max_length=500,null=True,blank=True)
     schdul_num=models.IntegerField(verbose_name="Schedule ID #",null=True,blank=True)
 
     date=models.DateField(verbose_name="date", auto_now=False, auto_now_add=False,null=True,blank=True)
-    Asocatd_rfi=models.BooleanField(verbose_name="Assoicated RFI",blank=True,null=True)
+    # Asocatd_rfi=models.BooleanField(verbose_name="Assoicated RFI",blank=True,null=True)
     # if_yes=models.IntegerField(verbose_name="If Yes #",null=True,blank=True)
-    if_yes_rfi=models.ForeignKey(RFI, verbose_name="select the RFI", on_delete=models.CASCADE,null=True,blank=True)
-    pco=models.ForeignKey(PCO, verbose_name="PCO", on_delete=models.CASCADE,null=True,blank=True)
-   
+    rfi_log=models.ForeignKey(RFI_Log, verbose_name="RFI log", on_delete=models.CASCADE,null=True,blank=True)
+    # pco=models.ForeignKey(PCO, verbose_name="PCO", on_delete=models.CASCADE,null=True,blank=True)
 
     dscrptn_impct=models.CharField(verbose_name="Detailed Description of Impact Trade:", max_length=5000 , blank=True, null=True)
     dscrptn_task=models.CharField(verbose_name="Schedule ID # and description of tasks that follow that will be affected:", max_length=5000 , blank=True, null=True)

@@ -251,6 +251,49 @@ class RFILogViews(APIView):
         rfi_log.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+class Delay_NoticeViews(APIView):
+
+    def get(self, request,id=None):
+        if id:
+            try:
+                delay_notice=Delay_Notice.objects.get(id=id)
+            except:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+            serialize=Delay_NoticeSerializer(delay_notice)
+        else:
+            delay_notice=Delay_Notice.objects.all()
+            serialize=Delay_NoticeSerializer(delay_notice,many=True)
+            
+        return Response(serialize.data)
+    
+    
+    
+    def post(self,request):
+        serialize=Delay_NoticeSerializer(data=request.data)
+        if serialize.is_valid():
+            serialize.save()
+            return Response(serialize.data,status=status.HTTP_201_CREATED)
+        return Response(serialize.data,status=status.HTTP_400_BAD_REQUEST)
+    
+    
+    
+    
+    def put(self,request,id=None):
+        dly_ntc=get_object_or_404(Delay_Notice,id=id)
+        serializer=Delay_NoticeSerializer(dly_ntc,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+    
+    
+    def delete(self,request,id=None):
+        dly_ntc=get_object_or_404(Delay_Notice,id=id)
+        dly_ntc.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
 
 class PCOViews(APIView):
     def get(self, request, id=None, format=None):
@@ -282,25 +325,3 @@ class PCOViews(APIView):
         
 
 
-
-class Delay_NoticeViews(APIView):
-    def get(self, request,id=None):
-        if id:
-            try:
-                delay_notice=Delay_Notice.objects.get(id=id)
-            except:
-                return Response(status=status.HTTP_404_NOT_FOUND)
-            serialize=Delay_NoticeSerializer(delay_notice)
-        else:
-            delay_notice=Delay_Notice.objects.all()
-            serialize=Delay_NoticeSerializer(delay_notice,many=True)
-            
-        return Response(serialize.data)
-    
-    def post(self,request):
-        serialize=Delay_NoticeSerializer(data=request.data)
-        if serialize.is_valid():
-            serialize.save()
-            return Response(serialize.data,status=status.HTTP_201_CREATED)
-        return Response(serialize.data,status=status.HTTP_400_BAD_REQUEST)
-    

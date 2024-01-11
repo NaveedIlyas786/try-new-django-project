@@ -45,6 +45,10 @@ class DMS_DertorySezializers(serializers.ModelSerializer):
         
         representation['company'] = instance.company.Cmpny_Name if instance.company else None
         representation['department'] = instance.department.dprtmnt_name if instance.department else None
+        
+        # Add full_name field
+        full_name = f"{instance.first_name} {instance.last_name}".strip()
+        representation['full_name'] = full_name if full_name.strip() else None
 
         return representation
 

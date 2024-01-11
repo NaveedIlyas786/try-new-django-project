@@ -4,7 +4,7 @@ from rest_framework import serializers
 from .models import( Project, Contract,  Insurance, Bond, 
                     Submittals, ShopDrawing,Schedule_of_Value, 
                     Safity, Schedule, Sub_Contractors, LaborRate, HDS_system,
-                    Buget,Project_detail,Delay_Notice,RFI,PCO,RFI_Log)
+                    Buget,Project_detail,Delay_Notice,RFI,PCO,RFI_Log,Delay_Log)
 
 from Estimating.models import Proposal,Spec_detail,GC_detail
 from Estimating.serializers import ProposalSerializer,SpecificationDetailSerializer,GC_infoSerializers,DMS_Dertory
@@ -566,17 +566,22 @@ class Delay_NoticeSerializer(serializers.ModelSerializer):
     
     project_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Project.objects.all(), source='project', required=False)
     project=ProjectSerializer(read_only=True)
-    # gnrl_cntrctr_id=serializers.PrimaryKeyRelatedField(write_only=True,queryset=GC_detail.objects.all(),source='gnrl_cntrctr',required=False)
-    # gnrl_cntrctr=GC_infoSerializers(read_only=True)
     rfi_log_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=RFI_Log.objects.all(), source='rfi_log',required=False)
     rfi_log=RFI_LogSerializer(read_only=True)
-    
-    # pco_id=serializers.PrimaryKeyRelatedField(write_only=True,queryset=PCO.objects.all(),source='pco',required=False)
-    # pco=PCOSerializer(read_only=True)
-    
-    
+   
 
     
     class Meta:
         model=Delay_Notice
         fields=['id','project_id','delay_num','floor','area','schdul_num','date','rfi_log_id','rfi_log','dscrptn_impct','dscrptn_task','comnt','preprd_by','project']
+        
+        
+        
+class Delay_LogSerializer(serializers.ModelSerializer):
+    
+    dly_ntc_id=serializers.PrimaryKeyRelatedField(write_only=True,queryset=Delay_Notice.objects.all(),source='dly_ntc',required=False)
+    dly_ntc=Delay_NoticeSerializer(read_only=True)
+    class Meta:
+        model=Delay_Log
+        fields=['id','dly_ntc_id','dly_ntc','date','typ','dely_log_num','status','dly_rslov','fnl_impct','totl_impct']
+        

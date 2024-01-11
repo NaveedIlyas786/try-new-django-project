@@ -165,7 +165,17 @@ class RFIViews(APIView):
             project_id = request.data.get('project_id')
             if project_id:
                 project = get_object_or_404(Project, id=project_id)
-                serializer.save(project=project)
+                rfi_instance = serializer.save(project=project)
+
+                # Create and save RFI_Log instance
+                rfi_log_data = {
+                    'rfi_id': rfi_instance.id,
+                    # Set other fields as needed, or use default values
+                }
+                rfi_log_serializer = RFI_LogSerializer(data=rfi_log_data)
+                if rfi_log_serializer.is_valid():
+                    rfi_log_serializer.save()
+
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 return Response({"error": "project_id is required"}, status=status.HTTP_400_BAD_REQUEST)

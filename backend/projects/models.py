@@ -584,10 +584,17 @@ class  Delay_Notice(models.Model):
     comnt=models.CharField(verbose_name="Additional Comments:", max_length=5000,null=True,blank=True)
     preprd_by=models.CharField(verbose_name="Prepared by:", max_length=500,null=True,blank=True)
     
-# class Delay_Log(models.Model):
-#     project=models.ForeignKey(Project, verbose_name="Select Project", on_delete=models.CASCADE,null=True,blank=True)
-#     dely_log_num=models.CharField(verbose_name="Delay Number",null=True,blank=True, max_length=50)
-#     status=models.CharField(verbose_name="Select status", max_length=50,choices=[
-#         ('Open','Open'),('Close','Close'),
-#         ],default='Close', null=True, blank=True)
-#     pass
+class Delay_Log(models.Model):
+    dly_ntc=models.ForeignKey(Delay_Notice, verbose_name="Select Delay Notice", on_delete=models.CASCADE,null=True,blank=True)
+    date=models.DateField(verbose_name="date", auto_now=False, auto_now_add=False,null=True,blank=True)
+    typ=models.CharField(verbose_name="Select status", max_length=50,choices=[
+        ('Related PCO','Related PCO'),('Related RFI','Related RFI'),('Other Traders','Other Traders'),
+        ],default='Other Traders', null=True, blank=True)
+    dely_log_num=models.CharField(verbose_name="Delay Number",null=True,blank=True, max_length=50)
+    status=models.CharField(verbose_name="Select status", max_length=50,choices=[
+        ('Open','Open'),('Close','Close'),
+        ],default='Close', null=True, blank=True)
+    dly_rslov=models.DateField(verbose_name="Delay Resolve date", auto_now=False, auto_now_add=False,null=True,blank=True)
+    fnl_impct=models.IntegerField(verbose_name="Final Impact (Working Days)",null=True,blank=True)
+    totl_impct=models.IntegerField(verbose_name="Total Project Impact(Working Days)",null=True,blank=True)
+    

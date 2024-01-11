@@ -3,7 +3,7 @@ from .models import Project_detail,Project
 from .models import (
     Project, Contract,  Insurance, Bond, Submittals, 
     ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, 
-    HDS_system,  Buget,Project_detail,RFI,RFI_Log,Delay_Notice,PCO,Schedule_of_Value
+    HDS_system,  Buget,Project_detail,RFI,RFI_Log,Delay_Notice,Delay_Log,PCO,Schedule_of_Value
 )
 from Estimating.models import Spec_detail
 
@@ -103,12 +103,15 @@ class ProjectDetailAdmin(admin.ModelAdmin):
     list_display = ('id','prnt_id','drctry_Name','file_type','file_name','prjct_id')
 
 
+class RFI_LogInline(admin.StackedInline):
+    model = RFI_Log
+    extra = 1  # Number of empty forms to display
 
 class RFIAdmin(admin.ModelAdmin):
     list_display=('id','project','rfi_num','date','drwng_rfrnc','detl_num','spc_rfrnc','rspns_rqrd','qustn','bool1','bool2','bool3','rply_by','rspns','name_log','title','date2')
+    inlines = [RFI_LogInline] 
 
-class RFi_LogAdmin(admin.ModelAdmin):
-    list_display=('id','rfi','gc_rfi_num','date_close','status','dscrptn','cost_schdl','received_date')
+
 class PCOAdmin(admin.ModelAdmin):
     list_display=('id','date','attn','company','email','zip_city','addrs','pco_num','project','dcrsbsn')
 
@@ -118,17 +121,16 @@ class Delay_NoticeAdmin(admin.ModelAdmin):
     list_display=('id','delay_num','project','floor','area','schdul_num','date',
                   'dscrptn_impct','dscrptn_task','comnt','preprd_by','rfi_log')
     
-
-
+class Delay_LogInline(admin.StackedInline):
+    model = Delay_Notice
+    extra = 1  
 
 # Register the models with their respective admin views
 admin.site.register(Project_detail, ProjectDetailAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Contract)
-# admin.site.register(Schedule_of_Value)
 admin.site.register(Insurance)
 admin.site.register(Bond)
-# admin.site.register(Zlien)
 admin.site.register(Submittals)
 admin.site.register(ShopDrawing)
 admin.site.register(Safity)
@@ -139,5 +141,6 @@ admin.site.register(HDS_system)
 admin.site.register(Buget)
 admin.site.register(Delay_Notice,Delay_NoticeAdmin)
 admin.site.register(RFI,RFIAdmin)
-admin.site.register(RFI_Log,RFi_LogAdmin)
+admin.site.register(RFI_Log)
 admin.site.register(PCO,PCOAdmin)
+admin.site.register(Delay_Log)

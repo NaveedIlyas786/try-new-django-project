@@ -3,7 +3,7 @@ from .models import Project_detail,Project
 from .models import (
     Project, Contract,  Insurance, Bond, Submittals, 
     ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, 
-    HDS_system,  Buget,Project_detail,RFI,RFI_Log,Delay_Notice,PCO,Schedule_of_Value,GC_aen
+    HDS_system,  Buget,Project_detail,RFI,RFI_Log,Delay_Notice,PCO,Schedule_of_Value
 )
 from Estimating.models import Spec_detail
 
@@ -81,19 +81,16 @@ class BugetInline(admin.StackedInline):
     model = Buget
     extra = 1
 
-class GC_attenInline(admin.StackedInline):
-    model=GC_aen
-    extra=1
 
 class ProjectAdmin(admin.ModelAdmin):
     inlines = [
         ContractInline,  InsuranceInline, BondInline,
         ScheduleInline, SubContractorsInline, LaborRateInline,
-        BugetInline,HDSSystemInline,SafityInline,ShopDrawingInline,SubmittalsInline,ScheduleOfValueInline,GC_attenInline
+        BugetInline,HDSSystemInline,SafityInline,ShopDrawingInline,SubmittalsInline,ScheduleOfValueInline
     ]
 
     
-    list_display = ('id','status', 'job_num', 'start_date', 'proposal','prjct_engnr','bim_oprtr','Forman','prjct_mngr','start_date','general_superintendent',
+    list_display = ('id','status', 'job_num', 'start_date', 'proposal','prjct_engnr','bim_oprtr','Forman','prjct_mngr','start_date','gc_attn','attn_email','attn_phone','general_superintendent',
                     'project_address','addendums','contacts','gc','gc_address','drywell','finish','wall_type','ro_door','ro_window','substitution')  
     search_fields = ['status', 'job_num'] 
 
@@ -128,7 +125,6 @@ class Delay_NoticeAdmin(admin.ModelAdmin):
 admin.site.register(Project_detail, ProjectDetailAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Contract)
-admin.site.register(GC_aen)
 # admin.site.register(Schedule_of_Value)
 admin.site.register(Insurance)
 admin.site.register(Bond)

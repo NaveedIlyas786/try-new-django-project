@@ -14,11 +14,11 @@ from rest_framework.views import APIView
 
 
 from rest_framework.decorators import api_view
-from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget,Delay_Notice,RFI,PCO,Schedule_of_Value,GC_aen,RFI_Log
+from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget,Delay_Notice,RFI,PCO,Schedule_of_Value,RFI_Log
 from .serializers import (ProjectSerializer, ContractSerializer,  InsuranceSerializer, BondSerializer,
                            SubmittalsSerializer, ShopDrawingSerializer, SafitySerializer, ScheduleSerializer,
                           SubContractorsSerializer, LaborRateSerializer,HDSSystemSerializer,
-                          BugetSerializer,Delay_NoticeSerializer,RFISerializer,PCOSerializer,ScheduleOfValueSerializer,GC_attenSerializer,RFI_LogSerializer)
+                          BugetSerializer,Delay_NoticeSerializer,RFISerializer,PCOSerializer,ScheduleOfValueSerializer,RFI_LogSerializer)
 
 
 
@@ -52,19 +52,14 @@ def create_project(request, id=None):
             ('schedule_of_value', Schedule_of_Value, ScheduleOfValueSerializer),
             ('insurance', Insurance, InsuranceSerializer),
             ('bond', Bond, BondSerializer),
-            # ('zlien', Zlien, ZlienSerializer),
             ('submittals', Submittals, SubmittalsSerializer),
             ('shop_drawing', ShopDrawing, ShopDrawingSerializer),
             ('safity', Safity, SafitySerializer),
             ('schedule', Schedule, ScheduleSerializer),
             ('sub_contractors', Sub_Contractors, SubContractorsSerializer),
             ('labor_rate', LaborRate, LaborRateSerializer),
-            # ('billing', Billing, BillingSerializer),
-            # ('sov', Sov, SovSerializer),
             ('hds_system', HDS_system, HDSSystemSerializer),
-            # ('on_build', OnBuild, OnBuildSerializer),
             ('buget', Buget, BugetSerializer),
-            ('atten',GC_aen,GC_attenSerializer)
         ]
 
 
@@ -81,55 +76,29 @@ def create_project(request, id=None):
             serializer = ProjectSerializer(projects, many=True)
         
         return Response(serializer.data, status=status.HTTP_200_OK)
-    if request.method == 'POST':
 
+    if request.method == 'POST':
         data = request.data
         if isinstance(data, list):
             data = data[0]
+
+        # Handle Project data
         project_serializer = ProjectSerializer(data=data)
         if not project_serializer.is_valid():
             return Response(project_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        project = project_serializer.save()
 
-        related_data_models = [
-            ('contract', Contract, ContractSerializer),
-            ('schedule_of_value', Schedule_of_Value, ScheduleOfValueSerializer),
-            ('insurance', Insurance, InsuranceSerializer),
-            ('bond', Bond, BondSerializer),
-            # ('zlien', Zlien, ZlienSerializer),
-            ('submittals', Submittals, SubmittalsSerializer),
-            ('shop_drawing', ShopDrawing, ShopDrawingSerializer),
-            ('safity', Safity, SafitySerializer),
-            ('schedule', Schedule, ScheduleSerializer),
-            ('sub_contractors', Sub_Contractors, SubContractorsSerializer),
-            ('labor_rate', LaborRate, LaborRateSerializer),
-            # ('billing', Billing, BillingSerializer),
-            # ('sov', Sov, SovSerializer),
-            ('hds_system', HDS_system, HDSSystemSerializer),
-            # ('on_build', OnBuild, OnBuildSerializer),
-            ('buget', Buget, BugetSerializer),
-            ('atten',GC_aen,GC_attenSerializer),
-        ]
-        related_serializers = []
+        # Handle related models
         for key, model, serializer_class in related_data_models:
             related_data_list = data.get(key)
             if related_data_list:
                 for related_data in related_data_list:
-                    serializer = serializer_class(data=related_data)
-                    if not serializer.is_valid():
-                        return Response({key: serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-                    related_serializers.append(serializer)
-            else:
-                return Response({key: "This field is required"}, status=status.HTTP_400_BAD_REQUEST)
+                    related_serializer = serializer_class(data=related_data)
+                    if not related_serializer.is_valid():
+                        return Response(related_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                    related_serializer.save(project=project)
 
-        project = project_serializer.save()
-
-        # Now save all related data with the project id
-        for serializer in related_serializers:
-            serializer.validated_data['project'] = project
-            serializer.save()
         return Response({"message": "Project and related data created successfully"}, status=status.HTTP_201_CREATED)
-
-
 
     if request.method == 'PUT':
         data = request.data

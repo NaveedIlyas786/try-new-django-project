@@ -87,7 +87,9 @@ class Project(models.Model):
     gc_address=models.CharField(verbose_name="GC Address", max_length=5000, null=True, blank=True)
     
     # gc_attn=models.ForeignKey(GC_attn, verbose_name="GC Atten", on_delete=models.CASCADE,null=True,blank=True)
-    
+    gc_attn = models.CharField(verbose_name="GC attn", max_length=100,null=True,blank=True)
+    attn_email=models.EmailField(verbose_name="Add GC Email", max_length=254, null=True, blank=True)
+    attn_phone=models.CharField(verbose_name="GC Phone number", max_length=50, null=True, blank=True)
     
 
 
@@ -383,12 +385,10 @@ class Project(models.Model):
 
 
 
-class GC_aen(models.Model):
+# class GC_aen(models.Model):
     
-    prjct=models.ForeignKey(Project, verbose_name="Add Project", on_delete=models.CASCADE)
-    gc_attn = models.CharField(verbose_name="GC attn", max_length=100,null=True,blank=True)
-    attn_email=models.EmailField(verbose_name="Add GC Email", max_length=254, null=True, blank=True)
-    attn_phone=models.CharField(verbose_name="GC Phone number", max_length=50, null=True, blank=True)
+#     prjct=models.ForeignKey(Project, verbose_name="Add Project", on_delete=models.CASCADE,null=True,blank=True)
+
     
     
 
@@ -525,10 +525,6 @@ class RFI(models.Model):
     project=models.ForeignKey(Project, verbose_name="Select", on_delete=models.CASCADE,null=True,blank=True)
     rfi_num=models.CharField(verbose_name="RFI #",max_length=50,null=True,blank=True)
     date=models.DateField(verbose_name="Date", auto_now=False, auto_now_add=False,null=True,blank=True)
-    # attn=models.CharField(verbose_name="Attn", max_length=500,null=True,blank=True)
-    # company=models.CharField(verbose_name="Company", max_length=500,null=True,blank=True)
-    # phne=models.CharField(verbose_name="Phone", max_length=50,null=True,blank=True)
-    # email=models.EmailField(verbose_name="Email", max_length=254,null=True,blank=True)
     drwng_rfrnc=models.CharField(verbose_name="Drawing Reference", max_length=500,null=True,blank=True)
     detl_num=models.IntegerField(verbose_name="Detail No",null=True,blank=True)
     spc_rfrnc=models.CharField(verbose_name="Spec Reference", max_length=500,null=True,blank=True)
@@ -537,17 +533,12 @@ class RFI(models.Model):
     bool1=models.BooleanField(verbose_name="Other Trades",null=True,blank=True)
     bool2=models.BooleanField(verbose_name="bool2",null=True,blank=True)
     bool3=models.BooleanField(verbose_name="boll3",null=True,blank=True)
-
     rply_by=models.DateField(verbose_name="Date", auto_now=False, auto_now_add=False,null=True,blank=True)
     rspns=models.CharField(verbose_name="Response",max_length=5000,null=True,blank=True)
-    # open_date=models.DateField(verbose_name="date Opened", auto_now=False, auto_now_add=False,null=True,blank=True)
-    # close_date=models.DateField(verbose_name="date Closed", auto_now=False, auto_now_add=False,null=True,blank=True)
     name_log=models.CharField(verbose_name="Name Login", max_length=50,null=True,blank=True)
     title=models.CharField(verbose_name="Title login", max_length=250,null=True,blank=True)
     date2=models.DateField(verbose_name="Date", auto_now=False, auto_now_add=False,null=True,blank=True)
-    
-    # def __str__(self):
-    #     return self.rfi_num
+
     
 
 class RFI_Log(models.Model):
@@ -586,21 +577,17 @@ class  Delay_Notice(models.Model):
     floor=models.CharField(verbose_name="Floor", max_length=500,null=True,blank=True)
     area=models.CharField(verbose_name="area",max_length=500,null=True,blank=True)
     schdul_num=models.IntegerField(verbose_name="Schedule ID #",null=True,blank=True)
-
     date=models.DateField(verbose_name="date", auto_now=False, auto_now_add=False,null=True,blank=True)
-    # Asocatd_rfi=models.BooleanField(verbose_name="Assoicated RFI",blank=True,null=True)
-    # if_yes=models.IntegerField(verbose_name="If Yes #",null=True,blank=True)
     rfi_log=models.ForeignKey(RFI_Log, verbose_name="RFI log", on_delete=models.CASCADE,null=True,blank=True)
-    # pco=models.ForeignKey(PCO, verbose_name="PCO", on_delete=models.CASCADE,null=True,blank=True)
-
     dscrptn_impct=models.CharField(verbose_name="Detailed Description of Impact Trade:", max_length=5000 , blank=True, null=True)
     dscrptn_task=models.CharField(verbose_name="Schedule ID # and description of tasks that follow that will be affected:", max_length=5000 , blank=True, null=True)
-
-    # gnrl_cntrctr=models.ForeignKey(GC_detail,verbose_name="General Contractor", on_delete=models.CASCADE,null=True,blank=True) 
-    # gc_forem=models.CharField(verbose_name="GC Foreman or Supervisor Name:", max_length=500,null=True,blank=True)
     comnt=models.CharField(verbose_name="Additional Comments:", max_length=5000,null=True,blank=True)
     preprd_by=models.CharField(verbose_name="Prepared by:", max_length=500,null=True,blank=True)
     
-    # def __str__(self):
-    #     print(f"Delay_Notice __str__ called for object with id {self.id}")
-    #     return str(self.delay_num) if self.delay_num is not None else 'No Delay Number'
+# class Delay_Log(models.Model):
+#     project=models.ForeignKey(Project, verbose_name="Select Project", on_delete=models.CASCADE,null=True,blank=True)
+#     dely_log_num=models.CharField(verbose_name="Delay Number",null=True,blank=True, max_length=50)
+#     status=models.CharField(verbose_name="Select status", max_length=50,choices=[
+#         ('Open','Open'),('Close','Close'),
+#         ],default='Close', null=True, blank=True)
+#     pass

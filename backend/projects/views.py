@@ -2,6 +2,7 @@
 from rest_framework import generics
 from rest_framework import viewsets
 from yaml import serialize
+from django.db import transaction
 
 from django.shortcuts import get_object_or_404
 
@@ -14,11 +15,11 @@ from rest_framework.views import APIView
 
 
 from rest_framework.decorators import api_view
-from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget,Delay_Notice,RFI,PCO,Schedule_of_Value,RFI_Log
+from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget,Delay_Notice,RFI,PCO,Schedule_of_Value,RFI_Log,Delay_Log
 from .serializers import (ProjectSerializer, ContractSerializer,  InsuranceSerializer, BondSerializer,
                            SubmittalsSerializer, ShopDrawingSerializer, SafitySerializer, ScheduleSerializer,
                           SubContractorsSerializer, LaborRateSerializer,HDSSystemSerializer,
-                          BugetSerializer,Delay_NoticeSerializer,RFISerializer,PCOSerializer,ScheduleOfValueSerializer,RFI_LogSerializer)
+                          BugetSerializer,Delay_NoticeSerializer,RFISerializer,PCOSerializer,ScheduleOfValueSerializer,RFI_LogSerializer,Delay_LogSerializer)
 
 
 
@@ -169,7 +170,7 @@ class RFIViews(APIView):
 
                 # Create and save RFI_Log instance
                 rfi_log_data = {
-                    'rfi_id': rfi_instance.id,
+                    'rfi_id': rfi_instance.id, # type: ignore
                     # Set other fields as needed, or use default values
                 }
                 rfi_log_serializer = RFI_LogSerializer(data=rfi_log_data)
@@ -247,14 +248,23 @@ class Delay_NoticeViews(APIView):
     
     
     
-    def post(self,request):
-        serialize=Delay_NoticeSerializer(data=request.data)
+
+    def post(self, request):
+        serialize = Delay_NoticeSerializer(data=request.data)
         if serialize.is_valid():
-            serialize.save()
-            return Response(serialize.data,status=status.HTTP_201_CREATED)
-        return Response(serialize.data,status=status.HTTP_400_BAD_REQUEST)
-    
-    
+            delay_notice_instance = serialize.save()
+
+            # Create and save Delay_Log instance
+            delay_log_data = {
+                'dly_ntc_id': delay_notice_instance.id, # type: ignore
+                # Set other fields as needed, or use default values
+            }
+            delay_log_serializer = Delay_LogSerializer(data=delay_log_data)
+            if delay_log_serializer.is_valid():
+                delay_log_serializer.save()
+
+            return Response(serialize.data, status=status.HTTP_201_CREATED)
+        return Response(serialize.errors, status=status.HTTP_400_BAD_REQUEST)
     
     
     def put(self,request,id=None):
@@ -270,6 +280,45 @@ class Delay_NoticeViews(APIView):
     def delete(self,request,id=None):
         dly_ntc=get_object_or_404(Delay_Notice,id=id)
         dly_ntc.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+
+
+class Delay_LogViews(APIView):
+
+    def get(self, request,id=None):
+        if id:
+            try:
+                delay_log=Delay_Log.objects.get(id=id)
+            except:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+            serialize=Delay_LogSerializer(delay_log)
+        else:
+            delay_log=Delay_Log.objects.all()
+            serialize=Delay_LogSerializer(delay_log,many=True)
+            
+        return Response(serialize.data)
+    
+    def post(self,request):
+        serialize=Delay_LogSerializer(data=request.data)
+        if serialize.is_valid():
+            serialize.save()
+            return Response(serialize.data,status=status.HTTP_201_CREATED)
+        return Response(serialize.data,status=status.HTTP_400_BAD_REQUEST)
+    
+    
+    def put(self,request,id=None):
+        dly_log=get_object_or_404(Delay_Log,id=id)
+        serializer=Delay_LogSerializer(dly_log,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self,request,id=None):
+        dly_log=get_object_or_404(Delay_Log,id=id)
+        dly_log.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
 

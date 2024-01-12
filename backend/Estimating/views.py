@@ -284,18 +284,27 @@ class EstimatorSummaryView(views.APIView):
 
         year = int(request.query_params.get('year', datetime.now().year))
 
-        estimators = User.objects.filter(roles__name='Estimator')
+        estimators = DMS_Dertory.objects.filter(
+            Q(job_title__name='Estimator') | 
+            Q(job_title__name='Estimating Manager') |
+            Q(job_title__name='Field Management') |
+            Q(job_title__name='Owner')
+        )
+        
         for estimator in estimators:
             estimates = Estimating.objects.filter(
                 estimator=estimator,
                 start_date__year=year  
             )
-
+            # Serialize the estimator to get the full_name
+            serialized_estimator = DMS_DertorySezializers(estimator).data
+            estimator_full_name = serialized_estimator.get('full_name')
+            
             if estimates.count() == 0:
                 continue
             
             estimator_data = calculate_summary(estimates)
-            estimator_data['estimator'] = estimator.full_Name  
+            estimator_data['estimator'] = estimator_full_name 
             
             response_data.append(estimator_data)
 

@@ -720,7 +720,6 @@ def create_proposal(request, proposal_id=None):
     
 
     elif request.method == 'PUT':
-        
         if not proposal_id:
             return Response({"error": "Proposal ID is required for updating"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -737,11 +736,12 @@ def create_proposal(request, proposal_id=None):
             nested_entities = {
                 'services': (ProposalServiceSerializer, ProposalService),
                 'Addendums': (AddendumSerializer, Addendum),
-                'spcifc': (SpecificationSerializer, Specification),
+                'spcifc': (SpecificationSerializer, Specification, Spec_detail),  # Added Spec_detail here
                 'qualification': (QualificationSerializer, Qualification)
             }
 
-            for entity_key, (SerializerClass, ModelClass) in nested_entities.items():
+            for entity_key, value in nested_entities.items():
+                SerializerClass, ModelClass = value[:2]
                 entity_data_list = request.data.get(entity_key, [])
                 for entity_data in entity_data_list:
                     entity_id = entity_data.get('id')
@@ -753,14 +753,36 @@ def create_proposal(request, proposal_id=None):
                             entity_serializer = SerializerClass(entity_instance, data=entity_data, context=context, partial=True)
                         except ModelClass.DoesNotExist:
                             return Response({"error": f"{entity_key[:-1]} not found"}, status=status.HTTP_404_NOT_FOUND)
-                        # entity_serializer = SerializerClass(entity_instance, data=entity_data, partial=True)
                     else:
                         # Create new entity
-                        entity_data['proposal'] = proposal.id # type: ignore
+                        entity_data['proposal'] = proposal.id  # type: ignore
                         entity_serializer = SerializerClass(data=entity_data, context=context)
 
                     if entity_serializer.is_valid():
-                        entity_serializer.save()
+                        saved_instance = entity_serializer.save()
+
+                        # Additional logic for Specification details
+                        if entity_key == 'spcifc' and 'sefic' in entity_data:
+                            SpecDetailClass = value[2]  # Spec_detail class
+                            for detail_data in entity_data['sefic']:
+                                detail_id = detail_data.get('id')
+                                if detail_id:
+                                    # Update existing Spec_detail instance
+                                    try:
+                                        detail_instance = SpecDetailClass.objects.get(id=detail_id, sefic=saved_instance)
+                                        detail_serializer = SpecificationDetailSerializer(detail_instance, data=detail_data, partial=True)
+                                    except SpecDetailClass.DoesNotExist:
+                                        continue
+                                else:
+                                    # Create new Spec_detail instance
+                                    detail_data['sefic'] = saved_instance.id
+                                    detail_serializer = SpecificationDetailSerializer(data=detail_data)
+
+                                if detail_serializer.is_valid():
+                                    detail_serializer.save()
+                                else:
+                                    return Response(detail_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
                     else:
                         return Response(entity_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

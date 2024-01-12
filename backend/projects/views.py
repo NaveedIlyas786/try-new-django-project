@@ -350,6 +350,3 @@ class PCOViews(APIView):
             else:
                 return Response({"error": "project_id is required"}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-
-

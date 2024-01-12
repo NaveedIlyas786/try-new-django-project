@@ -527,6 +527,14 @@ class ProjectDetailSerializer(serializers.ModelSerializer):
 
 
 class RFISerializer(serializers.ModelSerializer):
+    date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+    rspns_rqrd = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+    rply_by = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+    date2 = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
     
     project_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Project.objects.all(), source='project', required=False)
     project=ProjectSerializer(read_only=True)
@@ -540,6 +548,12 @@ class RFISerializer(serializers.ModelSerializer):
 
 
 class RFI_LogSerializer(serializers.ModelSerializer):
+    date_close = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+    received_date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+    
+    
     rfi_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=RFI.objects.all(), source='rfi', required=False)
     rfi=RFISerializer(read_only=True)
 
@@ -552,6 +566,10 @@ class RFI_LogSerializer(serializers.ModelSerializer):
 
 
 class PCOSerializer(serializers.ModelSerializer):
+    date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+    
+    
     project_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Project.objects.all(), source='project', required=False)
     project=ProjectSerializer(read_only=True)
     class Meta:
@@ -563,7 +581,9 @@ class PCOSerializer(serializers.ModelSerializer):
 
 
 class Delay_NoticeSerializer(serializers.ModelSerializer):
-    
+    date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+
     project_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Project.objects.all(), source='project', required=False)
     project=ProjectSerializer(read_only=True)
     rfi_log_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=RFI_Log.objects.all(), source='rfi_log',required=False)
@@ -578,6 +598,8 @@ class Delay_NoticeSerializer(serializers.ModelSerializer):
         
         
 class Delay_LogSerializer(serializers.ModelSerializer):
+    date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
     
     dly_ntc_id=serializers.PrimaryKeyRelatedField(write_only=True,queryset=Delay_Notice.objects.all(),source='dly_ntc',required=False)
     dly_ntc=Delay_NoticeSerializer(read_only=True)

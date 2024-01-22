@@ -538,6 +538,7 @@ class RFI(models.Model):
     name_log=models.CharField(verbose_name="Name Login", max_length=50,null=True,blank=True)
     title=models.CharField(verbose_name="Title login", max_length=250,null=True,blank=True)
     date2=models.DateField(verbose_name="Date", auto_now=False, auto_now_add=False,null=True,blank=True)
+    atchd_pdf=models.BinaryField("Atthd_pdf", null=True, blank=True, editable=True)
 
     
 

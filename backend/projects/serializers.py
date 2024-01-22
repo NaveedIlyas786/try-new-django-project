@@ -8,8 +8,11 @@ from .models import( Project, Contract,  Insurance, Bond,
 
 from Estimating.models import Proposal,Spec_detail,GC_detail
 from Estimating.serializers import ProposalSerializer,SpecificationDetailSerializer,GC_infoSerializers,DMS_Dertory
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 import datetime
+import base64
+
 
 
 
@@ -538,9 +541,24 @@ class RFISerializer(serializers.ModelSerializer):
     
     project_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Project.objects.all(), source='project', required=False)
     project=ProjectSerializer(read_only=True)
+        # Convert binary data to base64 for serialization
+    def to_internal_value(self, data):
+        internal_data = super().to_internal_value(data)
+
+        atchd_pdf = data.get('atchd_pdf')
+        if atchd_pdf and isinstance(atchd_pdf, InMemoryUploadedFile):
+            # Read file content and encode it in base64
+            file_content = atchd_pdf.read()
+            # Keep it as bytes
+            internal_data['atchd_pdf'] = base64.b64encode(file_content)
+        elif atchd_pdf and isinstance(atchd_pdf, str):
+            # If it's a string, assume it's base64-encoded data
+            internal_data['atchd_pdf'] = base64.b64decode(atchd_pdf)
+        return internal_data
+
     class Meta:
-        model=RFI
-        fields=['id','project','project_id','rfi_num','date','drwng_rfrnc','detl_num','spc_rfrnc','rspns_rqrd','qustn','bool1','bool2','bool3','rply_by','rspns','name_log','title','date2']
+        model = RFI
+        fields = ['id', 'project', 'project_id', 'rfi_num', 'date', 'drwng_rfrnc', 'detl_num', 'spc_rfrnc', 'rspns_rqrd', 'qustn', 'bool1', 'bool2', 'bool3', 'rply_by', 'rspns', 'name_log', 'title', 'date2', 'atchd_pdf']
 
 
 

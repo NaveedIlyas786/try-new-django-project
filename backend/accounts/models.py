@@ -26,7 +26,7 @@ class Department(models.Model):
 
 # Custom User Manager
 class UserManager(BaseUserManager):
-    def create_user(self, email,full_Name,phone_number=None,signtr=None, password=None, password2=None,roles=None):
+    def create_user(self, email, full_Name, password=None, phone_number=None, signtr=None, is_active=False, roles=None):
         """
         Creates and saves a User with the given email, full_Name and password.
         """
@@ -40,7 +40,9 @@ class UserManager(BaseUserManager):
             # signtr=signtr
         )
 
-        user.set_password(password)
+        # user.set_password(password)
+        # user.save(using=self._db)
+        user.is_active = is_active
         user.save(using=self._db)
         if roles:
             user.roles.set(roles)
@@ -82,6 +84,7 @@ class User(AbstractBaseUser):
     locaton=models.CharField(verbose_name="Location", max_length=250,null=True,blank=True)
     create_at=models.DateTimeField(auto_now_add=True)
     # signtr = models.BinaryField(null=True, blank=True)
+    signtr = models.BinaryField("Signature", null=True, blank=True, editable=True)
     phone_number=models.IntegerField(null=True,blank=True,unique=True)
     updated_at=models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=False)

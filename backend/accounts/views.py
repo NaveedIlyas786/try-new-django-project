@@ -2,6 +2,8 @@ from django.shortcuts import render
 #123456
 # from rest_framework
 import logging
+from rest_framework.parsers import MultiPartParser, FormParser
+
 from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework import status
@@ -49,10 +51,11 @@ def get_tokens_for_user(user):
 
 #veiw for Registor or Create User 
 class UserRegistrationView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
 
 
     def post(self, request, format=None):
-        serializer = UserRegisterationSerializers(data=request.data)
+        serializer = UserRegisterationSerializers(data=request.data, context={'request': request})
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
             

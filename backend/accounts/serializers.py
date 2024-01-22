@@ -16,24 +16,69 @@ import base64
 
 
 class UserRegisterationSerializers(serializers.ModelSerializer):
-    # this line for password hid (password ****** like this format)
-    password2 = serializers.CharField(
-        style={'input_type': 'password'}, write_only=True)
+    password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
+    signtr = serializers.ImageField(write_only=True, required=False)
     
-    def get_signtr(self, obj):
-        if obj.signtr:
-            # Convert the binary data to base64 encoded string
-            return base64.b64encode(obj.signtr).decode('utf-8')
-        return None
+    
+    # def get_signtr(self, obj):
+    #     if obj.signtr:
+    #         # Convert the binary data to base64 encoded string
+    #         return base64.b64encode(obj.signtr).decode('utf-8')
+    #     return None
 
 
     class Meta:
         model = User
-        fields = ['id','email', 'full_Name', 'password', 'password2','phone_number','roles','is_active','company','department','direct_number','locaton']
+        fields = ['id','email', 'full_Name', 'password', 'password2','phone_number','roles','is_active','company','department','direct_number','locaton','signtr']
         extra_kwargs = {
             'password': {'write_only': True}
         }
 
+
+
+
+
+
+
+# Validating Password and Config Password while registration
+
+
+
+
+
+    def validate(self, data):
+        # Check that the two password entries match
+        if data['password'] != data.pop('password2', None):
+            raise serializers.ValidationError("Passwords must match.")
+        return data
+    
+
+
+    
+    def create(self, validated_data):
+        # Handle the signature image file
+        signtr_file = self.context['request'].FILES.get('signtr') if 'request' in self.context else None
+        if signtr_file:
+            validated_data['signtr'] = signtr_file.read()
+        else:
+            validated_data['signtr'] = None
+        
+        # Remove fields that are not required by the create_user method
+        validated_data.pop('password2', None)
+        signtr_data = validated_data.pop('signtr', None)
+        
+        # Create the user instance
+        user = User.objects.create_user(**validated_data)
+        
+        # Set the password for the user
+        user.set_password(validated_data['password'])
+        
+        # If there is a signature, save it separately after the user is created
+        if signtr_data:
+            user.signtr = signtr_data
+            user.save(update_fields=['signtr'])
+        
+        return user
 
 
     def to_representation(self, instance):
@@ -52,6 +97,10 @@ class UserRegisterationSerializers(serializers.ModelSerializer):
             'direct_number': instance.direct_number,
             # 'locaton': instance.locaton
         }
+        if instance.signtr:
+            representation['signtr'] = base64.b64encode(instance.signtr).decode('utf-8')
+        else:
+            representation['signtr'] = None
 
         # Optionally handle roles, ensuring None values don't cause issues
         if instance.roles.exists():
@@ -60,53 +109,6 @@ class UserRegisterationSerializers(serializers.ModelSerializer):
             representation['roles'] = 'No roles assigned'
 
         return representation
-        # representation['signtr_type'] = str(type(instance.signtr))
-
-
-
-        # if instance.signtr:
-        #     # Ensure the data is bytes before encoding
-        #     if isinstance(instance.signtr, bytes):
-        #         representation['signtr'] = base64.b64encode(instance.signtr).decode('utf-8')
-        #     else:
-        #         # Handle the case where signtr is not bytes
-        #         # You may need to adjust this part based on what signtr actually contains
-        #         representation['signtr'] = instance.signtr
-        # else:
-        #     representation['signtr'] = None
-    
-
-
-
-
-# Validating Password and Config Password while registration
-
-
-
-
-
-    def validate(self, data):
-        password = data.get('password')
-        password2 = data.get('password2')
-        if password != password2:
-            raise serializers.ValidationError(
-                "Password and Confirm Password Dosn't Match")
-        return data
-    
-
-
-    
-    def create(self, validated_data):
-        validated_data.pop('password2', None)  # Remove password2 from the validated data
-        user = User.objects.create_user(**validated_data)
-        user.set_password(validated_data['password'])  # Set the password for the user
-        user.save()
-        return user
-
-    
-
-
-
 
 
 
@@ -130,7 +132,7 @@ class UserLoginserializers(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'full_Name', 'is_active','is_admin', 'create_at','phone_number']
+        fields = ['id', 'email', 'full_Name', 'is_active','is_admin', 'create_at','phone_number','signtr']
 
 
 

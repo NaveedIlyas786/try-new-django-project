@@ -108,9 +108,79 @@ class DMS_DertoryView(APIView):
 
 
 
+# class SendEmailView(APIView):
+
+#     def post(self, request, estimating_id, format=None):
+#         logger = logging.getLogger(__name__)
+
+#         try:
+#             estimating = Estimating.objects.get(id=estimating_id)
+#             if estimating.company is None:
+#                 return Response({'error': 'Company not found'}, status=status.HTTP_400_BAD_REQUEST)
+
+#             email_from = 'mubeenjutt9757@gmail.com'  # Default sender email
+
+#             # Find the active proposal related to this estimating
+#             active_proposal = Proposal.objects.filter(estimating=estimating, is_active=True).first()
+#             if not active_proposal:
+#                 return Response({'error': 'Active proposal not found'}, status=status.HTTP_400_BAD_REQUEST)
+
+#             # Use the plane_date from the active proposal
+#             plane_date = active_proposal.plane_date.strftime('%m-%d-%Y') if active_proposal.plane_date else "N/A"
+#             architect_name=active_proposal.architect_name if active_proposal.architect_name else "N/A"
+#             architect_firm=active_proposal.architect_firm if active_proposal.architect_firm else "N/A"
+
+
+#             # Email message
+#             subject = 'Proposal'
+#             message = f"""
+#             Hello,
+#             <br>
+
+#             Thank you for allowing <strong>{estimating.company.Cmpny_Name}</strong> the opportunity to bid on the <strong>{estimating.prjct_name}</strong>.
+
+#             The plans used to formulate the bid proposal are dated <strong>{plane_date}</strong>, drafted by <strong>{architect_firm}</strong>, and approved by <strong>{architect_name}</strong>.
+#             <br>
+#             Let us know if there are any questions. <br><br>
+
+#             Thank you
+#             """
+
+#             # Fetch all GC emails related to this estimating
+#             gc_emails = [gc.gc_email for gc in GC_detail.objects.filter(estimating=estimating) if gc.gc_email]
+
+#             if not gc_emails:
+#                 return Response({'error': 'No valid GC emails found'}, status=status.HTTP_400_BAD_REQUEST)
+
+#             email = EmailMessage(
+#                 subject,
+#                 message,
+#                 email_from,
+#                 gc_emails,
+#             )
+#             email.content_subtype = 'html'
+
+#             # Attach the PDF if it's in the request
+#             pdf_file = request.FILES.get('pdf')
+#             if isinstance(pdf_file, InMemoryUploadedFile):
+#                 email.attach(pdf_file.name, pdf_file.read(), 'application/pdf')
+
+#             email.send()
+
+#             return Response({'message': 'Email sent successfully!'})
+
+#         except Estimating.DoesNotExist:
+#             logger.error(f'Estimating ID {estimating_id} not found')
+#             return Response({'error': 'Estimating not found'}, status=status.HTTP_404_NOT_FOUND)
+
+#         except Exception as e:
+#             logger.error(str(e))
+#             logger.error(f'Request Data: {request.data}')  # Log the entire request data
+#             return Response({'error': 'Failed to send email', 'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 class SendEmailView(APIView):
 
-    def post(self, request, estimating_id, format=None):
+    def post(self, request, estimating_id, gc_id, format=None):
         logger = logging.getLogger(__name__)
 
         try:
@@ -127,36 +197,35 @@ class SendEmailView(APIView):
 
             # Use the plane_date from the active proposal
             plane_date = active_proposal.plane_date.strftime('%m-%d-%Y') if active_proposal.plane_date else "N/A"
-            architect_name=active_proposal.architect_name if active_proposal.architect_name else "N/A"
-            architect_firm=active_proposal.architect_firm if active_proposal.architect_firm else "N/A"
-
+            architect_name = active_proposal.architect_name if active_proposal.architect_name else "N/A"
+            architect_firm = active_proposal.architect_firm if active_proposal.architect_firm else "N/A"
 
             # Email message
             subject = 'Proposal'
             message = f"""
             Hello,
             <br>
-
             Thank you for allowing <strong>{estimating.company.Cmpny_Name}</strong> the opportunity to bid on the <strong>{estimating.prjct_name}</strong>.
-
             The plans used to formulate the bid proposal are dated <strong>{plane_date}</strong>, drafted by <strong>{architect_firm}</strong>, and approved by <strong>{architect_name}</strong>.
             <br>
             Let us know if there are any questions. <br><br>
-
             Thank you
             """
 
-            # Fetch all GC emails related to this estimating
-            gc_emails = [gc.gc_email for gc in GC_detail.objects.filter(estimating=estimating) if gc.gc_email]
-
-            if not gc_emails:
-                return Response({'error': 'No valid GC emails found'}, status=status.HTTP_400_BAD_REQUEST)
+            # Fetch the specific GC's email using gc_id
+            try:
+                gc_detail = GC_detail.objects.get(estimating=estimating, id=gc_id)
+                gc_email = gc_detail.gc_email
+                if not gc_email:
+                    return Response({'error': 'GC email not found'}, status=status.HTTP_400_BAD_REQUEST)
+            except GC_detail.DoesNotExist:
+                return Response({'error': 'GC not found'}, status=status.HTTP_404_NOT_FOUND)
 
             email = EmailMessage(
                 subject,
                 message,
                 email_from,
-                gc_emails,
+                [gc_email],  # Send email to the specific GC
             )
             email.content_subtype = 'html'
 
@@ -172,13 +241,12 @@ class SendEmailView(APIView):
         except Estimating.DoesNotExist:
             logger.error(f'Estimating ID {estimating_id} not found')
             return Response({'error': 'Estimating not found'}, status=status.HTTP_404_NOT_FOUND)
-
         except Exception as e:
             logger.error(str(e))
             logger.error(f'Request Data: {request.data}')  # Log the entire request data
             return Response({'error': 'Failed to send email', 'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
+        
+        
 class UrlsListViews(APIView):
     
     def get(self, request, id=None):

@@ -21,7 +21,8 @@ urlpatterns = [
     path('proposals/', views.create_proposal, name='proposal-list'),
     path('proposals/<int:proposal_id>/', views.create_proposal, name='update-delete-proposal'),
 
-    path('sendEmail/<int:estimating_id>/',views.SendEmailView.as_view(),name='send-Email'),
+    path('sendEmail/<int:estimating_id>/<int:gc_id>/', views.SendEmailView.as_view(), name='send-Email'),
+
 
     path('Qualification/',views.QualificationView.as_view(),name='Qualification list'),
     path('Qualification/<int:id>/',views.QualificationView.as_view(),name='Qualification detail'),

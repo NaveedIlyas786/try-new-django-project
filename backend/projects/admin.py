@@ -108,7 +108,7 @@ class RFI_LogInline(admin.StackedInline):
     extra = 1  # Number of empty forms to display
 
 class RFIAdmin(admin.ModelAdmin):
-    list_display=('id','project','rfi_num','date','drwng_rfrnc','detl_num','spc_rfrnc','rspns_rqrd','qustn','bool1','bool2','bool3','rply_by','rspns','name_log','title','date2')
+    list_display=('id','project','rfi_num','date','drwng_rfrnc','detl_num','spc_rfrnc','rspns_rqrd','qustn','bool1','bool2','bool3','rply_by','rspns','name_log','title','date2','atchd_pdf')
     inlines = [RFI_LogInline] 
 
 

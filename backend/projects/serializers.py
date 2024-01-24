@@ -623,5 +623,5 @@ class Delay_LogSerializer(serializers.ModelSerializer):
     dly_ntc=Delay_NoticeSerializer(read_only=True)
     class Meta:
         model=Delay_Log
-        fields=['id','dly_ntc_id','dly_ntc','date','typ','dely_log_num','status','dly_rslov','fnl_impct','totl_impct']
+        fields=['id','dly_ntc_id','dly_ntc','date','typ','status','dly_rslov','fnl_impct']
         

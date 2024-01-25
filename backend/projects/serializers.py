@@ -558,7 +558,7 @@ class RFISerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RFI
-        fields = ['id', 'project', 'project_id', 'rfi_num', 'date', 'drwng_rfrnc', 'detl_num', 'spc_rfrnc', 'rspns_rqrd', 'qustn', 'bool1', 'bool2', 'bool3', 'rply_by', 'rspns', 'name_log', 'title', 'date2', 'atchd_pdf']
+        fields = ['id', 'project', 'project_id', 'rfi_num', 'date', 'drwng_rfrnc', 'detl_num', 'spc_rfrnc','dscrptn', 'rspns_rqrd', 'qustn', 'bool1', 'bool2', 'bool3', 'rply_by', 'rspns', 'name_log', 'title', 'date2', 'atchd_pdf']
 
 
 
@@ -577,7 +577,7 @@ class RFI_LogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model=RFI_Log
-        fields=['id','rfi_id','rfi','gc_rfi_num','date_close','status','dscrptn','cost_schdl','received_date']
+        fields=['id','rfi_id','rfi','gc_rfi_num','date_close','status','cost_schdl','received_date']
 
 
 
@@ -592,7 +592,7 @@ class PCOSerializer(serializers.ModelSerializer):
     project=ProjectSerializer(read_only=True)
     class Meta:
         model = PCO
-        fields=['id','date','attn','company','email','addrs','zip_city','pco_num','project_id','project','dcrsbsn']
+        fields=['id','date','zip_city','pco_num','project_id','project','dcrsbsn']
 
 
 
@@ -606,12 +606,24 @@ class Delay_NoticeSerializer(serializers.ModelSerializer):
     project=ProjectSerializer(read_only=True)
     rfi_log_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=RFI_Log.objects.all(), source='rfi_log',required=False)
     rfi_log=RFI_LogSerializer(read_only=True)
-   
+    def to_internal_value(self, data):
+        internal_data = super().to_internal_value(data)
+
+        atchd_pdf = data.get('atchd_pdf')
+        if atchd_pdf and isinstance(atchd_pdf, InMemoryUploadedFile):
+            # Read file content and encode it in base64
+            file_content = atchd_pdf.read()
+            # Keep it as bytes
+            internal_data['atchd_pdf'] = base64.b64encode(file_content)
+        elif atchd_pdf and isinstance(atchd_pdf, str):
+            # If it's a string, assume it's base64-encoded data
+            internal_data['atchd_pdf'] = base64.b64decode(atchd_pdf)
+        return internal_data
 
     
     class Meta:
         model=Delay_Notice
-        fields=['id','project_id','delay_num','floor','area','schdul_num','date','rfi_log_id','rfi_log','dscrptn_impct','dscrptn_task','comnt','preprd_by','project']
+        fields=['id','project_id','delay_num','floor','area','schdul_num','date','rfi_log_id','rfi_log','dscrptn_impct','dscrptn_task','comnt','preprd_by','project','atchd_pdf']
         
         
         

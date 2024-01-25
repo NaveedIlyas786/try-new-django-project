@@ -539,6 +539,7 @@ class RFI(models.Model):
     title=models.CharField(verbose_name="Title login", max_length=250,null=True,blank=True)
     date2=models.DateField(verbose_name="Date", auto_now=False, auto_now_add=False,null=True,blank=True)
     atchd_pdf=models.BinaryField("Atthd_pdf", null=True, blank=True, editable=True)
+    dscrptn=models.CharField(verbose_name="Description", max_length=5000,null=True,blank=True)
 
     
 
@@ -548,8 +549,8 @@ class RFI_Log(models.Model):
     date_close=models.DateField(verbose_name="Date close", auto_now=False, auto_now_add=False,null=True,blank=True)
     status=models.CharField(verbose_name="Status", max_length=50,choices=[
         ('Open','Open'),('Close','Close'),('Void','Void')
-        ],default='Close',null=True,blank=True)
-    dscrptn=models.CharField(verbose_name="Description", max_length=5000,null=True,blank=True)
+        ],default='Open',null=True,blank=True)
+    
     cost_schdl=models.CharField(verbose_name="Cost or Schedule", max_length=50,choices=[
         ('Cost','Cost'),('Schedule','Schedule'),('Cost & Schedule','Cost & Schedule'),('None','None')
         ],default='None',null=True,blank=True)
@@ -561,10 +562,7 @@ class RFI_Log(models.Model):
 
 class PCO(models.Model):
     date=models.DateField(verbose_name="Date", auto_now=False, auto_now_add=False,null=True,blank=True)
-    attn=models.CharField(verbose_name="Attn", max_length=500,null=True,blank=True)
-    company=models.CharField(verbose_name="Company", max_length=500,null=True,blank=True)
-    email=models.EmailField(verbose_name="Email", max_length=254,null=True,blank=True)    
-    addrs=models.CharField(verbose_name="Address", max_length=500,null=True,blank=True)
+    
     zip_city=models.CharField(verbose_name="City,Stat,Zip code", max_length=500,null=True,blank=True)
     pco_num=models.CharField(verbose_name="PCO NO.", max_length=500,null=True,blank=True)
     project=models.ForeignKey(Project,verbose_name="Project",on_delete=models.CASCADE,null=True,blank=True)
@@ -584,6 +582,8 @@ class  Delay_Notice(models.Model):
     dscrptn_task=models.CharField(verbose_name="Schedule ID # and description of tasks that follow that will be affected:", max_length=5000 , blank=True, null=True)
     comnt=models.CharField(verbose_name="Additional Comments:", max_length=5000,null=True,blank=True)
     preprd_by=models.CharField(verbose_name="Prepared by:", max_length=500,null=True,blank=True)
+    atchd_pdf=models.BinaryField("Atthd_pdf", null=True, blank=True, editable=True)
+
     
 class Delay_Log(models.Model):
     dly_ntc=models.ForeignKey(Delay_Notice, verbose_name="Select Delay Notice", on_delete=models.CASCADE,null=True,blank=True)

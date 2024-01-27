@@ -589,17 +589,11 @@ class PCO(models.Model):
     get_bond=models.FloatField(verbose_name="Bond@",null=True,blank=True)
     value_bond=models.FloatField(verbose_name="Value of Bond",null=True,blank=True)
     totl_rqest=models.FloatField(verbose_name="Total Req",null=True,blank=True)
+    prpd_by=models.CharField(verbose_name="Login User name", max_length=500, null=True, blank=True)
 
     atchd_pdf=models.BinaryField("Atthd_pdf", null=True, blank=True, editable=True)
     
     
-
-
-    
-    # zip_city=models.CharField(verbose_name="City,Stat,Zip code", max_length=500,null=True,blank=True)
-
-
-
 
 class Qualification(models.Model):
     pco=models.ForeignKey(PCO, verbose_name="PCO", on_delete=models.CASCADE,null=True,blank=True)
@@ -634,9 +628,6 @@ class Miscellaneous(models.Model):
 
 
 
-
-
-
 class Labor(models.Model):
     pco=models.ForeignKey(PCO, verbose_name="PCO", on_delete=models.CASCADE,null=True,blank=True)
     itm_name=models.CharField(verbose_name="Material item name", max_length=500,null=True,blank=True)
@@ -649,6 +640,16 @@ class Labor(models.Model):
 
 
 
+class PCO_Log(models.Model):
+    pco=models.ForeignKey(PCO,verbose_name="PCO",on_delete=models.CASCADE,null=True,blank=True)
+    t_m=models.CharField(verbose_name="T&M", max_length=50,null=True,blank=True)
+    cor_amont=models.FloatField(verbose_name="Cor Amount",null=True,blank=True)
+    co_amont=models.FloatField(verbose_name="C/O Amount",null=True,blank=True)
+    co_num=models.CharField(verbose_name="C/O#", max_length=50,null=True,blank=True)
+    uthr_name=models.CharField(verbose_name="Author Name", max_length=50,null=True,blank=True)
+    note=models.CharField(verbose_name="Note", max_length=5000,null=True, blank=True)
+
+
 class  Delay_Notice(models.Model):
     project=models.ForeignKey(Project, verbose_name="slect project", on_delete=models.CASCADE , blank=True,null=True)
     delay_num=models.CharField(verbose_name="Delay Number #",blank=True,null=True,max_length=50)
@@ -657,6 +658,8 @@ class  Delay_Notice(models.Model):
     schdul_num=models.IntegerField(verbose_name="Schedule ID #",null=True,blank=True)
     date=models.DateField(verbose_name="date", auto_now=False, auto_now_add=False,null=True,blank=True)
     rfi_log=models.ForeignKey(RFI_Log, verbose_name="RFI log", on_delete=models.CASCADE,null=True,blank=True)
+    pco_log=models.ForeignKey(PCO_Log,verbose_name="PCO",on_delete=models.CASCADE,null=True,blank=True)
+
     dscrptn_impct=models.CharField(verbose_name="Detailed Description of Impact Trade:", max_length=5000 , blank=True, null=True)
     dscrptn_task=models.CharField(verbose_name="Schedule ID # and description of tasks that follow that will be affected:", max_length=5000 , blank=True, null=True)
     comnt=models.CharField(verbose_name="Additional Comments:", max_length=5000,null=True,blank=True)

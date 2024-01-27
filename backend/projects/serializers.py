@@ -4,7 +4,8 @@ from rest_framework import serializers
 from .models import( Project, Contract,  Insurance, Bond, 
                     Submittals, ShopDrawing,Schedule_of_Value, 
                     Safity, Schedule, Sub_Contractors, LaborRate, HDS_system,
-                    Buget,Project_detail,Delay_Notice,RFI,PCO,RFI_Log,Delay_Log,Qualification,Debited_Material,Credited_Material,Miscellaneous,Labor)
+                    Buget,Project_detail,Delay_Notice,RFI,PCO,RFI_Log,Delay_Log,Qualification,Debited_Material,Credited_Material,Miscellaneous,Labor
+                    , PCO_Log)
 
 from Estimating.models import Proposal,Spec_detail,GC_detail
 from Estimating.serializers import ProposalSerializer,SpecificationDetailSerializer,GC_infoSerializers,DMS_Dertory
@@ -659,7 +660,7 @@ class PCOSerializer(serializers.ModelSerializer):
             'id', 'date', 'pco_num', 'project_id', 'asi_num', 'pci_num', 'project', 'rfi_id', 'rfi',
             'dcrsbsn', 'chnge_dtals', 'typ', 'work_day', 'mtrl_sub_totl', 'get_tax', 'value_tax',
             'mtrl_totl', 'mscllns_totl', 'lbr_totl', 'subtotl_cost', 'get_ohp_tax', 'value_ohp_tax',
-            'cost_ohp_mtrl_tax', 'get_bond', 'value_bond', 'totl_rqest', 'atchd_pdf',
+            'cost_ohp_mtrl_tax', 'get_bond', 'value_bond', 'totl_rqest','prpd_by', 'atchd_pdf',
             'qualifications', 'debited_materials', 'credited_materials', 'miscellaneous', 'labor'
         ]
         
@@ -678,7 +679,10 @@ class PCOSerializer(serializers.ModelSerializer):
 
         # Save the PCO instance
         pco_instance = super().save(**kwargs)
-
+        PCO_Log.objects.create(
+            pco=pco_instance,
+            uthr_name=pco_instance.prpd_by
+        )
         # Create or update nested instances
         self._save_nested_data(qualifications_data, Qualification, pco_instance)
         self._save_nested_data(debited_materials_data, Debited_Material, pco_instance)
@@ -693,6 +697,12 @@ class PCOSerializer(serializers.ModelSerializer):
             ModelClass.objects.create(pco=parent_instance, **data)
 
 
+class PCO_LogSerializer(serializers.ModelSerializer):
+    pco_id=serializers.PrimaryKeyRelatedField(write_only=True,queryset=PCO.objects.all(),source='pco',required=False)
+    pco=PCOSerializer(read_only=True)
+    class Meta:
+        model=PCO_Log
+        fields=['id','pco_id','pco','t_m','cor_amont','co_amont','co_num','uthr_name','note']
 
 
 class Delay_NoticeSerializer(serializers.ModelSerializer):
@@ -703,6 +713,8 @@ class Delay_NoticeSerializer(serializers.ModelSerializer):
     project=ProjectSerializer(read_only=True)
     rfi_log_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=RFI_Log.objects.all(), source='rfi_log',required=False)
     rfi_log=RFI_LogSerializer(read_only=True)
+    pco_log_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=PCO_Log.objects.all(), source='pco_log',required=False)
+    pco_log=PCO_LogSerializer(read_only=True)
     def to_internal_value(self, data):
         internal_data = super().to_internal_value(data)
 
@@ -720,7 +732,7 @@ class Delay_NoticeSerializer(serializers.ModelSerializer):
     
     class Meta:
         model=Delay_Notice
-        fields=['id','project_id','delay_num','floor','area','schdul_num','date','rfi_log_id','rfi_log','dscrptn_impct','dscrptn_task','comnt','preprd_by','project','atchd_pdf']
+        fields=['id','project_id','delay_num','pco_log_id','pco_log','floor','area','schdul_num','date','rfi_log_id','rfi_log','dscrptn_impct','dscrptn_task','comnt','preprd_by','project','atchd_pdf']
         
         
         

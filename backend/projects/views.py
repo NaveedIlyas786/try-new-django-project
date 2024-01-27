@@ -17,9 +17,9 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget,Delay_Notice,RFI,PCO,Schedule_of_Value,RFI_Log,Delay_Log,Qualification,Debited_Material,Credited_Material,Labor,Miscellaneous
 from .serializers import (ProjectSerializer, ContractSerializer,  InsuranceSerializer, BondSerializer,QualificationSerializer,DebitedMaterialSerializer,CreditedMaterialSerializer,LaborSerializer,MiscellaneousSerializer,
-                           SubmittalsSerializer, ShopDrawingSerializer, SafitySerializer, ScheduleSerializer,
+                           SubmittalsSerializer, ShopDrawingSerializer, SafitySerializer, ScheduleSerializer,PCO_Log,
                           SubContractorsSerializer, LaborRateSerializer,HDSSystemSerializer,
-                          BugetSerializer,Delay_NoticeSerializer,RFISerializer,PCOSerializer,ScheduleOfValueSerializer,RFI_LogSerializer,Delay_LogSerializer)
+                          BugetSerializer,Delay_NoticeSerializer,RFISerializer,PCOSerializer,ScheduleOfValueSerializer,RFI_LogSerializer,Delay_LogSerializer,PCO_LogSerializer)
 
 
 
@@ -396,20 +396,56 @@ def update_nested_objects(data, pco_instance):
         (Miscellaneous, 'miscellaneous'),
         (Labor, 'labor')
     ]:
-        current_items = {item.id: item for item in nested_model.objects.filter(pco=pco_instance)}
-        
-        for item_data in data.get(data_key, []):
-            item_id = item_data.get('id')
+        # IDs of items to keep (not delete)
+        provided_ids = set()
 
-            if item_id and item_id in current_items:
+        # Update or create items
+        for item_data in data.get(data_key, []):
+            item_id = item_data.pop('id', None)
+            
+            if item_id:
                 # Update existing item
-                existing_item = current_items[item_id]
-                for key, value in item_data.items():
-                    setattr(existing_item, key, value)
-                existing_item.save()
-            # elif not item_id:
+                provided_ids.add(item_id)
+                nested_model.objects.filter(id=item_id, pco=pco_instance).update(**item_data)
+            else:
                 # Create new item
-                # nested_model.objects.create(pco=pco_instance, **item_data)
-            # else:
-            #     # Handle the case where an ID is provided but doesn't match any existing item
-            #     raise ValueError(f"{nested_model.__name__} with ID {item_id} not found for this PCO.")
+                nested_model.objects.create(pco=pco_instance, **item_data)
+
+        # Delete items not included in the provided data
+        nested_model.objects.filter(pco=pco_instance).exclude(id__in=provided_ids).delete()
+
+
+
+class Pco_LogView(APIView):
+    def get(self, request,id=None):
+        if id:
+            try:
+                pco_log=PCO_Log.objects.get(id=id)
+            except:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+            serialize=PCO_LogSerializer(pco_log)
+        else:
+            pco_logs=PCO_Log.objects.all()
+            serialize=PCO_LogSerializer(pco_logs,many=True)
+            
+        return Response(serialize.data)
+    
+    def post(self,request):
+        serialize=PCO_LogSerializer(data=request.data)
+        if serialize.is_valid():
+            serialize.save()
+            return Response(serialize.data,status=status.HTTP_201_CREATED)
+        return Response(serialize.data,status=status.HTTP_400_BAD_REQUEST)
+    
+    def put(self,request,id=None):
+        pco_log=get_object_or_404(PCO_Log,id=id)
+        serializer=PCO_LogSerializer(pco_log,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self,request,id=None):
+        pco_log=get_object_or_404(PCO_Log,id=id)
+        pco_log.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

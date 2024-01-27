@@ -1,8 +1,12 @@
-# views.py
-from rest_framework import generics
-from rest_framework import viewsets
-from yaml import serialize
-from django.db import transaction
+# # views.py
+# from rest_framework import generics
+# from rest_framework import viewsets
+# from yaml import serialize
+# from django.db import transaction
+from django.core.mail import EmailMessage
+import logging
+from django.core.files.uploadedfile import InMemoryUploadedFile
+
 
 from django.shortcuts import get_object_or_404
 
@@ -416,3 +420,65 @@ class Pco_LogView(APIView):
         pco_log=get_object_or_404(PCO_Log,id=id)
         pco_log.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    
+
+class SendRFIEmailView(APIView):
+
+    def post(self, request, rfi_id, format=None):
+        logger = logging.getLogger(__name__)
+
+        try:
+            # Fetch the RFI and project
+            rfi = RFI.objects.get(id=rfi_id)
+            project = rfi.project
+
+            recipient_email = project.attn_email
+            if not recipient_email:
+                return Response({'error': 'Recipient email not found'}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Email setup
+            email_from = 'mubeenjutt9757@gmail.com'
+            subject = 'RFI Details'
+            message = f"""
+            Hello,
+            <br>
+            Here are the details of the RFI for project: 
+            <br>
+         
+            <br><br>
+            Please review and let us know if there are any questions.
+            <br><br>
+            Thank you
+            """
+
+            # Log the files received for debugging
+            logger.info(f'Files received in the request: {request.FILES}')
+
+            email = EmailMessage(
+                subject,
+                message,
+                email_from,
+                [recipient_email]
+            )
+            email.content_subtype = 'html'
+
+            # Attach the PDF if it's in the request
+            pdf_file = request.FILES.get('pdf')
+            if pdf_file:
+                logger.info('Attaching PDF file to email')
+                email.attach(pdf_file.name, pdf_file.read(), 'application/pdf')
+            else:
+                logger.error('PDF file not found in request.FILES')
+
+            email.send()
+
+            return Response({'message': 'RFI email sent successfully!'})
+
+        except RFI.DoesNotExist:
+            logger.error(f'RFI ID {rfi_id} not found')
+            return Response({'error': 'RFI not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            logger.error(str(e))
+            logger.error(f'Request Data: {request.data}')
+            return Response({'error': 'Failed to send email', 'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

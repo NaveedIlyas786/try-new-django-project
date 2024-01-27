@@ -4,7 +4,7 @@ from rest_framework import serializers
 from .models import( Project, Contract,  Insurance, Bond, 
                     Submittals, ShopDrawing,Schedule_of_Value, 
                     Safity, Schedule, Sub_Contractors, LaborRate, HDS_system,
-                    Buget,Project_detail,Delay_Notice,RFI,PCO,RFI_Log,Delay_Log)
+                    Buget,Project_detail,Delay_Notice,RFI,PCO,RFI_Log,Delay_Log,Qualification,Debited_Material,Credited_Material,Miscellaneous,Labor)
 
 from Estimating.models import Proposal,Spec_detail,GC_detail
 from Estimating.serializers import ProposalSerializer,SpecificationDetailSerializer,GC_infoSerializers,DMS_Dertory
@@ -580,20 +580,117 @@ class RFI_LogSerializer(serializers.ModelSerializer):
         fields=['id','rfi_id','rfi','gc_rfi_num','date_close','status','cost_schdl','received_date']
 
 
+class QualificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Qualification
+        fields = '__all__'
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        return representation
+
+
+class DebitedMaterialSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Debited_Material
+        fields = '__all__'
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        return representation
+class CreditedMaterialSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Credited_Material
+        fields = '__all__'
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        return representation
+        
+class MiscellaneousSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Miscellaneous
+        fields = '__all__'
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        return representation
+class LaborSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Labor
+        fields = '__all__'
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        return representation
 
 
 
 class PCOSerializer(serializers.ModelSerializer):
     date = serializers.DateField(
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
-    
+    rfi_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=RFI_Log.objects.all(), source='rfi',required=False)
+    rfi=RFI_LogSerializer(read_only=True)
+
     
     project_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Project.objects.all(), source='project', required=False)
     project=ProjectSerializer(read_only=True)
+    
+    qualifications = QualificationSerializer(source='qualification_set', many=True, required=False)
+    debited_materials = DebitedMaterialSerializer(source='debited_material_set',many=True, required=False)
+    credited_materials = CreditedMaterialSerializer(source='credited_material_set',many=True, required=False)
+    miscellaneous = MiscellaneousSerializer(source='miscellaneous_set',many=True, required=False)
+    labor = LaborSerializer(source='labor_set',many=True,required=False)
+    
+    
+    
+    def to_internal_value(self, data):
+        internal_data = super().to_internal_value(data)
+
+        atchd_pdf = data.get('atchd_pdf')
+        if atchd_pdf and isinstance(atchd_pdf, InMemoryUploadedFile):
+            # Read file content and encode it in base64
+            file_content = atchd_pdf.read()
+            # Keep it as bytes
+            internal_data['atchd_pdf'] = base64.b64encode(file_content)
+        elif atchd_pdf and isinstance(atchd_pdf, str):
+            # If it's a string, assume it's base64-encoded data
+            internal_data['atchd_pdf'] = base64.b64decode(atchd_pdf)
+        return internal_data
+    
     class Meta:
         model = PCO
-        fields=['id','date','zip_city','pco_num','project_id','project','dcrsbsn']
+        fields = [
+            'id', 'date', 'pco_num', 'project_id', 'asi_num', 'pci_num', 'project', 'rfi_id', 'rfi',
+            'dcrsbsn', 'chnge_dtals', 'typ', 'work_day', 'mtrl_sub_totl', 'get_tax', 'value_tax',
+            'mtrl_totl', 'mscllns_totl', 'lbr_totl', 'subtotl_cost', 'get_ohp_tax', 'value_ohp_tax',
+            'cost_ohp_mtrl_tax', 'get_bond', 'value_bond', 'totl_rqest', 'atchd_pdf',
+            'qualifications', 'debited_materials', 'credited_materials', 'miscellaneous', 'labor'
+        ]
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
+        for field_name, field in self.fields.items():
+            field.required = False
+    def save(self, **kwargs):
+        # Extract nested data before saving the main object
+        qualifications_data = self.validated_data.pop('qualification_set', [])
+        debited_materials_data = self.validated_data.pop('debited_material_set', [])
+        credited_materials_data = self.validated_data.pop('credited_material_set', [])
+        miscellaneous_data = self.validated_data.pop('miscellaneous_set', [])
+        labor_data = self.validated_data.pop('labor_set', [])
+
+        # Save the PCO instance
+        pco_instance = super().save(**kwargs)
+
+        # Create or update nested instances
+        self._save_nested_data(qualifications_data, Qualification, pco_instance)
+        self._save_nested_data(debited_materials_data, Debited_Material, pco_instance)
+        self._save_nested_data(credited_materials_data, Credited_Material, pco_instance)
+        self._save_nested_data(miscellaneous_data, Miscellaneous, pco_instance)
+        self._save_nested_data(labor_data, Labor, pco_instance)
+
+        return pco_instance
+
+    def _save_nested_data(self, data_list, ModelClass, parent_instance):
+        for data in data_list:
+            ModelClass.objects.create(pco=parent_instance, **data)
 
 
 

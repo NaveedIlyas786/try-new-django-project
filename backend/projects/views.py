@@ -15,8 +15,8 @@ from rest_framework.views import APIView
 
 
 from rest_framework.decorators import api_view
-from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget,Delay_Notice,RFI,PCO,Schedule_of_Value,RFI_Log,Delay_Log
-from .serializers import (ProjectSerializer, ContractSerializer,  InsuranceSerializer, BondSerializer,
+from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget,Delay_Notice,RFI,PCO,Schedule_of_Value,RFI_Log,Delay_Log,Qualification,Debited_Material,Credited_Material,Labor,Miscellaneous
+from .serializers import (ProjectSerializer, ContractSerializer,  InsuranceSerializer, BondSerializer,QualificationSerializer,DebitedMaterialSerializer,CreditedMaterialSerializer,LaborSerializer,MiscellaneousSerializer,
                            SubmittalsSerializer, ShopDrawingSerializer, SafitySerializer, ScheduleSerializer,
                           SubContractorsSerializer, LaborRateSerializer,HDSSystemSerializer,
                           BugetSerializer,Delay_NoticeSerializer,RFISerializer,PCOSerializer,ScheduleOfValueSerializer,RFI_LogSerializer,Delay_LogSerializer)
@@ -322,31 +322,94 @@ class Delay_LogViews(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
 
+# @api_view(['GET', 'POST', 'PUT', 'DELETE'])
+# def create_pco(request, id=None):
+#     related_data_models = [
+#             ('qualification', Qualification, QualificationSerializer),
+#             ('debited_material', Debited_Material, DebitedMaterialSerializer),
+#             ('credited_material', Credited_Material, CreditedMaterialSerializer),
+#             ('miscellaneous', Miscellaneous, MiscellaneousSerializer),
+#             ('Labor_set', Labor, LaborSerializer),
+#         ]
+    
+#     if request.method == 'POST':
+#         serializer = PCOSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class PCOViews(APIView):
-    def get(self, request, id=None, format=None):
+
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+def create_pco(request, id=None):
+    # GET: Retrieve a list of PCO instances or a single instance by ID
+    if request.method == 'GET':
         if id:
             try:
-                pco=PCO.objects.get(id=id)
-                # serializer=PCOSerializer(pco)
-                # return Response(serializer.data)
+                pco = PCO.objects.get(pk=id)
+                serializer = PCOSerializer(pco)
             except PCO.DoesNotExist:
-                return Response(status=status.HTTP_404_NOT_FOUND)
-            serializer=PCOSerializer(pco)
-            
+                return Response({'message': 'The PCO does not exist'}, status=status.HTTP_404_NOT_FOUND)
         else:
-            pco=PCO.objects.all() 
-            serializer=PCOSerializer(pco,many=True)
+            pcos = PCO.objects.all()
+            serializer = PCOSerializer(pcos, many=True)
         return Response(serializer.data)
-    
-    def post(self, request, format=None):
-        serializer=PCOSerializer(data=request.data)
+
+    # POST: Create a new PCO instance
+    if request.method == 'POST':
+        serializer = PCOSerializer(data=request.data)
         if serializer.is_valid():
-            project_id = request.data.get('project_id')
-            if project_id:
-                project = Project.objects.get(id=project_id)
-                serializer.save(project=project)  # Fix the typo here
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            else:
-                return Response({"error": "project_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # PUT: Update an existing PCO instance
+    # PUT: Update an existing PCO instance and its nested objects
+    elif request.method == 'PUT' and id is not None:
+        try:
+            pco = PCO.objects.get(pk=id)
+        except PCO.DoesNotExist:
+            return Response({'message': 'The PCO does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = PCOSerializer(pco, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+
+            # Update nested objects
+            update_nested_objects(request.data, pco)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # DELETE: Delete a specific PCO instance
+    if request.method == 'DELETE' and id is not None:
+        try:
+            pco = PCO.objects.get(pk=id)
+            pco.delete()
+            return Response({'message': 'PCO was deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
+        except PCO.DoesNotExist:
+            return Response({'message': 'The PCO does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        
+def update_nested_objects(data, pco_instance):
+    for nested_model, data_key in [
+        (Qualification, 'qualifications'),
+        (Debited_Material, 'debited_materials'),
+        (Credited_Material, 'credited_materials'),
+        (Miscellaneous, 'miscellaneous'),
+        (Labor, 'labor')
+    ]:
+        current_items = {item.id: item for item in nested_model.objects.filter(pco=pco_instance)}
+        
+        for item_data in data.get(data_key, []):
+            item_id = item_data.get('id')
+
+            if item_id and item_id in current_items:
+                # Update existing item
+                existing_item = current_items[item_id]
+                for key, value in item_data.items():
+                    setattr(existing_item, key, value)
+                existing_item.save()
+            # elif not item_id:
+                # Create new item
+                # nested_model.objects.create(pco=pco_instance, **item_data)
+            # else:
+            #     # Handle the case where an ID is provided but doesn't match any existing item
+            #     raise ValueError(f"{nested_model.__name__} with ID {item_id} not found for this PCO.")

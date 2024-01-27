@@ -113,7 +113,7 @@ class RFIAdmin(admin.ModelAdmin):
 
 
 class PCOAdmin(admin.ModelAdmin):
-    list_display=('id','date','zip_city','pco_num','project','dcrsbsn')
+    list_display=('id','date','pco_num','project','dcrsbsn')
 
 
 

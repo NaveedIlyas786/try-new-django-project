@@ -1,3 +1,4 @@
+from codecs import charmap_build
 from email.policy import default
 from operator import itemgetter
 from random import choice
@@ -560,13 +561,91 @@ class RFI_Log(models.Model):
     
 
 
-class PCO(models.Model):
-    date=models.DateField(verbose_name="Date", auto_now=False, auto_now_add=False,null=True,blank=True)
+
     
-    zip_city=models.CharField(verbose_name="City,Stat,Zip code", max_length=500,null=True,blank=True)
-    pco_num=models.CharField(verbose_name="PCO NO.", max_length=500,null=True,blank=True)
+
+class PCO(models.Model):
     project=models.ForeignKey(Project,verbose_name="Project",on_delete=models.CASCADE,null=True,blank=True)
-    dcrsbsn=models.CharField(verbose_name="Description of work", max_length=500,null=True,blank=True)
+    rfi=models.ForeignKey(RFI_Log,verbose_name="Add RFI",on_delete=models.CASCADE,null=True,blank=True)
+    date=models.DateField(verbose_name="Current Date", auto_now=False, auto_now_add=False,null=True,blank=True)
+
+    pco_num=models.CharField(verbose_name="PCO NO.", max_length=500,null=True,blank=True)
+    asi_num=models.CharField(verbose_name="ASI NO.", max_length=500,null=True,blank=True)
+    pci_num=models.CharField(verbose_name="ACI NO.", max_length=500,null=True,blank=True)
+    dcrsbsn=models.CharField(verbose_name="PCO Description", max_length=500,null=True,blank=True)
+    chnge_dtals=models.CharField(verbose_name="Change Detail", max_length=5000,null=True,blank=True)
+    typ=models.CharField(verbose_name="Type of PCO", max_length=500,null=True,blank=True)
+    work_day=models.CharField(verbose_name="Estimating Working day", max_length=50,null=True,blank=True)
+    mtrl_sub_totl=models.FloatField(verbose_name="Material Sub total ",null=True,blank=True)
+    get_tax=models.FloatField(verbose_name="Material Tax",null=True,blank=True)
+    value_tax=models.FloatField(verbose_name="Material Tax",null=True,blank=True)
+    mtrl_totl=models.FloatField(verbose_name="Material Total",null=True,blank=True)
+    mscllns_totl=models.FloatField(verbose_name="Miscellaneous Total",null=True,blank=True)
+    lbr_totl=models.FloatField(verbose_name="Labor Total",null=True,blank=True)
+    subtotl_cost=models.FloatField(verbose_name="Subtotal Cost",null=True,blank=True)
+    get_ohp_tax=models.FloatField(verbose_name="Enter the OH&P @",null=True,blank=True)
+    value_ohp_tax=models.FloatField(verbose_name="value of OH&P @",null=True,blank=True)
+    cost_ohp_mtrl_tax=models.FloatField(verbose_name="value of Cost + OH&P + Material tax",null=True,blank=True)
+    get_bond=models.FloatField(verbose_name="Bond@",null=True,blank=True)
+    value_bond=models.FloatField(verbose_name="Value of Bond",null=True,blank=True)
+    totl_rqest=models.FloatField(verbose_name="Total Req",null=True,blank=True)
+
+    atchd_pdf=models.BinaryField("Atthd_pdf", null=True, blank=True, editable=True)
+    
+    
+
+
+    
+    # zip_city=models.CharField(verbose_name="City,Stat,Zip code", max_length=500,null=True,blank=True)
+
+
+
+
+class Qualification(models.Model):
+    pco=models.ForeignKey(PCO, verbose_name="PCO", on_delete=models.CASCADE,null=True,blank=True)
+    detail=models.CharField(verbose_name="Add Qualification", max_length=255)
+    def __str__(self):
+        return self.detail
+    
+class Debited_Material(models.Model):
+    pco=models.ForeignKey(PCO, verbose_name="PCO", on_delete=models.CASCADE,null=True,blank=True)
+    itm_name=models.CharField(verbose_name="Material item name", max_length=500,null=True,blank=True)
+    quntty=models.IntegerField(verbose_name="Quantity", null=True,blank=True)
+    unit=models.CharField(verbose_name="Unit", max_length=500,null=True,blank=True)
+    unit_prz=models.FloatField(verbose_name="Unit$",null=True,blank=True)
+    totl=models.FloatField(verbose_name="Total",null=True,blank=True)
+    
+class Credited_Material(models.Model):
+    pco=models.ForeignKey(PCO, verbose_name="PCO", on_delete=models.CASCADE,null=True,blank=True)
+    itm_name=models.CharField(verbose_name="Material item name", max_length=500,null=True,blank=True)
+    quntty=models.IntegerField(verbose_name="Quantity", null=True,blank=True)
+    unit=models.CharField(verbose_name="Unit", max_length=500,null=True,blank=True)
+    unit_prz=models.FloatField(verbose_name="Unit$",null=True,blank=True)
+    totl=models.FloatField(verbose_name="Total",null=True,blank=True)
+
+
+class Miscellaneous(models.Model):
+    pco=models.ForeignKey(PCO, verbose_name="PCO", on_delete=models.CASCADE,null=True,blank=True)
+    itm_name=models.CharField(verbose_name="Material item name", max_length=500,null=True,blank=True)
+    quntty=models.IntegerField(verbose_name="Quantity", null=True,blank=True)
+    unit=models.CharField(verbose_name="Unit", max_length=500,null=True,blank=True)
+    unit_prz=models.FloatField(verbose_name="Unit$",null=True,blank=True)
+    totl=models.FloatField(verbose_name="Total",null=True,blank=True)
+
+
+
+
+
+
+class Labor(models.Model):
+    pco=models.ForeignKey(PCO, verbose_name="PCO", on_delete=models.CASCADE,null=True,blank=True)
+    itm_name=models.CharField(verbose_name="Material item name", max_length=500,null=True,blank=True)
+    quntty=models.IntegerField(verbose_name="Quantity", null=True,blank=True)
+    unit=models.CharField(verbose_name="Unit", max_length=500,null=True,blank=True)
+    unit_prz=models.FloatField(verbose_name="Unit$",null=True,blank=True)
+    totl=models.FloatField(verbose_name="Total",null=True,blank=True)
+
+
 
 
 

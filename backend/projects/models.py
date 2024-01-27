@@ -636,7 +636,7 @@ class Labor(models.Model):
     unit_prz=models.FloatField(verbose_name="Unit$",null=True,blank=True)
     totl=models.FloatField(verbose_name="Total",null=True,blank=True)
 
-
+#  fdfdf
 
 
 

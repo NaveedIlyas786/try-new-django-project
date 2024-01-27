@@ -171,7 +171,6 @@ class RFIViews(APIView):
                 # Create and save RFI_Log instance
                 rfi_log_data = {
                     'rfi_id': rfi_instance.id, # type: ignore
-                    # Set other fields as needed, or use default values
                 }
                 rfi_log_serializer = RFI_LogSerializer(data=rfi_log_data)
                 if rfi_log_serializer.is_valid():
@@ -254,10 +253,8 @@ class Delay_NoticeViews(APIView):
         if serialize.is_valid():
             delay_notice_instance = serialize.save()
 
-            # Create and save Delay_Log instance
             delay_log_data = {
                 'dly_ntc_id': delay_notice_instance.id, # type: ignore
-                # Set other fields as needed, or use default values
             }
             delay_log_serializer = Delay_LogSerializer(data=delay_log_data)
             if delay_log_serializer.is_valid():
@@ -282,8 +279,6 @@ class Delay_NoticeViews(APIView):
         dly_ntc.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-
-
 
 class Delay_LogViews(APIView):
 
@@ -322,27 +317,8 @@ class Delay_LogViews(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
 
-# @api_view(['GET', 'POST', 'PUT', 'DELETE'])
-# def create_pco(request, id=None):
-#     related_data_models = [
-#             ('qualification', Qualification, QualificationSerializer),
-#             ('debited_material', Debited_Material, DebitedMaterialSerializer),
-#             ('credited_material', Credited_Material, CreditedMaterialSerializer),
-#             ('miscellaneous', Miscellaneous, MiscellaneousSerializer),
-#             ('Labor_set', Labor, LaborSerializer),
-#         ]
-    
-#     if request.method == 'POST':
-#         serializer = PCOSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def create_pco(request, id=None):
-    # GET: Retrieve a list of PCO instances or a single instance by ID
     if request.method == 'GET':
         if id:
             try:
@@ -363,8 +339,7 @@ def create_pco(request, id=None):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # PUT: Update an existing PCO instance
-    # PUT: Update an existing PCO instance and its nested objects
+
     elif request.method == 'PUT' and id is not None:
         try:
             pco = PCO.objects.get(pk=id)
@@ -375,11 +350,9 @@ def create_pco(request, id=None):
         if serializer.is_valid():
             serializer.save()
 
-            # Update nested objects
             update_nested_objects(request.data, pco)
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    # DELETE: Delete a specific PCO instance
     if request.method == 'DELETE' and id is not None:
         try:
             pco = PCO.objects.get(pk=id)
@@ -396,22 +369,16 @@ def update_nested_objects(data, pco_instance):
         (Miscellaneous, 'miscellaneous'),
         (Labor, 'labor')
     ]:
-        # IDs of items to keep (not delete)
         provided_ids = set()
-
-        # Update or create items
         for item_data in data.get(data_key, []):
             item_id = item_data.pop('id', None)
             
             if item_id:
-                # Update existing item
                 provided_ids.add(item_id)
                 nested_model.objects.filter(id=item_id, pco=pco_instance).update(**item_data)
             else:
-                # Create new item
                 nested_model.objects.create(pco=pco_instance, **item_data)
 
-        # Delete items not included in the provided data
         nested_model.objects.filter(pco=pco_instance).exclude(id__in=provided_ids).delete()
 
 

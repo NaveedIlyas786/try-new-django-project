@@ -532,13 +532,13 @@ class ProjectDetailSerializer(serializers.ModelSerializer):
 
 class RFISerializer(serializers.ModelSerializer):
     date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)# type: ignore
     rspns_rqrd = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)# type: ignore
     rply_by = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)# type: ignore
     date2 = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)# type: ignore
     
     project_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Project.objects.all(), source='project', required=False)
     project=ProjectSerializer(read_only=True)
@@ -568,9 +568,9 @@ class RFISerializer(serializers.ModelSerializer):
 
 class RFI_LogSerializer(serializers.ModelSerializer):
     date_close = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)# type: ignore
     received_date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)# type: ignore
     
     
     rfi_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=RFI.objects.all(), source='rfi', required=False)
@@ -624,7 +624,7 @@ class LaborSerializer(serializers.ModelSerializer):
 
 class PCOSerializer(serializers.ModelSerializer):
     date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)# type: ignore
     rfi_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=RFI_Log.objects.all(), source='rfi',required=False)
     rfi=RFI_LogSerializer(read_only=True)
 
@@ -671,11 +671,11 @@ class PCOSerializer(serializers.ModelSerializer):
             field.required = False
     def save(self, **kwargs):
         # Extract nested data before saving the main object
-        qualifications_data = self.validated_data.pop('qualification_set', [])
-        debited_materials_data = self.validated_data.pop('debited_material_set', [])
-        credited_materials_data = self.validated_data.pop('credited_material_set', [])
-        miscellaneous_data = self.validated_data.pop('miscellaneous_set', [])
-        labor_data = self.validated_data.pop('labor_set', [])
+        qualifications_data = self.validated_data.pop('qualification_set', [])# type: ignore
+        debited_materials_data = self.validated_data.pop('debited_material_set', [])# type: ignore
+        credited_materials_data = self.validated_data.pop('credited_material_set', [])# type: ignore
+        miscellaneous_data = self.validated_data.pop('miscellaneous_set', [])# type: ignore
+        labor_data = self.validated_data.pop('labor_set', [])# type: ignore
 
         # Save the PCO instance
         pco_instance = super().save(**kwargs)
@@ -707,7 +707,7 @@ class PCO_LogSerializer(serializers.ModelSerializer):
 
 class Delay_NoticeSerializer(serializers.ModelSerializer):
     date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)# type: ignore
 
     project_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Project.objects.all(), source='project', required=False)
     project=ProjectSerializer(read_only=True)
@@ -738,7 +738,7 @@ class Delay_NoticeSerializer(serializers.ModelSerializer):
         
 class Delay_LogSerializer(serializers.ModelSerializer):
     date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)# type: ignore
     
     dly_ntc_id=serializers.PrimaryKeyRelatedField(write_only=True,queryset=Delay_Notice.objects.all(),source='dly_ntc',required=False)
     dly_ntc=Delay_NoticeSerializer(read_only=True)

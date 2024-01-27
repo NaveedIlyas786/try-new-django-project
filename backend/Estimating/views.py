@@ -366,7 +366,7 @@ class EstimatorSummaryView(views.APIView):
             )
             # Serialize the estimator to get the full_name
             serialized_estimator = DMS_DertorySezializers(estimator).data
-            estimator_full_name = serialized_estimator.get('full_name')
+            estimator_full_name = serialized_estimator.get('full_name')# type: ignore
             
             if estimates.count() == 0:
                 continue
@@ -886,53 +886,6 @@ def create_proposal(request, proposal_id=None):
 
 
 
-
-
-# class ServiceViews(APIView):
-#     def get(self, request, format=None):
-#         service = Service.objects.all()
-#         serializer = ServiceSerializer(service, many=True)
-#         return Response(serializer.data)
-
-
-#     def post(self, request, format=None):
-#         serializer = ServiceSerializer(data=request.data)
-#         if serializer.is_valid():
-
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-    
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#     def put(self, request, id, format=None):
-#         try:
-#             service = Service.objects.get(id=id)
-#         except Service.DoesNotExist:
-#             return Response(status=status.HTTP_404_NOT_FOUND)
-
-#         serializer = ServiceSerializer(service, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#     def delete(self, request, id, format=None):
-#         try:
-#             service = Service.objects.get(id=id)
-#         except Service.DoesNotExist:
-#             return Response(status=status.HTTP_404_NOT_FOUND)
-
-#         service.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
-    
-
-
-    
-
-
-
-# This is the Views of Addendum
-
 class AddendumView(APIView):
     def get(self, request, format=None):
         Addendums = Addendum.objects.all()
@@ -983,44 +936,11 @@ class SpecificationViews(APIView):
         serializer = SpecificationSerializer(specification, many=True)
         return Response(serializer.data)
 
-#     def post(self, request, format=None):
-#         serializer = SpecificationSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#     def put(self, request, id, format=None):
-#         try:
-#             specification = Specification.objects.get(id=id)
-#         except Specification.DoesNotExist:
-#             return Response(status=status.HTTP_404_NOT_FOUND)
-
-#         serializer = SpecificationSerializer(
-#             specification, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#     def delete(self, request, id, format=None):
-#         try:
-#             specification = Specification.objects.get(id=id)
-#         except Specification.DoesNotExist:
-#             return Response(status=status.HTTP_404_NOT_FOUND)
-
-#         specification.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 
 
 
-
-
-
-
-# THIS IS sPECIFICATION DETAIL VIEW ALL CRUD OPRATION 
 class SpecificationDetailViews(APIView):
 
     def get(self, request, format=None):
@@ -1028,32 +948,3 @@ class SpecificationDetailViews(APIView):
         serializer = SpecificationDetailSerializer(specification, many=True)
         return Response(serializer.data)
 
-#     def post(self, request, format=None):
-#         serializer = SpecificationDetailSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#     def put(self, request, id, format=None):
-#         try:
-#             specification = Spec_detail.objects.get(id=id)
-#         except Spec_detail.DoesNotExist:
-#             return Response(status=status.HTTP_404_NOT_FOUND)
-
-#         serializer = SpecificationDetailSerializer(
-#             specification, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#     def delete(self, request, id, format=None):
-#         try:
-#             specification = Spec_detail.objects.get(id=id)
-#         except Spec_detail.DoesNotExist:
-#             return Response(status=status.HTTP_404_NOT_FOUND)
-
-#         specification.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
-    

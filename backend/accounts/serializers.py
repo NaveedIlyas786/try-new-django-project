@@ -68,7 +68,7 @@ class UserRegisterationSerializers(serializers.ModelSerializer):
         signtr_data = validated_data.pop('signtr', None)
         
         # Create the user instance
-        user = User.objects.create_user(**validated_data)
+        user = User.objects.create_user(**validated_data)# type: ignore
         
         # Set the password for the user
         user.set_password(validated_data['password'])
@@ -161,8 +161,8 @@ class UserChangePasswordSerializer(serializers.Serializer):
         if password != password2:
             raise serializers.ValidationError(
                 "Password and Confirm Password Dosn't Match")
-        user.set_password(password)
-        user.save()
+        user.set_password(password)# type: ignore
+        user.save()# type: ignore
         return attrs
 
 
@@ -217,8 +217,8 @@ class UserPasswordResetSerializer(serializers.Serializer):
     def validate(self, attrs):
         try:
             request = self.context.get("request")
-            uidb64 = request.parser_context.get('kwargs').get('uidb64')
-            token = request.parser_context.get('kwargs').get('token')
+            uidb64 = request.parser_context.get('kwargs').get('uidb64')# type: ignore
+            token = request.parser_context.get('kwargs').get('token')# type: ignore
             id = force_str(urlsafe_base64_decode(uidb64))
 
             user = User.objects.get(id=id)

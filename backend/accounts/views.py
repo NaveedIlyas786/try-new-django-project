@@ -40,7 +40,7 @@ def get_tokens_for_user(user):
 
     return {
         'refresh': str(refresh),
-        'access': str(refresh.access_token),
+        'access': str(refresh.access_token),# type: ignore
     }
 
 
@@ -63,11 +63,11 @@ class UserRegistrationView(APIView):
             admin_user = User.objects.get(is_admin=True)
             admin_token = get_tokens_for_user(admin_user)['access']
 
-            approval_link = request.build_absolute_uri(f'http://localhost:5173/adminDecisionPage/{user.id}/')
+            approval_link = request.build_absolute_uri(f'http://localhost:5173/adminDecisionPage/{user.id}/')# type: ignore
             # disapproval_link = request.build_absolute_uri(f'/api/user/disapprove_user/{user.id}/')
 
             message = (
-                            f'A new account for {user.full_Name} and Email {user.email} needs your approval to access the DMS Content Management System. '
+                            f'A new account for {user.full_Name} and Email {user.email} needs your approval to access the DMS Content Management System. '# type: ignore
                             f'Click the link to approve or reject request: {approval_link}\n'
                             # f'Click this link to disapprove: {disapproval_link}\n'
                             # f'Use this token for authorization: Bearer {admin_token}'
@@ -127,8 +127,8 @@ class UserLoginViews(APIView):
     def post(self, request, format=None):
         serializer = UserLoginserializers(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            email = serializer.validated_data.get('email')
-            password = serializer.validated_data.get('password')
+            email = serializer.validated_data.get('email')# type: ignore
+            password = serializer.validated_data.get('password')# type: ignore
             logger.info('Email and password extracted from request.')
 
             User = get_user_model()
@@ -220,7 +220,7 @@ class UserPasswordResetViews(APIView):
             # Include 'request' in the context
             serializer = UserPasswordResetSerializer(data=request.data, context={'request': request})  
             if serializer.is_valid():
-                password = serializer.validated_data.get('password')
+                password = serializer.validated_data.get('password')# type: ignore
                 user.set_password(password)
                 user.save()
                 return Response({'msg': 'Password reset successful'}, status=status.HTTP_200_OK)
@@ -246,7 +246,7 @@ def approve_user(request, user_id):
     try:
         dms_user = DMS_Dertory.objects.get(email=user.email)
         # Map the Role from DMS_Dertory to UserRole
-        user_role, created = UserRole.objects.get_or_create(name=dms_user.job_title.name)
+        user_role, created = UserRole.objects.get_or_create(name=dms_user.job_title.name)# type: ignore
         user.roles.add(user_role)
     except DMS_Dertory.DoesNotExist:
         pass  # Handle if no matching DMS_Dertory or leave as is
@@ -268,7 +268,7 @@ def approve_user(request, user_id):
         'DMS Contact Management System Access',
         ' ',
         settings.EMAIL_HOST_USER,
-        [user.email],
+        [user.email],# type: ignore
         fail_silently=False,
         html_message=message,
 
@@ -292,7 +292,7 @@ def disapprove_user(request, user_id):
         'Account Not Approved',
         'Sorry, your account registration has not been approved.',
         settings.EMAIL_HOST_USER,
-        [user.email],
+        [user.email],# type: ignore
         fail_silently=False,
     )
     user.delete()

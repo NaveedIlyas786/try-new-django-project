@@ -87,7 +87,6 @@ class Project(models.Model):
     gc=models.ForeignKey(GC_detail, verbose_name="Add GC", on_delete=models.CASCADE, null=True, blank=True)
     gc_address=models.CharField(verbose_name="GC Address", max_length=5000, null=True, blank=True)
     
-    # gc_attn=models.ForeignKey(GC_attn, verbose_name="GC Atten", on_delete=models.CASCADE,null=True,blank=True)
     gc_attn = models.CharField(verbose_name="GC attn", max_length=100,null=True,blank=True)
     attn_email=models.EmailField(verbose_name="Add GC Email", max_length=254, null=True, blank=True)
     attn_phone=models.CharField(verbose_name="GC Phone number", max_length=50, null=True, blank=True)
@@ -597,7 +596,7 @@ class PCO(models.Model):
 
 class Qualification(models.Model):
     pco=models.ForeignKey(PCO, verbose_name="PCO", on_delete=models.CASCADE,null=True,blank=True)
-    detail=models.CharField(verbose_name="Add Qualification", max_length=255)
+    detail=models.CharField(verbose_name="Add Qualification", max_length=5000)
     def __str__(self):
         return self.detail
     
@@ -636,8 +635,6 @@ class Labor(models.Model):
     unit_prz=models.FloatField(verbose_name="Unit$",null=True,blank=True)
     totl=models.FloatField(verbose_name="Total",null=True,blank=True)
 
-#  fdfdf
-
 
 
 class PCO_Log(models.Model):
@@ -673,11 +670,9 @@ class Delay_Log(models.Model):
     typ=models.CharField(verbose_name="Select status", max_length=50,choices=[
         ('Related PCO','Related PCO'),('Related RFI','Related RFI'),('Other Trades','Other Trades'),
         ],default='Other Traders', null=True, blank=True)
-    # dely_log_num=models.CharField(verbose_name="Delay Number",null=True,blank=True, max_length=50)
     status=models.CharField(verbose_name="Select status", max_length=50,choices=[
         ('Open','Open'),('Close','Close'),
         ],default='Open', null=True, blank=True)
     dly_rslov=models.DateField(verbose_name="Delay Resolve date", auto_now=False, auto_now_add=False,null=True,blank=True)
     fnl_impct=models.IntegerField(verbose_name="Final Impact (Working Days)",null=True,blank=True)
-    # totl_impct=models.IntegerField(verbose_name="Total Project Impact(Working Days)",null=True,blank=True)
     

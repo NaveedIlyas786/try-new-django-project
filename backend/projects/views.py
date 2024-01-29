@@ -433,7 +433,7 @@ class SendRFIEmailView(APIView):
             rfi = RFI.objects.get(id=rfi_id)
             project = rfi.project
 
-            recipient_email = project.attn_email
+            recipient_email = project.attn_email #type: ignore
             if not recipient_email:
                 return Response({'error': 'Recipient email not found'}, status=status.HTTP_400_BAD_REQUEST)
 

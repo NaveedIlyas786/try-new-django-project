@@ -573,7 +573,7 @@ class RFI_LogSerializer(serializers.ModelSerializer):
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)# type: ignore
     
     
-    rfi_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=RFI.objects.all(), source='rfi', required=False)
+    rfi_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=RFI.objects.all(), source='rfi', required=False,allow_null=True)
     rfi=RFISerializer(read_only=True)
 
     class Meta:

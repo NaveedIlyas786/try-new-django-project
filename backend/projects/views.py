@@ -216,9 +216,9 @@ class RFILogViews(APIView):
             if rfi_id:
                 rfi = get_object_or_404(RFI, id=rfi_id)
                 serializer.save(rfi=rfi)
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
-                return Response({"error": "rfi_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+                serializer.save()  # Save without rfi_id
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, id=None):
@@ -422,7 +422,6 @@ class Pco_LogView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
     
-
 class SendRFIEmailView(APIView):
 
     def post(self, request, rfi_id, format=None):
@@ -433,37 +432,29 @@ class SendRFIEmailView(APIView):
             rfi = RFI.objects.get(id=rfi_id)
             project = rfi.project
 
-            recipient_email = project.attn_email #type: ignore
+            recipient_email = project.attn_email #type:ignore  # Assuming attn_email is the field for recipient email
             if not recipient_email:
                 return Response({'error': 'Recipient email not found'}, status=status.HTTP_400_BAD_REQUEST)
 
             # Email setup
-            email_from = 'mubeenjutt9757@gmail.com'
+            email_from = 'mubeenjutt9757@gmail.com'  # Replace with your actual email
             subject = 'RFI Details'
-            message = f"""
+            message = """
             Hello,
             <br>
             Here are the details of the RFI for project: 
             <br>
-         
+            ...
             <br><br>
             Please review and let us know if there are any questions.
             <br><br>
             Thank you
             """
 
-            # Log the files received for debugging
-            logger.info(f'Files received in the request: {request.FILES}')
-
-            email = EmailMessage(
-                subject,
-                message,
-                email_from,
-                [recipient_email]
-            )
+            # Attach the PDF if it's in the request
+            email = EmailMessage(subject, message, email_from, [recipient_email])
             email.content_subtype = 'html'
 
-            # Attach the PDF if it's in the request
             pdf_file = request.FILES.get('pdf')
             if pdf_file:
                 logger.info('Attaching PDF file to email')
@@ -471,6 +462,13 @@ class SendRFIEmailView(APIView):
             else:
                 logger.error('PDF file not found in request.FILES')
 
+            # Process CC emails
+            cc_emails = request.data.get('cc_emails')
+            if cc_emails:
+                cc_email_list = [email.strip() for email in cc_emails.split(',')]
+                email.cc = cc_email_list
+
+            # Send the email
             email.send()
 
             return Response({'message': 'RFI email sent successfully!'})
@@ -480,5 +478,4 @@ class SendRFIEmailView(APIView):
             return Response({'error': 'RFI not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             logger.error(str(e))
-            logger.error(f'Request Data: {request.data}')
             return Response({'error': 'Failed to send email', 'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

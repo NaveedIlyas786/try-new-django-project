@@ -544,6 +544,7 @@ class RFI(models.Model):
     
 
 class RFI_Log(models.Model):
+    project=models.ForeignKey(Project, verbose_name="Select", on_delete=models.CASCADE,null=True,blank=True)
     rfi=models.ForeignKey(RFI, verbose_name="Select RFI", on_delete=models.CASCADE,null=True,blank=True)
     gc_rfi_num=models.CharField(verbose_name="GC RFI#",null=True,blank=True,max_length=50)
     date_close=models.DateField(verbose_name="Date close", auto_now=False, auto_now_add=False,null=True,blank=True)
@@ -555,6 +556,7 @@ class RFI_Log(models.Model):
         ('Cost','Cost'),('Schedule','Schedule'),('Cost & Schedule','Cost & Schedule'),('None','None')
         ],default='None',null=True,blank=True)
     received_date=models.DateField(verbose_name="Received Date", auto_now=False, auto_now_add=False,null=True,blank=True)
+
     
     
     

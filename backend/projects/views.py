@@ -175,6 +175,7 @@ class RFIViews(APIView):
                 # Create and save RFI_Log instance
                 rfi_log_data = {
                     'rfi_id': rfi_instance.id, # type: ignore
+                    'project_id':rfi_instance.project.id,#type:ignore
                 }
                 rfi_log_serializer = RFI_LogSerializer(data=rfi_log_data)
                 if rfi_log_serializer.is_valid():

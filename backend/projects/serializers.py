@@ -575,10 +575,13 @@ class RFI_LogSerializer(serializers.ModelSerializer):
     
     rfi_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=RFI.objects.all(), source='rfi', required=False,allow_null=True)
     rfi=RFISerializer(read_only=True)
+    
+    project_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Project.objects.all(), source='project', required=False)
+    project=ProjectSerializer(read_only=True)
 
     class Meta:
         model=RFI_Log
-        fields=['id','rfi_id','rfi','gc_rfi_num','date_close','status','cost_schdl','received_date']
+        fields=['id','project_id','rfi_id','rfi','gc_rfi_num','date_close','status','cost_schdl','received_date','project']
 
 
 class QualificationSerializer(serializers.ModelSerializer):

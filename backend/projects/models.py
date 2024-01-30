@@ -645,7 +645,7 @@ class PCO_Log(models.Model):
     cor_amont=models.FloatField(verbose_name="Cor Amount",null=True,blank=True)
     co_amont=models.FloatField(verbose_name="C/O Amount",null=True,blank=True)
     co_num=models.CharField(verbose_name="C/O#", max_length=50,null=True,blank=True)
-    uthr_name=models.CharField(verbose_name="Author Name", max_length=50,null=True,blank=True)
+    auther_name=models.CharField(verbose_name="Author Name", max_length=50,null=True,blank=True)
     note=models.CharField(verbose_name="Note", max_length=5000,null=True, blank=True)
 
 

@@ -705,7 +705,7 @@ class PCO_LogSerializer(serializers.ModelSerializer):
     pco=PCOSerializer(read_only=True)
     class Meta:
         model=PCO_Log
-        fields=['id','pco_id','pco','t_m','cor_amont','co_amont','co_num','uthr_name','note']
+        fields=['id','pco_id','pco','t_m','cor_amont','co_amont','co_num','auther_name','note']
 
 
 class Delay_NoticeSerializer(serializers.ModelSerializer):

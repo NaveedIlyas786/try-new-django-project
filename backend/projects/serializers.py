@@ -684,7 +684,7 @@ class PCOSerializer(serializers.ModelSerializer):
         pco_instance = super().save(**kwargs)
         PCO_Log.objects.create(
             pco=pco_instance,
-            uthr_name=pco_instance.prpd_by
+            auther_name=pco_instance.prpd_by
         )
         # Create or update nested instances
         self._save_nested_data(qualifications_data, Qualification, pco_instance)

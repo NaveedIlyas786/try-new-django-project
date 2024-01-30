@@ -422,61 +422,41 @@ class Pco_LogView(APIView):
         pco_log.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-    
 class SendRFIEmailView(APIView):
-
     def post(self, request, rfi_id, format=None):
         logger = logging.getLogger(__name__)
 
         try:
-            # Fetch the RFI and project
             rfi = RFI.objects.get(id=rfi_id)
             project = rfi.project
 
-            recipient_email = project.attn_email #type:ignore  # Assuming attn_email is the field for recipient email
+            recipient_email = project.attn_email  #type: ignore
             if not recipient_email:
                 return Response({'error': 'Recipient email not found'}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Email setup
-            email_from = 'mubeenjutt9757@gmail.com'  # Replace with your actual email
             subject = 'RFI Details'
             message = """
             Hello,
-            <br>
-            Here are the details of the RFI for project: 
-            <br>
+            Here are the details of the RFI for project:
             ...
-            <br><br>
             Please review and let us know if there are any questions.
-            <br><br>
             Thank you
             """
-
-            # Attach the PDF if it's in the request
-            email = EmailMessage(subject, message, email_from, [recipient_email])
+            email = EmailMessage(subject, message, 'mubeenjutt9757@gmail.com', [recipient_email])
             email.content_subtype = 'html'
 
             pdf_file = request.FILES.get('pdf')
             if pdf_file:
-                logger.info('Attaching PDF file to email')
                 email.attach(pdf_file.name, pdf_file.read(), 'application/pdf')
-            else:
-                logger.error('PDF file not found in request.FILES')
 
-            # Process CC emails
             cc_emails = request.data.get('cc_emails')
             if cc_emails:
-                cc_email_list = [email.strip() for email in cc_emails.split(',')]
-                email.cc = cc_email_list
+                cc_email_list = cc_emails.split(',')
+                email.cc = [email.strip() for email in cc_email_list]
 
-            # Send the email
             email.send()
-
             return Response({'message': 'RFI email sent successfully!'})
-
         except RFI.DoesNotExist:
-            logger.error(f'RFI ID {rfi_id} not found')
             return Response({'error': 'RFI not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            logger.error(str(e))
             return Response({'error': 'Failed to send email', 'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

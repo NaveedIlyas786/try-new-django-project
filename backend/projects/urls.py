@@ -30,6 +30,8 @@ urlpatterns = [
     
     
     path('rfi_mail/<int:rfi_id>/',views.SendRFIEmailView.as_view(),name='RFI_Email_send'),
+    path('projectdashboard/', views.ProjectDashboardAPIView.as_view(), name='project-dashboard'),
+
 
 
 

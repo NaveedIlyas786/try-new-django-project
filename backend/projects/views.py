@@ -6,6 +6,8 @@
 from django.core.mail import EmailMessage
 import logging
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.db.models import Prefetch
+from django.db.models import F,Sum
 
 
 from django.shortcuts import get_object_or_404
@@ -16,6 +18,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from rest_framework.views import APIView
+from django.db.models import Count, Q
 
 
 from rest_framework.decorators import api_view
@@ -430,7 +433,8 @@ class SendRFIEmailView(APIView):
             rfi = RFI.objects.get(id=rfi_id)
             project = rfi.project
 
-            recipient_email = project.attn_email  #type: ignore
+            # Get the recipient email from the request
+            recipient_email = request.data.get('recipient')
             if not recipient_email:
                 return Response({'error': 'Recipient email not found'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -442,21 +446,106 @@ class SendRFIEmailView(APIView):
             Please review and let us know if there are any questions.
             Thank you
             """
+
+            # Initialize EmailMessage
             email = EmailMessage(subject, message, 'mubeenjutt9757@gmail.com', [recipient_email])
             email.content_subtype = 'html'
 
+            # Attach PDF if available
             pdf_file = request.FILES.get('pdf')
             if pdf_file:
                 email.attach(pdf_file.name, pdf_file.read(), 'application/pdf')
-
-            cc_emails = request.data.get('cc_emails')
-            if cc_emails:
-                cc_email_list = cc_emails.split(',')
-                email.cc = [email.strip() for email in cc_email_list]
 
             email.send()
             return Response({'message': 'RFI email sent successfully!'})
         except RFI.DoesNotExist:
             return Response({'error': 'RFI not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
+            logger.error('Failed to send email', exc_info=True)
             return Response({'error': 'Failed to send email', 'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+
+class ProjectDashboardAPIView(APIView):
+    def get(self, request):
+        data = {}
+        statuses = ['Pre-Construction', 'Construction Phase', 'Close out phase', 'Upcoming/Estimating phase', 'Complete']
+        # rfis = RFI_Log.objects.filter(project=project,status='Open').select_related('rfi')
+        for status in statuses:
+            projects = Project.objects.filter(status=status)
+            total_bid_amount = projects.aggregate(Sum('proposal__estimating__bid_amount'))['proposal__estimating__bid_amount__sum'] or 0
+            total_projects = projects.count()
+            total_open_rfi_count = RFI_Log.objects.filter(project__status=status, status='Open').count()
+            total_pco_count = PCO_Log.objects.filter(pco__project__status=status).count()
+            total_open_delay_count = Delay_Log.objects.filter(dly_ntc__project__status=status, status='Open').count()
+            
+            
+            projects_data = []
+            
+            for project in projects:
+                project_data = {
+                    'project_name': project.proposal.estimating.prjct_name, #type:ignore
+                    'project_id':project.id, #type:ignore
+                    'prjct_mngr': project.prjct_mngr.first_name if project.prjct_mngr else None,
+                    'RFI': self.get_rfi_data(project),
+                    'PCO': self.get_pco_data(project),
+                    'Delay': self.get_delay_data(project),
+                }
+                projects_data.append(project_data)
+
+            data[status] = {
+                'total_projects': total_projects,
+                'total_bid_amount': total_bid_amount,
+                
+                'total_open_rfi_count': total_open_rfi_count,
+                'total_pco_count': total_pco_count,
+                'total_open_delay_count': total_open_delay_count,
+                'projects': projects_data,
+            }
+
+        return Response(data)
+
+    def get_rfi_data(self, project):
+        rfis = RFI_Log.objects.filter(project=project,status='Open').select_related('rfi')
+        total_rfi_num = rfis.count()
+        rfi_details = rfis.values('rfi__rfi_num','gc_rfi_num','status','rfi__date','date_close','rfi__rply_by','received_date','rfi__dscrptn','cost_schdl')
+        # dms_rfi=rfis.values()
+
+        return {
+            'total_rfi_num': total_rfi_num,
+            'rfi_detail': list(rfi_details),
+        }
+
+    def get_pco_data(self, project):
+        pcos = PCO_Log.objects.filter(pco__project=project).select_related('pco')
+        total_pco_num = pcos.count()
+        pco_details = pcos.values('pco__pco_num','t_m','cor_amont','co_amont','co_num','auther_name','note','pco__dcrsbsn','pco__date')
+        return {
+            'total_pco_num': total_pco_num,
+            'pco_detail': list(pco_details),
+        }
+
+    def get_delay_data(self, project):
+        delays = Delay_Log.objects.filter(dly_ntc__project=project,status='Open').select_related('dly_ntc__rfi_log__rfi', 'dly_ntc__pco_log__pco')
+        total_delay_num = delays.count()
+
+        # Prepare delay details, including RFI number and PCO number from nested relations
+        delay_details = []
+        for delay in delays:
+            detail = {
+                'delay_num': delay.dly_ntc.delay_num, # type: ignore
+                'rfi_num': delay.dly_ntc.rfi_log.rfi.rfi_num if delay.dly_ntc.rfi_log and delay.dly_ntc.rfi_log.rfi else None, # type: ignore
+                'pco_num': delay.dly_ntc.pco_log.pco.pco_num if delay.dly_ntc.pco_log and delay.dly_ntc.pco_log.pco else None,#type: ignore
+                'status':delay.status,#type: ignore
+                'type':delay.typ,
+                'dly_rslov':delay.dly_rslov,
+                'fnl_impct':delay.fnl_impct,
+                
+                
+            }
+            delay_details.append(detail)
+
+        return {
+            'total_delay_num': total_delay_num,
+            'delay_detail': delay_details,
+        }

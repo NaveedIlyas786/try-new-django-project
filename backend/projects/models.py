@@ -633,6 +633,7 @@ class Labor(models.Model):
     pco=models.ForeignKey(PCO, verbose_name="PCO", on_delete=models.CASCADE,null=True,blank=True)
     itm_name=models.CharField(verbose_name="Material item name", max_length=500,null=True,blank=True)
     quntty=models.IntegerField(verbose_name="Quantity", null=True,blank=True)
+    typ=models.CharField(verbose_name="Type Rate", max_length=50,null=True,blank=True)
     unit=models.CharField(verbose_name="Unit", max_length=500,null=True,blank=True)
     unit_prz=models.FloatField(verbose_name="Unit$",null=True,blank=True)
     totl=models.FloatField(verbose_name="Total",null=True,blank=True)

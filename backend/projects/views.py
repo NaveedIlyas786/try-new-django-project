@@ -5,9 +5,7 @@
 # from django.db import transaction
 from django.core.mail import EmailMessage
 import logging
-from django.core.files.uploadedfile import InMemoryUploadedFile
-from django.db.models import Prefetch
-from django.db.models import F,Sum
+from django.db.models import Sum
 
 
 from django.shortcuts import get_object_or_404
@@ -18,7 +16,6 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from rest_framework.views import APIView
-from django.db.models import Count, Q
 
 
 from rest_framework.decorators import api_view

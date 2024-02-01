@@ -34,7 +34,7 @@ class SubmittalsInline(admin.StackedInline):
         # Check if the db_field is 'scop_work_number'
         if db_field.name == 'scop_work_number':
             # Try to get the Project instance that's currently being edited
-            project_id = request.resolver_match.kwargs.get('object_id')
+            project_id = request.resolver_match.kwargs.get('object_id')#type:ignore
             if project_id:
                 project = Project.objects.get(pk=project_id)
                 # Update the queryset for the scop_work_number field

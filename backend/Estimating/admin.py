@@ -159,28 +159,10 @@ class ProposalAdmin(NestedModelAdmin):
 
 
 
-
-
-# admin.site.register(Company, CompanyAdmin)
-# admin.site.register(Location,LocationAdmin)
-# admin.site.register(Estimating, EstimatingAdmin)
-# admin.site.register(Proposal,ProposalAdmin)
-# admin.site.register(Service,ServiceAdmin)
-# admin.site.register(Qualification,QualificationAdmin)
-# admin.site.register(Estimating_detail,EstimatingDetailAdmin)
-# admin.site.register(UrlsTable,UrlsAdmin)
-# admin.site.register(Role,RoleAdmin)
-# admin.site.register(Dprtmnt,DprtmntAdmin)
-# admin.site.register(DMS_Dertory,DMS_DertoryAdmin)
-
-
-
 admin.site.register(Company, CompanyAdmin)
 admin.site.register(Location, LocationAdmin)
 admin.site.register(Estimating, EstimatingAdmin)
 admin.site.register(Proposal, ProposalAdmin)
-# admin.site.register(Service, ServiceAdmin)
-# admin.site.register(Qualification, QualificationAdmin)
 admin.site.register(Estimating_detail, EstimatingDetailAdmin)
 admin.site.register(UrlsTable, UrlsAdmin)
 admin.site.register(Role, RoleAdmin)

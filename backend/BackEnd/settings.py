@@ -43,11 +43,12 @@ INSTALLED_APPS = [
     'accounts',
     'projects',
     'Estimating',
+    'reports',
     'rest_framework',
     'rest_framework_simplejwt',
     'nested_admin',
     'import_export',
-    # 'whitenoise',
+    
 ]
 
 

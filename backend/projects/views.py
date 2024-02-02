@@ -422,46 +422,56 @@ class Pco_LogView(APIView):
         pco_log.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-class SendRFIEmailView(APIView):
-    def post(self, request, rfi_id, format=None):
-        logger = logging.getLogger(__name__)
-
+class SendDocumentEmailView(APIView):
+    def post(self, request, document_id, format=None):
+        document_type = request.data.get('document_type')  # 'RFI' or 'Delay'
+        
         try:
-            rfi = RFI.objects.get(id=rfi_id)
-            project = rfi.project
+            if document_type == 'RFI':
+                document = RFI.objects.get(id=document_id)
+                message = """
+                Hello,
+                Here are the details of the RFI for project:
+                ...
+                Please review and let us know if there are any questions.
+                Thank you.
+                """
+            elif document_type == 'Delay':
+                document = Delay_Notice.objects.get(id=document_id)
+                message = """
+                Hello,
+                Here is the Delay Notice for project:
+                ...
+                Please review and address the delay accordingly.
+                Thank you.
+                """
+            else:
+                return Response({'error': 'Invalid document type'}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Get the recipient email from the request
-            recipient_email = request.data.get('recipient')
-            if not recipient_email:
-                return Response({'error': 'Recipient email not found'}, status=status.HTTP_400_BAD_REQUEST)
+            project = document.project
+            recipient_email = project.attn_email if not request.data.get('cc_emails') else None
+            cc_emails = request.data.get('cc_emails').split(',') if request.data.get('cc_emails') else []
 
-            subject = 'RFI Details'
-            message = """
-            Hello,
-            Here are the details of the RFI for project:
-            ...
-            Please review and let us know if there are any questions.
-            Thank you
-            """
+            subject = f'{document_type} Details'
+            email = EmailMessage(
+                subject,
+                message,
+                'mubeenjutt9757@gmail.com',
+                [recipient_email] if recipient_email else [],
+                cc=cc_emails,
+            )
 
-            # Initialize EmailMessage
-            email = EmailMessage(subject, message, 'mubeenjutt9757@gmail.com', [recipient_email])
-            email.content_subtype = 'html'
-
-            # Attach PDF if available
             pdf_file = request.FILES.get('pdf')
             if pdf_file:
-                email.attach(pdf_file.name, pdf_file.read(), 'application/pdf')
+                email.attach(f"{document_type} Attachment.pdf", pdf_file.read(), 'application/pdf')
 
             email.send()
-            return Response({'message': 'RFI email sent successfully!'})
-        except RFI.DoesNotExist:
-            return Response({'error': 'RFI not found'}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            logger.error('Failed to send email', exc_info=True)
-            return Response({'error': 'Failed to send email', 'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+            return Response({'message': f'{document_type} email sent successfully!'}, status=status.HTTP_200_OK)
 
+        except (RFI.DoesNotExist, Delay_Notice.DoesNotExist):
+            return Response({'error': f'{document_type} not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': 'Failed to send email', 'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class ProjectDashboardAPIView(APIView):
     def get(self, request):

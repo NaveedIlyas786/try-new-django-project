@@ -324,6 +324,7 @@ class Delay_LogViews(APIView):
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def create_pco(request, id=None):
+    # GET: Retrieve a list of PCO instances or a single instance by ID
     if request.method == 'GET':
         if id:
             try:
@@ -344,7 +345,8 @@ def create_pco(request, id=None):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+    # PUT: Update an existing PCO instance
+    # PUT: Update an existing PCO instance and its nested objects
     elif request.method == 'PUT' and id is not None:
         try:
             pco = PCO.objects.get(pk=id)
@@ -355,9 +357,11 @@ def create_pco(request, id=None):
         if serializer.is_valid():
             serializer.save()
 
+            # Update nested objects
             update_nested_objects(request.data, pco)
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # DELETE: Delete a specific PCO instance
     if request.method == 'DELETE' and id is not None:
         try:
             pco = PCO.objects.get(pk=id)
@@ -374,18 +378,23 @@ def update_nested_objects(data, pco_instance):
         (Miscellaneous, 'miscellaneous'),
         (Labor, 'labor')
     ]:
+        # IDs of items to keep (not delete)
         provided_ids = set()
+
+        # Update or create items
         for item_data in data.get(data_key, []):
             item_id = item_data.pop('id', None)
             
             if item_id:
+                # Update existing item
                 provided_ids.add(item_id)
                 nested_model.objects.filter(id=item_id, pco=pco_instance).update(**item_data)
             else:
+                # Create new item
                 nested_model.objects.create(pco=pco_instance, **item_data)
 
+        # Delete items not included in the provided data
         nested_model.objects.filter(pco=pco_instance).exclude(id__in=provided_ids).delete()
-
 
 
 class Pco_LogView(APIView):
@@ -427,38 +436,32 @@ class SendDocumentEmailView(APIView):
         document_type = request.data.get('document_type')  # 'RFI' or 'Delay'
         
         try:
-            if document_type == 'RFI':
+            # Fetch the document and prepare the message based on type
+            if document_type == 'PCO':
+                document = PCO.objects.get(id=document_id)  # Replace with your actual model and query
+                message = "Hello,\nHere is the PCO for your project: ..."
+            elif document_type == 'RFI':
                 document = RFI.objects.get(id=document_id)
-                message = """
-                Hello,
-                Here are the details of the RFI for project:
-                ...
-                Please review and let us know if there are any questions.
-                Thank you.
-                """
+                message = "Hello,\nHere are the details of the RFI for project: ..."
             elif document_type == 'Delay':
                 document = Delay_Notice.objects.get(id=document_id)
-                message = """
-                Hello,
-                Here is the Delay Notice for project:
-                ...
-                Please review and address the delay accordingly.
-                Thank you.
-                """
+                message = "Hello,\nHere is the Delay Notice for project: ..."
             else:
                 return Response({'error': 'Invalid document type'}, status=status.HTTP_400_BAD_REQUEST)
 
             project = document.project
-            recipient_email = project.attn_email if not request.data.get('cc_emails') else None
-            cc_emails = request.data.get('cc_emails').split(',') if request.data.get('cc_emails') else []
+            attn_email = project.attn_email#type: ignore  # Attention email from the project
+            cc_emails = request.data.get('cc_emails', '').split(',')  # CC emails from the request
+            
+            # Combine attn_email and cc_emails, ensuring no duplicates
+            recipient_list = list(set([attn_email] + cc_emails))
 
             subject = f'{document_type} Details'
             email = EmailMessage(
                 subject,
                 message,
-                'mubeenjutt9757@gmail.com',
-                [recipient_email] if recipient_email else [],
-                cc=cc_emails,
+                'mubeenjutt9757@gmail.com',  # Sender's email
+                recipient_list,  # Combined recipient list
             )
 
             pdf_file = request.FILES.get('pdf')
@@ -468,11 +471,10 @@ class SendDocumentEmailView(APIView):
             email.send()
             return Response({'message': f'{document_type} email sent successfully!'}, status=status.HTTP_200_OK)
 
-        except (RFI.DoesNotExist, Delay_Notice.DoesNotExist):
+        except (RFI.DoesNotExist, Delay_Notice.DoesNotExist,PCO.DoesNotExist):
             return Response({'error': f'{document_type} not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'error': 'Failed to send email', 'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 class ProjectDashboardAPIView(APIView):
     def get(self, request):
         data = {}

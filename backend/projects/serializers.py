@@ -13,6 +13,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 
 import datetime
 import base64
+from django.db import transaction
 
 
 
@@ -627,7 +628,7 @@ class LaborSerializer(serializers.ModelSerializer):
 
 class PCOSerializer(serializers.ModelSerializer):
     date = serializers.DateField(
-        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)# type: ignore
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
     rfi_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=RFI_Log.objects.all(), source='rfi',required=False)
     rfi=RFI_LogSerializer(read_only=True)
 
@@ -674,11 +675,11 @@ class PCOSerializer(serializers.ModelSerializer):
             field.required = False
     def save(self, **kwargs):
         # Extract nested data before saving the main object
-        qualifications_data = self.validated_data.pop('qualification_set', [])# type: ignore
-        debited_materials_data = self.validated_data.pop('debited_material_set', [])# type: ignore
-        credited_materials_data = self.validated_data.pop('credited_material_set', [])# type: ignore
-        miscellaneous_data = self.validated_data.pop('miscellaneous_set', [])# type: ignore
-        labor_data = self.validated_data.pop('labor_set', [])# type: ignore
+        qualifications_data = self.validated_data.pop('qualification_set', [])#type: ignore
+        debited_materials_data = self.validated_data.pop('debited_material_set', [])#type: ignore
+        credited_materials_data = self.validated_data.pop('credited_material_set', [])#type: ignore
+        miscellaneous_data = self.validated_data.pop('miscellaneous_set', [])#type: ignore
+        labor_data = self.validated_data.pop('labor_set', [])#type: ignore
 
         # Save the PCO instance
         pco_instance = super().save(**kwargs)
@@ -698,7 +699,6 @@ class PCOSerializer(serializers.ModelSerializer):
     def _save_nested_data(self, data_list, ModelClass, parent_instance):
         for data in data_list:
             ModelClass.objects.create(pco=parent_instance, **data)
-
 
 class PCO_LogSerializer(serializers.ModelSerializer):
     pco_id=serializers.PrimaryKeyRelatedField(write_only=True,queryset=PCO.objects.all(),source='pco',required=False)

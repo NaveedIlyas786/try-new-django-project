@@ -599,7 +599,7 @@ class PCO(models.Model):
 
 class Qualification(models.Model):
     pco=models.ForeignKey(PCO, verbose_name="PCO", on_delete=models.CASCADE,null=True,blank=True)
-    detail=models.CharField(verbose_name="Add Qualification", max_length=255)
+    detail=models.CharField(verbose_name="Add Qualification", max_length=5000)
     def __str__(self):
         return self.detail
     

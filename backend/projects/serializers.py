@@ -552,14 +552,14 @@ class RFISerializer(serializers.ModelSerializer):
     class Meta:
         model = RFI
         fields = ['id', 'project', 'project_id', 'rfi_num', 'date', 'drwng_rfrnc', 'detl_num', 'spc_rfrnc', 'dscrptn', 'rspns_rqrd', 'qustn', 'bool1', 'bool2', 'bool3', 'rply_by', 'rspns', 'name_log', 'title', 'date2', 'attached_pdfs']
-        # Note: 'attached_pdf' removed from fields since it's handled by get_attached_pdfs and not a direct model field
+        # Note: 'atchd_pdf' removed from fields since it's handled by get_attached_pdfs and not a direct model field
 
     def get_attached_pdfs(self, obj):
         attached_pdfs = Attached_Pdf_Rfi.objects.filter(rfi=obj)
         return Attache_PDF_RFISerializer(attached_pdfs, many=True).data
 
     def create(self, validated_data):
-        attached_pdf_data = validated_data.pop('attached_pdf', None)
+        attached_pdf_data = validated_data.pop('atchd_pdf', None)
         rfi = RFI.objects.create(**validated_data)
         if attached_pdf_data and isinstance(attached_pdf_data, InMemoryUploadedFile):
             for file in attached_pdf_data:
@@ -790,7 +790,7 @@ class PCOSerializer(serializers.ModelSerializer):
             pco=pco,
             auther_name=pco.prpd_by,
         )
-        attached_pdf_data = self.context['request'].FILES.getlist('attached_pdf')
+        attached_pdf_data = self.context['request'].FILES.getlist('atchd_pdf')
         for file in attached_pdf_data:
             Attached_Pdf_Pco.objects.create(
                 pco=pco,
@@ -817,7 +817,7 @@ class PCOSerializer(serializers.ModelSerializer):
         # Handle attached PDF updates
         request = self.context.get('request')
         if request and hasattr(request, 'FILES'):
-            attached_pdfs = request.FILES.getlist('attached_pdf')
+            attached_pdfs = request.FILES.getlist('atchd_pdf')
             if attached_pdfs:
                 # Optional: Clear existing files if replacing them is the intended behavior
                 Attached_Pdf_Pco.objects.filter(pco=instance).delete()
@@ -908,7 +908,7 @@ class Delay_NoticeSerializer(serializers.ModelSerializer):
 
 
     def create(self, validated_data):
-        attached_pdf_data = validated_data.pop('attached_pdf', None)
+        attached_pdf_data = validated_data.pop('atchd_pdf', None)
         delay = Delay_Notice.objects.create(**validated_data)
         if attached_pdf_data and isinstance(attached_pdf_data, InMemoryUploadedFile):
             for file in attached_pdf_data:

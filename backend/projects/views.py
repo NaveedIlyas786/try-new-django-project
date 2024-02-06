@@ -174,7 +174,7 @@ class RFIViews(APIView):
         serializer = RFISerializer(data=request.data)
         if serializer.is_valid():
             rfi_instance = serializer.save()
-            files = request.FILES.getlist('atchd_pdf')  # Adjust field name if necessary
+            files = request.FILES.getlist('attached_pdf')  # Adjust field name if necessary
             for file in files:
                 Attached_Pdf_Rfi.objects.create(
                     rfi=rfi_instance,
@@ -202,7 +202,7 @@ class RFIViews(APIView):
             rfi_instance = serializer.save()
             # If updating with new files, clear existing ones or add to them based on your logic
             Attached_Pdf_Rfi.objects.filter(rfi=rfi).delete()  # Optional: adjust this logic as needed
-            files = request.FILES.getlist('atchd_pdf')  # Adjust field name if necessary
+            files = request.FILES.getlist('attached_pdf')  # Adjust field name if necessary
             for file in files:
                 Attached_Pdf_Rfi.objects.create(
                     rfi=rfi_instance,
@@ -275,7 +275,7 @@ class Delay_NoticeViews(APIView):
         serialize = Delay_NoticeSerializer(data=request.data)
         if serialize.is_valid():
             delay_notice_instance = serialize.save()
-            files = request.FILES.getlist('atchd_pdf')
+            files = request.FILES.getlist('attached_pdf')
             for file in files:
                 Attached_Pdf_Delay.objects.create(
                     delay=delay_notice_instance,
@@ -299,7 +299,7 @@ class Delay_NoticeViews(APIView):
         if serializer.is_valid():
             delay_instance=serializer.save()
             Attached_Pdf_Delay.objects.filter(delay=dly_ntc).delete()
-            files=request.FILES.getlist('atchd_pdf')
+            files=request.FILES.getlist('attached_pdf')
             for file in files:
                 Attached_Pdf_Delay.objects.create(
                     delay=delay_instance,

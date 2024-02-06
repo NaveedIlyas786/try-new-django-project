@@ -6,11 +6,11 @@
 from django.core.mail import EmailMessage
 import logging
 from django.db.models import Sum
-
+from rest_framework.parsers import MultiPartParser, FormParser,JSONParser
 
 from django.shortcuts import get_object_or_404
 
-from .models import Project, Project_detail
+from .models import Attached_Pdf_Delay, Project, Project_detail
 from .serializers import ProjectSerializer, ProjectDetailSerializer
 from rest_framework.response import Response
 from rest_framework import status
@@ -19,8 +19,8 @@ from rest_framework.views import APIView
 
 
 from rest_framework.decorators import api_view
-from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget,Delay_Notice,RFI,PCO,Schedule_of_Value,RFI_Log,Delay_Log,Qualification,Debited_Material,Credited_Material,Labor,Miscellaneous
-from .serializers import (ProjectSerializer, ContractSerializer,  InsuranceSerializer, BondSerializer,QualificationSerializer,DebitedMaterialSerializer,CreditedMaterialSerializer,LaborSerializer,MiscellaneousSerializer,
+from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget,Delay_Notice,RFI,PCO,Schedule_of_Value,RFI_Log,Delay_Log,Qualification,Debited_Material,Credited_Material,Labor,Miscellaneous,Attached_Pdf_Rfi,Attached_Pdf_Delay,Attached_Pdf_Pco
+from .serializers import (ProjectSerializer, ContractSerializer,  InsuranceSerializer, BondSerializer,Attache_PDF_RFISerializer,Attache_PDF_DelaySerializer,QualificationSerializer,DebitedMaterialSerializer,CreditedMaterialSerializer,LaborSerializer,MiscellaneousSerializer,Attache_PDF_PCOSerializer,
                            SubmittalsSerializer, ShopDrawingSerializer, SafitySerializer, ScheduleSerializer,PCO_Log,
                           SubContractorsSerializer, LaborRateSerializer,HDSSystemSerializer,
                           BugetSerializer,Delay_NoticeSerializer,RFISerializer,PCOSerializer,ScheduleOfValueSerializer,RFI_LogSerializer,Delay_LogSerializer,PCO_LogSerializer)
@@ -155,22 +155,32 @@ def create_project(request, id=None):
 
 
 class RFIViews(APIView):
+    parser_classes = (MultiPartParser, FormParser,JSONParser)
+
     def get(self, request, id=None):
         if id:
             rfi = get_object_or_404(RFI, id=id)
             serializer = RFISerializer(rfi)
+            # Fetch associated files
+            attached_files = Attached_Pdf_Rfi.objects.filter(rfi=rfi)
+            files_serializer = Attache_PDF_RFISerializer(attached_files, many=True)
+            return Response({'rfi': serializer.data, 'attached_files': files_serializer.data})
         else:
             rfi = RFI.objects.all()
             serializer = RFISerializer(rfi, many=True)
-        return Response(serializer.data)
+            return Response(serializer.data)
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         serializer = RFISerializer(data=request.data)
         if serializer.is_valid():
-            project_id = request.data.get('project_id')
-            if project_id:
-                project = get_object_or_404(Project, id=project_id)
-                rfi_instance = serializer.save(project=project)
+            rfi_instance = serializer.save()
+            files = request.FILES.getlist('attached_pdf')  # Adjust field name if necessary
+            for file in files:
+                Attached_Pdf_Rfi.objects.create(
+                    rfi=rfi_instance,
+                    binary=file.read(),  # This stores the binary directly; adjust for base64 if needed
+                    typ=file.content_type
+                )
 
                 # Create and save RFI_Log instance
                 rfi_log_data = {
@@ -180,17 +190,25 @@ class RFIViews(APIView):
                 rfi_log_serializer = RFI_LogSerializer(data=rfi_log_data)
                 if rfi_log_serializer.is_valid():
                     rfi_log_serializer.save()
-
+                    
+                    
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            else:
-                return Response({"error": "project_id is required"}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, id=None):
         rfi = get_object_or_404(RFI, id=id)
         serializer = RFISerializer(rfi, data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            rfi_instance = serializer.save()
+            # If updating with new files, clear existing ones or add to them based on your logic
+            Attached_Pdf_Rfi.objects.filter(rfi=rfi).delete()  # Optional: adjust this logic as needed
+            files = request.FILES.getlist('attached_pdf')  # Adjust field name if necessary
+            for file in files:
+                Attached_Pdf_Rfi.objects.create(
+                    rfi=rfi_instance,
+                    binary=file.read(),  # Adjust for base64 if needed
+                    typ=file.content_type
+                )
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -198,8 +216,9 @@ class RFIViews(APIView):
         rfi = get_object_or_404(RFI, id=id)
         rfi.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
+    
+    
+    
 class RFILogViews(APIView):
     def get(self, request, id=None):
         if id:
@@ -239,25 +258,30 @@ class Delay_NoticeViews(APIView):
 
     def get(self, request,id=None):
         if id:
-            try:
-                delay_notice=Delay_Notice.objects.get(id=id)
-            except:
-                return Response(status=status.HTTP_404_NOT_FOUND)
-            serialize=Delay_NoticeSerializer(delay_notice)
+            delay_notice=Delay_Notice.objects.get(id=id)
+            serializer=Delay_NoticeSerializer(delay_notice)
+            attached_files = Attached_Pdf_Delay.objects.filter(delay=delay_notice)
+            files_serializer = Attache_PDF_DelaySerializer(attached_files, many=True)
+            return Response({'delay': serializer.data, 'attached_files': files_serializer.data})
         else:
             delay_notice=Delay_Notice.objects.all()
-            serialize=Delay_NoticeSerializer(delay_notice,many=True)
-            
-        return Response(serialize.data)
+            serializer=Delay_NoticeSerializer(delay_notice,many=True)
+            return Response(serializer.data)
     
     
     
 
-    def post(self, request):
+    def post(self, request,*args,**kwargs):
         serialize = Delay_NoticeSerializer(data=request.data)
         if serialize.is_valid():
             delay_notice_instance = serialize.save()
-
+            files = request.FILES.getlist('attached_pdf')
+            for file in files:
+                Attached_Pdf_Delay.objects.create(
+                    delay=delay_notice_instance,
+                    binary=file.read(),  # This stores the binary directly; adjust for base64 if needed
+                    typ=file.content_type
+                )
             delay_log_data = {
                 'dly_ntc_id': delay_notice_instance.id, # type: ignore
             }
@@ -273,7 +297,15 @@ class Delay_NoticeViews(APIView):
         dly_ntc=get_object_or_404(Delay_Notice,id=id)
         serializer=Delay_NoticeSerializer(dly_ntc,data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            delay_instance=serializer.save()
+            Attached_Pdf_Delay.objects.filter(delay=dly_ntc).delete()
+            files=request.FILES.getlist('attached_pdf')
+            for file in files:
+                Attached_Pdf_Delay.objects.create(
+                    delay=delay_instance,
+                    binary=file.read(),
+                    typ=file.content_type
+                )
             return Response(serializer.data)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
@@ -330,69 +362,47 @@ def pco_view(request, id=None):
                 pco = PCO.objects.get(pk=id)
                 serializer = PCOSerializer(pco)
             except PCO.DoesNotExist:
-                return Response({'message': 'PCO not found'}, status=404)
+                return Response({'message': 'PCO not found'}, status=status.HTTP_404_NOT_FOUND)
         else:
             pcos = PCO.objects.all()
             serializer = PCOSerializer(pcos, many=True)
-        return Response(serializer.data, status=200)
-
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
     elif request.method == 'POST':
-        serializer = PCOSerializer(data=request.data)
+        serializer = PCOSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
+            pco_instance = serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.errors, status=400)
-
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'PUT':
         if not id:
-            return Response({"message": "ID is required for PUT request"}, status=400)
+            return Response({"message": "ID is required for PUT request"}, status=status.HTTP_400_BAD_REQUEST)
         try:
             pco = PCO.objects.get(pk=id)
         except PCO.DoesNotExist:
-            return Response({'message': 'PCO not found'}, status=404)
-        
-        serializer = PCOSerializer(pco, data=request.data, partial=True)
+            return Response({'message': 'PCO not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = PCOSerializer(pco, data=request.data, partial=True, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         else:
-            return Response(serializer.errors, status=400)
-
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
         if not id:
-            return Response({"message": "ID is required for DELETE request"}, status=400)
+            return Response({"message": "ID is required for DELETE request"}, status=status.HTTP_400_BAD_REQUEST)
         try:
             pco = PCO.objects.get(pk=id)
             pco.delete()
-            return Response({'message': 'PCO was deleted successfully'}, status=204)
+            return Response({'message': 'PCO was deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
         except PCO.DoesNotExist:
-            return Response({'message': 'PCO not found'}, status=404)
+            return Response({'message': 'PCO not found'}, status=status.HTTP_404_NOT_FOUND)
 
     else:
-        return Response({"message": "HTTP method not allowed"}, status=405)
+        return Response({"message": "HTTP method not allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
     
-def update_nested_objects(data, pco_instance):
-    for nested_model, data_key in [
-        (Qualification, 'qualifications'),
-        (Debited_Material, 'debited_materials'),
-        (Credited_Material, 'credited_materials'),
-        (Miscellaneous, 'miscellaneous'),
-        (Labor, 'labor')
-    ]:
-        provided_ids = set()
-
-        for item_data in data.get(data_key, []):
-            item_id = item_data.pop('id', None)
-            
-            if item_id:
-                provided_ids.add(item_id)
-                nested_model.objects.filter(id=item_id, pco=pco_instance).update(**item_data)
-            else:
-                nested_model.objects.create(pco=pco_instance, **item_data)
-
-        nested_model.objects.filter(pco=pco_instance).exclude(id__in=provided_ids).delete()
 
 
 class Pco_LogView(APIView):

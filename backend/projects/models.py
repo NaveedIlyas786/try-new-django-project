@@ -538,10 +538,13 @@ class RFI(models.Model):
     name_log=models.CharField(verbose_name="Name Login", max_length=50,null=True,blank=True)
     title=models.CharField(verbose_name="Title login", max_length=250,null=True,blank=True)
     date2=models.DateField(verbose_name="Date", auto_now=False, auto_now_add=False,null=True,blank=True)
-    atchd_pdf=models.BinaryField("Atthd_pdf", null=True, blank=True, editable=True)
     dscrptn=models.CharField(verbose_name="Description", max_length=5000,null=True,blank=True)
 
-    
+
+class Attached_Pdf_Rfi(models.Model):
+    rfi=models.ForeignKey(RFI, verbose_name="Select RFI", on_delete=models.CASCADE,null=True,blank=True)
+    binary=models.BinaryField("Atthd_pdf", null=True, blank=True, editable=True)
+    typ=models.CharField(verbose_name="Type of Attachment", max_length=250,null=True,blank=True)
 
 class RFI_Log(models.Model):
     project=models.ForeignKey(Project, verbose_name="Select", on_delete=models.CASCADE,null=True,blank=True)
@@ -593,9 +596,12 @@ class PCO(models.Model):
     totl_rqest=models.FloatField(verbose_name="Total Req",null=True,blank=True)
     prpd_by=models.CharField(verbose_name="Login User name", max_length=500, null=True, blank=True)
 
-    atchd_pdf=models.BinaryField("Atthd_pdf", null=True, blank=True, editable=True)
     
-    
+class Attached_Pdf_Pco(models.Model):
+    pco=models.ForeignKey(PCO, verbose_name="Select PCO", on_delete=models.CASCADE,null=True,blank=True)
+    binary=models.BinaryField("Atthd_pdf", null=True, blank=True, editable=True)
+    typ=models.CharField(verbose_name="Type of Attachment", max_length=250,null=True,blank=True)
+
 
 class Qualification(models.Model):
     pco = models.ForeignKey(PCO, verbose_name="PCO", related_name='qualifications', on_delete=models.CASCADE, null=True, blank=True)
@@ -664,9 +670,12 @@ class  Delay_Notice(models.Model):
     dscrptn_task=models.CharField(verbose_name="Schedule ID # and description of tasks that follow that will be affected:", max_length=5000 , blank=True, null=True)
     comnt=models.CharField(verbose_name="Additional Comments:", max_length=5000,null=True,blank=True)
     preprd_by=models.CharField(verbose_name="Prepared by:", max_length=500,null=True,blank=True)
-    atchd_pdf=models.BinaryField("Atthd_pdf", null=True, blank=True, editable=True)
 
-    
+class Attached_Pdf_Delay(models.Model):
+    delay=models.ForeignKey(Delay_Notice, verbose_name="Select Delay Notice", on_delete=models.CASCADE,null=True,blank=True)
+    binary=models.BinaryField("Atthd_pdf", null=True, blank=True, editable=True)
+    typ=models.CharField(verbose_name="Type of Attachment", max_length=250,null=True,blank=True)
+
 class Delay_Log(models.Model):
     dly_ntc=models.ForeignKey(Delay_Notice, verbose_name="Select Delay Notice", on_delete=models.CASCADE,null=True,blank=True)
     date=models.DateField(verbose_name="date", auto_now=False, auto_now_add=False,null=True,blank=True)

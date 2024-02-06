@@ -4,7 +4,7 @@ from rest_framework import serializers
 from .models import( Project, Contract,  Insurance, Bond, 
                     Submittals, ShopDrawing,Schedule_of_Value, 
                     Safity, Schedule, Sub_Contractors, LaborRate, HDS_system,
-                    Buget,Project_detail,Delay_Notice,RFI,PCO,RFI_Log,Delay_Log,Qualification,Debited_Material,Credited_Material,Miscellaneous,Labor
+                    Buget,Project_detail,Delay_Notice,RFI,PCO,RFI_Log,Delay_Log,Qualification,Debited_Material,Credited_Material,Miscellaneous,Labor,Attached_Pdf_Delay,Attached_Pdf_Pco,Attached_Pdf_Rfi
                     , PCO_Log)
 
 from Estimating.models import Proposal,Spec_detail,GC_detail
@@ -527,7 +527,11 @@ class ProjectDetailSerializer(serializers.ModelSerializer):
         fields = ['id', 'drctry_Name', 'prjct_id', 'prnt_id', 'file_type', 'file_name', 'children']
 
 
-
+class Attache_PDF_RFISerializer(serializers.ModelSerializer):
+        # Convert binary data to base64 for serialization
+    class Meta:
+        model=Attached_Pdf_Rfi
+        fields='__all__'
 
 
 
@@ -543,25 +547,29 @@ class RFISerializer(serializers.ModelSerializer):
     
     project_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Project.objects.all(), source='project', required=False)
     project=ProjectSerializer(read_only=True)
-        # Convert binary data to base64 for serialization
-    def to_internal_value(self, data):
-        internal_data = super().to_internal_value(data)
-
-        atchd_pdf = data.get('atchd_pdf')
-        if atchd_pdf and isinstance(atchd_pdf, InMemoryUploadedFile):
-            # Read file content and encode it in base64
-            file_content = atchd_pdf.read()
-            # Keep it as bytes
-            internal_data['atchd_pdf'] = base64.b64encode(file_content)
-        elif atchd_pdf and isinstance(atchd_pdf, str):
-            # If it's a string, assume it's base64-encoded data
-            internal_data['atchd_pdf'] = base64.b64decode(atchd_pdf)
-        return internal_data
+    attached_pdfs = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = RFI
-        fields = ['id', 'project', 'project_id', 'rfi_num', 'date', 'drwng_rfrnc', 'detl_num', 'spc_rfrnc','dscrptn', 'rspns_rqrd', 'qustn', 'bool1', 'bool2', 'bool3', 'rply_by', 'rspns', 'name_log', 'title', 'date2', 'atchd_pdf']
+        fields = ['id', 'project', 'project_id', 'rfi_num', 'date', 'drwng_rfrnc', 'detl_num', 'spc_rfrnc', 'dscrptn', 'rspns_rqrd', 'qustn', 'bool1', 'bool2', 'bool3', 'rply_by', 'rspns', 'name_log', 'title', 'date2', 'attached_pdfs']
+        # Note: 'attached_pdf' removed from fields since it's handled by get_attached_pdfs and not a direct model field
 
+    def get_attached_pdfs(self, obj):
+        attached_pdfs = Attached_Pdf_Rfi.objects.filter(rfi=obj)
+        return Attache_PDF_RFISerializer(attached_pdfs, many=True).data
+
+    def create(self, validated_data):
+        attached_pdf_data = validated_data.pop('attached_pdf', None)
+        rfi = RFI.objects.create(**validated_data)
+        if attached_pdf_data and isinstance(attached_pdf_data, InMemoryUploadedFile):
+            for file in attached_pdf_data:
+                file_content = file.read() #type: ignore
+                Attached_Pdf_Rfi.objects.create(
+                    rfi=rfi,
+                    binary=base64.b64encode(file_content),
+                    typ=file.content_type #type: ignore
+                )
+        return rfi
 
 
 
@@ -730,7 +738,11 @@ class LaborSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
+class Attache_PDF_PCOSerializer(serializers.ModelSerializer):
+        # Convert binary data to base64 for serialization
+    class Meta:
+        model=Attached_Pdf_Pco
+        fields='__all__'
 
 class PCOSerializer(serializers.ModelSerializer):
     
@@ -748,15 +760,20 @@ class PCOSerializer(serializers.ModelSerializer):
     credited_materials = CreditedMaterialSerializer(many=True, required=False)
     miscellaneous = MiscellaneousSerializer(many=True, required=False)
     labor = LaborSerializer(many=True, required=False)
+    attached_pdfs = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = PCO
         fields = [
             'id', 'date', 'pco_num', 'project_id', 'asi_num', 'pci_num', 'project', 'rfi_id', 'rfi',
             'dcrsbsn', 'chnge_dtals', 'typ', 'work_day', 'mtrl_sub_totl', 'get_tax', 'value_tax',
             'mtrl_totl', 'mscllns_totl', 'lbr_totl', 'subtotl_cost', 'get_ohp_tax', 'value_ohp_tax',
-            'cost_ohp_mtrl_tax', 'get_bond', 'value_bond', 'totl_rqest', 'prpd_by', 'atchd_pdf',
-            'qualifications', 'debited_materials', 'credited_materials', 'miscellaneous', 'labor'
+            'cost_ohp_mtrl_tax', 'get_bond', 'value_bond', 'totl_rqest', 'prpd_by',
+            'qualifications', 'debited_materials', 'credited_materials', 'miscellaneous', 'labor','attached_pdfs',
         ]
+    def get_attached_pdfs(self, obj):
+        attached_pdfs = Attached_Pdf_Pco.objects.filter(pco=obj)
+        return Attache_PDF_PCOSerializer(attached_pdfs, many=True).data
     @transaction.atomic
     def create(self, validated_data):
         nested_objects_data = {
@@ -773,6 +790,13 @@ class PCOSerializer(serializers.ModelSerializer):
             pco=pco,
             auther_name=pco.prpd_by,
         )
+        attached_pdf_data = self.context['request'].FILES.getlist('attached_pdf')
+        for file in attached_pdf_data:
+            Attached_Pdf_Pco.objects.create(
+                pco=pco,
+                binary=file.read(),  # Adjust for base64 encoding if necessary
+                typ=file.content_type
+            )
 
         # Process each type of nested object
         for _, (nested_data, ModelClass) in nested_objects_data.items():
@@ -790,6 +814,19 @@ class PCOSerializer(serializers.ModelSerializer):
                 setattr(instance, attr, value)
         instance.save()
 
+        # Handle attached PDF updates
+        request = self.context.get('request')
+        if request and hasattr(request, 'FILES'):
+            attached_pdfs = request.FILES.getlist('attached_pdf')
+            if attached_pdfs:
+                # Optional: Clear existing files if replacing them is the intended behavior
+                Attached_Pdf_Pco.objects.filter(pco=instance).delete()
+                for file in attached_pdfs:
+                    Attached_Pdf_Pco.objects.create(
+                        pco=instance,
+                        binary=file.read(),  # Consider adjusting for base64 encoding if necessary
+                        typ=file.content_type
+                    )
         # Nested updates or creations
         for field_name in nested_fields:
             if field_name in validated_data:
@@ -833,35 +870,7 @@ class PCOSerializer(serializers.ModelSerializer):
         representation['miscellaneous'] = MiscellaneousSerializer(instance.miscellaneous.all(), many=True).data
         representation['labor'] = LaborSerializer(instance.labor.all(), many=True).data
         return representation
-    # def create_or_update_nested(self, pco, nested_data, SerializerClass):
-    #     for item_data in nested_data:
-    #         item_id = item_data.pop('id', None)
-    #         if item_id:
-    #             nested_instance = SerializerClass.Meta.model.objects.get(id=item_id, pco=pco)
-    #             for key, value in item_data.items():
-    #                 setattr(nested_instance, key, value)
-    #             nested_instance.save()
-    #         else:
-    #             SerializerClass.Meta.model.objects.create(pco=pco, **item_data)
 
-    # def create_or_update_nested(self, pco, data_list, ModelClass):
-    #     for item_data in data_list:
-    #         item_id = item_data.get('id', None)
-    #         if item_id:
-    #             item_instance = ModelClass.objects.get(pk=item_id, pco=pco)
-    #             for key, value in item_data.items():
-    #                 setattr(item_instance, key, value)
-    #             item_instance.save()
-    #         else:
-    #             ModelClass.objects.create(pco=pco, **item_data)
-
-    def to_internal_value(self, data):
-        # Handle the conversion of uploaded files to base64
-        if 'atchd_pdf' in data and isinstance(data['atchd_pdf'], InMemoryUploadedFile):
-            file = data['atchd_pdf']
-            data['atchd_pdf'] = base64.b64encode(file.read()).decode('utf-8')
-        return super().to_internal_value(data)
-    
     
     
     
@@ -871,6 +880,11 @@ class PCO_LogSerializer(serializers.ModelSerializer):
     class Meta:
         model=PCO_Log
         fields=['id','pco_id','pco','t_m','cor_amont','co_amont','co_num','auther_name','note']
+class Attache_PDF_DelaySerializer(serializers.ModelSerializer):
+        # Convert binary data to base64 for serialization
+    class Meta:
+        model=Attached_Pdf_Delay
+        fields='__all__'
 
 
 class Delay_NoticeSerializer(serializers.ModelSerializer):
@@ -883,26 +897,28 @@ class Delay_NoticeSerializer(serializers.ModelSerializer):
     rfi_log=RFI_LogSerializer(read_only=True)
     pco_log_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=PCO_Log.objects.all(), source='pco_log',required=False)
     pco_log=PCO_LogSerializer(read_only=True)
-    def to_internal_value(self, data):
-        internal_data = super().to_internal_value(data)
+    attached_pdfs = serializers.SerializerMethodField(read_only=True)
 
-        atchd_pdf = data.get('atchd_pdf')
-        if atchd_pdf and isinstance(atchd_pdf, InMemoryUploadedFile):
-            # Read file content and encode it in base64
-            file_content = atchd_pdf.read()
-            # Keep it as bytes
-            internal_data['atchd_pdf'] = base64.b64encode(file_content)
-        elif atchd_pdf and isinstance(atchd_pdf, str):
-            # If it's a string, assume it's base64-encoded data
-            internal_data['atchd_pdf'] = base64.b64decode(atchd_pdf)
-        return internal_data
-
-    
     class Meta:
         model=Delay_Notice
-        fields=['id','project_id','delay_num','pco_log_id','pco_log','floor','area','schdul_num','date','rfi_log_id','rfi_log','dscrptn_impct','dscrptn_task','comnt','preprd_by','project','atchd_pdf']
-        
-        
+        fields=['id','project_id','delay_num','pco_log_id','pco_log','floor','area','schdul_num','date','rfi_log_id','rfi_log','dscrptn_impct','dscrptn_task','comnt','preprd_by','project','attached_pdfs']
+    def get_attached_pdfs(self, obj):
+        attached_pdfs = Attached_Pdf_Delay.objects.filter(delay=obj)
+        return Attache_PDF_DelaySerializer(attached_pdfs, many=True).data
+
+
+    def create(self, validated_data):
+        attached_pdf_data = validated_data.pop('attached_pdf', None)
+        delay = Delay_Notice.objects.create(**validated_data)
+        if attached_pdf_data and isinstance(attached_pdf_data, InMemoryUploadedFile):
+            for file in attached_pdf_data:
+                file_content = file.read() #type: ignore
+                Attached_Pdf_Delay.objects.create(
+                    delay=delay,
+                    binary=base64.b64encode(file_content),
+                    typ=file.content_type #type: ignore
+                )
+        return delay
         
 class Delay_LogSerializer(serializers.ModelSerializer):
     date = serializers.DateField(

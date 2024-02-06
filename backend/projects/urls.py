@@ -16,8 +16,8 @@ urlpatterns = [
     path('rfi/',views.RFIViews.as_view(),name='RFI'),
     path('rfi/<int:id>/',views.RFIViews.as_view(),name='RFI'),
     
-    path('pco/',views.create_pco,name='PCO'),
-    path('pco/<int:id>/',views.create_pco,name='PCO'),
+    path('pco/',views.pco_view,name='PCO'),
+    path('pco/<int:id>/',views.pco_view,name='PCO'),
     
     path('pco_log/',views.Pco_LogView.as_view(),name='PCO Log'),
     path('pco_log/<int:id>/',views.Pco_LogView.as_view(),name='PCO Log'),

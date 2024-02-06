@@ -323,53 +323,56 @@ class Delay_LogViews(APIView):
     
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
-def create_pco(request, id=None):
-    # GET: Retrieve a list of PCO instances or a single instance by ID
+def pco_view(request, id=None):
     if request.method == 'GET':
         if id:
             try:
                 pco = PCO.objects.get(pk=id)
                 serializer = PCOSerializer(pco)
             except PCO.DoesNotExist:
-                return Response({'message': 'The PCO does not exist'}, status=status.HTTP_404_NOT_FOUND)
+                return Response({'message': 'PCO not found'}, status=404)
         else:
             pcos = PCO.objects.all()
             serializer = PCOSerializer(pcos, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=200)
 
-    # POST: Create a new PCO instance
-    if request.method == 'POST':
+    elif request.method == 'POST':
         serializer = PCOSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=201)
+        else:
+            return Response(serializer.errors, status=400)
 
-    # PUT: Update an existing PCO instance
-    # PUT: Update an existing PCO instance and its nested objects
-    elif request.method == 'PUT' and id is not None:
+    elif request.method == 'PUT':
+        if not id:
+            return Response({"message": "ID is required for PUT request"}, status=400)
         try:
             pco = PCO.objects.get(pk=id)
         except PCO.DoesNotExist:
-            return Response({'message': 'The PCO does not exist'}, status=status.HTTP_404_NOT_FOUND)
-
+            return Response({'message': 'PCO not found'}, status=404)
+        
         serializer = PCOSerializer(pco, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-
-            # Update nested objects
-            update_nested_objects(request.data, pco)
             return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    # DELETE: Delete a specific PCO instance
-    if request.method == 'DELETE' and id is not None:
+        else:
+            return Response(serializer.errors, status=400)
+
+    elif request.method == 'DELETE':
+        if not id:
+            return Response({"message": "ID is required for DELETE request"}, status=400)
         try:
             pco = PCO.objects.get(pk=id)
             pco.delete()
-            return Response({'message': 'PCO was deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
+            return Response({'message': 'PCO was deleted successfully'}, status=204)
         except PCO.DoesNotExist:
-            return Response({'message': 'The PCO does not exist'}, status=status.HTTP_404_NOT_FOUND)
-        
+            return Response({'message': 'PCO not found'}, status=404)
+
+    else:
+        return Response({"message": "HTTP method not allowed"}, status=405)
+    
+    
 def update_nested_objects(data, pco_instance):
     for nested_model, data_key in [
         (Qualification, 'qualifications'),
@@ -378,22 +381,17 @@ def update_nested_objects(data, pco_instance):
         (Miscellaneous, 'miscellaneous'),
         (Labor, 'labor')
     ]:
-        # IDs of items to keep (not delete)
         provided_ids = set()
 
-        # Update or create items
         for item_data in data.get(data_key, []):
             item_id = item_data.pop('id', None)
             
             if item_id:
-                # Update existing item
                 provided_ids.add(item_id)
                 nested_model.objects.filter(id=item_id, pco=pco_instance).update(**item_data)
             else:
-                # Create new item
                 nested_model.objects.create(pco=pco_instance, **item_data)
 
-        # Delete items not included in the provided data
         nested_model.objects.filter(pco=pco_instance).exclude(id__in=provided_ids).delete()
 
 
@@ -495,6 +493,7 @@ class ProjectDashboardAPIView(APIView):
                 project_data = {
                     'project_name': project.proposal.estimating.prjct_name, #type:ignore
                     'project_id':project.id, #type:ignore
+                    'job_num':project.job_num,
                     'prjct_mngr': project.prjct_mngr.first_name if project.prjct_mngr else None,
                     'RFI': self.get_rfi_data(project),
                     'PCO': self.get_pco_data(project),

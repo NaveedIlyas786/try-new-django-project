@@ -598,13 +598,13 @@ class PCO(models.Model):
     
 
 class Qualification(models.Model):
-    pco=models.ForeignKey(PCO, verbose_name="PCO", on_delete=models.CASCADE,null=True,blank=True)
+    pco = models.ForeignKey(PCO, verbose_name="PCO", related_name='qualifications', on_delete=models.CASCADE, null=True, blank=True)
     detail=models.CharField(verbose_name="Add Qualification", max_length=5000)
     def __str__(self):
         return self.detail
     
 class Debited_Material(models.Model):
-    pco=models.ForeignKey(PCO, verbose_name="PCO", on_delete=models.CASCADE,null=True,blank=True)
+    pco = models.ForeignKey(PCO, verbose_name="Debited Material", related_name='debited_materials', on_delete=models.CASCADE, null=True, blank=True)
     itm_name=models.CharField(verbose_name="Material item name", max_length=500,null=True,blank=True)
     quntty=models.IntegerField(verbose_name="Quantity", null=True,blank=True)
     unit=models.CharField(verbose_name="Unit", max_length=500,null=True,blank=True)
@@ -612,7 +612,7 @@ class Debited_Material(models.Model):
     totl=models.FloatField(verbose_name="Total",null=True,blank=True)
     
 class Credited_Material(models.Model):
-    pco=models.ForeignKey(PCO, verbose_name="PCO", on_delete=models.CASCADE,null=True,blank=True)
+    pco = models.ForeignKey(PCO, verbose_name="Credited Material", related_name='credited_materials', on_delete=models.CASCADE, null=True, blank=True)
     itm_name=models.CharField(verbose_name="Material item name", max_length=500,null=True,blank=True)
     quntty=models.IntegerField(verbose_name="Quantity", null=True,blank=True)
     unit=models.CharField(verbose_name="Unit", max_length=500,null=True,blank=True)
@@ -621,7 +621,7 @@ class Credited_Material(models.Model):
 
 
 class Miscellaneous(models.Model):
-    pco=models.ForeignKey(PCO, verbose_name="PCO", on_delete=models.CASCADE,null=True,blank=True)
+    pco = models.ForeignKey(PCO, verbose_name="Miscellaneous", related_name='miscellaneous', on_delete=models.CASCADE, null=True, blank=True)
     itm_name=models.CharField(verbose_name="Material item name", max_length=500,null=True,blank=True)
     quntty=models.IntegerField(verbose_name="Quantity", null=True,blank=True)
     unit=models.CharField(verbose_name="Unit", max_length=500,null=True,blank=True)
@@ -631,7 +631,7 @@ class Miscellaneous(models.Model):
 
 
 class Labor(models.Model):
-    pco=models.ForeignKey(PCO, verbose_name="PCO", on_delete=models.CASCADE,null=True,blank=True)
+    pco = models.ForeignKey(PCO, verbose_name="Labor", related_name='labor', on_delete=models.CASCADE, null=True, blank=True)
     itm_name=models.CharField(verbose_name="Material item name", max_length=500,null=True,blank=True)
     quntty=models.IntegerField(verbose_name="Quantity", null=True,blank=True)
     unit=models.CharField(verbose_name="Unit", max_length=500,null=True,blank=True)

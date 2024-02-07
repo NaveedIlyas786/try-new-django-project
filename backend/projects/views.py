@@ -164,37 +164,44 @@ class RFIViews(APIView):
             # Fetch associated files
             attached_files = Attached_Pdf_Rfi.objects.filter(rfi=rfi)
             files_serializer = Attache_PDF_RFISerializer(attached_files, many=True)
-            return Response({'rfi': serializer.data, 'attached_files': files_serializer.data})
+            return Response(serializer.data)
         else:
             rfi = RFI.objects.all()
             serializer = RFISerializer(rfi, many=True)
             return Response(serializer.data)
 
+
     def post(self, request, *args, **kwargs):
         serializer = RFISerializer(data=request.data)
         if serializer.is_valid():
             rfi_instance = serializer.save()
-            files = request.FILES.getlist('attached_pdf')  # Adjust field name if necessary
+
+            # Your original code seems to assume 'attached_pdf' is part of request.FILES, but it's not clear from your JSON
+            # If you're expecting file uploads, ensure the request includes them and the field name matches here.
+            files = request.FILES.getlist('attached_pdfs')  # Adjust field name if necessary
             for file in files:
                 Attached_Pdf_Rfi.objects.create(
                     rfi=rfi_instance,
                     typ=file.content_type,
-                    binary=file.read(),  # This stores the binary directly; adjust for base64 if needed
-
+                    binary=file.read(),  # Adjust for base64 if needed
                 )
 
-                # Create and save RFI_Log instance
-                rfi_log_data = {
-                    'rfi_id': rfi_instance.id, # type: ignore
-                    'project_id':rfi_instance.project.id,#type:ignore
-                }
-                rfi_log_serializer = RFI_LogSerializer(data=rfi_log_data)
-                if rfi_log_serializer.is_valid():
-                    rfi_log_serializer.save()
-                    
-                    
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            # If you're handling RFI_Log here, ensure RFI_LogSerializer and related model are correctly defined
+            # Assuming 'rfi_id' and 'project_id' are correctly targeted fields in your RFI_Log model
+            rfi_log_data = {
+                'rfi_id': rfi_instance.id,#type:ignore
+                'project_id': rfi_instance.project.id,#type: ignore
+            }
+            rfi_log_serializer = RFI_LogSerializer(data=rfi_log_data)
+            if rfi_log_serializer.is_valid():
+                rfi_log_serializer.save()
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        # This prints out the serializer errors if the data is not valid
+        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
     def put(self, request, id=None):
         rfi = get_object_or_404(RFI, id=id)
@@ -203,7 +210,7 @@ class RFIViews(APIView):
             rfi_instance = serializer.save()
             # If updating with new files, clear existing ones or add to them based on your logic
             Attached_Pdf_Rfi.objects.filter(rfi=rfi).delete()  # Optional: adjust this logic as needed
-            files = request.FILES.getlist('attached_pdf')  # Adjust field name if necessary
+            files = request.FILES.getlist('attached_pdfs')  # Adjust field name if necessary
             for file in files:
                 Attached_Pdf_Rfi.objects.create(
                     rfi=rfi_instance,

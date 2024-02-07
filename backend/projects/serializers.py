@@ -339,19 +339,7 @@ class HDSSystemSerializer(serializers.ModelSerializer):
             data['date'] = datetime.datetime.strptime(data['date'], '%m-%d-%Y').date()
         return super().to_internal_value(data)
 
-# class OnBuildSerializer(serializers.ModelSerializer):
 
-#     class Meta:
-#         model = OnBuild
-#         fields = '__all__'
-#     def to_representation(self, instance):
-#         representation = super().to_representation(instance)
-        
-        
-#         representation['project'] = instance.project.job_num if instance.project else None
-
-
-#         return representation
 
 class BugetSerializer(serializers.ModelSerializer):
     contract_date = serializers.DateField(
@@ -389,10 +377,8 @@ class ProjectSerializer(serializers.ModelSerializer):
     schedule = ScheduleSerializer(source='schedule_set', many=True, read_only=True, required=False)
     sub_contractors = SubContractorsSerializer(source='sub_contractors_set', many=True, read_only=True, required=False)
     laborrate = LaborRateSerializer(source='laborrate_set', many=True, read_only=True, required=False)
-    # billing = BillingSerializer(source='billing_set', many=True, read_only=True, required=False)
-    # sov = SovSerializer(source='sov_set', many=True, read_only=True, required=False)
+
     hds_system= HDSSystemSerializer(source='hds_system_set', many=True, required=False, read_only=True)
-    # onbuild = OnBuildSerializer(source='onbuild_set', many=True, required=False, read_only=True)
     buget = BugetSerializer(source='buget_set', many=True, required=False, read_only=True)
     start_date = serializers.DateField(
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore
@@ -438,19 +424,6 @@ class ProjectSerializer(serializers.ModelSerializer):
 
         representation = super().to_representation(instance)
         
-        # Handle job_title ManyToMany field
-        
-
-
-        # representation['prjct_engnr'] = instance.prjct_engnr.first_name if instance.prjct_engnr else None
-        # representation['bim_oprtr'] = instance.bim_oprtr.first_name if instance.bim_oprtr else None
-        # representation['Forman'] = instance.Forman.first_name if instance.Forman else None
-        # representation['prjct_mngr'] = instance.prjct_mngr.first_name if instance.prjct_mngr else None
-        # representation['general_superintendent'] = instance.general_superintendent.first_name if instance.general_superintendent else None
-
-        # representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None
-        # representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None
-
         if 'hds_system' in representation:
             representation['HDS System'] = representation.pop('hds_system')
 

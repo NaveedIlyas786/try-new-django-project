@@ -178,8 +178,9 @@ class RFIViews(APIView):
             for file in files:
                 Attached_Pdf_Rfi.objects.create(
                     rfi=rfi_instance,
+                    typ=file.content_type,
                     binary=file.read(),  # This stores the binary directly; adjust for base64 if needed
-                    typ=file.content_type
+
                 )
 
                 # Create and save RFI_Log instance
@@ -206,8 +207,9 @@ class RFIViews(APIView):
             for file in files:
                 Attached_Pdf_Rfi.objects.create(
                     rfi=rfi_instance,
+                    typ=file.content_type,
                     binary=file.read(),  # Adjust for base64 if needed
-                    typ=file.content_type
+
                 )
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

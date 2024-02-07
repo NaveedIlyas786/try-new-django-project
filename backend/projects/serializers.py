@@ -566,12 +566,12 @@ class RFISerializer(serializers.ModelSerializer):
                 file_content = file.read() #type: ignore
                 Attached_Pdf_Rfi.objects.create(
                     rfi=rfi,
+                    typ=file.content_type, #type: ignore
                     binary=base64.b64encode(file_content),
-                    typ=file.content_type #type: ignore
                 )
         return rfi
 
-
+#comment changing
 
 
 

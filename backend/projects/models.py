@@ -48,10 +48,6 @@ class Project(models.Model):
                                                models.Q(job_title__name='President'), on_delete=models.SET_NULL, null=True, blank=True)
 
 
-
-
-
-
     project_address=models.CharField(verbose_name="Add project address", max_length=5000, null=True, blank=True)
 
     addendums=models.CharField(verbose_name="Addendum", max_length=500, null=True, blank=True)
@@ -102,17 +98,10 @@ class Project(models.Model):
 
 
     def save(self, *args, **kwargs):
-        # Check if this is a new instance (i.e., being created and not updated)
         is_new = not self.pk
-
         super(Project, self).save(*args, **kwargs)
-
         if is_new:
-
-            # estimating_to_project = {}
             created_directories = {}
-
-            # Function to simplify directory creation and tracking
             def create_directory(name, parent_name=None):
                 parent = created_directories.get(parent_name) if parent_name else None
                 directory = Project_detail.objects.create(

@@ -7,8 +7,8 @@ from .models import( Project, Contract,  Insurance, Bond,
                     Buget,Project_detail,Delay_Notice,RFI,PCO,RFI_Log,Delay_Log,Qualification,Debited_Material,Credited_Material,Miscellaneous,Labor,Attached_Pdf_Delay,Attached_Pdf_Pco,Attached_Pdf_Rfi
                     , PCO_Log)
 
-from Estimating.models import Proposal,Spec_detail,GC_detail
-from Estimating.serializers import ProposalSerializer,SpecificationDetailSerializer,GC_infoSerializers,DMS_Dertory
+from Estimating.models import Proposal,Spec_detail,GC_detail,DMS_Dertory
+from Estimating.serializers import ProposalSerializer,SpecificationDetailSerializer,GC_infoSerializers,DMS_DertorySezializers
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
 import datetime
@@ -398,15 +398,29 @@ class ProjectSerializer(serializers.ModelSerializer):
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore
 
     proposal_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Proposal.objects.all(), source='proposal', required=False)
-    
+    prjct_engnr=DMS_DertorySezializers(read_only=True)
+    prjct_engnr_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='Project_Engineer',required=False)
 
+    bim_oprtr_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='Bim_Operator',required=False)
+    bim_oprtr=DMS_DertorySezializers(read_only=True)
+    
+    Forman_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='Forman_as_Forman',required=False)
+    Forman=DMS_DertorySezializers(read_only=True)
+    
+    
+    prjct_mngr_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='Project_Manager',required=False)
+    prjct_mngr=DMS_DertorySezializers(read_only=True)
+    
+    general_superintendent_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='general_superintendent',required=False)
+    general_superintendent=DMS_DertorySezializers(read_only=True)
+    
     proposal=ProposalSerializer(read_only=True)
     
     gc_id=serializers.PrimaryKeyRelatedField(write_only=True,queryset=GC_detail.objects.all(),source='gc',required=False)
     gc=GC_infoSerializers(read_only=True)
     class Meta:
         model = Project
-        fields = ['id','status', 'job_num', 'start_date', 'proposal_id','prjct_engnr','bim_oprtr','Forman','prjct_mngr','start_date','general_superintendent',
+        fields = ['id','status', 'job_num', 'start_date', 'proposal_id','prjct_engnr_id','prjct_engnr','bim_oprtr_id','bim_oprtr','Forman_id','Forman','prjct_mngr_id','prjct_mngr','start_date','general_superintendent_id','general_superintendent',
                     'project_address','addendums','contacts','gc_id','gc','gc_address','drywell','finish','wall_type','ro_door','ro_window','substitution',
                     'contracts','schedule_of_values','insurancs','bond','submittals','shopdrawing','safity','schedule','sub_contractors','laborrate',
                     'hds_system','buget','gc_attn','attn_email','attn_phone','proposal']
@@ -428,11 +442,11 @@ class ProjectSerializer(serializers.ModelSerializer):
         
 
 
-        representation['prjct_engnr'] = instance.prjct_engnr.first_name if instance.prjct_engnr else None
-        representation['bim_oprtr'] = instance.bim_oprtr.first_name if instance.bim_oprtr else None
-        representation['Forman'] = instance.Forman.first_name if instance.Forman else None
-        representation['prjct_mngr'] = instance.prjct_mngr.first_name if instance.prjct_mngr else None
-        representation['general_superintendent'] = instance.general_superintendent.first_name if instance.general_superintendent else None
+        # representation['prjct_engnr'] = instance.prjct_engnr.first_name if instance.prjct_engnr else None
+        # representation['bim_oprtr'] = instance.bim_oprtr.first_name if instance.bim_oprtr else None
+        # representation['Forman'] = instance.Forman.first_name if instance.Forman else None
+        # representation['prjct_mngr'] = instance.prjct_mngr.first_name if instance.prjct_mngr else None
+        # representation['general_superintendent'] = instance.general_superintendent.first_name if instance.general_superintendent else None
 
         # representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None
         # representation['estimating'] = instance.estimating.prjct_name if instance.estimating else None

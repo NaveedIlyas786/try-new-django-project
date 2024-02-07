@@ -271,7 +271,7 @@ class Delay_NoticeViews(APIView):
             serializer=Delay_NoticeSerializer(delay_notice)
             attached_files = Attached_Pdf_Delay.objects.filter(delay=delay_notice)
             files_serializer = Attache_PDF_DelaySerializer(attached_files, many=True)
-            return Response({'delay': serializer.data, 'attached_files': files_serializer.data})
+            return Response(serializer.data,)
         else:
             delay_notice=Delay_Notice.objects.all()
             serializer=Delay_NoticeSerializer(delay_notice,many=True)

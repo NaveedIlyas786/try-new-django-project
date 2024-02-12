@@ -284,7 +284,7 @@ class Delay_NoticeViews(APIView):
         serialize = Delay_NoticeSerializer(data=request.data)
         if serialize.is_valid():
             delay_notice_instance = serialize.save()
-            files = request.FILES.getlist('attached_pdf')
+            files = request.FILES.getlist('attached_pdfs')
             for file in files:
                 Attached_Pdf_Delay.objects.create(
                     delay=delay_notice_instance,
@@ -308,7 +308,7 @@ class Delay_NoticeViews(APIView):
         if serializer.is_valid():
             delay_instance=serializer.save()
             Attached_Pdf_Delay.objects.filter(delay=dly_ntc).delete()
-            files=request.FILES.getlist('attached_pdf')
+            files=request.FILES.getlist('attached_pdfs')
             for file in files:
                 Attached_Pdf_Delay.objects.create(
                     delay=delay_instance,

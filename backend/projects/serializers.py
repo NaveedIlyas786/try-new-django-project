@@ -749,7 +749,7 @@ class Delay_NoticeSerializer(serializers.ModelSerializer):
 
 
     def create(self, validated_data):
-        attached_pdf_data = validated_data.pop('attached_pdf', None)
+        attached_pdf_data = validated_data.pop('attached_pdfs', None)
         delay = Delay_Notice.objects.create(**validated_data)
         if attached_pdf_data and isinstance(attached_pdf_data, InMemoryUploadedFile):
             for file in attached_pdf_data:

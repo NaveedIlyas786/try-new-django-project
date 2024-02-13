@@ -751,6 +751,11 @@ def create_proposal(request, proposal_id=None):
                 proposal_addendum_serializer.save()
             else:
                 return Response(proposal_addendum_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+        
+        total_budget = 0
+
+
 
         # Handling nested data - specific details
         for specific_data in data.get('spcifc', []):
@@ -758,6 +763,7 @@ def create_proposal(request, proposal_id=None):
             specification_serializer = SpecificationSerializer(data=specific_data)
             if specification_serializer.is_valid():
                 specification = specification_serializer.save()
+                total_budget += float(specific_data['budget'])
                 for detail_data in specific_data.get('sefic', []):
                     detail_data['sefic'] = specification.id # type: ignore
                     spec_detail_serializer = SpecificationDetailSerializer(data=detail_data)
@@ -767,6 +773,15 @@ def create_proposal(request, proposal_id=None):
                         return Response(spec_detail_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             else:
                 return Response(specification_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+            if estimating_instance.bid_amount is None:
+                estimating_instance.bid_amount = 0
+
+                estimating_instance.bid_amount = total_budget # type: ignore
+            else:
+                estimating_instance.bid_amount = 0
+                estimating_instance.bid_amount += total_budget # type: ignore
+            estimating_instance.save()
         # qualifications_data = data.get('qualification', [])
         for qualification_data in data.get('qualification', []):
             qualification_data['proposal'] = proposal_instance.id # type: ignore
@@ -775,6 +790,10 @@ def create_proposal(request, proposal_id=None):
                 qualification_serializer.save()
             else:
                 return Response(qualification_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+
+            
+        
 
         return Response({"message": "Proposal created successfully"}, status=status.HTTP_201_CREATED)
 

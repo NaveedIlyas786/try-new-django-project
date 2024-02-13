@@ -353,16 +353,16 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     proposal_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Proposal.objects.all(), source='proposal', required=False)
     prjct_engnr=DMS_DertorySezializers(read_only=True)
-    prjct_engnr_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='Project_Engineer',required=False)
+    prjct_engnr_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='prjct_engnr',required=False)
 
-    bim_oprtr_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='Bim_Operator',required=False)
+    bim_oprtr_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='bim_oprtr',required=False)
     bim_oprtr=DMS_DertorySezializers(read_only=True)
     
-    Forman_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='Forman_as_Forman',required=False)
+    Forman_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='Forman',required=False)
     Forman=DMS_DertorySezializers(read_only=True)
     
     
-    prjct_mngr_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='Project_Manager',required=False)
+    prjct_mngr_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='prjct_mngr',required=False)
     prjct_mngr=DMS_DertorySezializers(read_only=True)
     
     general_superintendent_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='general_superintendent',required=False)
@@ -631,7 +631,7 @@ class PCOSerializer(serializers.ModelSerializer):
             pco=pco,
             auther_name=pco.prpd_by,
         )
-        attached_pdf_data = self.context['request'].FILES.getlist('attached_pdf')
+        attached_pdf_data = self.context['request'].FILES.getlist('attached_pdfs')
         for file in attached_pdf_data:
             Attached_Pdf_Pco.objects.create(
                 pco=pco,
@@ -658,7 +658,7 @@ class PCOSerializer(serializers.ModelSerializer):
         # Handle attached PDF updates
         request = self.context.get('request')
         if request and hasattr(request, 'FILES'):
-            attached_pdfs = request.FILES.getlist('attached_pdf')
+            attached_pdfs = request.FILES.getlist('attached_pdfs')
             if attached_pdfs:
                 # Optional: Clear existing files if replacing them is the intended behavior
                 Attached_Pdf_Pco.objects.filter(pco=instance).delete()

@@ -451,18 +451,17 @@ class Pco_LogView(APIView):
 class SendDocumentEmailView(APIView):
     def post(self, request, document_id, format=None):
         document_type = request.data.get('document_type')  # 'RFI' or 'Delay'
+        custom_message = request.data.get('custom_message', '')
+        subject = request.data.get('subject', 'From DMS CMS')
         
         try:
             # Fetch the document and prepare the message based on type
             if document_type == 'PCO':
                 document = PCO.objects.get(id=document_id)  # Replace with your actual model and query
-                message = "Hello,\nHere is the PCO for your project: ..."
             elif document_type == 'RFI':
                 document = RFI.objects.get(id=document_id)
-                message = "Hello,\nHere are the details of the RFI for project: ..."
             elif document_type == 'Delay':
                 document = Delay_Notice.objects.get(id=document_id)
-                message = "Hello,\nHere is the Delay Notice for project: ..."
             else:
                 return Response({'error': 'Invalid document type'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -473,10 +472,10 @@ class SendDocumentEmailView(APIView):
             # Combine attn_email and cc_emails, ensuring no duplicates
             recipient_list = list(set([attn_email] + cc_emails))
 
-            subject = f'{document_type} Details'
+            # subject = f'{document_type} Details'
             email = EmailMessage(
                 subject,
-                message,
+                custom_message,
                 'mubeenjutt9757@gmail.com',  # Sender's email
                 recipient_list,  # Combined recipient list
             )

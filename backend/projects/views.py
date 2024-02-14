@@ -7,10 +7,11 @@ from django.core.mail import EmailMessage
 import logging
 from django.db.models import Sum
 from rest_framework.parsers import MultiPartParser, FormParser,JSONParser
+from django.http import Http404
 
 from django.shortcuts import get_object_or_404
 
-from .models import Attached_Pdf_Delay, Project, Project_detail
+from .models import Attached_Pdf_Delay, Attached_Pdf_Rfi_log, Project, Project_detail
 from .serializers import ProjectSerializer, ProjectDetailSerializer
 from rest_framework.response import Response
 from rest_framework import status
@@ -229,6 +230,8 @@ class RFIViews(APIView):
     
     
 class RFILogViews(APIView):
+    parser_classes = (MultiPartParser, FormParser,JSONParser)
+
     def get(self, request, id=None):
         if id:
             rfi_log = get_object_or_404(RFI_Log, id=id)
@@ -238,23 +241,37 @@ class RFILogViews(APIView):
             serializer = RFI_LogSerializer(rfi_log, many=True)
         return Response(serializer.data)
 
-    def post(self, request):
-        serializer = RFI_LogSerializer(data=request.data)
-        if serializer.is_valid():
-            rfi_id = request.data.get('rfi_id')
-            if rfi_id:
-                rfi = get_object_or_404(RFI, id=rfi_id)
-                serializer.save(rfi=rfi)
-            else:
-                serializer.save()  # Save without rfi_id
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def put(self, request, id=None):
-        rfi_log = get_object_or_404(RFI_Log, id=id)
-        serializer = RFI_LogSerializer(rfi_log, data=request.data)
+    def post(self, request, *args, **kwargs):
+        serializer = RFI_LogSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, id=None):
+        try:
+            rfi_log = RFI_Log.objects.get(pk=id)
+        except RFI_Log.DoesNotExist:
+            raise Http404
+
+        serializer = RFI_LogSerializer(rfi_log, data=request.data, partial=True, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+
+            # Handle file updates
+            if 'attached_pdfs' in request.FILES:
+                attached_files = request.FILES.getlist('attached_pdfs')
+                for uploaded_file in attached_files:
+                    # This example overwrites existing files. Adjust as needed.
+                    Attached_Pdf_Rfi_log.objects.update_or_create(
+                        rfi_log=rfi_log,
+                        defaults={
+                            'typ': uploaded_file.content_type,
+                            'binary': base64.b64encode(uploaded_file.read()), #type: ignore
+                        }
+                    )
+
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

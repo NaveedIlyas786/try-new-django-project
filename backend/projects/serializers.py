@@ -4,7 +4,7 @@ from rest_framework import serializers
 from .models import( Project, Contract,  Insurance, Bond, 
                     Submittals, ShopDrawing,Schedule_of_Value, 
                     Safity, Schedule, Sub_Contractors, LaborRate, HDS_system,
-                    Buget,Project_detail,Delay_Notice,RFI,PCO,RFI_Log,Delay_Log,Qualification,Debited_Material,Credited_Material,Miscellaneous,Labor,Attached_Pdf_Delay,Attached_Pdf_Pco,Attached_Pdf_Rfi
+                    Buget,Project_detail,Delay_Notice,RFI,PCO,RFI_Log,Delay_Log,Qualification,Debited_Material,Credited_Material,Miscellaneous,Labor,Attached_Pdf_Delay,Attached_Pdf_Pco,Attached_Pdf_Rfi,Attached_Pdf_Rfi_log
                     , PCO_Log)
 
 from Estimating.models import Proposal,Spec_detail,GC_detail,DMS_Dertory
@@ -529,6 +529,16 @@ class RFISerializer(serializers.ModelSerializer):
 #comment changing
 
 
+class Attache_PDF_RFI_LogSerializer(serializers.ModelSerializer):
+    binary = serializers.SerializerMethodField()
+
+    def get_binary(self, obj):
+        if obj.binary:
+            return base64.b64encode(obj.binary).decode('utf-8')
+        return None
+    class Meta:
+        model=Attached_Pdf_Rfi_log
+        fields='__all__'
 
 class RFI_LogSerializer(serializers.ModelSerializer):
     date_close = serializers.DateField(
@@ -542,10 +552,28 @@ class RFI_LogSerializer(serializers.ModelSerializer):
     
     project_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Project.objects.all(), source='project', required=False)
     project=ProjectSerializer(read_only=True)
+    attached_pdfs = serializers.SerializerMethodField(read_only=True)
+
 
     class Meta:
         model=RFI_Log
-        fields=['id','project_id','rfi_id','rfi','gc_rfi_num','date_close','status','cost_schdl','received_date','project']
+        fields=['id','project_id','rfi_id','rfi','gc_rfi_num','date_close','status','cost_schdl','received_date','project','attached_pdfs']
+        
+        
+    def get_attached_pdfs(self, obj):
+        attached_pdfs = Attached_Pdf_Rfi_log.objects.filter(rfi_log=obj)
+        return Attache_PDF_RFI_LogSerializer(attached_pdfs, many=True).data
+    
+    def create(self, validated_data):
+        attached_pdfs = self.context['request'].FILES.getlist('attached_pdfs')
+        rfi_log = RFI_Log.objects.create(**validated_data)
+        for uploaded_file in attached_pdfs:
+            Attached_Pdf_Rfi_log.objects.create(
+                rfi_log=rfi_log,
+                typ=uploaded_file.content_type,
+                binary=base64.b64encode(uploaded_file.read()),
+            )
+        return rfi_log
 
 
 class QualificationSerializer(serializers.ModelSerializer):

@@ -551,8 +551,11 @@ class RFI_Log(models.Model):
         ],default='None',null=True,blank=True)
     received_date=models.DateField(verbose_name="Received Date", auto_now=False, auto_now_add=False,null=True,blank=True)
 
-    
-    
+class Attached_Pdf_Rfi_log(models.Model):
+    rfi_log=models.ForeignKey(RFI_Log, verbose_name="Select RFI_Log", on_delete=models.CASCADE,null=True,blank=True)
+    typ=models.CharField(verbose_name="Type of Attachment", max_length=250,null=True,blank=True)
+    binary=models.BinaryField("Atthd_pdf", null=True, blank=True, editable=True)
+
     
 
 

@@ -5,8 +5,9 @@ from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Q
+import base64
 
-from Estimating.models import Company,Estimating, Estimating_detail, Proposal, Addendum, Qualification, Spec_detail, Specification, ProposalService, Location,UrlsTable,DMS_Dertory,Dprtmnt,Role,GC_detail
+from Estimating.models import Company,Estimating, Estimating_detail, Proposal, Addendum, Qualification, Spec_detail, Specification, ProposalService, Location,UrlsTable,DMS_Dertory,Dprtmnt,Role,GC_detail,AttachedLogoCompany
 
 from rest_framework.exceptions import ValidationError
 
@@ -58,15 +59,39 @@ class UrlsSerializers(serializers.ModelSerializer):
         model=UrlsTable
         fields=['id','url','territory','web_name','ps']
 
+class Attache__LogoSerializer(serializers.ModelSerializer):
+    binary = serializers.SerializerMethodField()
 
+    def get_binary(self, obj):
+        if obj.binary:
+            return base64.b64encode(obj.binary).decode('utf-8')
+        return None
+    class Meta:
+        model=AttachedLogoCompany
+        fields='__all__'
 
 
 class CompanySerializer(serializers.ModelSerializer):
+    attached_pdfs = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = Company
-        fields = ['id','is_active','Cmpny_Name','adress','office_phone_number','fax_number','license_number','logo','email']
+        fields = ['id','is_active','Cmpny_Name','adress','office_phone_number','fax_number','license_number','logo','email','attached_pdfs']
 
-
+    def get_attached_pdfs(self, obj):
+        attached_pdfs = AttachedLogoCompany.objects.filter(company=obj)
+        return Attache__LogoSerializer(attached_pdfs, many=True).data
+    
+    def create(self, validated_data):
+        attached_pdfs = self.context['request'].FILES.getlist('attached_pdfs')
+        company = Company.objects.create(**validated_data)
+        for uploaded_file in attached_pdfs:
+            AttachedLogoCompany.objects.create(
+                company=company,
+                typ=uploaded_file.content_type,
+                binary=base64.b64encode(uploaded_file.read()),
+            )
+        return company
 
 
 

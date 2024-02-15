@@ -21,6 +21,10 @@ class Company(models.Model):
         return self.Cmpny_Name
     
 
+class AttachedLogoCompany(models.Model):
+    company=models.ForeignKey(Company, verbose_name="Select Company", on_delete=models.CASCADE,null=True,blank=True)
+    typ=models.CharField(verbose_name="Type of Attachment", max_length=250,null=True,blank=True)
+    binary=models.BinaryField("Atthd_pdf", null=True, blank=True, editable=True)
 
 
 class Role(models.Model):

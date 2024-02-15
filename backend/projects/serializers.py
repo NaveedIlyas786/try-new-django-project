@@ -563,17 +563,33 @@ class RFI_LogSerializer(serializers.ModelSerializer):
     def get_attached_pdfs(self, obj):
         attached_pdfs = Attached_Pdf_Rfi_log.objects.filter(rfi_log=obj)
         return Attache_PDF_RFI_LogSerializer(attached_pdfs, many=True).data
-    
     def create(self, validated_data):
-        attached_pdfs = self.context['request'].FILES.getlist('attached_pdfs')
+        # Safely get the request from the context
+        request = self.context.get('request')
+
         rfi_log = RFI_Log.objects.create(**validated_data)
-        for uploaded_file in attached_pdfs:
-            Attached_Pdf_Rfi_log.objects.create(
-                rfi_log=rfi_log,
-                typ=uploaded_file.content_type,
-                binary=base64.b64encode(uploaded_file.read()),
-            )
+
+        # Proceed only if the request is available and has files
+        if request and hasattr(request, 'FILES'):
+            attached_pdfs = request.FILES.getlist('attached_pdfs', [])
+            for uploaded_file in attached_pdfs:
+                Attached_Pdf_Rfi_log.objects.create(
+                    rfi_log=rfi_log,
+                    typ=uploaded_file.content_type,
+                    binary=base64.b64encode(uploaded_file.read()),
+                )
+
         return rfi_log
+    # def create(self, validated_data):
+    #     attached_pdfs = self.context['request'].FILES.getlist('attached_pdfs')
+    #     rfi_log = RFI_Log.objects.create(**validated_data)
+    #     for uploaded_file in attached_pdfs:
+    #         Attached_Pdf_Rfi_log.objects.create(
+    #             rfi_log=rfi_log,
+    #             typ=uploaded_file.content_type,
+    #             binary=base64.b64encode(uploaded_file.read()),
+    #         )
+    #     return rfi_log
 
 
 class QualificationSerializer(serializers.ModelSerializer):

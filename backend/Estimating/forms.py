@@ -24,8 +24,7 @@ class EstimatingDetailAdminForm(forms.ModelForm):
     
     def clean_file_field(self):
         file = self.cleaned_data.get('file_field')
-        if not file.name.endswith('.pdf'):
+        if not file.name.endswith('.pdf'):#type:ignore
             raise forms.ValidationError("Only PDF files are allowed.")
         return file
     
-

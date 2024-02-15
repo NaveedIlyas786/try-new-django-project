@@ -5,11 +5,13 @@ import os
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status,views
-from .models import Company, Estimating,Estimating_detail, Proposal, Qualification,Location,UrlsTable,ProposalService,Addendum,DMS_Dertory,Specification,Spec_detail,Role,Dprtmnt,GC_detail
-from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer,SpecificationSerializer,LocationSerializer,EstimatingDetailSerializer,ProposalServiceSerializer,CompanySerializer,UrlsSerializers,DMS_DertorySezializers,Job_titleSerializers,DprtmentSerializers,GC_infoSerializers
+from .models import Company, Estimating,Estimating_detail, Proposal, Qualification,Location,UrlsTable,ProposalService,Addendum,DMS_Dertory,Specification,Spec_detail,Role,Dprtmnt,GC_detail,AttachedLogoCompany
+from .serializers import EstimatingSerializer, ProposalSerializer, AddendumSerializer, QualificationSerializer, SpecificationDetailSerializer,SpecificationSerializer,LocationSerializer,EstimatingDetailSerializer,ProposalServiceSerializer,CompanySerializer,UrlsSerializers,DMS_DertorySezializers,Job_titleSerializers,DprtmentSerializers,GC_infoSerializers,Attache__LogoSerializer
 from accounts.models import User
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from rest_framework.parsers import MultiPartParser, FormParser,JSONParser
 
+from django.shortcuts import get_object_or_404
 
 from .forms import EstimatingDetailAdminForm
 
@@ -439,16 +441,20 @@ def calculate_summary(estimates, only_working=False):
 
 
 class CompanyListView(APIView):
+    parser_classes = (MultiPartParser, FormParser,JSONParser)
 
-
-    def get(self, request, format=None):
-        Cmpany = Company.objects.all()
-        serializer = CompanySerializer(Cmpany, many=True)
+    def get(self, request, id=None):
+        if id:
+            company=get_object_or_404(Company,id=id)
+            serializer=CompanySerializer(company)
+        else:
+            Cmpany = Company.objects.all()
+            serializer = CompanySerializer(Cmpany, many=True)
         return Response(serializer.data)
 
 
     def post(self, request, format=None):
-        serializer = CompanySerializer(data=request.data)
+        serializer = CompanySerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -461,9 +467,22 @@ class CompanyListView(APIView):
         except Company.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        serializer = CompanySerializer(Cmpany, data=request.data)
+        serializer = CompanySerializer(Cmpany, data=request.data, partial=True, context={'request': request})
         if serializer.is_valid():
             serializer.save()
+            
+            #handle File Update
+            if 'attached_pdfs' in request.FILES:
+                attached_files = request.FILES.getlist('attached_pdfs')
+                for uploaded_file in attached_files:
+                    # This example overwrites existing files. Adjust as needed.
+                    AttachedLogoCompany.objects.update_or_create(
+                        company=Cmpany,
+                        defaults={
+                            'typ': uploaded_file.content_type,
+                            'binary': base64.b64encode(uploaded_file.read()), #type: ignore
+                        }
+                    )
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

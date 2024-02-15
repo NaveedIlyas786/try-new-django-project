@@ -2,13 +2,14 @@ from django.contrib import admin
 from .models import Location,Estimating,Estimating_detail,Company
 from import_export.admin import ImportExportModelAdmin
 from django.db.models import Q
+from django import forms
 
 import os
 from django.contrib import admin
-from .models import Estimating,Proposal,Addendum,Specification,Spec_detail,Qualification,ProposalService,UrlsTable,Role,Dprtmnt,DMS_Dertory,GC_detail
+from .models import Estimating,Proposal,Addendum,Specification,Spec_detail,Qualification,ProposalService,UrlsTable,Role,Dprtmnt,DMS_Dertory,GC_detail,AttachedLogoCompany
 from nested_admin import NestedStackedInline, NestedModelAdmin # type: ignore
 from .forms import EstimatingDetailAdminForm,EstimatingAdminForm
-
+import base64
 
 
 
@@ -25,8 +26,7 @@ class DprtmntAdmin(admin.ModelAdmin):
 
 
 class DMS_DertoryAdmin(admin.ModelAdmin):
-
-
+    # form = CompanyAdminForm
     list_display=('id', 'first_name','last_name','email','job_title','company','department','direct_number','locaton','mobile_number')
     add_fieldsets = [
         (
@@ -46,9 +46,33 @@ class UrlsAdmin(admin.ModelAdmin):
 
 
 class CompanyAdmin(admin.ModelAdmin):
+    
     list_display = ('id', 'Cmpny_Name','adress',
                     'office_phone_number','fax_number',
                     'license_number','email','is_active')
+    
+    
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)  # Save the company instance first
+
+        # Handle file attachments
+        files = request.FILES.getlist('attached_files')
+        for uploaded_file in files:
+            # Read and encode the file's content
+            binary_data = base64.b64encode(uploaded_file.read())
+            AttachedLogoCompany.objects.create(
+                company=obj,
+                typ=uploaded_file.content_type,
+                binary=binary_data,
+            )
+
+    def save_formset(self, request, form, formset, change):
+        instances = formset.save(commit=False)
+        for instance in instances:
+            if isinstance(instance, AttachedLogoCompany) and hasattr(instance, 'binary'):
+                # Additional handling for AttachedLogoCompany instances if needed
+                pass
+        super().save_formset(request, form, formset, change)
 
 class LocationAdmin(admin.ModelAdmin):
     list_display=['id','name','is_active']

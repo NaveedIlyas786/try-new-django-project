@@ -17,6 +17,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from rest_framework.views import APIView
+import base64
 
 
 from rest_framework.decorators import api_view
@@ -244,7 +245,15 @@ class RFILogViews(APIView):
     def post(self, request, *args, **kwargs):
         serializer = RFI_LogSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
-            serializer.save()
+            rfi_log_instance=serializer.save()
+            
+            files = request.FILES.getlist('attached_pdfs')  # Adjust field name if necessary
+            for file in files:
+                Attached_Pdf_Rfi_log.objects.create(
+                    rfi_log=rfi_log_instance,
+                    typ=file.content_type,
+                    binary=file.read(),  # Adjust for base64 if needed
+                )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -268,7 +277,7 @@ class RFILogViews(APIView):
                         rfi_log=rfi_log,
                         defaults={
                             'typ': uploaded_file.content_type,
-                            'binary': base64.b64encode(uploaded_file.read()), #type: ignore
+                            'binary': base64.b64encode(uploaded_file.read()),
                         }
                     )
 

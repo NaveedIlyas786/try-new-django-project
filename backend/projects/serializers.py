@@ -530,12 +530,12 @@ class RFISerializer(serializers.ModelSerializer):
 
 
 class Attache_PDF_RFI_LogSerializer(serializers.ModelSerializer):
-    binary = serializers.SerializerMethodField()
+    # binary = serializers.SerializerMethodField()
 
-    def get_binary(self, obj):
-        if obj.binary:
-            return base64.b64encode(obj.binary).decode('utf-8')
-        return None
+    # def get_binary(self, obj):
+    #     if obj.binary:
+    #         return base64.b64encode(obj.binary).decode('utf-8')
+    #     return None
     class Meta:
         model=Attached_Pdf_Rfi_log
         fields='__all__'
@@ -564,21 +564,16 @@ class RFI_LogSerializer(serializers.ModelSerializer):
         attached_pdfs = Attached_Pdf_Rfi_log.objects.filter(rfi_log=obj)
         return Attache_PDF_RFI_LogSerializer(attached_pdfs, many=True).data
     def create(self, validated_data):
-        # Safely get the request from the context
-        request = self.context.get('request')
-
+        attached_pdf_data = validated_data.pop('attached_pdfs', None)
         rfi_log = RFI_Log.objects.create(**validated_data)
-
-        # Proceed only if the request is available and has files
-        if request and hasattr(request, 'FILES'):
-            attached_pdfs = request.FILES.getlist('attached_pdfs', [])
-            for uploaded_file in attached_pdfs:
+        if attached_pdf_data and isinstance(attached_pdf_data, InMemoryUploadedFile):
+            for file in attached_pdf_data:
+                file_content = file.read() #type: ignore
                 Attached_Pdf_Rfi_log.objects.create(
                     rfi_log=rfi_log,
-                    typ=uploaded_file.content_type,
-                    binary=base64.b64encode(uploaded_file.read()),
+                    typ=file.content_type, #type: ignore
+                    binary=base64.b64encode(file_content),
                 )
-
         return rfi_log
     # def create(self, validated_data):
     #     attached_pdfs = self.context['request'].FILES.getlist('attached_pdfs')

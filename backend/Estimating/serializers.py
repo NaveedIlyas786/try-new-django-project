@@ -33,25 +33,6 @@ class Job_titleSerializers(serializers.ModelSerializer):
 
 
 
-class DMS_DertorySezializers(serializers.ModelSerializer):
-    class Meta:
-        model = DMS_Dertory
-        fields = ['id', 'first_name','last_name', 'email', 'job_title', 'company', 'department', 'direct_number', 'locaton', 'mobile_number']
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        
-        # Handle job_title ManyToMany field
-        representation['job_title'] = instance.job_title.name if instance.job_title else None
-        
-        representation['company'] = instance.company.Cmpny_Name if instance.company else None
-        representation['department'] = instance.department.dprtmnt_name if instance.department else None
-        
-        # Add full_name field
-        full_name = f"{instance.first_name or ''} {instance.last_name or ''}".strip()
-        representation['full_name'] = full_name if full_name.strip() else None
-
-        return representation
 
 
 class UrlsSerializers(serializers.ModelSerializer):
@@ -95,6 +76,28 @@ class CompanySerializer(serializers.ModelSerializer):
 
 
 
+class DMS_DertorySezializers(serializers.ModelSerializer):
+    
+    company_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Company.objects.all(), source='company',required=False, allow_null=True)
+
+    company=CompanySerializer(read_only=True)
+    class Meta:
+        model = DMS_Dertory
+        fields = ['id', 'first_name','last_name', 'email', 'job_title', 'company_id','company', 'department', 'direct_number', 'locaton', 'mobile_number']
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        # Handle job_title ManyToMany field
+        representation['job_title'] = instance.job_title.name if instance.job_title else None
+        
+        representation['department'] = instance.department.dprtmnt_name if instance.department else None
+        
+        # Add full_name field
+        full_name = f"{instance.first_name or ''} {instance.last_name or ''}".strip()
+        representation['full_name'] = full_name if full_name.strip() else None
+
+        return representation
 
 class RecursiveEstimatingDetailSerializer(serializers.Serializer):
     """Serializer for recursive Estimating_detail children."""

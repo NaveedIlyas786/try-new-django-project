@@ -19,8 +19,8 @@ from rest_framework import status
 from rest_framework.views import APIView
 import base64
 
-
-from rest_framework.decorators import api_view
+from django.http import QueryDict
+from rest_framework.decorators import api_view,parser_classes
 from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget,Delay_Notice,RFI,PCO,Schedule_of_Value,RFI_Log,Delay_Log,Qualification,Debited_Material,Credited_Material,Labor,Miscellaneous,Attached_Pdf_Rfi,Attached_Pdf_Delay,Attached_Pdf_Pco
 from .serializers import (ProjectSerializer, ContractSerializer,  InsuranceSerializer, BondSerializer,Attache_PDF_RFISerializer,Attache_PDF_DelaySerializer,QualificationSerializer,DebitedMaterialSerializer,CreditedMaterialSerializer,LaborSerializer,MiscellaneousSerializer,Attache_PDF_PCOSerializer,
                            SubmittalsSerializer, ShopDrawingSerializer, SafitySerializer, ScheduleSerializer,PCO_Log,
@@ -390,6 +390,7 @@ class Delay_LogViews(APIView):
     
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
+@parser_classes((JSONParser, MultiPartParser))
 def pco_view(request, id=None):
     if request.method == 'GET':
         if id:

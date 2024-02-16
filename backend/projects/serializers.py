@@ -14,9 +14,9 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 import datetime
 import base64
 from django.db import transaction
-
-
-
+import logging
+import json
+import re
 
 class ContractSerializer(serializers.ModelSerializer):
     
@@ -623,7 +623,9 @@ class Attache_PDF_PCOSerializer(serializers.ModelSerializer):
     class Meta:
         model=Attached_Pdf_Pco
         fields='__all__'
-
+        
+        
+logger = logging.getLogger(__name__)
 class PCOSerializer(serializers.ModelSerializer):
     
     date = serializers.DateField(
@@ -640,7 +642,7 @@ class PCOSerializer(serializers.ModelSerializer):
     credited_materials = CreditedMaterialSerializer(many=True, required=False)
     miscellaneous = MiscellaneousSerializer(many=True, required=False)
     labor = LaborSerializer(many=True, required=False)
-    attached_pdfs = serializers.SerializerMethodField(read_only=True)
+    attached_pdfs = serializers.SerializerMethodField(read_only=True,required=False)
 
     class Meta:
         model = PCO
@@ -654,6 +656,10 @@ class PCOSerializer(serializers.ModelSerializer):
     def get_attached_pdfs(self, obj):
         attached_pdfs = Attached_Pdf_Pco.objects.filter(pco=obj)
         return Attache_PDF_PCOSerializer(attached_pdfs, many=True).data
+    
+    
+
+
     @transaction.atomic
     def create(self, validated_data):
         nested_objects_data = {
@@ -663,13 +669,28 @@ class PCOSerializer(serializers.ModelSerializer):
             'miscellaneous': (validated_data.pop('miscellaneous', []), Miscellaneous),
             'labor': (validated_data.pop('labor', []), Labor),
         }
+        
+        
+        
+        # print("Validated Data:", validated_data)
+        # logger.debug("Validated Data: %s", validated_data)
 
+        # request = self.context.get('request')
+        # if request:
+        #     print("Raw Data:", request.data)
+        #     logger.debug("Raw Data: %s", request.data)
+            
+            
+            
+       
         pco = super().create(validated_data)
         # Save the PCO instance
         PCO_Log.objects.create(
             pco=pco,
             auther_name=pco.prpd_by,
         )
+
+            
         attached_pdf_data = self.context['request'].FILES.getlist('attached_pdfs')
         for file in attached_pdf_data:
             Attached_Pdf_Pco.objects.create(
@@ -679,10 +700,109 @@ class PCOSerializer(serializers.ModelSerializer):
             )
 
         # Process each type of nested object
-        for _, (nested_data, ModelClass) in nested_objects_data.items():
-            for item_data in nested_data:
-                ModelClass.objects.create(pco=pco, **item_data)
-
+        # for _, (nested_data, ModelClass) in nested_objects_data.items():
+        #     for item_data in nested_data:
+        #         ModelClass.objects.create(pco=pco, **item_data)
+                
+                # Process nested 'miscellaneous' objects
+        request = self.context.get('request')
+        if request:
+            miscellaneous_items = []
+            for key, value in request.data.items():
+                if 'miscellaneous' in key:
+                    match = re.match(r'miscellaneous\[(\d+)\]\.(.+)', key)
+                    if match:
+                        index, field = match.groups()
+                        index = int(index)
+                        while len(miscellaneous_items) <= index:
+                            miscellaneous_items.append({})
+                        miscellaneous_items[index][field] = value
+            
+            for item_data in miscellaneous_items:
+                Miscellaneous.objects.create(pco=pco, **item_data)
+                
+        request = self.context.get('request')
+        if request:
+            qualifications_items = []
+            for key, value in request.data.items():
+                if 'qualifications' in key:
+                    match = re.match(r'qualifications\[(\d+)\]\.(.+)', key)
+                    if match:
+                        index, field = match.groups()
+                        index = int(index)
+                        while len(qualifications_items) <= index:
+                            qualifications_items.append({})
+                        qualifications_items[index][field] = value
+            
+            for item_data in qualifications_items:
+                Qualification.objects.create(pco=pco, **item_data)
+                
+        request = self.context.get('request')
+        if request:
+            debited_materials_items = []
+            for key, value in request.data.items():
+                if 'debited_materials' in key:
+                    match = re.match(r'debited_materials\[(\d+)\]\.(.+)', key)
+                    if match:
+                        index, field = match.groups()
+                        index = int(index)
+                        while len(debited_materials_items) <= index:
+                            debited_materials_items.append({})
+                        debited_materials_items[index][field] = value
+            
+            for item_data in debited_materials_items:
+                Debited_Material.objects.create(pco=pco, **item_data)
+                
+                
+        request = self.context.get('request')
+        if request:
+            credited_materials_items = []
+            for key, value in request.data.items():
+                if 'credited_materials' in key:
+                    match = re.match(r'credited_materials\[(\d+)\]\.(.+)', key)
+                    if match:
+                        index, field = match.groups()
+                        index = int(index)
+                        while len(credited_materials_items) <= index:
+                            credited_materials_items.append({})
+                        credited_materials_items[index][field] = value
+            
+            for item_data in credited_materials_items:
+                Credited_Material.objects.create(pco=pco, **item_data)
+                
+                
+        request = self.context.get('request')
+        if request:
+            credited_materials_items = []
+            for key, value in request.data.items():
+                if 'credited_materials' in key:
+                    match = re.match(r'credited_materials\[(\d+)\]\.(.+)', key)
+                    if match:
+                        index, field = match.groups()
+                        index = int(index)
+                        while len(credited_materials_items) <= index:
+                            credited_materials_items.append({})
+                        credited_materials_items[index][field] = value
+            
+            for item_data in credited_materials_items:
+                Credited_Material.objects.create(pco=pco, **item_data)
+                
+                
+        request = self.context.get('request')
+        if request:
+            labor_items = []
+            for key, value in request.data.items():
+                if 'labor' in key:
+                    match = re.match(r'labor\[(\d+)\]\.(.+)', key)
+                    if match:
+                        index, field = match.groups()
+                        index = int(index)
+                        while len(labor_items) <= index:
+                            labor_items.append({})
+                        labor_items[index][field] = value
+            
+            for item_data in labor_items:
+                Labor.objects.create(pco=pco, **item_data)                
         return pco    
     @transaction.atomic
     def update(self, instance, validated_data):

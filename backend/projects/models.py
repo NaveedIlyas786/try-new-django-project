@@ -599,7 +599,7 @@ class Attached_Pdf_Pco(models.Model):
 
 class Qualification(models.Model):
     pco = models.ForeignKey(PCO, verbose_name="PCO", related_name='qualifications', on_delete=models.CASCADE, null=True, blank=True)
-    detail=models.CharField(verbose_name="Add Qualification", max_length=5000)
+    detail=models.CharField(verbose_name="Add Qualification", max_length=5000,null=True,blank=True)
     def __str__(self):
         return self.detail
     

@@ -770,22 +770,7 @@ class PCOSerializer(serializers.ModelSerializer):
             for item_data in credited_materials_items:
                 Credited_Material.objects.create(pco=pco, **item_data)
                 
-                
-        request = self.context.get('request')
-        if request:
-            credited_materials_items = []
-            for key, value in request.data.items():
-                if 'credited_materials' in key:
-                    match = re.match(r'credited_materials\[(\d+)\]\.(.+)', key)
-                    if match:
-                        index, field = match.groups()
-                        index = int(index)
-                        while len(credited_materials_items) <= index:
-                            credited_materials_items.append({})
-                        credited_materials_items[index][field] = value
             
-            for item_data in credited_materials_items:
-                Credited_Material.objects.create(pco=pco, **item_data)
                 
                 
         request = self.context.get('request')
@@ -803,16 +788,19 @@ class PCOSerializer(serializers.ModelSerializer):
             
             for item_data in labor_items:
                 Labor.objects.create(pco=pco, **item_data)                
-        return pco    
+        return pco   
+    
+     
     @transaction.atomic
     def update(self, instance, validated_data):
         nested_fields = ['qualifications', 'debited_materials', 'credited_materials', 'miscellaneous', 'labor']
-
-        # Update the instance directly
+        
+        # Update the instance directly for non-nested fields
         for attr, value in validated_data.items():
             if attr not in nested_fields:
                 setattr(instance, attr, value)
         instance.save()
+
 
         # Handle attached PDF updates
         request = self.context.get('request')
@@ -835,22 +823,29 @@ class PCOSerializer(serializers.ModelSerializer):
 
         return instance
 
+        return instance
+
     def update_or_create_nested(self, items_data, instance, field_name):
-        ModelClass = self.get_model_class_for_field(field_name)  # Custom method to get the correct model class
-        existing_ids = [item['id'] for item in items_data if 'id' in item]
-        
-        # Delete nested objects not included in the update
-        getattr(instance, field_name).exclude(id__in=existing_ids).delete()
+        ModelClass = self.get_model_class_for_field(field_name)
+        existing_items = getattr(instance, field_name).all()
+        existing_ids = set(existing_items.values_list('id', flat=True))
+
+        # Track new and updated items by ID
+        new_or_updated_ids = set()
 
         for item_data in items_data:
-            item_id = item_data.get('id', None)
-            if item_id:
-                nested_instance, _ = ModelClass.objects.update_or_create( #type: ignore
-                    id=item_id,
-                    defaults=item_data
-                )
+            item_id = item_data.get('id')
+            if item_id and item_id in existing_ids:
+                ModelClass.objects.filter(id=item_id).update(**item_data)
+                new_or_updated_ids.add(item_id)
             else:
-                ModelClass.objects.create(**item_data, pco=instance) #type: ignore
+                created_item = ModelClass.objects.create(**item_data, pco=instance)
+                new_or_updated_ids.add(created_item.id)
+
+        # Delete any items not included in the update
+        items_to_delete = existing_ids - new_or_updated_ids
+        if items_to_delete:
+            ModelClass.objects.filter(id__in=items_to_delete).delete()
     
     def get_model_class_for_field(self, field_name):
         """Helper method to return the model class for a given field name."""

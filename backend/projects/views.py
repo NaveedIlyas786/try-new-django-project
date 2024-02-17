@@ -495,16 +495,20 @@ class SendDocumentEmailView(APIView):
             project = document.project
             attn_email = project.attn_email#type: ignore  # Attention email from the project
             cc_emails = request.data.get('cc_emails', '').split(',')  # CC emails from the request
-            
-            # Combine attn_email and cc_emails, ensuring no duplicates
-            recipient_list = list(set([attn_email] + cc_emails))
+            bcc_emails = request.data.get('bcc_emails', '').split(',')  # BCC emails from the request
 
+            # Combine attn_email and cc_emails, ensuring no duplicates
+            # Ensure no duplicates in CC and BCC lists
+            cc_emails = list(set(cc_emails)) if cc_emails != [''] else []
+            bcc_emails = list(set(bcc_emails)) if bcc_emails != [''] else []
             # subject = f'{document_type} Details'
             email = EmailMessage(
                 subject,
                 custom_message,
                 'mubeenjutt9757@gmail.com',  # Sender's email
-                recipient_list,  # Combined recipient list
+                [attn_email],  # Primary recipient
+                cc=cc_emails,  # CC recipients
+                bcc=bcc_emails,  # BCC recipients
             )
 
             pdf_file = request.FILES.get('pdf')
@@ -561,7 +565,7 @@ class ProjectDashboardAPIView(APIView):
     def get_rfi_data(self, project):
         rfis = RFI_Log.objects.filter(project=project,status='Open').select_related('rfi')
         total_rfi_num = rfis.count()
-        rfi_details = rfis.values('rfi__rfi_num','gc_rfi_num','status','rfi__date','date_close','rfi__rply_by','received_date','rfi__dscrptn','cost_schdl')
+        rfi_details = rfis.values('rfi__id','rfi__rfi_num','gc_rfi_num','status','rfi__date','date_close','rfi__rply_by','received_date','rfi__dscrptn','cost_schdl')
         # dms_rfi=rfis.values()
 
         return {
@@ -572,7 +576,7 @@ class ProjectDashboardAPIView(APIView):
     def get_pco_data(self, project):
         pcos = PCO_Log.objects.filter(pco__project=project).select_related('pco')
         total_pco_num = pcos.count()
-        pco_details = pcos.values('pco__pco_num','t_m','cor_amont','co_amont','co_num','auther_name','note','pco__dcrsbsn','pco__date')
+        pco_details = pcos.values('pco__id','pco__pco_num','t_m','cor_amont','co_amont','co_num','auther_name','note','pco__dcrsbsn','pco__date')
         return {
             'total_pco_num': total_pco_num,
             'pco_detail': list(pco_details),
@@ -586,6 +590,7 @@ class ProjectDashboardAPIView(APIView):
         delay_details = []
         for delay in delays:
             detail = {
+                'delay_notice_id':delay.dly_ntc.id,
                 'delay_num': delay.dly_ntc.delay_num, # type: ignore
                 'rfi_num': delay.dly_ntc.rfi_log.rfi.rfi_num if delay.dly_ntc.rfi_log and delay.dly_ntc.rfi_log.rfi else None, # type: ignore
                 'pco_num': delay.dly_ntc.pco_log.pco.pco_num if delay.dly_ntc.pco_log and delay.dly_ntc.pco_log.pco else None,#type: ignore

@@ -520,6 +520,7 @@ class RFISerializer(serializers.ModelSerializer):
             for file in attached_pdf_data:
                 file_content = file.read() #type: ignore
                 Attached_Pdf_Rfi.objects.create(
+                    file_name=file.name ,#type: ignore
                     rfi=rfi,
                     typ=file.content_type, #type: ignore
                     binary=base64.b64encode(file_content),
@@ -570,6 +571,7 @@ class RFI_LogSerializer(serializers.ModelSerializer):
             for file in attached_pdf_data:
                 file_content = file.read() #type: ignore
                 Attached_Pdf_Rfi_log.objects.create(
+                    file_name=file.name, #type: ignore
                     rfi_log=rfi_log,
                     typ=file.content_type, #type: ignore
                     binary=base64.b64encode(file_content),
@@ -694,9 +696,10 @@ class PCOSerializer(serializers.ModelSerializer):
         attached_pdf_data = self.context['request'].FILES.getlist('attached_pdfs')
         for file in attached_pdf_data:
             Attached_Pdf_Pco.objects.create(
+                file_name=file.name,
                 pco=pco,
                 binary=file.read(),  # Adjust for base64 encoding if necessary
-                typ=file.content_type
+                typ=file.content_type,
             )
 
         # Process each type of nested object
@@ -847,7 +850,7 @@ class PCOSerializer(serializers.ModelSerializer):
             Attached_Pdf_Pco.objects.filter(pco=instance).delete()  # Clear existing files
             attached_pdf_data = request.FILES.getlist('attached_pdfs') #type:ignore
             for file in attached_pdf_data:
-                Attached_Pdf_Pco.objects.create(pco=instance, binary=file.read(), typ=file.content_type)
+                Attached_Pdf_Pco.objects.create(file_name=file.name ,pco=instance, binary=file.read(), typ=file.content_type, )
     
         return instance
 
@@ -907,9 +910,11 @@ class Delay_NoticeSerializer(serializers.ModelSerializer):
             for file in attached_pdf_data:
                 file_content = file.read() #type: ignore
                 Attached_Pdf_Delay.objects.create(
+                    file_name=file.name , #type: ignore
                     delay=delay,
                     binary=base64.b64encode(file_content),
-                    typ=file.content_type #type: ignore
+                    typ=file.content_type, #type: ignore
+                    
                 )
         return delay
         

@@ -183,9 +183,11 @@ class RFIViews(APIView):
             files = request.FILES.getlist('attached_pdfs')  # Adjust field name if necessary
             for file in files:
                 Attached_Pdf_Rfi.objects.create(
+                    file_name=file.name ,
                     rfi=rfi_instance,
                     typ=file.content_type,
                     binary=file.read(),  # Adjust for base64 if needed
+                    
                 )
 
             # If you're handling RFI_Log here, ensure RFI_LogSerializer and related model are correctly defined
@@ -215,6 +217,7 @@ class RFIViews(APIView):
             files = request.FILES.getlist('attached_pdfs')  # Adjust field name if necessary
             for file in files:
                 Attached_Pdf_Rfi.objects.create(
+                    file_name=file.name,
                     rfi=rfi_instance,
                     typ=file.content_type,
                     binary=file.read(),  # Adjust for base64 if needed
@@ -250,6 +253,7 @@ class RFILogViews(APIView):
             files = request.FILES.getlist('attached_pdfs')  # Adjust field name if necessary
             for file in files:
                 Attached_Pdf_Rfi_log.objects.create(
+                    file_name=file.name,
                     rfi_log=rfi_log_instance,
                     typ=file.content_type,
                     binary=file.read(),  # Adjust for base64 if needed
@@ -313,9 +317,10 @@ class Delay_NoticeViews(APIView):
             files = request.FILES.getlist('attached_pdfs')
             for file in files:
                 Attached_Pdf_Delay.objects.create(
+                    file_name=file.name,
                     delay=delay_notice_instance,
                     binary=file.read(),  # This stores the binary directly; adjust for base64 if needed
-                    typ=file.content_type
+                    typ=file.content_type,
                 )
             delay_log_data = {
                 'dly_ntc_id': delay_notice_instance.id, # type: ignore
@@ -337,9 +342,11 @@ class Delay_NoticeViews(APIView):
             files=request.FILES.getlist('attached_pdfs')
             for file in files:
                 Attached_Pdf_Delay.objects.create(
+                    file_name=file.name ,
+
                     delay=delay_instance,
                     binary=file.read(),
-                    typ=file.content_type
+                    typ=file.content_type,
                 )
             return Response(serializer.data)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
@@ -506,7 +513,7 @@ class SendDocumentEmailView(APIView):
                 subject,
                 custom_message,
                 'mubeenjutt9757@gmail.com',  # Sender's email
-                [attn_email],  # Primary recipient
+                [attn_email],  # Primary recipient #type: ignore
                 cc=cc_emails,  # CC recipients
                 bcc=bcc_emails,  # BCC recipients
             )
@@ -590,10 +597,10 @@ class ProjectDashboardAPIView(APIView):
         delay_details = []
         for delay in delays:
             detail = {
-                'delay_notice_id':delay.dly_ntc.id,
+                'delay_notice_id':delay.dly_ntc.id, #type: ignore
                 'delay_num': delay.dly_ntc.delay_num, # type: ignore
                 'rfi_num': delay.dly_ntc.rfi_log.rfi.rfi_num if delay.dly_ntc.rfi_log and delay.dly_ntc.rfi_log.rfi else None, # type: ignore
-                'pco_num': delay.dly_ntc.pco_log.pco.pco_num if delay.dly_ntc.pco_log and delay.dly_ntc.pco_log.pco else None,#type: ignore
+                'pco_num': delay.dly_ntc.pco_log.pco.pco_num if delay.dly_ntc.pco_log and delay.dly_ntc.pco_log.pco else None,# type: ignore
                 'status':delay.status,#type: ignore
                 'type':delay.typ,
                 'dly_rslov':delay.dly_rslov,

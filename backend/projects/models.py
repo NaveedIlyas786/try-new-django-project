@@ -536,6 +536,8 @@ class Attached_Pdf_Rfi(models.Model):
     rfi=models.ForeignKey(RFI, verbose_name="Select RFI", on_delete=models.CASCADE,null=True,blank=True)
     typ=models.CharField(verbose_name="Type of Attachment", max_length=250,null=True,blank=True)
     binary=models.BinaryField("Atthd_pdf", null=True, blank=True, editable=True)
+    file_name = models.CharField(verbose_name="File Name", max_length=255, null=True, blank=True)  # New field for file name
+
 
 class RFI_Log(models.Model):
     project=models.ForeignKey(Project, verbose_name="Select", on_delete=models.CASCADE,null=True,blank=True)
@@ -555,6 +557,8 @@ class Attached_Pdf_Rfi_log(models.Model):
     rfi_log=models.ForeignKey(RFI_Log, verbose_name="Select RFI_Log", on_delete=models.CASCADE,null=True,blank=True)
     typ=models.CharField(verbose_name="Type of Attachment", max_length=250,null=True,blank=True)
     binary=models.BinaryField("Atthd_pdf", null=True, blank=True, editable=True)
+    file_name = models.CharField(verbose_name="File Name", max_length=255, null=True, blank=True)  # New field for file name
+
 
     
 
@@ -595,6 +599,8 @@ class Attached_Pdf_Pco(models.Model):
     pco=models.ForeignKey(PCO, verbose_name="Select PCO", on_delete=models.CASCADE,null=True,blank=True)
     binary=models.BinaryField("Atthd_pdf", null=True, blank=True, editable=True)
     typ=models.CharField(verbose_name="Type of Attachment", max_length=250,null=True,blank=True)
+    file_name = models.CharField(verbose_name="File Name", max_length=255, null=True, blank=True)  # New field for file name
+
 
 
 class Qualification(models.Model):
@@ -669,6 +675,8 @@ class Attached_Pdf_Delay(models.Model):
     delay=models.ForeignKey(Delay_Notice, verbose_name="Select Delay Notice", on_delete=models.CASCADE,null=True,blank=True)
     binary=models.BinaryField("Atthd_pdf", null=True, blank=True, editable=True)
     typ=models.CharField(verbose_name="Type of Attachment", max_length=250,null=True,blank=True)
+    file_name = models.CharField(verbose_name="File Name", max_length=255, null=True, blank=True)  # New field for file name
+
 
 class Delay_Log(models.Model):
     dly_ntc=models.ForeignKey(Delay_Notice, verbose_name="Select Delay Notice", on_delete=models.CASCADE,null=True,blank=True)

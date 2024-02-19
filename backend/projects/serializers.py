@@ -664,13 +664,13 @@ class PCOSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def create(self, validated_data):
-        # nested_objects_data = {
-        #     'qualifications': (validated_data.pop('qualifications', []), Qualification),
-        #     'debited_materials': (validated_data.pop('debited_materials', []), Debited_Material),
-        #     'credited_materials': (validated_data.pop('credited_materials', []), Credited_Material),
-        #     'miscellaneous': (validated_data.pop('miscellaneous', []), Miscellaneous),
-        #     'labor': (validated_data.pop('labor', []), Labor),
-        # }
+        nested_objects_data = {
+            'qualifications': (validated_data.pop('qualifications', []), Qualification),
+            'debited_materials': (validated_data.pop('debited_materials', []), Debited_Material),
+            'credited_materials': (validated_data.pop('credited_materials', []), Credited_Material),
+            'miscellaneous': (validated_data.pop('miscellaneous', []), Miscellaneous),
+            'labor': (validated_data.pop('labor', []), Labor),
+        }
         
         
         

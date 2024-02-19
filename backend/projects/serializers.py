@@ -796,6 +796,17 @@ class PCOSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def update(self, instance, validated_data):
+        
+        nested_fields = ['qualifications', 'debited_materials', 'credited_materials', 'miscellaneous', 'labor']
+        for field in nested_fields:
+            validated_data.pop(field, None)
+
+    # Update the PCO instance's own fields
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        
+        
     # Create a dictionary that maps the field names to their serializer classes
         nested_serializers_map = {
         'qualifications': QualificationSerializer,

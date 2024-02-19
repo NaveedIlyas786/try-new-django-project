@@ -212,10 +212,8 @@ class SendEmailResetPasswordViews(APIView):
 class UserPasswordResetViews(APIView):
     def post(self, request, uidb64, token, format=None):
         try:
-            print("UIDB64:", uidb64)
             id = force_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(id=id)
-            print("User:", user)
 
             # Include 'request' in the context
             serializer = UserPasswordResetSerializer(data=request.data, context={'request': request})  

@@ -4,12 +4,20 @@
 # from yaml import serialize
 # from django.db import transaction
 from django.core.mail import EmailMessage
+from django.core.mail import send_mail, EmailMultiAlternatives
+
+from email.mime.image import MIMEImage 
 import logging
 from django.db.models import Sum
 from rest_framework.parsers import MultiPartParser, FormParser,JSONParser
 from django.http import Http404
+from django.conf import settings
 
 from django.shortcuts import get_object_or_404
+from django.core.files.base import ContentFile
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+# from backend import Estimating
 
 from .models import Attached_Pdf_Delay, Attached_Pdf_Rfi_log, Project, Project_detail
 from .serializers import ProjectSerializer, ProjectDetailSerializer
@@ -19,7 +27,6 @@ from rest_framework import status
 from rest_framework.views import APIView
 import base64
 
-from django.http import QueryDict
 from rest_framework.decorators import api_view,parser_classes
 from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget,Delay_Notice,RFI,PCO,Schedule_of_Value,RFI_Log,Delay_Log,Qualification,Debited_Material,Credited_Material,Labor,Miscellaneous,Attached_Pdf_Rfi,Attached_Pdf_Delay,Attached_Pdf_Pco
 from .serializers import (ProjectSerializer, ContractSerializer,  InsuranceSerializer, BondSerializer,Attache_PDF_RFISerializer,Attache_PDF_DelaySerializer,QualificationSerializer,DebitedMaterialSerializer,CreditedMaterialSerializer,LaborSerializer,MiscellaneousSerializer,Attache_PDF_PCOSerializer,
@@ -27,7 +34,7 @@ from .serializers import (ProjectSerializer, ContractSerializer,  InsuranceSeria
                           SubContractorsSerializer, LaborRateSerializer,HDSSystemSerializer,
                           BugetSerializer,Delay_NoticeSerializer,RFISerializer,PCOSerializer,ScheduleOfValueSerializer,RFI_LogSerializer,Delay_LogSerializer,PCO_LogSerializer)
 
-
+from Estimating.models import DMS_Dertory,AttachedLogoCompany
 
 class ProjectDetailListCreateView(APIView):
     def get(self, request, prjct_id):
@@ -487,6 +494,8 @@ class SendDocumentEmailView(APIView):
         document_type = request.data.get('document_type')  # 'RFI' or 'Delay'
         custom_message = request.data.get('custom_message', '')
         subject = request.data.get('subject', 'From DMS CMS')
+        dms_user_id = request.data.get('dms_user_id')
+
         
         try:
             # Fetch the document and prepare the message based on type
@@ -498,37 +507,90 @@ class SendDocumentEmailView(APIView):
                 document = Delay_Notice.objects.get(id=document_id)
             else:
                 return Response({'error': 'Invalid document type'}, status=status.HTTP_400_BAD_REQUEST)
-
+            
+            # Fetch the DMS user and the logo
+            dms_user = DMS_Dertory.objects.get(id=dms_user_id)
+            attachment = AttachedLogoCompany.objects.filter(company=dms_user.company).first()
             project = document.project
             attn_email = project.attn_email#type: ignore  # Attention email from the project
-            cc_emails = request.data.get('cc_emails', '').split(',')  # CC emails from the request
-            bcc_emails = request.data.get('bcc_emails', '').split(',')  # BCC emails from the request
-
-            # Combine attn_email and cc_emails, ensuring no duplicates
-            # Ensure no duplicates in CC and BCC lists
-            cc_emails = list(set(cc_emails)) if cc_emails != [''] else []
-            bcc_emails = list(set(bcc_emails)) if bcc_emails != [''] else []
-            # subject = f'{document_type} Details'
-            email = EmailMessage(
-                subject,
-                custom_message,
-                'mubeenjutt9757@gmail.com',  # Sender's email
-                [attn_email],  # Primary recipient #type: ignore
-                cc=cc_emails,  # CC recipients
-                bcc=bcc_emails,  # BCC recipients
+            if attachment:
+                company_logo_binary = attachment.binary
+                file_type = attachment.typ 
+                logo_image = ContentFile(base64.b64decode(company_logo_binary), name=f"company_logo.{file_type.split('/')[-1]}") #type: ignore
+            else:
+                logo_image = None
+            
+            # Create the email message
+            email = EmailMultiAlternatives(
+                subject=subject,
+                body=custom_message,  # Fallback for email clients that don't support HTML
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[attn_email],  # Recipient's email #type: ignore
+                cc=request.data.get('cc_emails', '').split(','),  # Optional CC emails
+                bcc=request.data.get('bcc_emails', '').split(','),  # Optional BCC emails
             )
+            
+            def format_phone_number(number):
+                """Format the phone number into the desired format (123) 456-7890."""
+                if not number:
+                    return ""
+                number_str = str(number)
+                return f"({number_str[:3]}) {number_str[3:6]}-{number_str[6:]}"
 
+# In your SendDocumentEmailView, before constructing the html_content:
+            direct_number_formatted = format_phone_number(dms_user.direct_number)
+            mobile_number_formatted = format_phone_number(dms_user.mobile_number)
+
+            
+            # Prepare the HTML body with the inline image
+            html_content = f"""
+            <html>
+              <body>
+              
+                <p style="font-family: 'Times New Roman', serif; font-size: 16px">{custom_message}</p>
+                <p style="color: black; font-size: 16px; font-family: 'Times New Roman', serif;">Thank You! </p>
+                 <p style="color: grey; font-size: 18px; font-family: 'Times New Roman', serif;">
+                 {dms_user.first_name} {dms_user.last_name}<br>
+                {dms_user.job_title.name if dms_user.job_title else ''}
+                </p>
+                <img src="cid:company_logo" style="width: 250px; height: auto;">
+                <p style="color: grey; font-size: 18px;  font-family: 'Times New Roman', serif;">{dms_user.company.adress if dms_user.company else ''}<br>
+                {"Direct: " + direct_number_formatted if dms_user.direct_number else "Mobile: " + mobile_number_formatted if dms_user.mobile_number else ""}
+                </p>
+                
+              </body>
+            </html>
+            """
+            email.attach_alternative(html_content, "text/html")
+
+            # Attach the company logo as an inline image
+            if logo_image:
+                file_type = logo_image.name.split('.')[-1].lower()
+                if file_type == 'jpg':
+                    file_type = 'jpeg'
+                img = MIMEImage(logo_image.read(), _subtype=file_type)
+                img.add_header('Content-ID', '<company_logo>')
+                email.attach(img)#type: ignore
+
+            # Attach the PDF file if provided
             pdf_file = request.FILES.get('pdf')
             if pdf_file:
                 email.attach(f"{document_type} Attachment.pdf", pdf_file.read(), 'application/pdf')
 
+            # Send the email
             email.send()
+
             return Response({'message': f'{document_type} email sent successfully!'}, status=status.HTTP_200_OK)
+
+        except DMS_Dertory.DoesNotExist:
+            return Response({'error': 'DMS user not found'}, status=status.HTTP_404_NOT_FOUND)
 
         except (RFI.DoesNotExist, Delay_Notice.DoesNotExist,PCO.DoesNotExist):
             return Response({'error': f'{document_type} not found'}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({'error': 'Failed to send email', 'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        
 class ProjectDashboardAPIView(APIView):
     def get(self, request):
         data = {}

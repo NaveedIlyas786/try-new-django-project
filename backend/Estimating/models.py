@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from .validation import validate_file_extension
 from django.core.exceptions import ValidationError
@@ -114,6 +115,7 @@ class Estimating(models.Model):
     bid_amount=models.FloatField(verbose_name="Bid Amount ",blank=True,null=True)
     # location=models.ForeignKey(Location,verbose_name="Add Area", related_name='estimating_as_Area',limit_choices_to=models.Q(is_active=True), on_delete=models.CASCADE,blank=True,null=True)
     location=models.CharField(verbose_name="Location", max_length=250,default="California")
+    important_active=models.BooleanField(default=False)
 
     estimator = models.ForeignKey(
        DMS_Dertory,

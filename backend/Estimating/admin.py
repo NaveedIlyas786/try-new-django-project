@@ -86,7 +86,7 @@ class GC_detailInline(NestedStackedInline):
 class EstimatingAdmin(NestedModelAdmin):
     inlines = [GC_detailInline]
     form=EstimatingAdminForm
-    list_display = ['id', 'start_date', 'prjct_name','time','timezone',
+    list_display = ['id', 'important_active','start_date', 'prjct_name','time','timezone',
                     'due_date', 'status','company',
                     'bid_amount', 'location', 'estimator',
                     # 'bidder','bidder_mail','bidder_detail'

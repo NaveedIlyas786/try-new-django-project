@@ -183,6 +183,7 @@ class EstimatingSerializer(serializers.ModelSerializer):
         model = Estimating
         fields = [
             'id',
+            'important_active',
             'prjct_name',
             'due_date',
             'time',

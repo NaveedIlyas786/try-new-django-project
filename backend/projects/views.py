@@ -553,7 +553,7 @@ class SendDocumentEmailView(APIView):
                  {dms_user.first_name} {dms_user.last_name}<br>
                 {dms_user.job_title.name if dms_user.job_title else ''}
                 </p>
-                <img src="cid:company_logo" style="width: 250px; height: auto;">
+                <img src="cid:company_logo" style="width: 200px; height: auto;">
                 <p style="color: grey; font-size: 18px;  font-family: 'Times New Roman', serif;">{dms_user.company.adress if dms_user.company else ''}<br>
                 {"Direct: " + direct_number_formatted if dms_user.direct_number else "Mobile: " + mobile_number_formatted if dms_user.mobile_number else ""}
                 </p>

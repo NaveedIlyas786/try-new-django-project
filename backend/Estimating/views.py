@@ -187,13 +187,14 @@ class SendEmailView(APIView):
 
         try:
             estimating = Estimating.objects.get(id=estimating_id)
+            proposal_id = request.POST.get('proposalId')
             if estimating.company is None:
                 return Response({'error': 'Company not found'}, status=status.HTTP_400_BAD_REQUEST)
 
             email_from = 'mubeenjutt9757@gmail.com'  # Default sender email
 
             # Find the active proposal related to this estimating
-            active_proposal = Proposal.objects.filter(estimating=estimating, is_active=True).first()
+            active_proposal = Proposal.objects.get(id=proposal_id)
             if not active_proposal:
                 return Response({'error': 'Active proposal not found'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -233,7 +234,7 @@ class SendEmailView(APIView):
 
             # Attach the PDF if it's in the request
             pdf_file = request.FILES.get('pdf')
-            if isinstance(pdf_file, InMemoryUploadedFile):
+            if pdf_file:
                 email.attach(pdf_file.name, pdf_file.read(), 'application/pdf')
 
             email.send()

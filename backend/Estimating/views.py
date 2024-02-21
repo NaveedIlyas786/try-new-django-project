@@ -191,13 +191,24 @@ class SendEmailView(APIView):
             if estimating.company is None:
                 return Response({'error': 'Company not found'}, status=status.HTTP_400_BAD_REQUEST)
 
-            email_from = 'mubeenjutt9757@gmail.com'  # Default sender email
 
-            # Find the active proposal related to this estimating
-            active_proposal = Proposal.objects.get(id=proposal_id)
-            if not active_proposal:
+            if not proposal_id:
+                return Response({'error': 'Proposal ID is required'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            
+
+            try:
+                proposal_id = int(proposal_id)
+                active_proposal = Proposal.objects.get(id=proposal_id)
+            except ValueError:
+                return Response({'error': 'Invalid proposal ID'}, status=status.HTTP_400_BAD_REQUEST)
+            except Proposal.DoesNotExist:
                 return Response({'error': 'Active proposal not found'}, status=status.HTTP_400_BAD_REQUEST)
-
+            
+            
+            email_from = 'mubeenjutt9757@gmail.com'  # Default sender 
+            
+            
             # Use the plane_date from the active proposal
             plane_date = active_proposal.plane_date.strftime('%m-%d-%Y') if active_proposal.plane_date else "N/A"
             architect_name = active_proposal.architect_name if active_proposal.architect_name else "N/A"

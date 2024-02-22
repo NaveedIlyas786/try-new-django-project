@@ -215,7 +215,7 @@ class SendEmailView(APIView):
             architect_firm = active_proposal.architect_firm if active_proposal.architect_firm else "N/A"
 
             # Email message
-            subject = 'Proposal'
+            subject = estimating.prjct_name
             message = f"""
             Hello,
             <br>
@@ -236,7 +236,7 @@ class SendEmailView(APIView):
                 return Response({'error': 'GC not found'}, status=status.HTTP_404_NOT_FOUND)
 
             email = EmailMessage(
-                subject,
+                subject,#type: ignore
                 message,
                 email_from,
                 [gc_email],  # Send email to the specific GC

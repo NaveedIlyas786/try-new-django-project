@@ -51,6 +51,8 @@ class Project(models.Model):
     project_address=models.CharField(verbose_name="Add project address", max_length=5000, null=True, blank=True)
 
     addendums=models.CharField(verbose_name="Addendum", max_length=500, null=True, blank=True)
+    important_active=models.BooleanField(default=False)
+
 
 
 

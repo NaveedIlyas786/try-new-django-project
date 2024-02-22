@@ -374,7 +374,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     gc=GC_infoSerializers(read_only=True)
     class Meta:
         model = Project
-        fields = ['id','status', 'job_num', 'start_date', 'proposal_id','prjct_engnr_id','prjct_engnr','bim_oprtr_id','bim_oprtr','Forman_id','Forman','prjct_mngr_id','prjct_mngr','start_date','general_superintendent_id','general_superintendent',
+        fields = ['id','status','important_active', 'job_num', 'start_date', 'proposal_id','prjct_engnr_id','prjct_engnr','bim_oprtr_id','bim_oprtr','Forman_id','Forman','prjct_mngr_id','prjct_mngr','start_date','general_superintendent_id','general_superintendent',
                     'project_address','addendums','contacts','gc_id','gc','gc_address','drywell','finish','wall_type','ro_door','ro_window','substitution',
                     'contracts','schedule_of_values','insurancs','bond','submittals','shopdrawing','safity','schedule','sub_contractors','laborrate',
                     'hds_system','buget','gc_attn','attn_email','attn_phone','proposal']

@@ -351,26 +351,26 @@ class ProjectSerializer(serializers.ModelSerializer):
     start_date = serializers.DateField(
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore
 
-    proposal_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Proposal.objects.all(), source='proposal', required=False)
+    proposal_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Proposal.objects.all(), source='proposal', required=False, allow_null=True)
     prjct_engnr=DMS_DertorySezializers(read_only=True)
-    prjct_engnr_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='prjct_engnr',required=False)
+    prjct_engnr_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='prjct_engnr',required=False, allow_null=True)
 
-    bim_oprtr_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='bim_oprtr',required=False)
+    bim_oprtr_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='bim_oprtr',required=False, allow_null=True)
     bim_oprtr=DMS_DertorySezializers(read_only=True)
     
-    Forman_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='Forman',required=False)
+    Forman_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='Forman',required=False, allow_null=True)
     Forman=DMS_DertorySezializers(read_only=True)
     
     
-    prjct_mngr_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='prjct_mngr',required=False)
+    prjct_mngr_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='prjct_mngr',required=False , allow_null=True)
     prjct_mngr=DMS_DertorySezializers(read_only=True)
     
-    general_superintendent_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='general_superintendent',required=False)
+    general_superintendent_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=DMS_Dertory.objects.all(),source='general_superintendent',required=False, allow_null=True)
     general_superintendent=DMS_DertorySezializers(read_only=True)
     
     proposal=ProposalSerializer(read_only=True)
     
-    gc_id=serializers.PrimaryKeyRelatedField(write_only=True,queryset=GC_detail.objects.all(),source='gc',required=False)
+    gc_id=serializers.PrimaryKeyRelatedField(write_only=True,queryset=GC_detail.objects.all(),source='gc',required=False, allow_null=True)
     gc=GC_infoSerializers(read_only=True)
     class Meta:
         model = Project

@@ -331,10 +331,10 @@ class ProposalServiceSerializer(serializers.ModelSerializer):
 
 
 class ProposalSerializer(serializers.ModelSerializer):
-    services = ProposalServiceSerializer(many=True, read_only=True, required=False)
-    qualification=QualificationSerializer(many=True, read_only=True, required=False)
-    Addendums=AddendumSerializer(many=True,read_only=True, required=False)
-    spcifc=SpecificationSerializer(many=True,read_only=True, required=False)
+    services = ProposalServiceSerializer(many=True, read_only=True, required=False, allow_null=True)
+    qualification=QualificationSerializer(many=True, read_only=True, required=False, allow_null=True)
+    Addendums=AddendumSerializer(many=True,read_only=True, required=False, allow_null=True)
+    spcifc=SpecificationSerializer(many=True,read_only=True, required=False, allow_null=True)
     estimating_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Estimating.objects.all(), source='estimating', required=True)
     date = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore
     plane_date = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) # type: ignore

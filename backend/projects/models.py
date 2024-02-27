@@ -75,6 +75,8 @@ class Project(models.Model):
     ro_door=models.CharField(verbose_name="RO-Door", max_length=50,choices=[
         ('Requested','Requested'),('Pending','Pending'),('Received','Received')
         ],default='Pending', null=True, blank=True)
+    ro_window_is_active=models.BooleanField(verbose_name="RO-Window active",null=True,blank=True,default=False)
+
     
     ro_window=models.CharField(verbose_name="RO-Window", max_length=50,choices=[
         ('Requested','Requested'),('Pending','Pending'),('Received','Received')

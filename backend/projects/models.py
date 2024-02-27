@@ -386,6 +386,7 @@ class Project(models.Model):
 
 
 class Contract(models.Model):
+    is_active=models.BooleanField(verbose_name="Important",null=True,blank=True,default=False)
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     contract=models.CharField(verbose_name="Contract", max_length=50,choices=[
         ('Fully Executed','Fully Executed'),('Pending','Pending')
@@ -394,6 +395,8 @@ class Contract(models.Model):
 
 
 class Schedule_of_Value(models.Model):
+    is_active=models.BooleanField(verbose_name="Important",null=True,blank=True,default=False)
+
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     schedule=models.CharField(verbose_name="Schedule of Value", max_length=50,choices=[
         ('Approved','Approved'),('Pending','Pending')
@@ -403,12 +406,16 @@ class Schedule_of_Value(models.Model):
 
 
 class Insurance(models.Model):
+    is_active=models.BooleanField(verbose_name="Important",null=True,blank=True,default=False)
+
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     insurance=models.CharField(verbose_name="Insurance", max_length=50,choices=[
         ('CCIP','CCIP'),('Sent','Sent'),('Received','Received'),('Completed','Completed'),('Pending','Pending')
         ],default='Pending', null=True, blank=True)
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
 class Bond(models.Model):
+    is_active=models.BooleanField(verbose_name="Important",null=True,blank=True,default=False)
+
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     bond=models.CharField(verbose_name="Bond", max_length=50,choices=[
         ('Sent','Sent'),('Received','Received'),('Completed','Completed'),('N/A','N/A'),('Pending','Pending')
@@ -416,6 +423,8 @@ class Bond(models.Model):
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
 
 class Submittals(models.Model):
+    is_active=models.BooleanField(verbose_name="Important",null=True,blank=True,default=False)
+
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     # scop_work_number=models.ForeignKey(Spec_detail,related_name='scop_work_number', verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
     dscrptn=models.CharField(verbose_name="Add Description", max_length=5000,null=True,blank=True)
@@ -429,6 +438,8 @@ class Submittals(models.Model):
 
 
 class ShopDrawing(models.Model):
+    is_active=models.BooleanField(verbose_name="Important",null=True,blank=True,default=False)
+
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     # scop_work_number=models.ForeignKey(Spec_detail,related_name='scop_work_number_shpdrg', verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
     status=models.CharField(verbose_name="Shop Drawing", max_length=50,choices=[
@@ -438,6 +449,8 @@ class ShopDrawing(models.Model):
     scopWorkNumber=models.CharField(verbose_name="Add the scop of work Number", max_length=250, null=True, blank=True)
 
 class Safity(models.Model):
+    is_active=models.BooleanField(verbose_name="Important",null=True,blank=True,default=False)
+
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     # scop_work_number=models.ForeignKey(Spec_detail,related_name='scop_work_number_sfty', verbose_name="Add scope of Work", on_delete=models.CASCADE, null=True, blank=True)
     status=models.CharField(verbose_name="Safity", max_length=50,choices=[
@@ -448,6 +461,8 @@ class Safity(models.Model):
     scopWorkNumber=models.CharField(verbose_name="Add the scop of work Number", max_length=250, null=True, blank=True)
 
 class Schedule(models.Model):
+    is_active=models.BooleanField(verbose_name="Important",null=True,blank=True,default=False)
+
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     status=models.CharField(verbose_name="Schedule", max_length=50,choices=[
         ('Available','Available'),('Requested','Requested'),('Pending','Pending')
@@ -455,6 +470,8 @@ class Schedule(models.Model):
     date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
 
 class Sub_Contractors(models.Model):
+    is_active=models.BooleanField(verbose_name="Important",null=True,blank=True,default=False)
+
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     status=models.CharField(verbose_name="Sub Contractors", max_length=5000, null=True, blank=True)
     custom=models.CharField(verbose_name="If Custom", max_length=5000, null=True, blank=True)
@@ -465,6 +482,8 @@ class Sub_Contractors(models.Model):
     comment_box=models.CharField(verbose_name="comment", max_length=5000, null=True, blank=True)
 
 class LaborRate(models.Model):
+    is_active=models.BooleanField(verbose_name="Important",null=True,blank=True,default=False)
+
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     status=models.CharField(verbose_name="Labor Rate", max_length=500, null=True, blank=True)
     custom=models.CharField(verbose_name="If Custom", max_length=5000, null=True, blank=True)
@@ -474,6 +493,8 @@ class LaborRate(models.Model):
 
 
 class HDS_system(models.Model):
+    is_active=models.BooleanField(verbose_name="Important",null=True,blank=True,default=False)
+
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     status=models.CharField(verbose_name="HDS System", max_length=500, null=True, blank=True)
     custom=models.CharField(verbose_name="If Custom", max_length=500, null=True, blank=True)
@@ -483,6 +504,8 @@ class HDS_system(models.Model):
 
 
 class Buget(models.Model):
+    is_active=models.BooleanField(verbose_name="Important",null=True,blank=True,default=False)
+
     project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
     status=models.CharField(verbose_name="Labor Rate", max_length=50,choices=[
         ('Pending','Pending'),('Save','Save'),

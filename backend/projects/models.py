@@ -47,30 +47,36 @@ class Project(models.Model):
                                                models.Q(job_title__name='No. Cal. General Manager') |
                                                models.Q(job_title__name='President'), on_delete=models.SET_NULL, null=True, blank=True)
 
-
     project_address=models.CharField(verbose_name="Add project address", max_length=5000, null=True, blank=True)
 
-    addendums=models.CharField(verbose_name="Addendum", max_length=500, null=True, blank=True)
+    addendumStart=models.CharField(verbose_name="Addendum Start", max_length=50, null=True, blank=True)
+    addendumEnd=models.CharField(verbose_name="Addendum End", max_length=50, null=True, blank=True)
+
     important_active=models.BooleanField(default=False)
 
 
 
-
+    contacts_is_active=models.BooleanField(verbose_name="contacts active",null=True,blank=True,default=False)
 
     contacts=models.CharField(verbose_name="Contacts", max_length=50,choices=[
         ('On build','On build'),('Pending','Pending'),
         ],default='Pending', null=True, blank=True)
+    drywell_is_active=models.BooleanField(verbose_name="drawell active",null=True,blank=True,default=False)
 
     drywell=models.CharField(verbose_name="Drywell Conttrol Joins", max_length=50,choices=[
         ('Submitted','Submitted'),('Working','Working'),('Approved','Approved'),('Pending','Pending'),
         ],default='Pending', null=True, blank=True)
+    finish_is_active=models.BooleanField(verbose_name="finish active",null=True,blank=True,default=False)
 
     finish=models.CharField(verbose_name="FINISH LEVEL MARKUPS", max_length=50,choices=[
         ('Completed','Completed'),('Working','Working'),('Uploaded','Uploaded'),('Pending','Pending'),
         ],default='Pending', null=True, blank=True)
+    wall_type_is_active=models.BooleanField(verbose_name="wall type active",null=True,blank=True,default=False)
+
     wall_type=models.CharField(verbose_name="WALL TYPE MAPPING", max_length=50,choices=[
         ('Completed','Completed'),('Working','Working'),('Uploaded','Uploaded'),('Pending','Pending'),
         ],default='Pending', null=True, blank=True)
+    ro_door_is_active=models.BooleanField(verbose_name="ro-door active",null=True,blank=True,default=False)
 
     ro_door=models.CharField(verbose_name="RO-Door", max_length=50,choices=[
         ('Requested','Requested'),('Pending','Pending'),('Received','Received')
@@ -81,6 +87,7 @@ class Project(models.Model):
     ro_window=models.CharField(verbose_name="RO-Window", max_length=50,choices=[
         ('Requested','Requested'),('Pending','Pending'),('Received','Received')
         ],default='Pending', null=True, blank=True)
+    
 
     substitution=models.CharField(verbose_name="Substitution", max_length=5000, null=True, blank=True)
     

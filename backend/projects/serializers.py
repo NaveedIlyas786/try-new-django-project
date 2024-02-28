@@ -375,7 +375,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ['id','status','important_active', 'job_num', 'start_date', 'proposal_id','prjct_engnr_id','prjct_engnr','bim_oprtr_id','bim_oprtr','Forman_id','Forman','prjct_mngr_id','prjct_mngr','start_date','general_superintendent_id','general_superintendent',
-                    'project_address','addendums','contacts','gc_id','gc','gc_address','drywell','finish','wall_type','ro_door','ro_window','ro_window_is_active','substitution',
+                    'project_address','addendumStart','addendumEnd','contacts','gc_id','gc','gc_address','drywell','finish','wall_type','ro_door','drywell_is_active','contacts_is_active','finish_is_active','wall_type_is_active','ro_door_is_active','ro_window','ro_window_is_active','substitution',
                     'contracts','schedule_of_values','insurancs','bond','submittals','shopdrawing','safity','schedule','sub_contractors','laborrate',
                     'hds_system','buget','gc_attn','attn_email','attn_phone','proposal']
         
@@ -453,8 +453,6 @@ class ProjectSerializer(serializers.ModelSerializer):
         if 'substitution' in representation:
             representation['Substitutions'] = representation.pop('substitution')
 
-        if 'addendums' in representation:
-            representation['Addendum'] = representation.pop('addendums')
 
 
         if 'bond' in representation:
@@ -851,13 +849,23 @@ class PCOSerializer(serializers.ModelSerializer):
                             nested_serializer.save(pco=instance)
 
     # Handle file uploads
-        if 'attached_pdfs' in request.FILES: #type:ignore
-            Attached_Pdf_Pco.objects.filter(pco=instance).delete()  # Clear existing files
-            attached_pdf_data = request.FILES.getlist('attached_pdfs')#type:ignore
-            for file in attached_pdf_data:
-                Attached_Pdf_Pco.objects.create(
-                    file_name=file.name, pco=instance, binary=file.read(), typ=file.content_type,
-                )
+        # if 'attached_pdfs' in request.FILES: #type:ignore
+        #     Attached_Pdf_Pco.objects.filter(pco=instance).delete()  # Clear existing files
+        #     attached_pdf_data = request.FILES.getlist('attached_pdfs')#type:ignore
+        #     for file in attached_pdf_data:
+        #         Attached_Pdf_Pco.objects.create(
+        #             file_name=file.name, pco=instance, binary=file.read(), typ=file.content_type,
+        #         )
+        
+        
+        # attached_pdf_data = request.FILES.getlist('attached_pdfs') if 'attached_pdfs' in request.FILES else None
+        # if attached_pdf_data is not None:  # This ensures files are intended to be updated
+        # # If there are files, then proceed to clear existing ones and save new files
+        #     Attached_Pdf_Pco.objects.filter(pco=instance).delete()  # Clear existing files
+        #     for file in attached_pdf_data:
+        #         Attached_Pdf_Pco.objects.create(
+        #             file_name=file.name, pco=instance, binary=file.read(), typ=file.content_type,
+        #         )
 
         return instance
 

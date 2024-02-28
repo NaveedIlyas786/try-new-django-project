@@ -91,7 +91,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
     
     list_display = ('id','status','important_active', 'job_num', 'start_date', 'proposal','prjct_engnr','bim_oprtr','Forman','prjct_mngr','start_date','gc_attn','attn_email','attn_phone','general_superintendent',
-                    'project_address','addendums','contacts','gc','gc_address','drywell','finish','wall_type','ro_door','ro_window','substitution')  
+                    'project_address','addendumStart','addendumEnd','contacts','gc','gc_address','drywell','finish','wall_type','ro_door','ro_window','substitution')  
     search_fields = ['status', 'job_num'] 
 
 

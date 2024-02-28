@@ -430,15 +430,25 @@ def pco_view(request, id=None):
             return Response({"message": "ID is required for PUT request"}, status=status.HTTP_400_BAD_REQUEST)
         try:
             pco = PCO.objects.get(pk=id)
+            serializer = PCOSerializer(pco, data=request.data, partial=True, context={'request': request})
+            if serializer.is_valid():
+                pco_instance=serializer.save()
+                Attached_Pdf_Pco.objects.filter(pco=pco).delete()
+                files=request.FILES.getlist('attached_pdfs')
+                for file in files:
+                    Attached_Pdf_Pco.objects.create(
+                        file_name=file.name,
+                        pco=pco_instance,
+                        binary=file.read(),
+                        typ=file.content_type,
+                    )
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except PCO.DoesNotExist:
             return Response({'message': 'PCO not found'}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = PCOSerializer(pco, data=request.data, partial=True, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     elif request.method == 'DELETE':
         if not id:
             return Response({"message": "ID is required for DELETE request"}, status=status.HTTP_400_BAD_REQUEST)

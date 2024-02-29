@@ -69,12 +69,12 @@ class Project(models.Model):
     finish_is_active=models.BooleanField(verbose_name="finish active",null=True,blank=True,default=False)
 
     finish=models.CharField(verbose_name="FINISH LEVEL MARKUPS", max_length=50,choices=[
-        ('Completed','Completed'),('Working','Working'),('Uploaded','Uploaded'),('Pending','Pending'),
+        ('Completed','Completed'),('Working','Working'),('Pending','Pending'),
         ],default='Pending', null=True, blank=True)
     wall_type_is_active=models.BooleanField(verbose_name="wall type active",null=True,blank=True,default=False)
 
     wall_type=models.CharField(verbose_name="WALL TYPE MAPPING", max_length=50,choices=[
-        ('Completed','Completed'),('Working','Working'),('Uploaded','Uploaded'),('Pending','Pending'),
+        ('Completed','Completed'),('Working','Working'),('Pending','Pending'),
         ],default='Pending', null=True, blank=True)
     ro_door_is_active=models.BooleanField(verbose_name="ro-door active",null=True,blank=True,default=False)
 
@@ -97,6 +97,22 @@ class Project(models.Model):
     gc_attn = models.CharField(verbose_name="GC attn", max_length=100,null=True,blank=True)
     attn_email=models.EmailField(verbose_name="Add GC Email", max_length=254, null=True, blank=True)
     attn_phone=models.CharField(verbose_name="GC Phone number", max_length=50, null=True, blank=True)
+    
+    
+
+    
+    
+    contracts_is_active=models.BooleanField(verbose_name="Contracts active",null=True,blank=True,default=False)
+    scheduleOfValue_is_active=models.BooleanField(verbose_name="Schedule of value active",null=True,blank=True,default=False)
+    subContractors_is_active=models.BooleanField(verbose_name="Sub Contractors active",null=True,blank=True,default=False)
+    budget_is_active=models.BooleanField(verbose_name="Budget active",null=True,blank=True,default=False)
+    insurances_is_active=models.BooleanField(verbose_name="Insurances active",null=True,blank=True,default=False)
+    schedule_is_active=models.BooleanField(verbose_name="Schedule active",null=True,blank=True,default=False)
+    bonds_is_active=models.BooleanField(verbose_name="Bonds active",null=True,blank=True,default=False)
+    hdsSystem_is_active=models.BooleanField(verbose_name="HDS System active",null=True,blank=True,default=False)
+    wageRate_is_active=models.BooleanField(verbose_name="Wage Rate active",null=True,blank=True,default=False)
+
+
     
 
 

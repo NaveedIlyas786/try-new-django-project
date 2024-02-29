@@ -567,7 +567,10 @@ class RFI(models.Model):
     rfi_num=models.CharField(verbose_name="RFI #",max_length=50,null=True,blank=True)
     date=models.DateField(verbose_name="Date", auto_now=False, auto_now_add=False,null=True,blank=True)
     drwng_rfrnc=models.CharField(verbose_name="Drawing Reference", max_length=500,null=True,blank=True)
-    detl_num=models.IntegerField(verbose_name="Detail No",null=True,blank=True)
+    # detl_num=models.IntegerField(verbose_name="Detail No",null=True,blank=True)
+    
+    detl_num=models.CharField(verbose_name="Detail No", max_length=5000,null=True,blank=True)
+
     spc_rfrnc=models.CharField(verbose_name="Spec Reference", max_length=500,null=True,blank=True)
     rspns_rqrd=models.DateField(verbose_name="Date", auto_now=False, auto_now_add=False,null=True,blank=True)
     qustn=models.CharField(verbose_name="Question", max_length=5000,null=True,blank=True)
@@ -662,7 +665,7 @@ class Qualification(models.Model):
 class Debited_Material(models.Model):
     pco = models.ForeignKey(PCO, verbose_name="Debited Material", related_name='debited_materials', on_delete=models.CASCADE, null=True, blank=True)
     itm_name=models.CharField(verbose_name="Material item name", max_length=500,null=True,blank=True)
-    quntty=models.IntegerField(verbose_name="Quantity", null=True,blank=True)
+    quntty=models.FloatField(verbose_name="Quantity", null=True,blank=True)
     unit=models.CharField(verbose_name="Unit", max_length=500,null=True,blank=True)
     unit_prz=models.FloatField(verbose_name="Unit$",null=True,blank=True)
     totl=models.FloatField(verbose_name="Total",null=True,blank=True)
@@ -670,7 +673,7 @@ class Debited_Material(models.Model):
 class Credited_Material(models.Model):
     pco = models.ForeignKey(PCO, verbose_name="Credited Material", related_name='credited_materials', on_delete=models.CASCADE, null=True, blank=True)
     itm_name=models.CharField(verbose_name="Material item name", max_length=500,null=True,blank=True)
-    quntty=models.IntegerField(verbose_name="Quantity", null=True,blank=True)
+    quntty=models.FloatField(verbose_name="Quantity", null=True,blank=True)
     unit=models.CharField(verbose_name="Unit", max_length=500,null=True,blank=True)
     unit_prz=models.FloatField(verbose_name="Unit$",null=True,blank=True)
     totl=models.FloatField(verbose_name="Total",null=True,blank=True)
@@ -679,7 +682,7 @@ class Credited_Material(models.Model):
 class Miscellaneous(models.Model):
     pco = models.ForeignKey(PCO, verbose_name="Miscellaneous", related_name='miscellaneous', on_delete=models.CASCADE, null=True, blank=True)
     itm_name=models.CharField(verbose_name="Material item name", max_length=500,null=True,blank=True)
-    quntty=models.IntegerField(verbose_name="Quantity", null=True,blank=True)
+    quntty=models.FloatField(verbose_name="Quantity", null=True,blank=True)
     unit=models.CharField(verbose_name="Unit", max_length=500,null=True,blank=True)
     unit_prz=models.FloatField(verbose_name="Unit$",null=True,blank=True)
     totl=models.FloatField(verbose_name="Total",null=True,blank=True)
@@ -689,7 +692,7 @@ class Miscellaneous(models.Model):
 class Labor(models.Model):
     pco = models.ForeignKey(PCO, verbose_name="Labor", related_name='labor', on_delete=models.CASCADE, null=True, blank=True)
     itm_name=models.CharField(verbose_name="Material item name", max_length=500,null=True,blank=True)
-    quntty=models.IntegerField(verbose_name="Quantity", null=True,blank=True)
+    quntty=models.FloatField(verbose_name="Quantity", null=True,blank=True)
     unit=models.CharField(verbose_name="Unit", max_length=500,null=True,blank=True)
     unit_prz=models.FloatField(verbose_name="Unit$",null=True,blank=True)
     totl=models.FloatField(verbose_name="Total",null=True,blank=True)
@@ -711,8 +714,8 @@ class  Delay_Notice(models.Model):
     delay_num=models.CharField(verbose_name="Delay Number #",blank=True,null=True,max_length=50)
     floor=models.CharField(verbose_name="Floor", max_length=500,null=True,blank=True)
     area=models.CharField(verbose_name="area",max_length=500,null=True,blank=True)
-    schdul_num=models.IntegerField(verbose_name="Schedule ID #",null=True,blank=True)
-    date=models.DateField(verbose_name="date", auto_now=False, auto_now_add=False,null=True,blank=True)
+    schdul_num=models.CharField(verbose_name="Schedule ID #",max_length=50,null=True,blank=True)
+    date=models.DateField(verbose_name="date", auto_now=False,max_length=50, null=True,blank=True)
     rfi_log=models.ForeignKey(RFI_Log, verbose_name="RFI log", on_delete=models.CASCADE,null=True,blank=True)
     pco_log=models.ForeignKey(PCO_Log,verbose_name="PCO",on_delete=models.CASCADE,null=True,blank=True)
 

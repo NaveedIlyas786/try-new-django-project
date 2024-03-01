@@ -736,7 +736,7 @@ class Delay_Log(models.Model):
     date=models.DateField(verbose_name="date", auto_now=False, auto_now_add=False,null=True,blank=True)
     typ=models.CharField(verbose_name="Select status", max_length=50,choices=[
         ('Related PCO','Related PCO'),('Related RFI','Related RFI'),('Other Trades','Other Trades'),
-        ],default='Other Traders', null=True, blank=True)
+        ],default='Other Trades', null=True, blank=True)
     status=models.CharField(verbose_name="Select status", max_length=50,choices=[
         ('Open','Open'),('Close','Close'),
         ],default='Open', null=True, blank=True)

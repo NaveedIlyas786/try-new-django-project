@@ -481,6 +481,32 @@ class ProjectDetailSerializer(serializers.ModelSerializer):
         fields = ['id', 'drctry_Name', 'prjct_id', 'prnt_id', 'file_type', 'file_name', 'children']
 
 
+
+
+
+class ProjectForOtherSerializer(serializers.ModelSerializer):
+    
+    Forman=DMS_DertorySezializers(read_only=True)
+
+    proposal=ProposalSerializer(read_only=True)
+    
+    gc=GC_infoSerializers(read_only=True)
+    class Meta:
+        model = Project
+        fields = ['id','status','important_active', 'job_num', 'start_date','project_address','addendumStart','addendumEnd','gc','gc_address','gc_attn','attn_email','attn_phone','Forman','proposal']
+        
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        if 'proposal' in representation:
+            representation['Proposal'] = representation.pop('proposal')
+            
+        return representation
+
+
+
+
+
 class Attache_PDF_RFISerializer(serializers.ModelSerializer):
         # Convert binary data to base64 for serialization
     class Meta:
@@ -500,7 +526,7 @@ class RFISerializer(serializers.ModelSerializer):
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)# type: ignore
     
     project_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Project.objects.all(), source='project', required=False)
-    project=ProjectSerializer(read_only=True)
+    project=ProjectForOtherSerializer(read_only=True)
     attached_pdfs = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -529,6 +555,29 @@ class RFISerializer(serializers.ModelSerializer):
 #comment changing
 
 
+
+
+
+class RfiForRfiLogSerializer(serializers.ModelSerializer):
+    date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)# type: ignore
+    rspns_rqrd = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)# type: ignore
+    rply_by = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)# type: ignore
+    date2 = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)# type: ignore
+    
+    # project_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Project.objects.all(), source='project', required=False)
+    project=ProjectForOtherSerializer(read_only=True)
+    # attached_pdfs = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = RFI
+        fields = ['id', 'rfi_num', 'date', 'drwng_rfrnc', 'detl_num', 'spc_rfrnc', 'dscrptn', 'rspns_rqrd', 'qustn', 'bool1', 'bool2', 'bool3', 'rply_by', 'rspns', 'name_log', 'title', 'date2','project']
+        # Note: 'attached_pdf' removed from fields since it's handled by get_attached_pdfs and not a direct model field
+
+
 class Attache_PDF_RFI_LogSerializer(serializers.ModelSerializer):
     class Meta:
         model=Attached_Pdf_Rfi_log
@@ -542,10 +591,10 @@ class RFI_LogSerializer(serializers.ModelSerializer):
     
     
     rfi_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=RFI.objects.all(), source='rfi', required=False,allow_null=True)
-    rfi=RFISerializer(read_only=True)
+    rfi=RfiForRfiLogSerializer(read_only=True)
     
     project_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Project.objects.all(), source='project', required=False)
-    project=ProjectSerializer(read_only=True)
+    project=ProjectForOtherSerializer(read_only=True)
     attached_pdfs = serializers.SerializerMethodField(read_only=True)
 
 
@@ -580,6 +629,31 @@ class RFI_LogSerializer(serializers.ModelSerializer):
     #             binary=base64.b64encode(uploaded_file.read()),
     #         )
     #     return rfi_log
+
+
+
+
+class RFI_LogForOtherSerializer(serializers.ModelSerializer):
+    date_close = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)# type: ignore
+    received_date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)# type: ignore
+    
+    
+    rfi=RfiForRfiLogSerializer(read_only=True)
+    
+    project=ProjectForOtherSerializer(read_only=True)
+
+
+    class Meta:
+        model=RFI_Log
+        fields=['id','project_id','rfi_id','rfi','gc_rfi_num','date_close','status','cost_schdl','received_date','project']
+        
+
+
+
+
+
 
 
 class QualificationSerializer(serializers.ModelSerializer):
@@ -628,11 +702,11 @@ class PCOSerializer(serializers.ModelSerializer):
     rfi_id = serializers.PrimaryKeyRelatedField(
         write_only=True, queryset=RFI_Log.objects.all(), source='rfi', required=False, allow_null=True
     )
-    rfi=RFI_LogSerializer(read_only=True)
+    rfi=RFI_LogForOtherSerializer(read_only=True)
 
     
     project_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Project.objects.all(), source='project', required=False)
-    project=ProjectSerializer(read_only=True)
+    project=ProjectForOtherSerializer(read_only=True)
     
     qualifications = QualificationSerializer(many=True, required=False)
     debited_materials = DebitedMaterialSerializer(many=True, required=False)
@@ -853,12 +927,42 @@ class PCOSerializer(serializers.ModelSerializer):
                             nested_serializer.save(pco=instance)
         return instance
 
+
+
+
+
+class PCOForOtherSerializer(serializers.ModelSerializer):
+    
+    date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)#type: ignore
+
+    rfi=RFI_LogForOtherSerializer(read_only=True)
+
+    project=ProjectForOtherSerializer(read_only=True)
+
+
+    class Meta:
+        model = PCO
+        fields = [
+            'id', 'date', 'pco_num',  'asi_num', 'pci_num', 
+            'dcrsbsn', 'chnge_dtals', 'typ', 'work_day', 'mtrl_sub_totl', 'get_tax', 'value_tax',
+            'mtrl_totl', 'mscllns_totl', 'lbr_totl', 'subtotl_cost', 'get_ohp_tax', 'value_ohp_tax',
+            'cost_ohp_mtrl_tax', 'get_bond', 'value_bond', 'totl_rqest', 'prpd_by','project', 'rfi',
+            ]
+
+
+
+
 class PCO_LogSerializer(serializers.ModelSerializer):
     pco_id=serializers.PrimaryKeyRelatedField(write_only=True,queryset=PCO.objects.all(),source='pco',required=False)
-    pco=PCOSerializer(read_only=True)
+    pco=PCOForOtherSerializer(read_only=True)
     class Meta:
         model=PCO_Log
         fields=['id','pco_id','pco','t_m','cor_amont','co_amont','co_num','auther_name','note']
+        
+        
+
+        
 class Attache_PDF_DelaySerializer(serializers.ModelSerializer):
         # Convert binary data to base64 for serialization
     class Meta:
@@ -866,14 +970,19 @@ class Attache_PDF_DelaySerializer(serializers.ModelSerializer):
         fields='__all__'
 
 
+
+
+
+
+
 class Delay_NoticeSerializer(serializers.ModelSerializer):
     date = serializers.DateField(
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)# type: ignore
 
     project_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=Project.objects.all(), source='project', required=False)
-    project=ProjectSerializer(read_only=True)
+    project=ProjectForOtherSerializer(read_only=True)
     rfi_log_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=RFI_Log.objects.all(), source='rfi_log',required=False)
-    rfi_log=RFI_LogSerializer(read_only=True)
+    rfi_log=RFI_LogForOtherSerializer(read_only=True)
     pco_log_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=PCO_Log.objects.all(), source='pco_log',required=False)
     pco_log=PCO_LogSerializer(read_only=True)
     attached_pdfs = serializers.SerializerMethodField(read_only=True)
@@ -901,12 +1010,27 @@ class Delay_NoticeSerializer(serializers.ModelSerializer):
                 )
         return delay
         
+        
+        
+        
+        
+        
+
+class Delay_NoticeForOtherSerializer(serializers.ModelSerializer):
+    date = serializers.DateField(
+        format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)# type: ignore
+
+    project=ProjectForOtherSerializer(read_only=True)
+
+    class Meta:
+        model=Delay_Notice
+        fields=['id','delay_num','floor','area','schdul_num','date','dscrptn_impct','dscrptn_task','comnt','preprd_by','project']
 class Delay_LogSerializer(serializers.ModelSerializer):
     date = serializers.DateField(
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)# type: ignore
     
     dly_ntc_id=serializers.PrimaryKeyRelatedField(write_only=True,queryset=Delay_Notice.objects.all(),source='dly_ntc',required=False)
-    dly_ntc=Delay_NoticeSerializer(read_only=True)
+    dly_ntc=Delay_NoticeForOtherSerializer(read_only=True)
     class Meta:
         model=Delay_Log
         fields=['id','dly_ntc_id','dly_ntc','date','typ','status','dly_rslov','fnl_impct']

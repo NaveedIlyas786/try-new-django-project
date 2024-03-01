@@ -625,7 +625,9 @@ class PCOSerializer(serializers.ModelSerializer):
     
     date = serializers.DateField(
         format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)#type: ignore
-    rfi_id=serializers.PrimaryKeyRelatedField(write_only=True, queryset=RFI_Log.objects.all(), source='rfi',required=False,allow_null=True)
+    rfi_id = serializers.PrimaryKeyRelatedField(
+        write_only=True, queryset=RFI_Log.objects.all(), source='rfi', required=False, allow_null=True
+    )
     rfi=RFI_LogSerializer(read_only=True)
 
     
@@ -655,15 +657,21 @@ class PCOSerializer(serializers.ModelSerializer):
             'miscellaneous': MiscellaneousSerializer,
             'labor': LaborSerializer,
     }
+
     def get_attached_pdfs(self, obj):
         attached_pdfs = Attached_Pdf_Pco.objects.filter(pco=obj)
         return Attache_PDF_PCOSerializer(attached_pdfs, many=True).data
     
-    
+    # def to_internal_value(self, data):
+    #     rfi_id = data.get('rfi_id', None)
+    #     if rfi_id in [None, 'null', '']:  # Adjust based on actual incorrect inputs you're seeing
+    #         data['rfi_id'] = None  # Ensure it's interpreted as Python None
+    #     return super().to_internal_value(data)
 
 
     @transaction.atomic
     def create(self, validated_data):
+        print("Validated Data:", validated_data)
         nested_objects_data = {
             'qualifications': (validated_data.pop('qualifications', []), Qualification),
             'debited_materials': (validated_data.pop('debited_materials', []), Debited_Material),
@@ -701,11 +709,6 @@ class PCOSerializer(serializers.ModelSerializer):
                 binary=file.read(),  # Adjust for base64 encoding if necessary
                 typ=file.content_type,
             )
-
-        # Process each type of nested object
-        # for _, (nested_data, ModelClass) in nested_objects_data.items():
-        #     for item_data in nested_data:
-        #         ModelClass.objects.create(pco=pco, **item_data)
                 
                 # Process nested 'miscellaneous' objects
         request = self.context.get('request')
@@ -848,102 +851,8 @@ class PCOSerializer(serializers.ModelSerializer):
 
                         if nested_serializer.is_valid(raise_exception=True):
                             nested_serializer.save(pco=instance)
-
-    # Handle file uploads
-        # if 'attached_pdfs' in request.FILES: #type:ignore
-        #     Attached_Pdf_Pco.objects.filter(pco=instance).delete()  # Clear existing files
-        #     attached_pdf_data = request.FILES.getlist('attached_pdfs')#type:ignore
-        #     for file in attached_pdf_data:
-        #         Attached_Pdf_Pco.objects.create(
-        #             file_name=file.name, pco=instance, binary=file.read(), typ=file.content_type,
-        #         )
-        
-        
-        # attached_pdf_data = request.FILES.getlist('attached_pdfs') if 'attached_pdfs' in request.FILES else None
-        # if attached_pdf_data is not None:  # This ensures files are intended to be updated
-        # # If there are files, then proceed to clear existing ones and save new files
-        #     Attached_Pdf_Pco.objects.filter(pco=instance).delete()  # Clear existing files
-        #     for file in attached_pdf_data:
-        #         Attached_Pdf_Pco.objects.create(
-        #             file_name=file.name, pco=instance, binary=file.read(), typ=file.content_type,
-        #         )
-
         return instance
 
-
-
-    # @transaction.atomic
-    # def update(self, instance, validated_data):
-        
-    #     nested_fields = ['qualifications', 'debited_materials', 'credited_materials', 'miscellaneous', 'labor']
-    #     for field in nested_fields:
-    #         validated_data.pop(field, None)
-
-    # # Update the PCO instance's own fields
-    #     for attr, value in validated_data.items():
-    #         setattr(instance, attr, value)
-    #     instance.save()
-        
-        
-    # # Create a dictionary that maps the field names to their serializer classes
-    #     nested_serializers_map = {
-    #     'qualifications': QualificationSerializer,
-    #     'debited_materials': DebitedMaterialSerializer,
-    #     'credited_materials': CreditedMaterialSerializer,
-    #     'miscellaneous': MiscellaneousSerializer,
-    #     'labor': LaborSerializer,
-    #     }
-
-    # # Handle updating nested objects
-    #     request = self.context.get('request')
-    #     if request:
-    #         for field_name, serializer_class in nested_serializers_map.items():
-    #             # Manually handle the parsing of indexed fields from form-data
-    #             related_manager = getattr(instance, field_name)
-    #             nested_data_list = []
-            
-    #             for key in request.data.keys():
-    #                 if key.startswith(field_name + '['):
-    #                     # Extract the index and the field name
-    #                     match = re.match(rf'{field_name}\[(\d+)\]\.(.+)', key)
-    #                     if match:
-    #                         index, nested_field = match.groups()
-    #                         index = int(index)
-
-    #                     # Ensure we have enough entries in our list
-    #                         while len(nested_data_list) <= index:
-    #                             nested_data_list.append({})
-                        
-    #                     # Convert field data to the correct type if necessary, e.g., convert 'id' to int
-    #                         if nested_field == 'id':
-    #                             value = int(request.data[key])
-    #                         else:
-    #                             value = request.data[key]
-
-    #                         nested_data_list[index][nested_field] = value
-
-    #         # Now update or create nested objects
-    #             for nested_data in nested_data_list:
-    #                 item_id = nested_data.get('id')
-    #                 if item_id:  # Update existing nested instance
-    #                     nested_instance = related_manager.get(id=item_id)
-    #                     nested_serializer = serializer_class(nested_instance, data=nested_data, partial=True)
-    #                 else:  # Create new nested instance
-    #                     nested_serializer = serializer_class(data=nested_data)
-                
-    #                 if nested_serializer.is_valid(raise_exception=True):
-    #                     nested_serializer.save(pco=instance)
-
-    # # Handle file uploads
-    #     if 'attached_pdfs' in request.FILES: #type:ignore
-    #         Attached_Pdf_Pco.objects.filter(pco=instance).delete()  # Clear existing files
-    #         attached_pdf_data = request.FILES.getlist('attached_pdfs') #type:ignore
-    #         for file in attached_pdf_data:
-    #             Attached_Pdf_Pco.objects.create(file_name=file.name ,pco=instance, binary=file.read(), typ=file.content_type, )
-    
-    #     return instance
-
-    
 class PCO_LogSerializer(serializers.ModelSerializer):
     pco_id=serializers.PrimaryKeyRelatedField(write_only=True,queryset=PCO.objects.all(),source='pco',required=False)
     pco=PCOSerializer(read_only=True)

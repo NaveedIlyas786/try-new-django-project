@@ -419,12 +419,12 @@ def pco_view(request, id=None):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     elif request.method == 'POST':
-        serializer = PCOSerializer(data=request.data, context={'request': request})
-        if serializer.is_valid():
-            pco_instance = serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            serializer = PCOSerializer(data=request.data, context={'request': request})
+            if serializer.is_valid():
+                pco_instance = serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'PUT':
         if not id:
             return Response({"message": "ID is required for PUT request"}, status=status.HTTP_400_BAD_REQUEST)

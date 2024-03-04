@@ -114,7 +114,7 @@ class Estimating(models.Model):
     company = models.ForeignKey(Company, verbose_name="Company",related_name='company_in_estimator',limit_choices_to=models.Q(is_active=True), on_delete=models.CASCADE,blank=True,null=True)
     bid_amount=models.FloatField(verbose_name="Bid Amount ",blank=True,null=True)
     # location=models.ForeignKey(Location,verbose_name="Add Area", related_name='estimating_as_Area',limit_choices_to=models.Q(is_active=True), on_delete=models.CASCADE,blank=True,null=True)
-    location=models.CharField(verbose_name="Location", max_length=250,default="California")
+    location=models.CharField(verbose_name="Location", max_length=250,default="California",null=True,blank=True)
     important_active=models.BooleanField(default=False)
 
     estimator = models.ForeignKey(

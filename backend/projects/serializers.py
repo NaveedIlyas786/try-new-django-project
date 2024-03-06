@@ -17,7 +17,8 @@ from django.db import transaction
 import logging
 import json
 import re
-
+from datetime import timedelta
+import datetime
 class ContractSerializer(serializers.ModelSerializer):
     
     contract_date = serializers.DateField(
@@ -1045,16 +1046,28 @@ class AddMoreSerializer(serializers.ModelSerializer):
 class BadgingSerializer(serializers.ModelSerializer):
     newColumn = AddMoreSerializer(many=True, source='addmoreinstance_set', required=False)  # Make it not required and correct source
 
-    submittedDate = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
-    approvedDate = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
-    resubmitDate = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
-    renewedDate = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+    submittedDate = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True) #type:ignore
+    approvedDate = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)#type:ignore
+    resubmitDate = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)#type:ignore
+    renewedDate = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)#type:ignore
     
     class Meta:
         model = BadgingProject
         fields = ['id', 'project', 'firstName', 'lastName', 'middle', 'phone', 'submittedDate', 'approvedDate', 'resubmitDate', 'renewedDate', 'status', 'tradeExpertise', 'newColumn']
     def create(self, validated_data):
         new_columns_data = validated_data.pop('addmoreinstance_set', [])
+        submitted_date = validated_data.get('submittedDate')
+        approved_date = validated_data.get('approvedDate')
+        if submitted_date:
+            validated_data['resubmitDate'] = submitted_date + timedelta(days=60)
+        else:
+            validated_data['resubmitDate'] = None  # Explicitly set to None if submittedDate is None
+
+        if approved_date:
+            validated_data['renewedDate'] = approved_date + timedelta(days=365)  # Add one year
+        else:
+            validated_data['renewedDate'] = None  # Explicitly set to None if approvedDate is None
+
         badging_project = BadgingProject.objects.create(**validated_data)
 
         for new_column_data in new_columns_data:

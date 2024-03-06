@@ -3,7 +3,7 @@ from .models import Project_detail,Project
 from .models import (
     Project, Contract,  Insurance, Bond, Submittals, 
     ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, 
-    HDS_system,  Buget,Project_detail,RFI,RFI_Log,Delay_Notice,Delay_Log,PCO,Schedule_of_Value
+    HDS_system,  Buget,Project_detail,RFI,RFI_Log,Delay_Notice,Delay_Log,PCO,Schedule_of_Value,BadgingProject,AddMoreInstance
 )
 from Estimating.models import Spec_detail
 
@@ -125,6 +125,15 @@ class Delay_LogInline(admin.StackedInline):
     model = Delay_Notice
     extra = 1  
 
+
+class AddMoreInline(admin.StackedInline):
+    model = AddMoreInstance
+    extra = 1  
+class BadgingAdmin(admin.ModelAdmin):
+    inlines=[AddMoreInline]
+    list_display=( 'id','project','firstName','status','lastName','middle','phone','submittedDate','approvedDate','resubmitDate','renewedDate','tradeExpertise')
+
+
 # Register the models with their respective admin views
 admin.site.register(Project_detail, ProjectDetailAdmin)
 admin.site.register(Project, ProjectAdmin)
@@ -144,3 +153,4 @@ admin.site.register(RFI,RFIAdmin)
 admin.site.register(RFI_Log)
 admin.site.register(PCO,PCOAdmin)
 admin.site.register(Delay_Log)
+admin.site.register(BadgingProject,BadgingAdmin)

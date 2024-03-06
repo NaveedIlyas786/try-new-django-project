@@ -32,8 +32,7 @@ urlpatterns = [
     path('send_email/<int:document_id>/',views.SendDocumentEmailView.as_view(),name='RFI_Email_send'),
     path('projectdashboard/', views.ProjectDashboardAPIView.as_view(), name='project-dashboard'),
 
-
-
-
+    path('badging/', views.createBadging, name='Badging'), 
+    path('badging/<int:id>/', views.createBadging, name='Badging'), 
 
 ]

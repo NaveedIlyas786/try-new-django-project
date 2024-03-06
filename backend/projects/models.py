@@ -744,3 +744,28 @@ class Delay_Log(models.Model):
     dly_rslov=models.DateField(verbose_name="Delay Resolve date", auto_now=False, auto_now_add=False,null=True,blank=True)
     fnl_impct=models.IntegerField(verbose_name="Final Impact (Working Days)",null=True,blank=True)
     
+    
+    
+    
+    
+    
+class BadgingProject(models.Model):
+    project=models.ForeignKey(Project, verbose_name="select project", on_delete=models.CASCADE , blank=True,null=True)
+    firstName=models.CharField(verbose_name="First Name", max_length=250,null=True,blank=True)
+    lastName=models.CharField(verbose_name="Late Name", max_length=250,null=True,blank=True)
+    middle=models.CharField(verbose_name="Midle", max_length=250,null=True,blank=True)
+    phone=models.CharField(verbose_name="Phone", max_length=250,null=True,blank=True)
+    submittedDate=models.DateField(verbose_name="Submitted date", auto_now=False, auto_now_add=False,null=True,blank=True)
+    approvedDate=models.DateField(verbose_name="Approved date", auto_now=False, auto_now_add=False,null=True,blank=True)
+    resubmitDate=models.DateField(verbose_name="Resubmit date", auto_now=False, auto_now_add=False,null=True,blank=True)
+    renewedDate=models.DateField(verbose_name="Renewed date", auto_now=False, auto_now_add=False,null=True,blank=True)
+    status=models.CharField(verbose_name="Status", max_length=250,null=True,blank=True)
+
+    tradeExpertise=models.CharField(verbose_name="Trade Expertise", max_length=5000,null=True,blank=True)
+    
+    
+class AddMoreInstance(models.Model):
+    badging=models.ForeignKey(BadgingProject, verbose_name="select Badging", on_delete=models.CASCADE , blank=True,null=True)
+    instanceName=models.CharField(verbose_name="New Name", max_length=250,null=True,blank=True)
+    instanceValue=models.CharField(verbose_name="Value", max_length=250,null=True,blank=True)
+    

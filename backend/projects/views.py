@@ -28,10 +28,10 @@ from rest_framework.views import APIView
 import base64
 
 from rest_framework.decorators import api_view,parser_classes
-from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget,Delay_Notice,RFI,PCO,Schedule_of_Value,RFI_Log,Delay_Log,Qualification,Debited_Material,Credited_Material,Labor,Miscellaneous,Attached_Pdf_Rfi,Attached_Pdf_Delay,Attached_Pdf_Pco
+from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget,Delay_Notice,RFI,PCO,Schedule_of_Value,RFI_Log,Delay_Log,Qualification,Debited_Material,Credited_Material,Labor,Miscellaneous,Attached_Pdf_Rfi,Attached_Pdf_Delay,Attached_Pdf_Pco,BadgingProject,AddMoreInstance
 from .serializers import (ProjectSerializer, ContractSerializer,  InsuranceSerializer, BondSerializer,Attache_PDF_RFISerializer,Attache_PDF_DelaySerializer,QualificationSerializer,DebitedMaterialSerializer,CreditedMaterialSerializer,LaborSerializer,MiscellaneousSerializer,Attache_PDF_PCOSerializer,
                            SubmittalsSerializer, ShopDrawingSerializer, SafitySerializer, ScheduleSerializer,PCO_Log,
-                          SubContractorsSerializer, LaborRateSerializer,HDSSystemSerializer,
+                          SubContractorsSerializer, LaborRateSerializer,HDSSystemSerializer,AddMoreSerializer,BadgingSerializer,
                           BugetSerializer,Delay_NoticeSerializer,RFISerializer,PCOSerializer,ScheduleOfValueSerializer,RFI_LogSerializer,Delay_LogSerializer,PCO_LogSerializer)
 
 from Estimating.models import DMS_Dertory,AttachedLogoCompany
@@ -56,8 +56,51 @@ class ProjectDetailListCreateView(APIView):
 # class ProjectDetailListCreateView(viewsets.ReadOnlyModelViewSet):
 #     queryset = Project_detail.objects.filter(prnt_id__isnull=True)  # This fetches top-level directories
 #     serializer_class = ProjectDetailSerializer
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+def createBadging(request, id=None):
+    if request.method == 'GET':
+        if id:
+            try:
+                badging = BadgingProject.objects.get(id=id)
+                serializer = BadgingSerializer(badging)
+            except BadgingProject.DoesNotExist:
+                return Response({"error": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            badging = BadgingProject.objects.all()
+            serializer = BadgingSerializer(badging, many=True)
+        return Response(serializer.data)
 
-
+    elif request.method == 'POST':
+        serializer = BadgingSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == 'PUT':
+        if not id:
+            return Response({"error": "Method PUT requires an 'id'."}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            badging = BadgingProject.objects.get(id=id)
+        except BadgingProject.DoesNotExist:
+            return Response({"error": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
+        serializer = BadgingSerializer(badging, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == 'DELETE':
+        if not id:
+            return Response({"error": "Method DELETE requires an 'id'."}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            badging = BadgingProject.objects.get(id=id)
+        except BadgingProject.DoesNotExist:
+            return Response({"error": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
+        badging.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    
 @api_view(['GET', 'POST','PUT'])
 def create_project(request, id=None):
 

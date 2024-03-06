@@ -5,7 +5,7 @@ from .models import( Project, Contract,  Insurance, Bond,
                     Submittals, ShopDrawing,Schedule_of_Value, 
                     Safity, Schedule, Sub_Contractors, LaborRate, HDS_system,
                     Buget,Project_detail,Delay_Notice,RFI,PCO,RFI_Log,Delay_Log,Qualification,Debited_Material,Credited_Material,Miscellaneous,Labor,Attached_Pdf_Delay,Attached_Pdf_Pco,Attached_Pdf_Rfi,Attached_Pdf_Rfi_log
-                    , PCO_Log)
+                    , PCO_Log,BadgingProject,AddMoreInstance)
 
 from Estimating.models import Proposal,Spec_detail,GC_detail,DMS_Dertory
 from Estimating.serializers import ProposalSerializer,SpecificationDetailSerializer,GC_infoSerializers,DMS_DertorySezializers
@@ -1035,3 +1035,93 @@ class Delay_LogSerializer(serializers.ModelSerializer):
         model=Delay_Log
         fields=['id','dly_ntc_id','dly_ntc','date','typ','status','dly_rslov','fnl_impct']
         
+        
+
+class AddMoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AddMoreInstance
+        fields = '__all__'
+        
+class BadgingSerializer(serializers.ModelSerializer):
+    newColumn = AddMoreSerializer(many=True, source='addmoreinstance_set', required=False)  # Make it not required and correct source
+
+    submittedDate = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+    approvedDate = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+    resubmitDate = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+    renewedDate = serializers.DateField(format='%m-%d-%Y', input_formats=['%m-%d-%Y', 'iso-8601'], required=False, allow_null=True)
+    
+    class Meta:
+        model = BadgingProject
+        fields = ['id', 'project', 'firstName', 'lastName', 'middle', 'phone', 'submittedDate', 'approvedDate', 'resubmitDate', 'renewedDate', 'status', 'tradeExpertise', 'newColumn']
+    def create(self, validated_data):
+        new_columns_data = validated_data.pop('addmoreinstance_set', [])
+        badging_project = BadgingProject.objects.create(**validated_data)
+
+        for new_column_data in new_columns_data:
+            new_column_serializer = AddMoreSerializer(data=new_column_data)
+            if new_column_serializer.is_valid():
+                AddMoreInstance.objects.create(badging=badging_project, **new_column_data)
+            else:
+                print(new_column_serializer.errors)  # Log or handle errors here
+
+        return badging_project
+    def update(self, instance, validated_data):
+        new_columns_data = validated_data.pop('addmoreinstance_set', [])
+    
+    # Update BadgingProject instance's own fields
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+    # Handle updating nested AddMoreInstance objects
+    # Track existing ids to identify which instances to update or create
+        existing_column_ids = [item.id for item in instance.addmoreinstance_set.all()]
+
+        for new_column_data in new_columns_data:
+            column_id = new_column_data.get('id', None)
+
+            if column_id and column_id in existing_column_ids:
+                # Update existing AddMoreInstance
+                add_more_instance = AddMoreInstance.objects.get(id=column_id)
+                for key, value in new_column_data.items():
+                    # Make sure not to try to update the 'id' field
+                    if key != 'id':
+                        setattr(add_more_instance, key, value)
+                add_more_instance.save()
+            elif not column_id:
+                # Create new AddMoreInstance for this BadgingProject
+                AddMoreInstance.objects.create(badging=instance, **new_column_data)
+
+    # Delete any AddMoreInstances not included in the update
+        for existing_id in existing_column_ids:
+            if existing_id not in [d.get('id') for d in new_columns_data if 'id' in d]:
+                AddMoreInstance.objects.filter(id=existing_id).delete()
+
+        return instance
+
+
+
+    # def update(self, instance, validated_data):
+    #     new_columns_data = validated_data.pop('addmoreinstance_set', [])
+        
+    #     # Update BadgingProject instance's own fields
+    #     for attr, value in validated_data.items():
+    #         setattr(instance, attr, value)
+    #     instance.save()
+
+    #     # Handle updating nested AddMoreInstance objects
+    #     existing_ids = [item['id'] for item in new_columns_data if 'id' in item]
+    #     for add_more_instance in instance.addmoreinstance_set.all():
+    #         if add_more_instance.id not in existing_ids:
+    #             add_more_instance.delete()
+
+    #     for new_column_data in new_columns_data:
+    #         add_more_instance_id = new_column_data.get('id', None)
+    #         if add_more_instance_id:
+    #             # Update existing AddMoreInstance
+    #             AddMoreInstance.objects.filter(id=add_more_instance_id).update(**new_column_data)
+    #         else:
+    #             # Create new AddMoreInstance for this BadgingProject
+    #             AddMoreInstance.objects.create(badging=instance, **new_column_data)
+
+    #     return instance

@@ -48,6 +48,7 @@ class Project(models.Model):
                                                models.Q(job_title__name='President'), on_delete=models.SET_NULL, null=True, blank=True)
 
     project_address=models.CharField(verbose_name="Add project address", max_length=5000, null=True, blank=True)
+    badging=models.BooleanField(default=False)
 
     addendumStart=models.CharField(verbose_name="Addendum Start", max_length=50, null=True, blank=True)
     addendumEnd=models.CharField(verbose_name="Addendum End", max_length=50, null=True, blank=True)

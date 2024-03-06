@@ -374,7 +374,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     gc=GC_infoSerializers(read_only=True)
     class Meta:
         model = Project
-        fields = ['id','status','important_active', 'job_num', 'start_date', 'proposal_id','prjct_engnr_id','prjct_engnr','bim_oprtr_id','bim_oprtr','Forman_id','Forman','prjct_mngr_id','prjct_mngr','start_date','general_superintendent_id','general_superintendent',
+        fields = ['id','status','badging','important_active', 'job_num', 'start_date', 'proposal_id','prjct_engnr_id','prjct_engnr','bim_oprtr_id','bim_oprtr','Forman_id','Forman','prjct_mngr_id','prjct_mngr','start_date','general_superintendent_id','general_superintendent',
                     'project_address','addendumStart','addendumEnd','contacts','gc_id','gc','gc_address','drywell','finish','wall_type','ro_door','drywell_is_active','contacts_is_active','finish_is_active','wall_type_is_active','ro_door_is_active','ro_window','ro_window_is_active',
                     'contracts_is_active','scheduleOfValue_is_active','subContractors_is_active','budget_is_active','insurances_is_active','schedule_is_active','bonds_is_active','hdsSystem_is_active','wageRate_is_active'
                     ,'substitution','contracts','schedule_of_values','insurancs','bond','submittals','shopdrawing','safity','schedule','sub_contractors','laborrate',

@@ -1,17 +1,8 @@
 from typing import Required
 from rest_framework import serializers
-from .models import WageRateDetail, WageRate
-
-class WageRateDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = WageRateDetail
-        fields = '__all__'
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        return representation
+from .models import WageRateDetail
 
 class WageRateSerializer(serializers.ModelSerializer):
-    detail=WageRateDetailSerializer(source='wageratedetail_set',many=True,required=False)
 
     class Meta:
         model = WageRate

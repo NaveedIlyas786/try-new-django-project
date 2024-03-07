@@ -12,7 +12,7 @@ class WageRateDetailInline(NestedStackedInline):
     
 class WageRateAdmin(admin.ModelAdmin):
     inlines=[WageRateDetailInline]
-    list_display=('id','title')
+    list_display=('id','project')
 
 
     

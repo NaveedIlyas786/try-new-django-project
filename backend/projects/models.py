@@ -543,6 +543,18 @@ class Buget(models.Model):
 
 
 
+
+class WageRate(models.Model):
+    project=models.ForeignKey(Project, verbose_name="add project", on_delete=models.CASCADE,null=True,blank=True)
+    title_name=models.CharField(verbose_name="Area name", max_length=500,null=True,blank=True)
+    st_amount=models.FloatField(verbose_name="ST Amount",blank=True,null=True)
+    ot_amount=models.FloatField(verbose_name="OT Amount",blank=True,null=True)
+    dt_amount=models.FloatField(verbose_name="DT Amount",blank=True,null=True)
+
+
+
+
+
 class Project_detail(models.Model):
     drctry_Name = models.CharField(verbose_name="Folder Name", max_length=255)
 

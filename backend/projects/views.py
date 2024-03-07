@@ -19,7 +19,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 # from backend import Estimating
 
-from .models import Attached_Pdf_Delay, Attached_Pdf_Rfi_log, Project, Project_detail
+from .models import Attached_Pdf_Delay, Attached_Pdf_Rfi_log, Project, Project_detail, WageRate
 from .serializers import ProjectSerializer, ProjectDetailSerializer
 from rest_framework.response import Response
 from rest_framework import status
@@ -28,10 +28,10 @@ from rest_framework.views import APIView
 import base64
 
 from rest_framework.decorators import api_view,parser_classes
-from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget,Delay_Notice,RFI,PCO,Schedule_of_Value,RFI_Log,Delay_Log,Qualification,Debited_Material,Credited_Material,Labor,Miscellaneous,Attached_Pdf_Rfi,Attached_Pdf_Delay,Attached_Pdf_Pco,BadgingProject,AddMoreInstance
+from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget,Delay_Notice,RFI,PCO,Schedule_of_Value,RFI_Log,Delay_Log,Qualification,Debited_Material,Credited_Material,Labor,Miscellaneous,Attached_Pdf_Rfi,Attached_Pdf_Delay,Attached_Pdf_Pco,BadgingProject,WageRate
 from .serializers import (ProjectSerializer, ContractSerializer,  InsuranceSerializer, BondSerializer,Attache_PDF_RFISerializer,Attache_PDF_DelaySerializer,QualificationSerializer,DebitedMaterialSerializer,CreditedMaterialSerializer,LaborSerializer,MiscellaneousSerializer,Attache_PDF_PCOSerializer,
                            SubmittalsSerializer, ShopDrawingSerializer, SafitySerializer, ScheduleSerializer,PCO_Log,
-                          SubContractorsSerializer, LaborRateSerializer,HDSSystemSerializer,AddMoreSerializer,BadgingSerializer,
+                          SubContractorsSerializer, LaborRateSerializer,HDSSystemSerializer,AddMoreSerializer,BadgingSerializer,WageRateSerializer,
                           BugetSerializer,Delay_NoticeSerializer,RFISerializer,PCOSerializer,ScheduleOfValueSerializer,RFI_LogSerializer,Delay_LogSerializer,PCO_LogSerializer)
 
 from Estimating.models import DMS_Dertory,AttachedLogoCompany
@@ -117,6 +117,8 @@ def create_project(request, id=None):
             ('labor_rate', LaborRate, LaborRateSerializer),
             ('hds_system', HDS_system, HDSSystemSerializer),
             ('buget', Buget, BugetSerializer),
+            ('wagerate', WageRate, WageRateSerializer),
+
         ]
 
 

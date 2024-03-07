@@ -3,7 +3,7 @@ from .models import Project_detail,Project
 from .models import (
     Project, Contract,  Insurance, Bond, Submittals, 
     ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate, 
-    HDS_system,  Buget,Project_detail,RFI,RFI_Log,Delay_Notice,Delay_Log,PCO,Schedule_of_Value,BadgingProject,AddMoreInstance
+    HDS_system,  Buget,Project_detail,RFI,RFI_Log,Delay_Notice,Delay_Log,PCO,Schedule_of_Value,BadgingProject,AddMoreInstance,WageRate
 )
 from Estimating.models import Spec_detail
 
@@ -23,6 +23,9 @@ class BondInline(admin.StackedInline):
     model = Bond
     extra = 1
 
+class WageRateInline(admin.StackedInline):
+    model = WageRate
+    extra = 1
 # class ZlienInline(admin.StackedInline):
 #     model = Zlien
 #     extra = 1
@@ -84,7 +87,7 @@ class BugetInline(admin.StackedInline):
 
 class ProjectAdmin(admin.ModelAdmin):
     inlines = [
-        ContractInline,  InsuranceInline, BondInline,
+        ContractInline,WageRateInline,  InsuranceInline, BondInline,
         ScheduleInline, SubContractorsInline, LaborRateInline,
         BugetInline,HDSSystemInline,SafityInline,ShopDrawingInline,SubmittalsInline,ScheduleOfValueInline
     ]

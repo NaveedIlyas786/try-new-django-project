@@ -5,7 +5,7 @@ from .models import( Project, Contract,  Insurance, Bond,
                     Submittals, ShopDrawing,Schedule_of_Value, 
                     Safity, Schedule, Sub_Contractors, LaborRate, HDS_system,
                     Buget,Project_detail,Delay_Notice,RFI,PCO,RFI_Log,Delay_Log,Qualification,Debited_Material,Credited_Material,Miscellaneous,Labor,Attached_Pdf_Delay,Attached_Pdf_Pco,Attached_Pdf_Rfi,Attached_Pdf_Rfi_log
-                    , PCO_Log,BadgingProject,AddMoreInstance)
+                    , PCO_Log,BadgingProject,AddMoreInstance,WageRate)
 
 from Estimating.models import Proposal,Spec_detail,GC_detail,DMS_Dertory
 from Estimating.serializers import ProposalSerializer,SpecificationDetailSerializer,GC_infoSerializers,DMS_DertorySezializers
@@ -84,6 +84,18 @@ class InsuranceSerializer(serializers.ModelSerializer):
         if 'date' in data and data['date']:
             data['date'] = datetime.datetime.strptime(data['date'], '%m-%d-%Y').date()
         return super().to_internal_value(data)
+class WageRateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WageRate
+        fields = '__all__'
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        
+        representation['project'] = instance.project.job_num if instance.project else None
+        
+        return representation
+
 
 class BondSerializer(serializers.ModelSerializer):
     date = serializers.DateField(
@@ -332,10 +344,13 @@ class BugetSerializer(serializers.ModelSerializer):
         return super().to_internal_value(data)
     
 
+# WageRateSerializer
 
 class ProjectSerializer(serializers.ModelSerializer):
     
     contracts = ContractSerializer(source='contract_set', many=True, read_only=True, required=False)
+    wagerat = WageRateSerializer(source='wagerate_set', many=True, read_only=True, required=False)
+
     schedule_of_values = ScheduleOfValueSerializer(source='schedule_of_value_set', many=True, read_only=True)
     insurancs = InsuranceSerializer(source='insurance_set', many=True, read_only=True, required=False)
     bond = BondSerializer(source='bond_set', many=True, read_only=True, required=False)
@@ -375,7 +390,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     gc=GC_infoSerializers(read_only=True)
     class Meta:
         model = Project
-        fields = ['id','status','badging','important_active', 'job_num', 'start_date', 'proposal_id','prjct_engnr_id','prjct_engnr','bim_oprtr_id','bim_oprtr','Forman_id','Forman','prjct_mngr_id','prjct_mngr','start_date','general_superintendent_id','general_superintendent',
+        fields = ['id','status','wagerat','badging','important_active', 'job_num', 'start_date', 'proposal_id','prjct_engnr_id','prjct_engnr','bim_oprtr_id','bim_oprtr','Forman_id','Forman','prjct_mngr_id','prjct_mngr','start_date','general_superintendent_id','general_superintendent',
                     'project_address','addendumStart','addendumEnd','contacts','gc_id','gc','gc_address','drywell','finish','wall_type','ro_door','drywell_is_active','contacts_is_active','finish_is_active','wall_type_is_active','ro_door_is_active','ro_window','ro_window_is_active',
                     'contracts_is_active','scheduleOfValue_is_active','subContractors_is_active','budget_is_active','insurances_is_active','schedule_is_active','bonds_is_active','hdsSystem_is_active','wageRate_is_active'
                     ,'substitution','contracts','schedule_of_values','insurancs','bond','submittals','shopdrawing','safity','schedule','sub_contractors','laborrate',

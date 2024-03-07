@@ -22,6 +22,7 @@ urlpatterns = [
     path('api/estimating/',include('Estimating.urls')),
     path('api/project/',include('projects.urls')),
     path('api/user/', include('accounts.urls')),
+    path('api/BIM/',include('BIM.urls')),
     path('api/reports/',include('reports.urls'))# replace 'app_name' with the actual name of your app
 
 ]

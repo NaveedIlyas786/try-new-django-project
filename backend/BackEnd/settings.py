@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'nested_admin',
     'import_export',
+    'BIM',
     
 ]
 

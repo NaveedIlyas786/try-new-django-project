@@ -5,6 +5,7 @@
 # from django.db import transaction
 from django.core.mail import EmailMessage
 from django.core.mail import send_mail, EmailMultiAlternatives
+from django.db import transaction
 
 from email.mime.image import MIMEImage 
 import logging

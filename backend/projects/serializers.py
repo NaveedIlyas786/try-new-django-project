@@ -349,7 +349,7 @@ class BugetSerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     
     contracts = ContractSerializer(source='contract_set', many=True, read_only=True, required=False)
-    wagerat = WageRateSerializer(source='wagerate_set', many=True, read_only=True, required=False)
+    wagerat = WageRateSerializer(source='wagerate_set', many=True, required=False, read_only=False)
 
     schedule_of_values = ScheduleOfValueSerializer(source='schedule_of_value_set', many=True, read_only=True)
     insurancs = InsuranceSerializer(source='insurance_set', many=True, read_only=True, required=False)
@@ -397,6 +397,34 @@ class ProjectSerializer(serializers.ModelSerializer):
                     'hds_system','buget','gc_attn','attn_email','attn_phone','proposal']
         
 
+    def create(self, validated_data):
+        wagerat_data = validated_data.pop('wagerate_set', [])  # Adjust according to the actual source name
+        project = Project.objects.create(**validated_data)
+        for wage_data in wagerat_data:
+            WageRate.objects.create(project=project, **wage_data)
+        return project
+
+    def update(self, instance, validated_data):
+        wagerat_data = validated_data.pop('wagerate_set', [])
+        wagerates = (instance.wagerate_set).all()  # Adjust according to the actual related name
+        wagerates = list(wagerates)
+        instance = super().update(instance, validated_data)
+
+        for wage_data in wagerat_data:
+            wage = wagerates.pop(0) if wagerates else None
+            if wage:
+                for attr, value in wage_data.items():
+                    setattr(wage, attr, value)
+                wage.save()
+            else:
+                WageRate.objects.create(project=instance, **wage_data)
+
+        # Delete any leftover wage rates if they weren't included in the request
+        if wagerates:
+            for wage in wagerates:
+                wage.delete()
+
+        return instance
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

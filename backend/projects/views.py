@@ -58,18 +58,26 @@ class ProjectDetailListCreateView(APIView):
 #     queryset = Project_detail.objects.filter(prnt_id__isnull=True)  # This fetches top-level directories
 #     serializer_class = ProjectDetailSerializer
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
-def createBadging(request, id=None):
+def createBadging(request, id=None, project_id=None):
     if request.method == 'GET':
-        if id:
-            try:
-                badging = BadgingProject.objects.get(id=id)
-                serializer = BadgingSerializer(badging)
-            except BadgingProject.DoesNotExist:
-                return Response({"error": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
-        else:
-            badging = BadgingProject.objects.all()
-            serializer = BadgingSerializer(badging, many=True)
+        # Specific entry by id
+        if id and not project_id:
+            badging = get_object_or_404(BadgingProject, id=id)
+            serializer = BadgingSerializer(badging)
+            return Response(serializer.data)
+        
+        # Filter by project_id (can be all if project_id is None)
+        badging_query = BadgingProject.objects.all()
+        if project_id:
+            badging_query = badging_query.filter(project__id=project_id)
+
+        # If both id and project_id are provided, filter accordingly
+        if id and project_id:
+            badging_query = badging_query.filter(id=id, project__id=project_id)
+
+        serializer = BadgingSerializer(badging_query, many=True)
         return Response(serializer.data)
+        
 
     elif request.method == 'POST':
         serializer = BadgingSerializer(data=request.data)
@@ -79,17 +87,17 @@ def createBadging(request, id=None):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     elif request.method == 'PUT':
-        if not id:
-            return Response({"error": "Method PUT requires an 'id'."}, status=status.HTTP_400_BAD_REQUEST)
-        try:
-            badging = BadgingProject.objects.get(id=id)
-        except BadgingProject.DoesNotExist:
-            return Response({"error": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
+        if not id or not project_id:
+            return Response({"error": "Method PUT requires 'id' and 'project_id'."}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # Ensure that the BadgingProject belongs to the specific Project
+        badging = get_object_or_404(BadgingProject, id=id, project__id=project_id)
         serializer = BadgingSerializer(badging, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     
     elif request.method == 'DELETE':
         if not id:

@@ -34,5 +34,7 @@ urlpatterns = [
 
     path('badging/', views.createBadging, name='Badging'), 
     path('badging/<int:id>/', views.createBadging, name='Badging'), 
+    path('badging/<int:id>/<int:project_id>/', views.createBadging, name='create_badging_with_id_and_project_id'),
+
 
 ]

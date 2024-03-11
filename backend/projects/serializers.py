@@ -1121,63 +1121,83 @@ class BadgingSerializer(serializers.ModelSerializer):
                 print(new_column_serializer.errors)  # Log or handle errors here
 
         return badging_project
+    # def update(self, instance, validated_data):
+    #     new_columns_data = validated_data.pop('addmoreinstance_set', [])
+    
+    # # Update BadgingProject instance's own fields
+    #     for attr, value in validated_data.items():
+    #         setattr(instance, attr, value)
+    #     instance.save()
+
+    # # Handle updating nested AddMoreInstance objects
+    # # Track existing ids to identify which instances to update or create
+    #     existing_column_ids = [item.id for item in instance.addmoreinstance_set.all()]
+
+    #     for new_column_data in new_columns_data:
+    #         column_id = new_column_data.get('id', None)
+
+    #         if column_id and column_id in existing_column_ids:
+    #             # Update existing AddMoreInstance
+    #             add_more_instance = AddMoreInstance.objects.get(id=column_id)
+    #             for key, value in new_column_data.items():
+    #                 # Make sure not to try to update the 'id' field
+    #                 if key != 'id':
+    #                     setattr(add_more_instance, key, value)
+    #             add_more_instance.save()
+    #         elif not column_id:
+    #             # Create new AddMoreInstance for this BadgingProject
+    #             AddMoreInstance.objects.create(badging=instance, **new_column_data)
+
+    # # Delete any AddMoreInstances not included in the update
+    #     for existing_id in existing_column_ids:
+    #         if existing_id not in [d.get('id') for d in new_columns_data if 'id' in d]:
+    #             AddMoreInstance.objects.filter(id=existing_id).delete()
+
+    #     return instance
     def update(self, instance, validated_data):
         new_columns_data = validated_data.pop('addmoreinstance_set', [])
-    
+        project_id = instance.project.id  # Get the project ID from the instance being updated
+
     # Update BadgingProject instance's own fields
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
 
     # Handle updating nested AddMoreInstance objects
-    # Track existing ids to identify which instances to update or create
         existing_column_ids = [item.id for item in instance.addmoreinstance_set.all()]
+        new_instance_names = []  # List to keep track of new instance names added
 
         for new_column_data in new_columns_data:
             column_id = new_column_data.get('id', None)
+            instance_name = new_column_data.get('instanceName', None)
 
             if column_id and column_id in existing_column_ids:
                 # Update existing AddMoreInstance
                 add_more_instance = AddMoreInstance.objects.get(id=column_id)
                 for key, value in new_column_data.items():
-                    # Make sure not to try to update the 'id' field
+                # Make sure not to try to update the 'id' field
                     if key != 'id':
                         setattr(add_more_instance, key, value)
+                        if key == 'instanceName':
+                            new_instance_names.append(value)  # Add new instance name to the list
                 add_more_instance.save()
             elif not column_id:
-                # Create new AddMoreInstance for this BadgingProject
-                AddMoreInstance.objects.create(badging=instance, **new_column_data)
+            # Create new AddMoreInstance for this BadgingProject
+                new_instance = AddMoreInstance.objects.create(badging=instance, **new_column_data)
+                if instance_name:
+                    new_instance_names.append(instance_name)  # Add new instance name to the list
 
     # Delete any AddMoreInstances not included in the update
         for existing_id in existing_column_ids:
             if existing_id not in [d.get('id') for d in new_columns_data if 'id' in d]:
                 AddMoreInstance.objects.filter(id=existing_id).delete()
 
+    # Update all other BadgingProjects that share the same project_id with the new instance names
+        if new_instance_names:
+            other_badging_projects = BadgingProject.objects.filter(project__id=project_id).exclude(id=instance.id)
+            for badging_project in other_badging_projects:
+                for name in new_instance_names:
+                    AddMoreInstance.objects.create(badging=badging_project, instanceName=name)
+
         return instance
 
-
-
-    # def update(self, instance, validated_data):
-    #     new_columns_data = validated_data.pop('addmoreinstance_set', [])
-        
-    #     # Update BadgingProject instance's own fields
-    #     for attr, value in validated_data.items():
-    #         setattr(instance, attr, value)
-    #     instance.save()
-
-    #     # Handle updating nested AddMoreInstance objects
-    #     existing_ids = [item['id'] for item in new_columns_data if 'id' in item]
-    #     for add_more_instance in instance.addmoreinstance_set.all():
-    #         if add_more_instance.id not in existing_ids:
-    #             add_more_instance.delete()
-
-    #     for new_column_data in new_columns_data:
-    #         add_more_instance_id = new_column_data.get('id', None)
-    #         if add_more_instance_id:
-    #             # Update existing AddMoreInstance
-    #             AddMoreInstance.objects.filter(id=add_more_instance_id).update(**new_column_data)
-    #         else:
-    #             # Create new AddMoreInstance for this BadgingProject
-    #             AddMoreInstance.objects.create(badging=instance, **new_column_data)
-
-    #     return instance

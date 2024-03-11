@@ -87,16 +87,25 @@ def createBadging(request, id=None, project_id=None):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     elif request.method == 'PUT':
-        if not id or not project_id:
-            return Response({"error": "Method PUT requires 'id' and 'project_id'."}, status=status.HTTP_400_BAD_REQUEST)
-    
-    # Ensure that the BadgingProject belongs to the specific Project
-        badging = get_object_or_404(BadgingProject, id=id, project__id=project_id)
-        serializer = BadgingSerializer(badging, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        update_context = {}
+        if id:
+            badging = get_object_or_404(BadgingProject, id=id)
+        # Decide the update context based on provided IDs
+            if project_id:
+            # Updating all instances under the same project
+                update_context = {'update_type': 'project', 'project_id': project_id}
+            else:
+            # Updating only the single specified instance
+                update_context = {'update_type': 'single'}
+
+            serializer = BadgingSerializer(badging, data=request.data, context=update_context, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error": "Method PUT requires an 'id'."}, status=status.HTTP_400_BAD_REQUEST)
+
 
     
     elif request.method == 'DELETE':

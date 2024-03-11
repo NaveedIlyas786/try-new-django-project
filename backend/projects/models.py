@@ -24,7 +24,7 @@ class Project(models.Model):
     proposal=models.ForeignKey(Proposal, verbose_name="Add Proposal", on_delete=models.CASCADE, null=True, blank=True)
 
     prjct_engnr = models.ForeignKey(DMS_Dertory, verbose_name="Project Engineer", related_name='Project_Engineer', limit_choices_to=models.Q(
-        job_title__name='Project Engineer'), on_delete=models.SET_NULL, null=True, blank=True)
+        job_title__name='Project Engineer'), on_delete=models.SET_NULL, null=True, blank=True) 
     bim_oprtr = models.ForeignKey(DMS_Dertory, verbose_name="BIM Modeler", related_name='Bim_Operator', limit_choices_to=models.Q(job_title__name='BIM') | models.Q(
         job_title__name='BIM Modeler/Trimble Operator') | models.Q(job_title__name='BIM/Manager PR'), on_delete=models.SET_NULL, null=True, blank=True)
     Forman = models.ForeignKey(DMS_Dertory, verbose_name="FOREMAN/Superintendent", related_name='Forman_as_Forman', limit_choices_to=models.Q(job_title__name='Foreman') | models.Q(

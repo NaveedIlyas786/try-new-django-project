@@ -1121,60 +1121,49 @@ class BadgingSerializer(serializers.ModelSerializer):
                 print(new_column_serializer.errors)  # Log or handle errors here
 
         return badging_project
-
     def update(self, instance, validated_data):
         new_columns_data = validated_data.pop('addmoreinstance_set', [])
-        update_type = self.context.get('update_type', 'single')  # Use update_type from context.
-        project_id_context = self.context.get('project_id')  # Get project_id from context if provided.
+        update_type = self.context.get('update_type', 'single')
+        project_id_context = self.context.get('project_id')
 
-    # Update BadgingProject instance's own fields
+        # Update BadgingProject instance's own fields
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
 
-    # Handling new and updated AddMoreInstance objects
-        existing_column_ids = [item.id for item in instance.addmoreinstance_set.all()]
-        new_column_ids = [d.get('id') for d in new_columns_data if 'id' in d]
-        new_column_names = [d.get('instanceName') for d in new_columns_data]
+        # Existing and new instance names handling
+        existing_instance_names = {item.instanceName for item in instance.addmoreinstance_set.all()}
+        new_column_names = {d.get('instanceName') for d in new_columns_data}
 
-    # Delete AddMoreInstances not included in the updated data
-        for add_more_instance in instance.addmoreinstance_set.all():
-            if add_more_instance.id not in new_column_ids:
-                add_more_instance.delete()
+        # Delete instances not present in the new data for the current BadgingProject
+        instance.addmoreinstance_set.exclude(instanceName__in=new_column_names).delete()
 
-    # Update and create new AddMoreInstance objects
+        # Update and create new AddMoreInstance objects for the current BadgingProject
         for new_column_data in new_columns_data:
-            column_id = new_column_data.get('id', None)
-            if column_id:
-                add_more_instance = AddMoreInstance.objects.get(id=column_id)
-                for key, value in new_column_data.items():
-                    setattr(add_more_instance, key, value)
-                add_more_instance.save()
-            else:
-                AddMoreInstance.objects.create(badging=instance, **new_column_data)
+            AddMoreInstance.objects.update_or_create(
+                badging=instance,
+                instanceName=new_column_data['instanceName'],
+                defaults={'instanceValue': new_column_data.get('instanceValue')}
+            )
 
-    # Conditional update for other BadgingProjects based on update_type and project_id presence
+        # Conditional update for other BadgingProjects based on update_type and project_id
         if update_type == 'project' and project_id_context:
             other_badging_projects = BadgingProject.objects.filter(project__id=project_id_context).exclude(id=instance.id)
             for badging_project in other_badging_projects:
-            # Iterate through all other projects to update their AddMoreInstances
-                for instance_name in new_column_names:
-                # Here, we update or create AddMoreInstance for other BadgingProjects with instanceName only
-                # and set instanceValue as null
-                    add_more_instance, created = AddMoreInstance.objects.update_or_create(
-                        badging=badging_project, 
-                        instanceName=instance_name, 
-                        defaults={'instanceName': instance_name, 'instanceValue': None}  # Set instanceValue to None
-                    )
-            # Optionally, remove AddMoreInstances not in new_column_names if necessary
-                for add_more_instance in badging_project.addmoreinstance_set.all(): #type:ignore
-                    if add_more_instance.instanceName not in new_column_names:
-                        add_more_instance.delete()
+                # Delete instances removed from the current project from other projects
+                badging_project.addmoreinstance_set.exclude(instanceName__in=new_column_names).delete()#type:ignore
+
+                # Add or update new instances only if they are new, to avoid affecting existing entries
+                for new_column_data in new_columns_data:
+                    instance_name = new_column_data['instanceName']
+                    if instance_name not in existing_instance_names:  # Add new instances to other projects
+                        AddMoreInstance.objects.update_or_create(
+                            badging=badging_project,
+                            instanceName=instance_name,
+                            defaults={'instanceValue': new_column_data.get('instanceValue')}
+                        )
 
         return instance
-
-
-
 
     # def update(self, instance, validated_data):
     #     new_columns_data = validated_data.pop('addmoreinstance_set', [])

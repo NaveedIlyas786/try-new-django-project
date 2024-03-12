@@ -21,6 +21,7 @@ from email.mime.text import MIMEText
 # from backend import Estimating
 
 from .models import Attached_Pdf_Delay, Attached_Pdf_Rfi_log, Project, Project_detail, WageRate
+from BIM.serializers import BimSerializer
 from .serializers import ProjectSerializer, ProjectDetailSerializer
 from rest_framework.response import Response
 from rest_framework import status
@@ -164,10 +165,26 @@ def create_project(request, id=None):
         if not project_serializer.is_valid():
             return Response(project_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         project = project_serializer.save()
+        # Automatically create a BIM entry for the new project
+        bim_data = {
+            'project_id': project.id,#type:ignore  # Set the project ID to link the BIM entry with the newly created project
+            # Set other BIM fields as needed, or leave them with default values
+            # For example:
+            # 'bimRequirement': False,
+            # 'materialDeadline': None,
+            # Add other fields as required
+        }
+        bim_serializer = BimSerializer(data=bim_data)
+        if bim_serializer.is_valid():
+            bim_serializer.save()
+        else:
+            # In case BIM data is not valid, you can decide how to handle this.
+            # For simplicity, I'm just logging it here, but you could roll back project creation, or handle differently.
+            print("BIM data is not valid", bim_serializer.errors)
 
         # Handle related models
         for key, model, serializer_class in related_data_models:
-            related_data_list = data.get(key)
+            related_data_list = data.get(key,[])
             if related_data_list:
                 for related_data in related_data_list:
                     related_serializer = serializer_class(data=related_data)
@@ -188,7 +205,7 @@ def create_project(request, id=None):
 
         try:
             project = Project.objects.get(id=project_id)
-        except Project.DoesNotExist:
+        except Project.DoesNotExist:    
             return Response({"error": "Project not found"}, status=status.HTTP_404_NOT_FOUND)
 
         project_serializer = ProjectSerializer(project, data=data)

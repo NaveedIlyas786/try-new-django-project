@@ -121,7 +121,7 @@ class PCOAdmin(admin.ModelAdmin):
 
 
 class Delay_NoticeAdmin(admin.ModelAdmin):
-    list_display=('id','delay_num','project','floor','area','schdul_num','date',
+    list_display=('id','delay_num','project','floor','building','room','area','schdul_num','date',
                   'dscrptn_impct','dscrptn_task','comnt','preprd_by','rfi_log')
     
 class Delay_LogInline(admin.StackedInline):

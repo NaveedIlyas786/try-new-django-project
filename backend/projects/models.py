@@ -731,6 +731,8 @@ class  Delay_Notice(models.Model):
     date=models.DateField(verbose_name="date", auto_now=False,max_length=50, null=True,blank=True)
     rfi_log=models.ForeignKey(RFI_Log, verbose_name="RFI log", on_delete=models.CASCADE,null=True,blank=True)
     pco_log=models.ForeignKey(PCO_Log,verbose_name="PCO",on_delete=models.CASCADE,null=True,blank=True)
+    building= models.CharField(verbose_name="Building",max_length=520,null=True,blank=True)
+    room=models.CharField(verbose_name="Room",max_length=520,null=True,blank=True)
 
     dscrptn_impct=models.CharField(verbose_name="Detailed Description of Impact Trade:", max_length=5000 , blank=True, null=True)
     dscrptn_task=models.CharField(verbose_name="Schedule ID # and description of tasks that follow that will be affected:", max_length=5000 , blank=True, null=True)

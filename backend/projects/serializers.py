@@ -1033,7 +1033,7 @@ class Delay_NoticeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model=Delay_Notice
-        fields=['id','project_id','delay_num','pco_log_id','pco_log','floor','area','schdul_num','date','rfi_log_id','rfi_log','dscrptn_impct','dscrptn_task','comnt','preprd_by','project','attached_pdfs']
+        fields=['id','project_id','delay_num','building','room','pco_log_id','pco_log','floor','area','schdul_num','date','rfi_log_id','rfi_log','dscrptn_impct','dscrptn_task','comnt','preprd_by','project','attached_pdfs']
     def get_attached_pdfs(self, obj):
         attached_pdfs = Attached_Pdf_Delay.objects.filter(delay=obj)
         return Attache_PDF_DelaySerializer(attached_pdfs, many=True).data

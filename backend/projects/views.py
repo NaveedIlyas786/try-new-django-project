@@ -735,8 +735,7 @@ class ProjectDashboardAPIView(APIView):
     def get_pco_data(self, project):
         pcos = PCO_Log.objects.filter(pco__project=project).select_related('pco')
         total_pco_num = pcos.count()
-        pco_details = pcos.values('pco__id','pco__pco_num','t_m','cor_amont','co_amont','co_num','auther_name','note','pco__dcrsbsn','pco__date')
-        # 'pco__totl_rqest',
+        pco_details = pcos.values('pco__id','pco__pco_num','pco__totl_rqest','t_m','cor_amont','co_amont','co_num','auther_name','note','pco__dcrsbsn','pco__date')
         return {
             'total_pco_num': total_pco_num,
             'pco_detail': list(pco_details),
@@ -758,7 +757,8 @@ class ProjectDashboardAPIView(APIView):
                 'type':delay.typ,
                 'dly_rslov':delay.dly_rslov,
                 'fnl_impct':delay.fnl_impct,
-                # 'date':delay.date,
+                'date':delay.date,
+                'unResolvedDelayDays':delay.unResolvedDelayDays,
                 
                 
             }

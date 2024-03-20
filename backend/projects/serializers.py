@@ -531,13 +531,14 @@ class ProjectDetailSerializer(serializers.ModelSerializer):
 class ProjectForOtherSerializer(serializers.ModelSerializer):
     
     Forman=DMS_DertorySezializers(read_only=True)
+    prjct_mngr=DMS_DertorySezializers(read_only=True)
 
     proposal=ProposalSerializer(read_only=True)
     
     gc=GC_infoSerializers(read_only=True)
     class Meta:
         model = Project
-        fields = ['id','status','important_active', 'job_num', 'start_date','project_address','addendumStart','addendumEnd','gc','gc_address','gc_attn','attn_email','attn_phone','Forman','proposal']
+        fields = ['id','status','important_active', 'job_num', 'start_date','project_address','addendumStart','addendumEnd','gc','gc_address','gc_attn','attn_email','attn_phone','Forman','prjct_mngr','proposal']
         
 
     def to_representation(self, instance):
@@ -1077,7 +1078,7 @@ class Delay_LogSerializer(serializers.ModelSerializer):
     dly_ntc=Delay_NoticeForOtherSerializer(read_only=True)
     class Meta:
         model=Delay_Log
-        fields=['id','dly_ntc_id','dly_ntc','date','typ','status','dly_rslov','fnl_impct']
+        fields=['id','dly_ntc_id','dly_ntc','date','typ','status','dly_rslov','fnl_impct','unResolvedDelayDays']
         
         
 

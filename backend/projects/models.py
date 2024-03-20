@@ -461,6 +461,7 @@ class Submittals(models.Model):
         ],default="Pending", null=True, blank=True)
     due_date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
     actn_date=models.DateField(verbose_name="add date(YYYY-MM-DD)", null=True, blank=True)
+    LastUpdated_Date=models.DateField(verbose_name="add LastUpdated_Date(YYYY-MM-DD)", null=True, blank=True)
 
 
 class ShopDrawing(models.Model):
@@ -757,7 +758,8 @@ class Delay_Log(models.Model):
         ],default='Open', null=True, blank=True)
     dly_rslov=models.DateField(verbose_name="Delay Resolve date", auto_now=False, auto_now_add=False,null=True,blank=True)
     fnl_impct=models.IntegerField(verbose_name="Final Impact (Working Days)",null=True,blank=True)
-    
+    unResolvedDelayDays=models.IntegerField(verbose_name="UnResolved Delay Days",null=True,blank=True)
+
     
     
     

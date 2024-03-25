@@ -31,10 +31,10 @@ import base64
 
 from rest_framework.decorators import api_view,parser_classes
 from .models import Project, Contract, Insurance, Bond,  Submittals, ShopDrawing, Safity, Schedule, Sub_Contractors, LaborRate,  HDS_system, Buget,Delay_Notice,RFI,PCO,Schedule_of_Value,RFI_Log,Delay_Log,Qualification,Debited_Material,Credited_Material,Labor,Miscellaneous,Attached_Pdf_Rfi,Attached_Pdf_Delay,Attached_Pdf_Pco,BadgingProject,WageRate
-from .serializers import (ProjectSerializer, ContractSerializer,  InsuranceSerializer, BondSerializer,Attache_PDF_RFISerializer,Attache_PDF_DelaySerializer,QualificationSerializer,DebitedMaterialSerializer,CreditedMaterialSerializer,LaborSerializer,MiscellaneousSerializer,Attache_PDF_PCOSerializer,
+from .serializers import (ProjectSerializer, ContractSerializer,  InsuranceSerializer, BondSerializer,Attache_PDF_RFISerializer,Attache_PDF_DelaySerializer,QualificationSerializer,DebitedMaterialSerializer,CreditedMaterialSerializer,LaborSerializer,MiscellaneousSerializer,Attache_PDF_PCOSerializer,TM,Attached_Pdf_TM,Material,
                            SubmittalsSerializer, ShopDrawingSerializer, SafitySerializer, ScheduleSerializer,PCO_Log,
                           SubContractorsSerializer, LaborRateSerializer,HDSSystemSerializer,AddMoreSerializer,BadgingSerializer,WageRateSerializer,
-                          BugetSerializer,Delay_NoticeSerializer,RFISerializer,PCOSerializer,ScheduleOfValueSerializer,RFI_LogSerializer,Delay_LogSerializer,PCO_LogSerializer)
+                          BugetSerializer,Delay_NoticeSerializer,RFISerializer,PCOSerializer,ScheduleOfValueSerializer,RFI_LogSerializer,Delay_LogSerializer,PCO_LogSerializer,MetrialTMSerializers,LaborTMSerializers,MiscellaneousTM,TMSerializer)
 
 from Estimating.models import DMS_Dertory,AttachedLogoCompany
 
@@ -58,6 +58,61 @@ class ProjectDetailListCreateView(APIView):
 # class ProjectDetailListCreateView(viewsets.ReadOnlyModelViewSet):
 #     queryset = Project_detail.objects.filter(prnt_id__isnull=True)  # This fetches top-level directories
 #     serializer_class = ProjectDetailSerializer
+
+
+
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+@parser_classes((JSONParser, MultiPartParser))
+def tm_view(request, id=None):
+    if request.method == 'GET':
+        if id:
+            try:
+                tm = TM.objects.get(pk=id)
+                serializer = TMSerializer(tm)
+                return Response(serializer.data)  # Make sure to return a response here
+            except TM.DoesNotExist:
+                return Response({'message': 'TM not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            tms = TM.objects.all()
+            serializer = TMSerializer(tms, many=True)
+            return Response(serializer.data)  # And here, return a response for all TMs if no id is provided
+
+    elif request.method == 'POST':
+        serializer = TMSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            tm_instance = serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'PUT':
+        if not id:
+            return Response({"message": "ID is required for PUT request"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            tm = TM.objects.get(pk=id)
+            serializer = TMSerializer(tm, data=request.data, partial=True, context={'request': request})
+            if serializer.is_valid():
+                tm_instance = serializer.save()
+                Attached_Pdf_TM.objects.filter(tm=tm).delete()
+                files = request.FILES.getlist('attached_pdfs')
+                for file in files:
+                    Attached_Pdf_TM.objects.create(
+                        file_name=file.name,
+                        tm=tm_instance,
+                        binary=file.read(),
+                        typ=file.content_type,
+                    )
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except TM.DoesNotExist:
+            return Response({'message': 'TM not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+
+
+
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def createBadging(request, id=None, project_id=None):
     if request.method == 'GET':

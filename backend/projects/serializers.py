@@ -1,11 +1,12 @@
 # serializers.py
 from os import write
+from pyexpat import model
 from rest_framework import serializers
 from .models import( Project, Contract,  Insurance, Bond, 
                     Submittals, ShopDrawing,Schedule_of_Value, 
                     Safity, Schedule, Sub_Contractors, LaborRate, HDS_system,
                     Buget,Project_detail,Delay_Notice,RFI,PCO,RFI_Log,Delay_Log,Qualification,Debited_Material,Credited_Material,Miscellaneous,Labor,Attached_Pdf_Delay,Attached_Pdf_Pco,Attached_Pdf_Rfi,Attached_Pdf_Rfi_log
-                    , PCO_Log,BadgingProject,AddMoreInstance,WageRate)
+                    , PCO_Log,BadgingProject,AddMoreInstance,WageRate,TM,LaborTM,Material,Attached_Pdf_TM,MiscellaneousTM)
 
 from Estimating.models import Proposal,Spec_detail,GC_detail,DMS_Dertory
 from Estimating.serializers import ProposalSerializer,SpecificationDetailSerializer,GC_infoSerializers,DMS_DertorySezializers
@@ -696,10 +697,114 @@ class RFI_LogForOtherSerializer(serializers.ModelSerializer):
         
 
 
+class MetrialTMSerializers(serializers.ModelSerializer):
+    class Meta:
+        model=Material
+        fields='__all__'
+
+class LaborTMSerializers(serializers.ModelSerializer):
+    class Meta:
+        model=LaborTM
+        fields='__all__'
+
+class MiscellaneousTMSerializers(serializers.ModelSerializer):
+    class Meta:
+        model=MiscellaneousTM
+        fields='__all__'
+
+class Attached_Pdf_TMSerializers(serializers.ModelSerializer):
+    class Meta:
+        model= Attached_Pdf_TM
+        fields='__all__'
+    
 
 
+class TMSerializer(serializers.ModelSerializer):
 
-
+    
+    materials = MetrialTMSerializers(source='material_set', many=True, read_only=True)
+    miscellaneous = MiscellaneousTMSerializers(source='miscellaneoustm_set', many=True, read_only=True)
+    labor = LaborTMSerializers(source='labortm_set', many=True, read_only=True)
+    attached_pdfs = serializers.SerializerMethodField(read_only=True)
+    
+    # materials = MetrialTMSerializers(source='material_set', many=True, read_only=True)
+    # miscellaneous = MiscellaneousTMSerializers(source='miscellaneoustm_set', many=True, read_only=True)
+    # labor = LaborTMSerializers(source='labortm_set', many=True, read_only=True)
+    # # attached_pdfs = serializers.SerializerMethodField(read_only=True)
+    # attached_pdfs=serializers.SerializerMethodField(read_only=True,required=False)
+    class Meta:
+        model=TM
+        fields = ['id', 'date', 'tmNumber', 'description', 'materials', 'miscellaneous', 'labor', 'attached_pdfs']
+        nested_serializers_map={
+            'materials':MetrialTMSerializers,
+            'miscellaneous':MiscellaneousTMSerializers,
+            'labor':LaborTMSerializers,
+        }
+    def get_attached_pdfs(self,obj):
+        attached_pdfs=Attached_Pdf_TM.objects.filter(tm=obj)
+        return Attached_Pdf_TMSerializers(attached_pdfs,many=True).data
+    
+    @transaction.atomic
+    def create(self, validated_data):
+        print("Validated Data:", validated_data)
+        
+        tm=super().create(validated_data)
+        attached_pdf_data=self.context['request'].FILES.getlist('attached_pdfs')
+        for file in attached_pdf_data:
+            Attached_Pdf_TM.objects.create(
+                file_name=file.name,
+                tm=tm,
+                binary=file.read(),
+                typ=file.content_type,
+            )
+        request= self.context.get('request')
+        if request:
+            miscellaneous_item=[]
+            for key, value in request.data.items():
+                if 'miscellaneous' in key:
+                    match=re.match(r'miscellaneous\[(\d+)\]\.(.+)', key)
+                    if match:
+                        index, field =match.groups()
+                        index = int(index)
+                        while len(miscellaneous_item)<=index:
+                            miscellaneous_item.append({})
+                        miscellaneous_item[index][field]=value
+        for item_data in miscellaneous_item:
+            MiscellaneousTM.objects.create(tm=tm,**item_data)
+            
+            
+        request= self.context.get('request')
+        if request:
+            materials_item=[]
+            for key, value in request.data.items():
+                if 'materials' in key:
+                    match=re.match(r'materials\[(\d+)\]\.(.+)', key)
+                    if match:
+                        index, field =match.groups()
+                        index = int(index)
+                        while len(materials_item)<=index:
+                            materials_item.append({})
+                        materials_item[index][field]=value
+        for item_data in materials_item:
+            Material.objects.create(tm=tm,**item_data)
+            
+        request= self.context.get('request')
+        if request:
+            labor_item=[]
+            for key, value in request.data.items():
+                if 'labor' in key:
+                    match=re.match(r'labor\[(\d+)\]\.(.+)', key)
+                    if match:
+                        index, field =match.groups()
+                        index = int(index)
+                        while len(labor_item)<=index:
+                            labor_item.append({})
+                        labor_item[index][field]=value
+        for item_data in labor_item:
+            LaborTM.objects.create(tm=tm,**item_data)
+        return tm
+        
+            
 
 class QualificationSerializer(serializers.ModelSerializer):
     

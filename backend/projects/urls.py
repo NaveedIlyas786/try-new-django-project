@@ -27,7 +27,8 @@ urlpatterns = [
 
     path('rfi_log/<int:id>/',views.RFILogViews.as_view(),name='RFI_log'),
     
-    
+    path('tm/',views.tm_view,name='TM'),
+    path('tm/<int:id>/',views.tm_view,name='TM'),
     
     path('send_email/<int:document_id>/',views.SendDocumentEmailView.as_view(),name='RFI_Email_send'),
     path('projectdashboard/', views.ProjectDashboardAPIView.as_view(), name='project-dashboard'),

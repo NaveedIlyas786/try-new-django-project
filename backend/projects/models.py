@@ -785,3 +785,29 @@ class AddMoreInstance(models.Model):
     instanceName=models.CharField(verbose_name="New Name", max_length=250,null=True,blank=True)
     instanceValue=models.CharField(verbose_name="Value", max_length=250,null=True,blank=True)
     
+
+class TM(models.Model):
+    date=models.DateField(verbose_name="Date", auto_now=False, auto_now_add=False,null=True,blank=True)
+    tmNumber=models.CharField(verbose_name="T&M #", max_length=250, null=True,blank=True)
+    description=models.CharField(verbose_name="Description", max_length=500,null=True,blank=True)
+
+class LaborTM(models.Model):
+    tm=models.ForeignKey(TM,verbose_name="select T&M", on_delete=models.CASCADE, null=True, blank=True)
+    creaftMan=models.CharField(verbose_name="Craft Man", max_length=250, null=True, blank=True)
+    hours=models.FloatField(verbose_name="Hours",null=True,blank=True)
+
+class Material(models.Model):
+    tm=models.ForeignKey(TM,verbose_name="select T&M", on_delete=models.CASCADE, null=True, blank=True)
+    itemName=models.CharField(verbose_name="Item Name", max_length=250,null=True,blank=True)
+    quantity=models.IntegerField(verbose_name="Quantity",null=True,blank=True)
+    
+class MiscellaneousTM(models.Model):
+    tm=models.ForeignKey(TM,verbose_name="select T&M", on_delete=models.CASCADE, null=True, blank=True)
+    itemName=models.CharField(verbose_name="Item Name", max_length=250,null=True,blank=True)
+    quantity=models.IntegerField(verbose_name="Quantity",null=True,blank=True)
+
+class Attached_Pdf_TM(models.Model):
+    tm=models.ForeignKey(TM, verbose_name="Select T&M", on_delete=models.CASCADE,null=True,blank=True)
+    binary=models.BinaryField("Atthd_pdf", null=True, blank=True, editable=True)
+    typ=models.CharField(verbose_name="Type of Attachment", max_length=250,null=True,blank=True)
+    file_name = models.CharField(verbose_name="File Name", max_length=255, null=True, blank=True)  # New field for file name

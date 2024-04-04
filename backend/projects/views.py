@@ -270,7 +270,7 @@ def create_project(request, id=None):
         related_serializers = []
         for key, model, serializer_class in related_data_models:
             related_data = data.get(key)
-            if related_data:
+            if related_data: 
                 # Check if related_data is a dictionary or a list
                 if isinstance(related_data, dict):
                     related_data_list = [related_data]

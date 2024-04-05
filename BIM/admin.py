@@ -8,4 +8,4 @@ from projects.models import Project
 class BIMAdmin(admin.ModelAdmin):
     list_display=('id','project','bimRequirement','materialDeadline','materialVendor','framingStartDate','modelAvailable','estimatedModelTime','modelDeadline','reviewComplete','comments')
     
-admin.site.register(BIM,BIMAdmin)
+admin.site.register(BIM,BIMAdmin) 

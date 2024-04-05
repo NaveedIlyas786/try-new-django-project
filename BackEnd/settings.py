@@ -219,8 +219,8 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     'https://dms-cms-project.vercel.app',
-    "https://try-new-django-project.vercel.app",
-    'http://127.0.0.1:5173',
+    # "https://try-new-django-project.vercel.app",
+    # 'http://127.0.0.1:5173',
 ]
 
 STATICFILES_DIRS = os.path.join(BASE_DIR, 'static'),

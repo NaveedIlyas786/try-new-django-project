@@ -100,9 +100,7 @@ DATABASES = {
 #https://django-rest-framework-simplejwt.readthedocs.io/en/latest/getting_started.html
 
 REST_FRAMEWORK = {
-
     'DEFAULT_AUTHENTICATION_CLASSES': (
-
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     # The billow code if i view api as as JASAN form in the web page

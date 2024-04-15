@@ -65,15 +65,15 @@ MIDDLEWARE = [
     # "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
-# CORS_ORIGIN_WHITELIST = [
-#     'http://google.com',
-#     'http://hostname.example.com',
-#     'http://localhost:8000',
-#     'http://127.0.0.1:9000',
-#     'http://localhost:5173',
-#     'http://127.0.0.1:5173',
-#     'https://dms-cms-project.vercel.app'
-# ]
+CORS_ORIGIN_WHITELIST = [
+    'http://google.com',
+    'http://hostname.example.com',
+    'http://localhost:8000',
+    'http://127.0.0.1:9000',
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+    'https://dms-cms-project.vercel.app'
+]
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -219,8 +219,8 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     'https://dms-cms-project.vercel.app',
-    # "https://try-new-django-project.vercel.app",
-    # 'http://127.0.0.1:5173',
+    "https://try-new-django-project.vercel.app",
+    'http://127.0.0.1:5173',
 ]
 
 STATICFILES_DIRS = os.path.join(BASE_DIR, 'static'),
